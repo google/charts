@@ -1,5 +1,5 @@
 Charts is a general charting library, currently enabled for the
-[Flutter mobile app toolkit](https://flutter.io).
+[Flutter mobile UI framework](https://flutter.io).
 
 *Note*: This is not an official Google product.
 
