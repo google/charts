@@ -1,0 +1,14 @@
+name: example
+description: Charts-Flutter Demo
+dependencies:
+  charts_flutter:
+    path: ../
+  cupertino_icons: ^0.1.0
+  flutter:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  meta: ^1.1.1
+  intl: ^0.15.2
+flutter:
+  uses-material-design: true

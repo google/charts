@@ -1,3 +1,0 @@
-# Coming soon
-
-Stay tuned.
