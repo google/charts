@@ -175,6 +175,6 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(title: new Text(_appName)),
-        body: new ListView(children: _tests));
+        body: new SingleChildScrollView(child: new Column(children: _tests)));
   }
 }
