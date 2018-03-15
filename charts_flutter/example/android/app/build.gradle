@@ -1,4 +1,4 @@
-package third_party.dart.charts_flutter.examples.android.app
+package third_party.dart.charts_flutter.example.android.app
 
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
