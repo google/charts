@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Rectangle, min, max;
+import 'dart:math' show Rectangle, min, max, Point;
 import 'chart_canvas.dart' show FillPatternType;
 import '../../common/color.dart' show Color;
 
@@ -88,4 +88,26 @@ class CanvasBarStack {
     this.roundBottomRight = false,
     this.fullStackRect,
   });
+}
+
+/// A list of [CanvasPieSlice]s to be painted by [ChartCanvas].
+class CanvasPie {
+  final List<CanvasPieSlice> slices;
+  Point center;
+  double radius;
+  double innerRadius;
+  final Color stroke;
+  double strokeWidthPx;
+
+  CanvasPie(this.slices, this.center, this.radius, this.innerRadius,
+      {this.stroke, this.strokeWidthPx = 0.0});
+}
+
+/// A circle sector to be painted by [ChartCanvas].
+class CanvasPieSlice {
+  double startAngle;
+  double endAngle;
+  Color fill;
+
+  CanvasPieSlice(this.startAngle, this.endAngle, {this.fill});
 }

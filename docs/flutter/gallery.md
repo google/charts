@@ -26,6 +26,13 @@
 | Simple<hr>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple.md) | Dash Pattern<hr>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern.md) | Range Annotation<hr>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation.md) | |
 
 
+### Pie Charts
+
+| | | | |
+| --- | --- | --- | --- |
+| Simple<hr>[![](example/pie_charts/simple_thumb.png)](example/pie_charts/simple.md) | Donut<hr>[![](example/pie_charts/donut_thumb.png)](example/pie_charts/donut.md) | | |
+
+
 ### Axes
 
 | | | | |

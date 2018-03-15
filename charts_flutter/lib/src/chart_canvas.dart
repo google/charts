@@ -18,6 +18,7 @@ import 'package:charts_common/common.dart' as common
     show
         ChartCanvas,
         CanvasBarStack,
+        CanvasPie,
         Color,
         FillPatternType,
         StyleFactory,
@@ -25,17 +26,39 @@ import 'package:charts_common/common.dart' as common
         TextDirection;
 import 'package:flutter/material.dart';
 import 'text_element.dart' show TextElement;
+import 'canvas/circle_sector_painter.dart' show CircleSectorPainter;
 import 'canvas/line_painter.dart' show LinePainter;
+import 'canvas/pie_painter.dart' show PiePainter;
 import 'canvas/point_painter.dart' show PointPainter;
 
 class ChartCanvas implements common.ChartCanvas {
   final Canvas canvas;
   final _paint = new Paint();
 
+  CircleSectorPainter _circleSectorPainter;
   LinePainter _linePainter;
+  PiePainter _piePainter;
   PointPainter _pointPainter;
 
   ChartCanvas(this.canvas);
+
+  @override
+  void drawCircleSector(Point center, double radius, double innerRadius,
+      double startAngle, double endAngle,
+      {common.Color fill, common.Color stroke, double strokeWidthPx}) {
+    _circleSectorPainter ??= new CircleSectorPainter();
+    _circleSectorPainter.draw(
+        canvas: canvas,
+        paint: _paint,
+        center: center,
+        radius: radius,
+        innerRadius: innerRadius,
+        startAngle: startAngle,
+        endAngle: endAngle,
+        fill: fill,
+        stroke: stroke,
+        strokeWidthPx: strokeWidthPx);
+  }
 
   @override
   void drawLine(
@@ -55,6 +78,12 @@ class ChartCanvas implements common.ChartCanvas {
         roundEndCaps: roundEndCaps,
         strokeWidthPx: strokeWidthPx,
         dashPattern: dashPattern);
+  }
+
+  @override
+  void drawPie(common.CanvasPie canvasPie) {
+    _piePainter ??= new PiePainter();
+    _piePainter.draw(canvas, _paint, canvasPie);
   }
 
   @override
