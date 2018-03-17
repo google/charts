@@ -98,12 +98,15 @@ export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/none_draw_s
     show NoneRenderSpec;
 export 'package:charts_common/src/chart/line/line_renderer_config.dart'
     show LineRendererConfig;
+export 'package:charts_common/src/chart/pie/arc_renderer_config.dart'
+    show ArcRendererConfig;
 export 'package:charts_common/src/chart/common/series_renderer.dart'
     show rendererIdKey;
 
 export 'src/bar_chart.dart';
 export 'src/base_chart.dart' show LayoutConfig;
 export 'src/line_chart.dart';
+export 'src/pie_chart.dart';
 export 'src/time_series_chart.dart';
 export 'src/selection_model_config.dart' show SelectionModelConfig;
 export 'src/behaviors/chart_behavior.dart'

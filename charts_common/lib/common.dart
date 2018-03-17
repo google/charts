@@ -24,7 +24,8 @@ export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
 export 'src/chart/common/behavior/zoom/pan_behavior.dart' show PanBehavior;
 export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 export 'src/chart/common/base_chart.dart' show BaseChart, LifecycleListener;
-export 'src/chart/common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
+export 'src/chart/common/canvas_shapes.dart'
+    show CanvasBarStack, CanvasPie, CanvasPieSlice, CanvasRect;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/series_renderer.dart' show SeriesRenderer;
 export 'src/chart/common/series_renderer_config.dart'
@@ -80,4 +81,7 @@ export 'src/chart/cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
 export 'src/chart/line/line_chart.dart' show LineChart;
 export 'src/chart/line/line_renderer.dart' show LineRenderer;
 export 'src/chart/line/line_renderer_config.dart' show LineRendererConfig;
+export 'src/chart/pie/arc_renderer.dart' show ArcRenderer;
+export 'src/chart/pie/arc_renderer_config.dart' show ArcRendererConfig;
+export 'src/chart/pie/pie_chart.dart' show PieChart;
 export 'src/chart/time_series/time_series_chart.dart' show TimeSeriesChart;

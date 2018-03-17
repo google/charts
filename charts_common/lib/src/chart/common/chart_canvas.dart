@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:math' show Point, Rectangle;
-import 'canvas_shapes.dart' show CanvasBarStack;
+import 'canvas_shapes.dart' show CanvasBarStack, CanvasPie;
 import '../../common/color.dart' show Color;
 import '../../common/text_element.dart' show TextElement;
 
@@ -22,6 +22,23 @@ abstract class ChartCanvas {
   /// Set the name of the view doing the rendering for debugging purposes,
   /// or null when we believe rendering is complete.
   set drawingView(String viewName);
+
+  /// Renders a sector of a circle, with an optional hole in the center.
+  ///
+  /// [center] The x, y coordinates of the circle's center.
+  /// [radius] The radius of the circle.
+  /// [innerRadius] Optional radius of a hole in the center of the circle that
+  ///     should not be filled in as part of the sector.
+  /// [startAngle] The angle at which the arc starts, measured clockwise from
+  ///     the positive x axis and expressed in radians
+  /// [endAngle] The angle at which the arc ends, measured clockwise from the
+  ///     positive x axis and expressed in radians.
+  /// [fill] Fill color for the sector.
+  /// [stroke] Stroke color of the arc and radius lines.
+  /// [strokeWidthPx] Stroke width of the arc and radius lines.
+  void drawCircleSector(Point center, double radius, double innerRadius,
+      double startAngle, double endAngle,
+      {Color fill, Color stroke, double strokeWidthPx});
 
   /// Renders a simple line.
   ///
@@ -37,6 +54,9 @@ abstract class ChartCanvas {
       bool roundEndCaps,
       double strokeWidthPx,
       List<int> dashPattern});
+
+  /// Renders a pie, with an optional hole in the center.
+  void drawPie(CanvasPie canvasPie);
 
   /// Renders a simple point.
   void drawPoint({Point point, Color fill, double radius});
