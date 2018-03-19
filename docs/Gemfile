@@ -1,0 +1,15 @@
+# This file enables generation of documentation html from markdown locally.
+#
+# Ruby 2.10 or later is required.
+# To install needed dependencies:
+#
+#   gem install bundler
+#   bundle install --path .bundle
+#
+# To generate and serve html locally:
+#
+#   bundle exec jekyll serve
+#
+# --------------------------------------------------------------------------
+source 'https://rubygems.org'
+gem 'github-pages', group: :jekyll_plugins
