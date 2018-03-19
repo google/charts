@@ -16,7 +16,7 @@ dependencies:
 
 
 dev_dependencies:
-  mockito: 3.0.0-alpha
+  mockito:
   flutter_test:
     sdk: flutter
   test: ^0.12.0
