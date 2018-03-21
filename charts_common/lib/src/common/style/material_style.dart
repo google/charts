@@ -69,4 +69,7 @@ class MaterialStyle implements Style {
 
   @override
   Color get linePointHighlighterColor => MaterialPalette.gray.shade600;
+
+  @override
+  Color get noDataColor => MaterialPalette.gray.shade200;
 }

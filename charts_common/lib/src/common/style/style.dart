@@ -63,4 +63,7 @@ abstract class Style {
 
   /// Default color for [LinePointHighlighter].
   Color get linePointHighlighterColor;
+
+  /// Default color for "no data" states on charts.
+  Color get noDataColor;
 }

@@ -69,4 +69,7 @@ class QuantumStyle implements Style {
 
   @override
   Color get linePointHighlighterColor => QuantumPalette.gray.shade600;
+
+  @override
+  Color get noDataColor => QuantumPalette.gray.shade200;
 }
