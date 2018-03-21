@@ -25,7 +25,7 @@ import '../base_chart_state.dart' show BaseChartState;
 abstract class ChartBehavior<B extends common.ChartBehavior> {
   Set<GestureType> get desiredGestures;
 
-  B createCommonBehavior();
+  B createCommonBehavior<T, D>();
 
   void updateCommonBehavior(B commonBehavior);
 

@@ -34,6 +34,8 @@ import '../../common/proxy_gesture_listener.dart' show ProxyGestureListener;
 import 'selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
 
+typedef BehaviorCreator = ChartBehavior<T, D> Function<T, D>();
+
 abstract class BaseChart<T, D> {
   ChartContext context;
 
@@ -191,6 +193,13 @@ abstract class BaseChart<T, D> {
   //
   // Behavior methods
   //
+
+  /// Helper method to create a behavior with congruent types.
+  ///
+  /// This invokes the provides helper with type parameters that match this
+  /// chart.
+  ChartBehavior<T, D> createBehavior(BehaviorCreator creator) =>
+      creator<T, D>();
 
   /// Attaches a behavior to the chart.
   ///

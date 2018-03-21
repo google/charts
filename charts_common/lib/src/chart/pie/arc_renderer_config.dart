@@ -44,13 +44,18 @@ class ArcRendererConfig extends LayoutViewConfig
   /// Stroke color of the border of the arcs.
   final Color stroke;
 
+  /// Color of the "no data" state for the chart, used when an empty series is
+  /// drawn.
+  final Color noDataColor;
+
   ArcRendererConfig(
       {this.customRendererId,
       this.arcRatio,
       this.arcWidth,
       this.strokeWidthPx = 2.0,
       this.symbolRenderer})
-      : this.stroke = StyleFactory.style.white;
+      : this.stroke = StyleFactory.style.white,
+        this.noDataColor = StyleFactory.style.noDataColor;
 
   @override
   ArcRenderer build() {

@@ -35,8 +35,8 @@ class PanBehavior extends ChartBehavior<common.PanBehavior> {
   Set<GestureType> get desiredGestures => _desiredGestures;
 
   @override
-  common.PanBehavior createCommonBehavior() {
-    return new FlutterPanBehavior();
+  common.PanBehavior<T, D> createCommonBehavior<T, D>() {
+    return new FlutterPanBehavior<T, D>();
   }
 
   @override
@@ -53,7 +53,7 @@ class PanBehavior extends ChartBehavior<common.PanBehavior> {
 }
 
 /// Adds fling gesture support to [common.PanBehavior].
-class FlutterPanBehavior<T, D> extends common.PanBehavior
+class FlutterPanBehavior<T, D> extends common.PanBehavior<T, D>
     implements ChartStateBehavior {
   BaseChartState _chartState;
 

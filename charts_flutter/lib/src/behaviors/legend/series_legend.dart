@@ -119,7 +119,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
       this.insideJustification});
 
   @override
-  common.SeriesLegend createCommonBehavior() => new _FlutterSeriesLegend(this);
+  common.SeriesLegend<T, D> createCommonBehavior<T, D>() =>
+      new _FlutterSeriesLegend<T, D>(this);
 
   @override
   void updateCommonBehavior(common.SeriesLegend commonBehavior) {
@@ -138,7 +139,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
 }
 
 /// Flutter specific wrapper on the common Legend for building content.
-class _FlutterSeriesLegend extends common.SeriesLegend
+class _FlutterSeriesLegend<T, D> extends common.SeriesLegend<T, D>
     implements BuildableBehavior {
   SeriesLegend config;
 

@@ -1,5 +1,3 @@
-package third_party.dart.charts_flutter.examples.android
-
 buildscript {
     repositories {
         google()

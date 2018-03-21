@@ -45,8 +45,8 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
       : defaultColor = common.MaterialPalette.gray.shade100;
 
   @override
-  common.RangeAnnotation createCommonBehavior() =>
-      new common.RangeAnnotation(annotations,
+  common.RangeAnnotation<T, D> createCommonBehavior<T, D>() =>
+      new common.RangeAnnotation<T, D>(annotations,
           defaultColor: defaultColor, extendAxis: extendAxis);
 
   @override

@@ -100,8 +100,8 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   }
 
   @override
-  common.SelectNearest createCommonBehavior() {
-    return new common.SelectNearest(
+  common.SelectNearest<T, D> createCommonBehavior<T, D>() {
+    return new common.SelectNearest<T, D>(
         selectionModelType: selectionModelType,
         eventTrigger: eventTrigger,
         expandToDomain: expandToDomain,

@@ -93,30 +93,49 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
       var measures = [];
 
-      for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
-        T datum = series.data[arcIndex];
-
-        var measure = measureFn(datum, arcIndex);
-        measures.add(measure);
-        if (measure == null) {
-          continue;
-        }
-
-        var angle = (measure / seriesTotal) * 2 * PI;
+      if (series.data.length == 0) {
+        // If the series has no data, generate an empty arc element that
+        // occupies the entire chart.
+        //
+        // Use a tiny epsilon difference to ensure that the canvas renders a
+        // "full" circle, in the correct direction.
+        var angle = 2 * PI * .999999;
         var endAngle = startAngle + angle;
 
         var details = new _ArcRendererElement<T, D>();
         details.startAngle = startAngle;
         details.endAngle = endAngle;
-        details.key = arcIndex;
-        details.measure = measure;
+        details.key = 0;
+        details.measure = 0.0;
 
         elements.add(details);
+      } else {
+        // Otherwise, generate an arc element per datum.
+        for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
+          T datum = series.data[arcIndex];
 
-        // Update the starting angle for the next datum in the series.
-        startAngle = endAngle;
+          var measure = measureFn(datum, arcIndex);
+          measures.add(measure);
+          if (measure == null) {
+            continue;
+          }
 
-        totalAngle = totalAngle + angle;
+          var angle = (measure / seriesTotal) * 2 * PI;
+          var endAngle = startAngle + angle;
+
+          var details = new _ArcRendererElement<T, D>();
+          details.startAngle = startAngle;
+          details.endAngle = endAngle;
+          details.key = arcIndex;
+          details.measure = measure;
+
+          elements.add(details);
+
+          // Update the starting angle for the next datum in the series.
+          startAngle = endAngle;
+
+          totalAngle = totalAngle + angle;
+        }
       }
 
       series.setAttr(arcElementsKey, elements);
@@ -154,14 +173,14 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
       var elementsList = series.getAttr(arcElementsKey);
 
-      for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
-        T datum = series.data[arcIndex];
-        final details = elementsList[arcIndex];
-        D domainValue = domainFn(datum, arcIndex);
+      if (series.data.length == 0) {
+        // If the series is empty, set up the "no data" arc element. This should
+        // occupy the entire chart, and use the chart style's no data color.
+        final details = elementsList[0];
 
-        var arcKey = domainValue.toString();
+        var arcKey = '0';
 
-        // If we already have a AnimatingArc for that index, use it.
+        // If we already have an AnimatingArc for that index, use it.
         var animatingArc = arcList.arcs.firstWhere(
             (_AnimatedArc arc) => arc.key == arcKey,
             orElse: () => null);
@@ -169,21 +188,17 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
         arcList.center = center;
         arcList.radius = radius;
         arcList.innerRadius = innerRadius;
-        arcList.stroke = config.stroke;
+        arcList.stroke = config.noDataColor;
         arcList.strokeWidthPx = config.strokeWidthPx;
+        arcList.strokeWidthPx = 0.0;
 
-        // If we don't have any existing arc element, create a new arc and have
-        // it animate in from 0.
+        // If we don't have any existing arc element, create a new arc. Unlike
+        // real arcs, we should not animate the no data state in from 0.
         if (animatingArc == null) {
-          animatingArc = new _AnimatedArc<T, D>(key: arcKey, datum: datum)
-            ..setNewTarget(new _ArcRendererElement()
-              ..color = colorFn(datum, arcIndex)
-              ..startAngle = 0.0
-              ..endAngle = 0.0);
-
+          animatingArc = new _AnimatedArc<T, D>(key: arcKey, datum: null);
           arcList.arcs.add(animatingArc);
         } else {
-          animatingArc.datum = datum;
+          animatingArc.datum = null;
         }
 
         // Update the set of arcs that still exist in the series data.
@@ -192,11 +207,56 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
         // Get the arcElement we are going to setup.
         // Optimization to prevent allocation in non-animating case.
         final arcElement = new _ArcRendererElement()
-          ..color = colorFn(datum, arcIndex)
+          ..color = config.noDataColor
           ..startAngle = details.startAngle
           ..endAngle = details.endAngle;
 
         animatingArc.setNewTarget(arcElement);
+      } else {
+        for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
+          T datum = series.data[arcIndex];
+          final details = elementsList[arcIndex];
+          D domainValue = domainFn(datum, arcIndex);
+
+          var arcKey = domainValue.toString();
+
+          // If we already have an AnimatingArc for that index, use it.
+          var animatingArc = arcList.arcs.firstWhere(
+              (_AnimatedArc arc) => arc.key == arcKey,
+              orElse: () => null);
+
+          arcList.center = center;
+          arcList.radius = radius;
+          arcList.innerRadius = innerRadius;
+          arcList.stroke = config.stroke;
+          arcList.strokeWidthPx = config.strokeWidthPx;
+
+          // If we don't have any existing arc element, create a new arc and
+          // have it animate in from 0.
+          if (animatingArc == null) {
+            animatingArc = new _AnimatedArc<T, D>(key: arcKey, datum: datum)
+              ..setNewTarget(new _ArcRendererElement()
+                ..color = colorFn(datum, arcIndex)
+                ..startAngle = 0.0
+                ..endAngle = 0.0);
+
+            arcList.arcs.add(animatingArc);
+          } else {
+            animatingArc.datum = datum;
+          }
+
+          // Update the set of arcs that still exist in the series data.
+          _currentKeys.add(arcKey);
+
+          // Get the arcElement we are going to setup.
+          // Optimization to prevent allocation in non-animating case.
+          final arcElement = new _ArcRendererElement()
+            ..color = colorFn(datum, arcIndex)
+            ..startAngle = details.startAngle
+            ..endAngle = details.endAngle;
+
+          animatingArc.setNewTarget(arcElement);
+        }
       }
     });
 
