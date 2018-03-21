@@ -109,7 +109,7 @@ void main() {
         .thenReturn(domainOffset + 10.0 + 50.0);
     when(domainAxis.getLocation('camp1'))
         .thenReturn(domainOffset + 10.0 + 100.0 + 10.0 + 50.0);
-    when(domainAxis.getLocation('outsideViewport')).thenReturn(-51);
+    when(domainAxis.getLocation('outsideViewport')).thenReturn(-51.0);
 
     if (vertical) {
       when(domainAxis.getDomain(100.0)).thenReturn('camp0');
