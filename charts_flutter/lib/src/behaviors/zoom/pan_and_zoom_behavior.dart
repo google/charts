@@ -29,8 +29,8 @@ class PanAndZoomBehavior extends ChartBehavior<common.PanAndZoomBehavior> {
   Set<GestureType> get desiredGestures => _desiredGestures;
 
   @override
-  common.PanAndZoomBehavior createCommonBehavior() {
-    return new FlutterPanAndZoomBehavior();
+  common.PanAndZoomBehavior<T, D> createCommonBehavior<T, D>() {
+    return new FlutterPanAndZoomBehavior<T, D>();
   }
 
   @override
@@ -48,5 +48,5 @@ class PanAndZoomBehavior extends ChartBehavior<common.PanAndZoomBehavior> {
 
 /// Adds fling gesture support to [common.PanAndZoomBehavior], by way of
 /// [FlutterPanBehavior].
-class FlutterPanAndZoomBehavior<T, D> extends common.PanAndZoomBehavior
+class FlutterPanAndZoomBehavior<T, D> extends common.PanAndZoomBehavior<T, D>
     with FlutterPanBehavior {}

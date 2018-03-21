@@ -57,8 +57,8 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
       this.showVerticalFollowLine = true});
 
   @override
-  common.LinePointHighlighter createCommonBehavior() =>
-      new common.LinePointHighlighter(
+  common.LinePointHighlighter<T, D> createCommonBehavior<T, D>() =>
+      new common.LinePointHighlighter<T, D>(
           selectionModelType: selectionModelType,
           defaultRadiusPx: defaultRadiusPx,
           radiusPaddingPx: radiusPaddingPx,
