@@ -118,6 +118,9 @@ abstract class BaseChart<T, D> {
     return _selectionModels.putIfAbsent(type, () => new SelectionModel<T, D>());
   }
 
+  /// Returns a list of datum details from selection model of [type].
+  List<DatumDetails<T, D>> getDatumDetails(SelectionModelType type);
+
   //
   // Renderer methods
   //
@@ -293,6 +296,12 @@ abstract class BaseChart<T, D> {
 
     // Allow listeners to manipulate the seriesList.
     fireOnDraw(processedSeriesList);
+
+    // Set an index on the series list.
+    // This can be used by listeners of selection to determine the order of
+    // series, because the selection details are not returned in this order.
+    int seriesIndex = 0;
+    processedSeriesList.forEach((series) => series.seriesIndex = seriesIndex++);
 
     _currentSeriesList = processedSeriesList;
 

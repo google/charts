@@ -27,6 +27,8 @@ export 'src/chart/common/base_chart.dart' show BaseChart, LifecycleListener;
 export 'src/chart/common/canvas_shapes.dart'
     show CanvasBarStack, CanvasPie, CanvasPieSlice, CanvasRect;
 export 'src/chart/common/chart_context.dart' show ChartContext;
+export 'src/chart/common/datum_details.dart'
+    show DatumDetails, DomainFormatter, MeasureFormatter;
 export 'src/chart/common/series_renderer.dart' show SeriesRenderer;
 export 'src/chart/common/series_renderer_config.dart'
     show RendererAttributeKey, SeriesRendererConfig;
@@ -75,6 +77,7 @@ export 'src/chart/bar/bar_renderer_decorator.dart' show BarRendererDecorator;
 export 'src/chart/bar/bar_label_decorator.dart' show BarLabelDecorator;
 export 'src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType, BaseBarRendererConfig;
+export 'src/chart/cartesian/axis/axis.dart' show domainAxisKey, measureAxisKey;
 export 'src/chart/cartesian/axis/spec/axis_spec.dart' show AxisSpec;
 export 'src/chart/cartesian/cartesian_chart.dart' show CartesianChart;
 export 'src/chart/cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;

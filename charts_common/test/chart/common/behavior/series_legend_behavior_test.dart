@@ -17,6 +17,7 @@ import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
 import 'package:charts_common/src/chart/common/series_renderer.dart';
 import 'package:charts_common/src/chart/common/behavior/legend/legend.dart';
+import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
 import 'package:charts_common/src/common/quantum_palette.dart';
 import 'package:charts_common/src/data/series.dart';
@@ -25,6 +26,10 @@ import 'package:test/test.dart';
 class ConcreteChart extends BaseChart<MyRow, String> {
   @override
   SeriesRenderer<MyRow, String> makeDefaultRenderer() => null;
+
+  @override
+  List<DatumDetails<MyRow, String>> getDatumDetails(SelectionModelType _) =>
+      null;
 
   void callOnPostProcess(List<MutableSeries<MyRow, String>> seriesList) {
     fireOnPostprocess(seriesList);

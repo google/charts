@@ -15,8 +15,10 @@
 
 import 'arc_renderer.dart' show ArcRenderer;
 import '../common/base_chart.dart' show BaseChart;
+import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show MutableSeries;
 import '../common/series_renderer.dart' show SeriesRenderer;
+import '../common/selection_model/selection_model.dart' show SelectionModelType;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
 
 class PieChart<T, D> extends BaseChart<T, D> {
@@ -45,4 +47,7 @@ class PieChart<T, D> extends BaseChart<T, D> {
     return new ArcRenderer<T, D>()
       ..rendererId = SeriesRenderer.defaultRendererId;
   }
+
+  @override
+  List<DatumDetails<T, D>> getDatumDetails(SelectionModelType type) => [];
 }

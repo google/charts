@@ -24,6 +24,7 @@ class MutableSeries<T, D> extends ImmutableSeries<T, D> {
   String displayName;
   String seriesCategory;
   bool overlaySeries;
+  int seriesIndex;
 
   List<T> data;
 
@@ -74,6 +75,7 @@ class MutableSeries<T, D> extends ImmutableSeries<T, D> {
     displayName = other.displayName;
     seriesCategory = other.seriesCategory;
     overlaySeries = other.overlaySeries;
+    seriesIndex = other.seriesIndex;
 
     data = other.data;
     domainFn = other.domainFn;
@@ -116,6 +118,7 @@ abstract class ImmutableSeries<T, D> {
   String get displayName;
   String get seriesCategory;
   bool get overlaySeries;
+  int get seriesIndex;
 
   List<T> get data;
 

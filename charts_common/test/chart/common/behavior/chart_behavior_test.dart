@@ -18,6 +18,9 @@ import 'package:mockito/mockito.dart';
 
 import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/behavior/chart_behavior.dart';
+import 'package:charts_common/src/chart/common/datum_details.dart';
+import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
+
 import 'package:test/test.dart';
 
 class MockBehavior extends Mock implements ChartBehavior<String, String> {}
@@ -43,6 +46,10 @@ class ParentBehavior implements ChartBehavior<String, String> {
 class ConcreteChart extends BaseChart<String, String> {
   @override
   SeriesRenderer<String, String> makeDefaultRenderer() => null;
+
+  @override
+  List<DatumDetails<String, String>> getDatumDetails(SelectionModelType _) =>
+      null;
 }
 
 void main() {
