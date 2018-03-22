@@ -33,7 +33,7 @@ import 'package:flutter/material.dart' show StatefulWidget;
 import 'base_chart_state.dart' show BaseChartState;
 
 @immutable
-abstract class BaseChart extends StatefulWidget {
+abstract class BaseChart<T, D> extends StatefulWidget {
   /// Series list to draw.
   final List<common.Series> seriesList;
 
@@ -83,7 +83,7 @@ abstract class BaseChart extends StatefulWidget {
   BaseChartState createState() => new BaseChartState();
 
   /// Creates and returns a [common.BaseChart].
-  common.BaseChart createCommonChart(BaseChartState chartState);
+  common.BaseChart<T, D> createCommonChart(BaseChartState chartState);
 
   /// Updates the [common.BaseChart].
   void updateCommonChart(

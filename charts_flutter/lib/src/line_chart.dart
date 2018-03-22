@@ -14,14 +14,14 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show LineChart, BaseChart, RTLSpec, Series, LineRendererConfig;
+    show LineChart, RTLSpec, Series, LineRendererConfig;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'base_chart.dart' show BaseChart, LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class LineChart extends BaseChart {
+class LineChart<T> extends BaseChart<T, num> {
   LineChart(
     List<common.Series> seriesList, {
     bool animate,
@@ -45,8 +45,8 @@ class LineChart extends BaseChart {
         );
 
   @override
-  common.BaseChart createCommonChart(BaseChartState chartState) =>
-      new common.LineChart(layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.LineChart<T> createCommonChart(BaseChartState chartState) =>
+      new common.LineChart<T>(layoutConfig: layoutConfig?.commonLayoutConfig);
 
   @override
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
