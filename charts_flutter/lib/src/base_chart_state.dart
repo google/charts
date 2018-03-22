@@ -31,7 +31,7 @@ import 'chart_state.dart' show ChartState;
 import 'chart_gesture_detector.dart' show ChartGestureDetector;
 import 'widget_layout_delegate.dart';
 
-class BaseChartState extends State<BaseChart>
+class BaseChartState<T, D> extends State<BaseChart<T, D>>
     with TickerProviderStateMixin
     implements ChartState {
   // Animation
@@ -65,7 +65,7 @@ class BaseChartState extends State<BaseChart>
 
   /// Builds the common chart canvas widget.
   Widget _buildChartContainer() {
-    final chartContainer = new ChartContainer(
+    final chartContainer = new ChartContainer<T, D>(
         oldChartWidget: _oldWidget,
         chartWidget: widget,
         chartState: this,

@@ -80,7 +80,7 @@ abstract class BaseChart<T, D> extends StatefulWidget {
             animationDuration ?? const Duration(milliseconds: 750);
 
   @override
-  BaseChartState createState() => new BaseChartState();
+  BaseChartState<T, D> createState() => new BaseChartState<T, D>();
 
   /// Creates and returns a [common.BaseChart].
   common.BaseChart<T, D> createCommonChart(BaseChartState chartState);

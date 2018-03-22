@@ -29,8 +29,8 @@ import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../../common/color.dart' show Color;
 
 /// Renders series data as a series of bars.
-class BarRenderer<T, D>
-    extends BaseBarRenderer<T, D, _BarRendererElement, _AnimatedBar<T, D>> {
+class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
+    _AnimatedBar<T, D>> {
   /// If we are grouped, use this spacing between the bars in a group.
   final _barGroupInnerPadding = 2;
 
@@ -65,8 +65,8 @@ class BarRenderer<T, D>
   }
 
   @override
-  _BarRendererElement getBaseDetails(T datum, int index) {
-    return new _BarRendererElement()..roundPx = _roundingRadiusPx;
+  _BarRendererElement<T, D> getBaseDetails(T datum, int index) {
+    return new _BarRendererElement<T, D>()..roundPx = _roundingRadiusPx;
   }
 
   bool get rtl => _chart.context.rtl;
@@ -79,7 +79,7 @@ class BarRenderer<T, D>
       ImmutableSeries<T, D> series,
       T datum,
       Color color,
-      _BarRendererElement details,
+      _BarRendererElement<T, D> details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
       int domainWidth,
@@ -112,9 +112,9 @@ class BarRenderer<T, D>
   /// Generates a [_BarRendererElement] to represent the rendering data for one
   /// bar on the chart.
   @override
-  _BarRendererElement makeBarRendererElement(
+  _BarRendererElement<T, D> makeBarRendererElement(
       {Color color,
-      _BarRendererElement details,
+      _BarRendererElement<T, D> details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
       int domainWidth,
@@ -126,7 +126,7 @@ class BarRenderer<T, D>
       double strokeWidthPx,
       int barGroupIndex,
       int numBarGroups}) {
-    return new _BarRendererElement()
+    return new _BarRendererElement<T, D>()
       ..color = color
       ..roundPx = details.roundPx
       ..measureAxisPosition = measureAxisPosition
@@ -154,7 +154,7 @@ class BarRenderer<T, D>
 
   @override
   void paintBar(ChartCanvas canvas, double animationPercent,
-      Iterable<_BarRendererElement> barElements) {
+      Iterable<_BarRendererElement<T, D>> barElements) {
     final bars = <CanvasRect>[];
 
     // When adjusting bars for stacked bar padding, do not modify the first bar
@@ -163,7 +163,7 @@ class BarRenderer<T, D>
     final unmodifiedBar =
         renderingVertically ? barElements.first : barElements.last;
 
-    for (_BarRendererElement bar in barElements) {
+    for (var bar in barElements) {
       var bounds = bar.bounds;
 
       if (bar != unmodifiedBar) {
@@ -260,14 +260,14 @@ class BarRenderer<T, D>
 
 abstract class ImmutableBarRendererElement<T, D> {
   ImmutableSeries<T, D> get series;
-  D get datum;
+  T get datum;
   Rectangle<int> get bounds;
 }
 
 class _BarRendererElement<T, D> extends BaseBarRendererElement
-    implements ImmutableBarRendererElement {
+    implements ImmutableBarRendererElement<T, D> {
   ImmutableSeries<T, D> series;
-  D datum;
+  T datum;
   Rectangle<int> bounds;
   int roundPx;
 
@@ -309,7 +309,8 @@ class _BarRendererElement<T, D> extends BaseBarRendererElement
   }
 }
 
-class _AnimatedBar<T, D> extends BaseAnimatedBar<T, D, _BarRendererElement> {
+class _AnimatedBar<T, D>
+    extends BaseAnimatedBar<T, D, _BarRendererElement<T, D>> {
   _AnimatedBar(
       {@required String key,
       @required T datum,
@@ -329,8 +330,8 @@ class _AnimatedBar<T, D> extends BaseAnimatedBar<T, D, _BarRendererElement> {
         0);
   }
 
-  _BarRendererElement getCurrentBar(double animationPercent) {
-    final _BarRendererElement bar = super.getCurrentBar(animationPercent);
+  _BarRendererElement<T, D> getCurrentBar(double animationPercent) {
+    final _BarRendererElement<T, D> bar = super.getCurrentBar(animationPercent);
 
     // Update with series and datum information to pass to bar decorator.
     bar.series = series;
@@ -340,6 +341,6 @@ class _AnimatedBar<T, D> extends BaseAnimatedBar<T, D, _BarRendererElement> {
   }
 
   @override
-  _BarRendererElement clone(_BarRendererElement other) =>
-      new _BarRendererElement.clone(other);
+  _BarRendererElement<T, D> clone(_BarRendererElement other) =>
+      new _BarRendererElement<T, D>.clone(other);
 }

@@ -24,7 +24,7 @@ import '../../common/text_style.dart' show TextStyle;
 import 'bar_renderer.dart' show ImmutableBarRendererElement;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 
-class BarLabelDecorator extends BarRendererDecorator {
+class BarLabelDecorator<T, D> extends BarRendererDecorator<T, D> {
   // Default configuration
   static const _defaultLabelPosition = BarLabelPosition.auto;
   static const _defaultLabelPadding = 5;
@@ -60,7 +60,7 @@ class BarLabelDecorator extends BarRendererDecorator {
             outsideLabelStyleSpec ?? _defaultOutsideLabelStyle;
 
   @override
-  void decorate(Iterable<ImmutableBarRendererElement> barElements,
+  void decorate(Iterable<ImmutableBarRendererElement<T, D>> barElements,
       ChartCanvas canvas, GraphicsFactory graphicsFactory,
       {@required Rectangle drawBounds,
       @required double animationPercent,
@@ -81,7 +81,7 @@ class BarLabelDecorator extends BarRendererDecorator {
     final outsideLabelStyle =
         _getTextStyle(graphicsFactory, outsideLabelStyleSpec);
 
-    for (ImmutableBarRendererElement element in barElements) {
+    for (var element in barElements) {
       final labelFn = element.series.labelAccessorFn;
       final label = (labelFn != null) ? labelFn(element.datum, null) : null;
 
