@@ -14,13 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show
-        AxisSpec,
-        BaseChart,
-        DateTimeFactory,
-        LineRendererConfig,
-        Series,
-        TimeSeriesChart;
+    show AxisSpec, DateTimeFactory, LineRendererConfig, Series, TimeSeriesChart;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'cartesian_chart.dart' show CartesianChart;
@@ -28,7 +22,7 @@ import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class TimeSeriesChart extends CartesianChart {
+class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
   final common.DateTimeFactory dateTimeFactory;
 
   /// Create a [TimeSeriesChart].
@@ -63,8 +57,8 @@ class TimeSeriesChart extends CartesianChart {
         );
 
   @override
-  common.BaseChart createCommonChart(BaseChartState chartState) =>
-      new common.TimeSeriesChart(
+  common.TimeSeriesChart<T> createCommonChart(BaseChartState chartState) =>
+      new common.TimeSeriesChart<T>(
           layoutConfig: layoutConfig?.commonLayoutConfig);
 
   @override

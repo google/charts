@@ -53,7 +53,7 @@ class ChartContainer<T, D> extends CustomPaint {
 
   @override
   RenderCustomPaint createRenderObject(BuildContext context) {
-    return new ChartContainerRenderObject()..reconfigure(this);
+    return new ChartContainerRenderObject<T, D>()..reconfigure(this);
   }
 
   @override

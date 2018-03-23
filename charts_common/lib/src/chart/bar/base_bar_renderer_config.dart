@@ -38,8 +38,8 @@ import '../../common/symbol_renderer.dart' show SymbolRenderer;
 ///   offsets overlap. Note that bars for each series will be rendered in order,
 ///   such that bars from the last series will be "on top" of bars from previous
 ///   series.
-abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
-    implements SeriesRendererConfig<dynamic, D> {
+abstract class BaseBarRendererConfig<T, D> extends LayoutViewConfig
+    implements SeriesRendererConfig<T, D> {
   final String customRendererId;
 
   final SymbolRenderer symbolRenderer;

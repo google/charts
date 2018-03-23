@@ -17,14 +17,19 @@ import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
 import 'package:charts_common/src/chart/common/series_renderer.dart';
 import 'package:charts_common/src/chart/common/behavior/legend/legend.dart';
+import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
-import 'package:charts_common/src/common/quantum_palette.dart';
+import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:test/test.dart';
 
 class ConcreteChart extends BaseChart<MyRow, String> {
   @override
   SeriesRenderer<MyRow, String> makeDefaultRenderer() => null;
+
+  @override
+  List<DatumDetails<MyRow, String>> getDatumDetails(SelectionModelType _) =>
+      null;
 
   void callOnPostProcess(List<MutableSeries<MyRow, String>> seriesList) {
     fireOnPostprocess(seriesList);
@@ -42,6 +47,9 @@ void main() {
   final s2D2 = new MyRow('s2d2', 22);
   final s2D3 = new MyRow('s2d3', 23);
 
+  final blue = new Color(r: 0x21, g: 0x96, b: 0xF3);
+  final red = new Color(r: 0xF4, g: 0x43, b: 0x36);
+
   ConcreteChart chart;
 
   setUp(() {
@@ -52,7 +60,7 @@ void main() {
         data: [s1D1, s1D2, s1D3],
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
-        colorFn: (_, __) => QuantumPalette.googleBlue.shadeDefault))
+        colorFn: (_, __) => blue))
       ..measureFn = (_, __) => 0.0;
 
     series2 = new MutableSeries(new Series<MyRow, String>(
@@ -60,7 +68,7 @@ void main() {
         data: [s2D1, s2D2, s2D3],
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
-        colorFn: (_, __) => QuantumPalette.googleRed.shadeDefault))
+        colorFn: (_, __) => red))
       ..measureFn = (_, __) => 0.0;
   });
 
@@ -76,14 +84,12 @@ void main() {
     expect(legendEntries, hasLength(2));
     expect(legendEntries[0].series, equals(series1));
     expect(legendEntries[0].label, equals('s1'));
-    expect(
-        legendEntries[0].color, equals(QuantumPalette.googleBlue.shadeDefault));
+    expect(legendEntries[0].color, equals(blue));
     expect(legendEntries[0].isSelected, isFalse);
 
     expect(legendEntries[1].series, equals(series2));
     expect(legendEntries[1].label, equals('s2'));
-    expect(
-        legendEntries[1].color, equals(QuantumPalette.googleRed.shadeDefault));
+    expect(legendEntries[1].color, equals(red));
     expect(legendEntries[1].isSelected, isFalse);
   });
 
@@ -103,14 +109,12 @@ void main() {
     expect(legendEntries, hasLength(2));
     expect(legendEntries[0].series, equals(series1));
     expect(legendEntries[0].label, equals('s1'));
-    expect(
-        legendEntries[0].color, equals(QuantumPalette.googleBlue.shadeDefault));
+    expect(legendEntries[0].color, equals(blue));
     expect(legendEntries[0].isSelected, isTrue);
 
     expect(legendEntries[1].series, equals(series2));
     expect(legendEntries[1].label, equals('s2'));
-    expect(
-        legendEntries[1].color, equals(QuantumPalette.googleRed.shadeDefault));
+    expect(legendEntries[1].color, equals(red));
     expect(legendEntries[1].isSelected, isFalse);
   });
 }

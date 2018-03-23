@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show PI;
+
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/symbol_renderer.dart';
 import '../../common/color.dart' show Color;
@@ -38,6 +40,12 @@ class ArcRendererConfig extends LayoutViewConfig
   /// If arcRatio is set, this value will be ignored.
   final int arcWidth;
 
+  /// Start angle for pie slices, in radians.
+  ///
+  /// Angles are defined from the positive x axis in Cartesian space. The
+  /// default startAngle is -π/2.
+  final double startAngle;
+
   /// Stroke width of the border of the arcs.
   final double strokeWidthPx;
 
@@ -52,6 +60,7 @@ class ArcRendererConfig extends LayoutViewConfig
       {this.customRendererId,
       this.arcRatio,
       this.arcWidth,
+      this.startAngle = -PI / 2,
       this.strokeWidthPx = 2.0,
       this.symbolRenderer})
       : this.stroke = StyleFactory.style.white,

@@ -29,7 +29,7 @@ import 'base_chart.dart' show BaseChart, LayoutConfig;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
 @immutable
-abstract class CartesianChart extends BaseChart {
+abstract class CartesianChart<T, D> extends BaseChart<T, D> {
   final common.AxisSpec domainAxis;
   final common.AxisSpec primaryMeasureAxis;
   final common.AxisSpec secondaryMeasureAxis;

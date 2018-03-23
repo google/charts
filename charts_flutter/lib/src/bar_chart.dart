@@ -20,7 +20,6 @@ import 'package:charts_common/common.dart' as common
         BarGroupingType,
         BarRendererConfig,
         BarRendererDecorator,
-        BaseChart,
         RTLSpec,
         Series,
         SeriesRendererConfig;
@@ -34,7 +33,7 @@ import 'selection_model_config.dart' show SelectionModelConfig;
 import 'symbol_renderer.dart' show RoundedRectSymbolRenderer;
 
 @immutable
-class BarChart extends CartesianChart {
+class BarChart<T> extends CartesianChart<T, String> {
   final bool vertical;
   final common.BarRendererDecorator barRendererDecorator;
 
@@ -46,7 +45,7 @@ class BarChart extends CartesianChart {
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
     common.BarGroupingType barGroupingType,
-    common.BarRendererConfig defaultRenderer,
+    common.BarRendererConfig<T> defaultRenderer,
     List<common.SeriesRendererConfig> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
@@ -63,7 +62,7 @@ class BarChart extends CartesianChart {
           primaryMeasureAxis: primaryMeasureAxis,
           secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer ??
-              new common.BarRendererConfig(
+              new common.BarRendererConfig<T>(
                   groupingType: barGroupingType,
                   barRendererDecorator: barRendererDecorator,
                   symbolRenderer: new RoundedRectSymbolRenderer()),
@@ -76,8 +75,8 @@ class BarChart extends CartesianChart {
         );
 
   @override
-  common.BaseChart createCommonChart(BaseChartState chartState) =>
-      new common.BarChart(
+  common.BarChart<T> createCommonChart(BaseChartState chartState) =>
+      new common.BarChart<T>(
           vertical: vertical, layoutConfig: layoutConfig?.commonLayoutConfig);
 
   @override

@@ -30,8 +30,10 @@ import 'axis/draw_strategy/gridline_draw_strategy.dart'
 import '../bar/bar_renderer.dart' show BarRenderer;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/chart_context.dart' show ChartContext;
+import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show MutableSeries;
 import '../common/series_renderer.dart' show SeriesRenderer;
+import '../common/selection_model/selection_model.dart' show SelectionModelType;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/rtl_spec.dart' show AxisPosition;
@@ -227,5 +229,37 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
     fireOnAxisConfigured();
 
     super.onPostLayout(rendererToSeriesList);
+  }
+
+  /// Returns a list of datum details from selection model of [type].
+  @override
+  List<DatumDetails<T, D>> getDatumDetails(SelectionModelType type) {
+    final entries = <DatumDetails<T, D>>[];
+
+    getSelectionModel(type).selectedDatum.forEach((seriesDatum) {
+      final series = seriesDatum.series;
+      final datum = seriesDatum.datum;
+
+      final domain = series.domainFn(datum, null);
+      final measure = series.measureFn(datum, null);
+      final color = series.colorFn(datum, null);
+
+      final x =
+          series.getAttr(domainAxisKey).getLocation(series.domainFn(datum, -1));
+      final y = series
+          .getAttr(measureAxisKey)
+          .getLocation(series.measureFn(datum, -1));
+
+      entries.add(new DatumDetails(
+          datum: datum,
+          domain: domain,
+          measure: measure,
+          series: series,
+          color: color,
+          chartX: x,
+          chartY: y));
+    });
+
+    return entries;
   }
 }
