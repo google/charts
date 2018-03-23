@@ -98,7 +98,7 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
   ///     Setting it to false used different palettes (ie: s1 uses Blue500,
   ///     s2 uses Red500),
   @protected
-  assignMissingColors(Iterable<MutableSeries> seriesList,
+  assignMissingColors(Iterable<MutableSeries<T, D>> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
     const defaultCategory = '__default__';
 
@@ -108,7 +108,7 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
     int maxMissing = 0;
     bool hasSpecifiedCategory = false;
 
-    seriesList.forEach((MutableSeries series) {
+    seriesList.forEach((MutableSeries<T, D> series) {
       if (series.colorFn == null) {
         // If there is no category, give it a default category to match logic.
         String category = series.seriesCategory;
