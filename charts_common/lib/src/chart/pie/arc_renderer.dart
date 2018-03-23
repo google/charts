@@ -87,7 +87,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
       // On the canvas, arc measurements are defined as angles from the positive
       // x axis. Start our first slice at the positive y axis instead.
-      var startAngle = -PI / 2;
+      var startAngle = config.startAngle;
 
       var totalAngle = 0.0;
 
@@ -178,7 +178,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
         // occupy the entire chart, and use the chart style's no data color.
         final details = elementsList[0];
 
-        var arcKey = '0';
+        var arcKey = '__no_data__';
 
         // If we already have an AnimatingArc for that index, use it.
         var animatingArc = arcList.arcs.firstWhere(
@@ -195,7 +195,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
         // If we don't have any existing arc element, create a new arc. Unlike
         // real arcs, we should not animate the no data state in from 0.
         if (animatingArc == null) {
-          animatingArc = new _AnimatedArc<T, D>(key: arcKey, datum: null);
+          animatingArc = new _AnimatedArc<T, D>(arcKey, null);
           arcList.arcs.add(animatingArc);
         } else {
           animatingArc.datum = null;
@@ -213,6 +213,8 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
         animatingArc.setNewTarget(arcElement);
       } else {
+        var previousEndAngle = config.startAngle;
+
         for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
           T datum = series.data[arcIndex];
           final details = elementsList[arcIndex];
@@ -232,17 +234,21 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
           arcList.strokeWidthPx = config.strokeWidthPx;
 
           // If we don't have any existing arc element, create a new arc and
-          // have it animate in from 0.
+          // have it animate in from the position of the previous arc's end
+          // angle. If there were no previous arcs, then animate everything in
+          // from 0.
           if (animatingArc == null) {
-            animatingArc = new _AnimatedArc<T, D>(key: arcKey, datum: datum)
+            animatingArc = new _AnimatedArc<T, D>(arcKey, datum)
               ..setNewTarget(new _ArcRendererElement()
                 ..color = colorFn(datum, arcIndex)
-                ..startAngle = 0.0
-                ..endAngle = 0.0);
+                ..startAngle = previousEndAngle
+                ..endAngle = previousEndAngle);
 
             arcList.arcs.add(animatingArc);
           } else {
             animatingArc.datum = datum;
+
+            previousEndAngle = animatingArc.previousArcEndAngle ?? 0.0;
           }
 
           // Update the set of arcs that still exist in the series data.
@@ -262,9 +268,28 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
     // Animate out arcs that don't exist anymore.
     _seriesArcMap.forEach((String key, _AnimatedArcList<T, D> arcList) {
-      for (var arc in arcList.arcs) {
+      for (var arcIndex = 0; arcIndex < arcList.arcs.length; arcIndex++) {
+        final arc = arcList.arcs[arcIndex];
+        final arcStartAngle = arc.previousArcStartAngle;
+
         if (_currentKeys.contains(arc.key) != true) {
-          arc.animateOut();
+          // Default to animating out to the top of the chart, clockwise, if
+          // there are no arcs that start past this arc.
+          var targetArcAngle = (2 * PI) + config.startAngle;
+
+          // Find the nearest start angle of the next arc that still exists in
+          // the data.
+          for (_AnimatedArc nextArc
+              in arcList.arcs.where((arc) => _currentKeys.contains(arc.key))) {
+            final nextArcStartAngle = nextArc.newTargetArcStartAngle;
+
+            if (arcStartAngle < nextArcStartAngle &&
+                nextArcStartAngle < targetArcAngle) {
+              targetArcAngle = nextArcStartAngle;
+            }
+          }
+
+          arc.animateOut(targetArcAngle);
         }
       }
     });
@@ -371,9 +396,12 @@ class _ArcRendererElement<T, D> {
 
   void updateAnimationPercent(_ArcRendererElement previous,
       _ArcRendererElement target, double animationPercent) {
-    // TODO: Smooth animation between angles.
-    startAngle = target.startAngle;
-    endAngle = target.endAngle;
+    startAngle =
+        ((target.startAngle - previous.startAngle) * animationPercent) +
+            previous.startAngle;
+
+    endAngle = ((target.endAngle - previous.endAngle) * animationPercent) +
+        previous.endAngle;
 
     color = getAnimatedColor(previous.color, target.color, animationPercent);
   }
@@ -399,21 +427,20 @@ class _AnimatedArc<T, D> {
   // Flag indicating whether this arc is being animated out of the chart.
   bool animatingOut = false;
 
-  _AnimatedArc({@required this.key, @required this.datum});
+  _AnimatedArc(this.key, this.datum);
 
   /// Animates a arc that was removed from the series out of the view.
   ///
   /// This should be called in place of "setNewTarget" for arcs that represent
   /// data that has been removed from the series.
   ///
-  /// Animates the height of the arc down to the measure axis position
-  /// (position of 0).
-  void animateOut() {
+  /// Animates the angle of the arc to [endAngle], in radians.
+  void animateOut(endAngle) {
     var newTarget = _currentArc.clone();
 
     // Animate the arc out by setting the angles to 0.
-    newTarget.startAngle = 0.0;
-    newTarget.endAngle = 0.0;
+    newTarget.startAngle = endAngle;
+    newTarget.endAngle = endAngle;
 
     setNewTarget(newTarget);
     animatingOut = true;
@@ -437,5 +464,23 @@ class _AnimatedArc<T, D> {
         _previousArc, _targetArc, animationPercent);
 
     return _currentArc;
+  }
+
+  /// Returns the [startAngle] of the new target element, without updating
+  /// animation state.
+  double get newTargetArcStartAngle {
+    return _targetArc != null ? _targetArc.startAngle : null;
+  }
+
+  /// Returns the [endAngle] of the new target element, without updating
+  /// animation state.
+  double get previousArcEndAngle {
+    return _previousArc != null ? _previousArc.endAngle : null;
+  }
+
+  /// Returns the [startAngle] of the previously rendered element, without
+  /// updating animation state.
+  double get previousArcStartAngle {
+    return _previousArc != null ? _previousArc.startAngle : null;
   }
 }
