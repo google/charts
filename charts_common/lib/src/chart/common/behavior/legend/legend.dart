@@ -38,7 +38,7 @@ class SeriesLegend<T, D> extends Legend<T, D> {
       : super(
             selectionModelType: selectionModelType ?? SelectionModelType.info,
             legendEntryGenerator:
-                legendEntryGenerator ?? const PerSeriesLegendEntryGenerator());
+                legendEntryGenerator ?? new PerSeriesLegendEntryGenerator());
 }
 
 /// Legend behavior for charts.
