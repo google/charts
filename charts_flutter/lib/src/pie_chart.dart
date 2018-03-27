@@ -25,7 +25,7 @@ class PieChart<T, D> extends BaseChart<T, D> {
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
-    common.ArcRendererConfig defaultRenderer,
+    common.ArcRendererConfig<T, D> defaultRenderer,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,

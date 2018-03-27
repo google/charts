@@ -37,7 +37,7 @@ const arcSeriesTotalKey =
     const AttributeKey<List<_ArcRendererElement>>('ArcRenderer.seriesTotal');
 
 class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
-  final ArcRendererConfig config;
+  final ArcRendererConfig<T, D> config;
 
   BaseChart<T, D> _chart;
 
@@ -54,7 +54,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
   // data.
   final _currentKeys = <String>[];
 
-  ArcRenderer({String rendererId, ArcRendererConfig config})
+  ArcRenderer({String rendererId, ArcRendererConfig<T, D> config})
       : config = config ?? new ArcRendererConfig(),
         super(rendererId: rendererId ?? 'arc', layoutPositionOrder: 10);
 
@@ -206,7 +206,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
         // Get the arcElement we are going to setup.
         // Optimization to prevent allocation in non-animating case.
-        final arcElement = new _ArcRendererElement()
+        final arcElement = new _ArcRendererElement<T, D>()
           ..color = config.noDataColor
           ..startAngle = details.startAngle
           ..endAngle = details.endAngle;
