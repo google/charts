@@ -25,7 +25,6 @@ import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../../common/color.dart' show Color;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import '../../data/series.dart' show AttributeKey;
 import 'line_renderer_config.dart' show LineRendererConfig;
 
@@ -50,10 +49,10 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
 
   LineRenderer({String rendererId, LineRendererConfig config})
       : this.config = config ?? new LineRendererConfig(),
-        super(rendererId: rendererId ?? 'line', layoutPositionOrder: 10);
-
-  @override
-  SymbolRenderer get symbolRenderer => config.symbolRenderer;
+        super(
+            rendererId: rendererId ?? 'line',
+            layoutPositionOrder: 10,
+            symbolRenderer: config?.symbolRenderer);
 
   void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
     assignMissingColors(seriesList, emptyCategoryUsesSinglePalette: false);

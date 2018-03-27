@@ -27,7 +27,6 @@ import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../../common/color.dart' show Color;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import '../../data/series.dart' show AttributeKey;
 
 const barGroupIndexKey = const AttributeKey<int>('BarRenderer.barGroupIndex');
@@ -92,10 +91,11 @@ abstract class BaseBarRenderer<T, D, R extends BaseBarRendererElement,
       String rendererId,
       int layoutPositionOrder})
       : this.config = config,
-        super(rendererId: rendererId, layoutPositionOrder: layoutPositionOrder);
-
-  @override
-  SymbolRenderer get symbolRenderer => config.symbolRenderer;
+        super(
+          rendererId: rendererId,
+          layoutPositionOrder: layoutPositionOrder,
+          symbolRenderer: config?.symbolRenderer,
+        );
 
   void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
     var barGroupIndex = 0;
