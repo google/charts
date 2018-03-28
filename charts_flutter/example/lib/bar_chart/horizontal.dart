@@ -35,7 +35,7 @@ class HorizontalBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // For horizontal bar charts, set the [vertical] flag to false.
-    return new charts.BarChart(
+    return new charts.BarChart<OrdinalSales>(
       seriesList,
       animate: animate,
       vertical: false,

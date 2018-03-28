@@ -38,7 +38,7 @@ class CustomMeasureTickCount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(seriesList,
+    return new charts.TimeSeriesChart<MyRow>(seriesList,
         animate: animate,
 
         /// Customize the measure axis to have 2 ticks,

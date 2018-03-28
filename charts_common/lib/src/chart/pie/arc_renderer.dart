@@ -238,7 +238,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
           // from 0.
           if (animatingArc == null) {
             animatingArc = new _AnimatedArc<T, D>(arcKey, datum)
-              ..setNewTarget(new _ArcRendererElement()
+              ..setNewTarget(new _ArcRendererElement<T, D>()
                 ..color = colorFn(datum, arcIndex)
                 ..startAngle = previousEndAngle
                 ..endAngle = previousEndAngle);
@@ -255,7 +255,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
           // Get the arcElement we are going to setup.
           // Optimization to prevent allocation in non-animating case.
-          final arcElement = new _ArcRendererElement()
+          final arcElement = new _ArcRendererElement<T, D>()
             ..color = colorFn(datum, arcIndex)
             ..startAngle = details.startAngle
             ..endAngle = details.endAngle;

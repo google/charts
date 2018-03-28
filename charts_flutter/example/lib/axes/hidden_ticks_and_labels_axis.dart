@@ -34,7 +34,7 @@ class HiddenTicksAndLabelsAxis extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart(
+    return new charts.BarChart<OrdinalSales>(
       seriesList,
       animate: animate,
 

@@ -35,7 +35,7 @@ class CustomAxisTickFormatters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(seriesList,
+    return new charts.TimeSeriesChart<MyRow>(seriesList,
         animate: animate,
         // Sets up a currency formatter for the measure axis.
         primaryMeasureAxis: new charts.NumericAxisSpec(

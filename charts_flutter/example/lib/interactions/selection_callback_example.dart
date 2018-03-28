@@ -89,7 +89,7 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
   // Listens to the underlying selection changes, and updates the information
   // relevant to building the primitive legend like information under the
   // chart.
-  _onSelectionChanged(charts.SelectionModel<TimeSeriesSales, DateTime> model) {
+  _onSelectionChanged(charts.SelectionModel model) {
     final selectedDatum = model.selectedDatum;
 
     DateTime time;
@@ -102,8 +102,7 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
     // series name for each selection point.
     if (selectedDatum.isNotEmpty) {
       time = selectedDatum.first.datum.time;
-      selectedDatum
-          .forEach((charts.SeriesDatum<TimeSeriesSales, DateTime> datumPair) {
+      selectedDatum.forEach((charts.SeriesDatum datumPair) {
         measures[datumPair.series.displayName] = datumPair.datum.sales;
       });
     }
@@ -121,7 +120,7 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
     final children = <Widget>[
       new SizedBox(
           height: 150.0,
-          child: new charts.TimeSeriesChart(
+          child: new charts.TimeSeriesChart<TimeSeriesSales>(
             widget.seriesList,
             animate: widget.animate,
             selectionModels: [

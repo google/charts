@@ -42,7 +42,7 @@ class SelectionBarHighlight extends StatelessWidget {
     //
     // [defaultInteractions] can be set to false to avoid the default
     // interactions.
-    return new charts.BarChart(
+    return new charts.BarChart<OrdinalSales>(
       seriesList,
       animate: animate,
       defaultInteractions: true,

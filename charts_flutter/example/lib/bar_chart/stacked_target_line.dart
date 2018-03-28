@@ -34,11 +34,11 @@ class StackedBarTargetLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart(seriesList,
+    return new charts.BarChart<OrdinalSales>(seriesList,
         animate: animate,
         barGroupingType: charts.BarGroupingType.stacked,
         customSeriesRenderers: [
-          new charts.BarTargetLineRendererConfig(
+          new charts.BarTargetLineRendererConfig<OrdinalSales>(
               // ID used to link series to this renderer.
               customRendererId: 'customTargetLine',
               groupingType: charts.BarGroupingType.stacked)

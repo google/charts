@@ -50,7 +50,7 @@ class RTLBarChart extends StatelessWidget {
     // chart display settings in RTL mode.
     return new Directionality(
         textDirection: TextDirection.rtl,
-        child: new charts.BarChart(
+        child: new charts.BarChart<OrdinalSales>(
           seriesList,
           animate: animate,
           vertical: false,
