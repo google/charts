@@ -46,7 +46,7 @@ class BarChart<T> extends CartesianChart<T, String> {
     common.AxisSpec secondaryMeasureAxis,
     common.BarGroupingType barGroupingType,
     common.BarRendererConfig<T> defaultRenderer,
-    List<common.SeriesRendererConfig> customSeriesRenderers,
+    List<common.SeriesRendererConfig<T, String>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,

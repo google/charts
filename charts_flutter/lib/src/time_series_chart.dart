@@ -38,7 +38,7 @@ class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
     common.AxisSpec secondaryMeasureAxis,
     common.LineRendererConfig defaultRenderer,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<T, DateTime>> selectionModels,
     LayoutConfig layoutConfig,
     this.dateTimeFactory,
     bool defaultInteractions: true,

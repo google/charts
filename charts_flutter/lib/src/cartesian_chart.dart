@@ -42,7 +42,7 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
     this.primaryMeasureAxis,
     this.secondaryMeasureAxis,
     common.SeriesRendererConfig defaultRenderer,
-    List<common.SeriesRendererConfig> customSeriesRenderers,
+    List<common.SeriesRendererConfig<T, D>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,
