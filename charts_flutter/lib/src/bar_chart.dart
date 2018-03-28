@@ -38,7 +38,7 @@ class BarChart<T> extends CartesianChart<T, String> {
   final common.BarRendererDecorator barRendererDecorator;
 
   BarChart(
-    List<common.Series> seriesList, {
+    List<common.Series<T, String>> seriesList, {
     bool animate,
     Duration animationDuration,
     common.AxisSpec domainAxis,

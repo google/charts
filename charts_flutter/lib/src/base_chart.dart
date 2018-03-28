@@ -35,7 +35,7 @@ import 'base_chart_state.dart' show BaseChartState;
 @immutable
 abstract class BaseChart<T, D> extends StatefulWidget {
   /// Series list to draw.
-  final List<common.Series> seriesList;
+  final List<common.Series<T, D>> seriesList;
 
   /// Animation transitions.
   final bool animate;
@@ -53,14 +53,14 @@ abstract class BaseChart<T, D> extends StatefulWidget {
 
   final List<ChartBehavior> behaviors;
 
-  final List<SelectionModelConfig> selectionModels;
+  final List<SelectionModelConfig<T, D>> selectionModels;
 
   // List of custom series renderers used to draw series data on the chart.
   //
   // Series assigned a rendererIdKey will be drawn with the matching renderer in
   // this list. Series without a rendererIdKey will be drawn by the default
   // renderer.
-  final List<common.SeriesRendererConfig> customSeriesRenderers;
+  final List<common.SeriesRendererConfig<T, D>> customSeriesRenderers;
 
   /// The spec to use if RTL is enabled.
   final common.RTLSpec rtlSpec;
@@ -83,11 +83,11 @@ abstract class BaseChart<T, D> extends StatefulWidget {
   BaseChartState<T, D> createState() => new BaseChartState<T, D>();
 
   /// Creates and returns a [common.BaseChart].
-  common.BaseChart<T, D> createCommonChart(BaseChartState chartState);
+  common.BaseChart<T, D> createCommonChart(BaseChartState<T, D> chartState);
 
   /// Updates the [common.BaseChart].
-  void updateCommonChart(
-      common.BaseChart chart, BaseChart oldWidget, BaseChartState chartState) {
+  void updateCommonChart(common.BaseChart chart, BaseChart<T, D> oldWidget,
+      BaseChartState<T, D> chartState) {
     common.Performance.time('chartsUpdateRenderers');
     // Set default renderer if one was provided.
     if (defaultRenderer != null &&
