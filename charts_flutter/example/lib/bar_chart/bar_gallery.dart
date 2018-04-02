@@ -23,6 +23,7 @@ import 'grouped_stacked.dart';
 import 'grouped_target_line.dart';
 import 'horizontal.dart';
 import 'horizontal_bar_label.dart';
+import 'horizontal_bar_label_custom.dart';
 import 'horizontal_pattern_forward_hatch.dart';
 import 'pattern_forward_hatch.dart';
 import 'simple.dart';
@@ -113,6 +114,15 @@ List<GalleryScaffold> buildGallery() {
       childBuilder: (List<charts.Series> series) =>
           new HorizontalBarLabelChart(series),
       seriesListBuilder: _createSingleSeriesWithLabelAccessor,
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Transform.rotate(
+          angle: 1.5708, child: new Icon(Icons.insert_chart)),
+      title: 'Horizontal Bar Chart with Custom Bar Labels',
+      subtitle: 'Bar labels with customized styling',
+      childBuilder: (List<charts.Series> _) =>
+          new HorizontalBarLabelCustomChart.withRandomData(),
+      seriesListBuilder: _createSingleSeriesWithLabelAccessorCustom,
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.insert_chart),
@@ -345,6 +355,44 @@ List<charts.Series<OrdinalSales, String>>
       data: data,
       labelAccessorFn: (OrdinalSales sales, _) =>
           '${sales.year}: \$${sales.sales.toString()}',
+    )
+  ];
+}
+
+/// Create one series with random data and custom labels accessor.
+List<charts.Series<OrdinalSales, String>>
+    _createSingleSeriesWithLabelAccessorCustom() {
+  final random = new Random();
+
+  final data = [
+    new OrdinalSales('2014', random.nextInt(100)),
+    new OrdinalSales('2015', random.nextInt(100)),
+    new OrdinalSales('2016', random.nextInt(100)),
+    new OrdinalSales('2017', random.nextInt(100)),
+  ];
+
+  return [
+    new charts.Series<OrdinalSales, String>(
+      id: 'Sales',
+      domainFn: (OrdinalSales sales, _) => sales.year,
+      measureFn: (OrdinalSales sales, _) => sales.sales,
+      data: data,
+      labelAccessorFn: (OrdinalSales sales, _) =>
+          '${sales.year}: \$${sales.sales.toString()}',
+      insideLabelStyleAccessorFn: (OrdinalSales sales, _) {
+        // Red 500 if year is 2014, Yellow 700 otherwise
+        final color = (sales.year == '2014')
+            ? new charts.Color(r: 0xF4, g: 0x43, b: 0x36)
+            : new charts.Color(r: 0xFF, g: 0xEB, b: 0x3B);
+        return new charts.TextStyleSpec(color: color);
+      },
+      outsideLabelStyleAccessorFn: (OrdinalSales sales, _) {
+        // Red 500 if year is 2014, Yellow 700 otherwise
+        final color = (sales.year == '2014')
+            ? new charts.Color(r: 0xF4, g: 0x43, b: 0x36)
+            : new charts.Color(r: 0xFF, g: 0xEB, b: 0x3B);
+        return new charts.TextStyleSpec(color: color);
+      },
     )
   ];
 }

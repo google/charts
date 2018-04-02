@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart';
+import '../chart/cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../common/color.dart' show Color;
 import '../common/typed_registry.dart' show TypedRegistry, TypedKey;
 import '../chart/common/chart_canvas.dart' show FillPatternType;
@@ -33,9 +34,11 @@ class Series<T, D> {
   final AccessorFn<T, num> measureOffsetFn;
   final AccessorFn<T, Color> colorFn;
   final AccessorFn<T, FillPatternType> fillPatternFn;
-  final AccessorFn<T, String> labelAccessorFn;
   final AccessorFn<T, num> radiusPxFn;
   final AccessorFn<T, num> strokeWidthPxFn;
+  final AccessorFn<T, String> labelAccessorFn;
+  final AccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn;
+  final AccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn;
 
   final List<int> dashPattern;
 
@@ -53,6 +56,8 @@ class Series<T, D> {
     this.dashPattern,
     this.fillPatternFn,
     this.labelAccessorFn,
+    this.insideLabelStyleAccessorFn,
+    this.outsideLabelStyleAccessorFn,
     this.measureLowerBoundFn,
     this.measureOffsetFn,
     this.measureUpperBoundFn,
