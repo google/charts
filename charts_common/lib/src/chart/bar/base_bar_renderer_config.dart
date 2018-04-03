@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:collection/equality.dart' show ListEquality;
+import 'package:collection/collection.dart' show ListEquality;
 import '../common/chart_canvas.dart' show FillPatternType;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;

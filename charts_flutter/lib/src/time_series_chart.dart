@@ -30,7 +30,7 @@ class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
   /// [dateTimeFactory] allows specifying a factory that creates [DateTime] to
   /// be used for the time axis. If none specified, local date time is used.
   TimeSeriesChart(
-    List<common.Series> seriesList, {
+    List<common.Series<T, DateTime>> seriesList, {
     bool animate,
     Duration animationDuration,
     common.AxisSpec domainAxis,
@@ -38,7 +38,7 @@ class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
     common.AxisSpec secondaryMeasureAxis,
     common.LineRendererConfig defaultRenderer,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<T, DateTime>> selectionModels,
     LayoutConfig layoutConfig,
     this.dateTimeFactory,
     bool defaultInteractions: true,

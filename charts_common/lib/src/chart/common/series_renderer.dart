@@ -37,7 +37,13 @@ abstract class SeriesRenderer<T, D> extends LayoutView {
   static const defaultRendererId = 'default';
 
   SymbolRenderer get symbolRenderer;
+  set symbolRenderer(SymbolRenderer symbolRenderer);
 
+  /// Symbol renderer for this renderer.
+  ///
+  /// The default is set natively by the platform. This is because in Flutter,
+  /// the [SymbolRenderer] has to be a Flutter wrapped version to support
+  /// building widget based symbols.
   String get rendererId;
   set rendererId(String rendererId);
 
@@ -64,6 +70,8 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
 
   String rendererId;
 
+  SymbolRenderer symbolRenderer;
+
   Rectangle<int> _drawAreaBounds;
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
@@ -72,6 +80,7 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
   BaseSeriesRenderer({
     @required this.rendererId,
     @required int layoutPositionOrder,
+    this.symbolRenderer,
   }) : this.layoutConfig = new LayoutViewConfig(
             position: LayoutPosition.DrawArea,
             positionOrder: layoutPositionOrder);

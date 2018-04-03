@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// Bar chart example
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -46,9 +49,55 @@ class BarChartWithSecondaryAxis extends StatelessWidget {
     );
   }
 
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory BarChartWithSecondaryAxis.withRandomData() {
+    return new BarChartWithSecondaryAxis(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final globalSalesData = [
+      new OrdinalSales('2014', random.nextInt(100) * 100),
+      new OrdinalSales('2015', random.nextInt(100) * 100),
+      new OrdinalSales('2016', random.nextInt(100) * 100),
+      new OrdinalSales('2017', random.nextInt(100) * 100),
+    ];
+
+    final losAngelesSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+        id: 'Global Revenue',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: globalSalesData,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Los Angeles Revenue',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: losAngelesSalesData,
+      )..setAttribute(charts.measureAxisIdKey, secondaryMeasureAxisId)
+      // Set the 'Los Angeles Revenue' series to use the secondary measure axis.
+      // All series that have this set will use the secondary measure axis.
+      // All other series will use the primary measure axis.
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
+
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart(
+    return new charts.BarChart<OrdinalSales>(
       seriesList,
       animate: animate,
       barGroupingType: charts.BarGroupingType.grouped,

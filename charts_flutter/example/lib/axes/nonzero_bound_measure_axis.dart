@@ -15,6 +15,9 @@
 
 /// Example of timeseries chart that has a measure axis that does NOT include
 /// zero. It starts at 100 and goes to 140.
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -33,9 +36,46 @@ class NonzeroBoundMeasureAxis extends StatelessWidget {
     );
   }
 
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory NonzeroBoundMeasureAxis.withRandomData() {
+    return new NonzeroBoundMeasureAxis(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<MyRow, DateTime>> _createRandomData() {
+    final random = new Random();
+
+    final data = [
+      new MyRow(new DateTime(2017, 9, 25), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 9, 26), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 9, 27), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 9, 28), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 9, 29), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 9, 30), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 10, 01), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 10, 02), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 10, 03), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 10, 04), random.nextInt(100) + 100),
+      new MyRow(new DateTime(2017, 10, 05), random.nextInt(100) + 100),
+    ];
+
+    return [
+      new charts.Series<MyRow, DateTime>(
+        id: 'Headcount',
+        domainFn: (MyRow row, _) => row.timeStamp,
+        measureFn: (MyRow row, _) => row.headcount,
+        data: data,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
+
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(seriesList,
+    return new charts.TimeSeriesChart<MyRow>(seriesList,
         animate: animate,
         // Provide a tickProviderSpec which does NOT require that zero is
         // included.

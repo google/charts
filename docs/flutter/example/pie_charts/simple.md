@@ -26,9 +26,10 @@ class SimplePieChart extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(seriesList, animate: animate);
+    return new charts.PieChart<LinearSales, int>(seriesList, animate: animate);
   }
 
   /// Create one series with sample hard coded data.

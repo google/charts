@@ -13,22 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Horizontal bar chart example
+/// Horizontal bar chart with custom style for each datum in the bar label.
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-class HorizontalBarChart extends StatelessWidget {
+class HorizontalBarLabelCustomChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  HorizontalBarChart(this.seriesList, {this.animate});
+  HorizontalBarLabelCustomChart(this.seriesList, {this.animate});
 
   /// Creates a [BarChart] with sample data and no transition.
-  factory HorizontalBarChart.withSampleData() {
-    return new HorizontalBarChart(
+  static HorizontalBarLabelCustomChart createWithSampleData() {
+    return new HorizontalBarLabelCustomChart(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -39,8 +39,8 @@ class HorizontalBarChart extends StatelessWidget {
   // This section is excluded from being copied to the gallery.
   // It is used for creating random series data to demonstrate animation in
   // the example app only.
-  factory HorizontalBarChart.withRandomData() {
-    return new HorizontalBarChart(_createRandomData());
+  factory HorizontalBarLabelCustomChart.withRandomData() {
+    return new HorizontalBarLabelCustomChart(_createRandomData());
   }
 
   /// Create random data.
@@ -60,18 +60,40 @@ class HorizontalBarChart extends StatelessWidget {
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: data,
-      )
+        // Set a label accessor to control the text of the bar label.
+        labelAccessorFn: (OrdinalSales sales, _) =>
+            '${sales.year}: \$${sales.sales.toString()}',
+        insideLabelStyleAccessorFn: (OrdinalSales sales, _) {
+          final color = (sales.year == '2014')
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.yellow.shadeDefault.darker;
+          return new charts.TextStyleSpec(color: color);
+        },
+        outsideLabelStyleAccessorFn: (OrdinalSales sales, _) {
+          final color = (sales.year == '2014')
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.yellow.shadeDefault.darker;
+          return new charts.TextStyleSpec(color: color);
+        },
+      ),
     ];
   }
   // EXCLUDE_FROM_GALLERY_DOCS_END
 
+  // The [BarLabelDecorator] has settings to set the text style for all labels
+  // for inside the bar and outside the bar. To be able to control each datum's
+  // style, set the style accessor functions on the series.
   @override
   Widget build(BuildContext context) {
-    // For horizontal bar charts, set the [vertical] flag to false.
     return new charts.BarChart<OrdinalSales>(
       seriesList,
       animate: animate,
       vertical: false,
+      barRendererDecorator:
+          new charts.BarLabelDecorator<OrdinalSales, String>(),
+      // Hide domain axis.
+      domainAxis:
+          new charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec()),
     );
   }
 
@@ -90,7 +112,22 @@ class HorizontalBarChart extends StatelessWidget {
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: data,
-      )
+        // Set a label accessor to control the text of the bar label.
+        labelAccessorFn: (OrdinalSales sales, _) =>
+            '${sales.year}: \$${sales.sales.toString()}',
+        insideLabelStyleAccessorFn: (OrdinalSales sales, _) {
+          final color = (sales.year == '2014')
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.yellow.shadeDefault.darker;
+          return new charts.TextStyleSpec(color: color);
+        },
+        outsideLabelStyleAccessorFn: (OrdinalSales sales, _) {
+          final color = (sales.year == '2014')
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.yellow.shadeDefault.darker;
+          return new charts.TextStyleSpec(color: color);
+        },
+      ),
     ];
   }
 }

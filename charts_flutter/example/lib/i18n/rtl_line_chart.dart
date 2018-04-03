@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// RTL Line chart example
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -32,6 +35,36 @@ class RTLLineChart extends StatelessWidget {
     );
   }
 
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory RTLLineChart.withRandomData() {
+    return new RTLLineChart(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<LinearSales, num>> _createRandomData() {
+    final random = new Random();
+
+    final data = [
+      new LinearSales(0, random.nextInt(100)),
+      new LinearSales(1, random.nextInt(100)),
+      new LinearSales(2, random.nextInt(100)),
+      new LinearSales(3, random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<LinearSales, int>(
+        id: 'Sales',
+        domainFn: (LinearSales sales, _) => sales.year,
+        measureFn: (LinearSales sales, _) => sales.sales,
+        data: data,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
+
   @override
   Widget build(BuildContext context) {
     // Charts will determine if RTL is enabled by checking the directionality by
@@ -47,7 +80,7 @@ class RTLLineChart extends StatelessWidget {
     // Domain axis' first domain starts on the right and grows left.
     return new Directionality(
         textDirection: TextDirection.rtl,
-        child: new charts.LineChart(
+        child: new charts.LineChart<LinearSales>(
           seriesList,
           animate: animate,
         ));

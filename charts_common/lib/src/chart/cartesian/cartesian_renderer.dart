@@ -21,6 +21,7 @@ import '../common/base_chart.dart' show BaseChart;
 import '../common/series_renderer.dart' show BaseSeriesRenderer, SeriesRenderer;
 import '../common/processed_series.dart' show MutableSeries;
 import '../../data/series.dart' show AccessorFn;
+import '../../common/symbol_renderer.dart' show SymbolRenderer;
 
 abstract class CartesianRenderer<T, D> extends SeriesRenderer<T, D> {
   void configureDomainAxes(List<MutableSeries<T, D>> seriesList);
@@ -32,8 +33,13 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
   bool _renderingVertically = true;
 
   BaseCartesianRenderer(
-      {@required String rendererId, @required int layoutPositionOrder})
-      : super(rendererId: rendererId, layoutPositionOrder: layoutPositionOrder);
+      {@required String rendererId,
+      @required int layoutPositionOrder,
+      SymbolRenderer symbolRenderer})
+      : super(
+            rendererId: rendererId,
+            layoutPositionOrder: layoutPositionOrder,
+            symbolRenderer: symbolRenderer);
 
   @override
   void onAttach(BaseChart<T, D> chart) {

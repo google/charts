@@ -35,14 +35,14 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
   final common.AxisSpec secondaryMeasureAxis;
 
   CartesianChart(
-    List<common.Series> seriesList, {
+    List<common.Series<T, D>> seriesList, {
     bool animate,
     Duration animationDuration,
     this.domainAxis,
     this.primaryMeasureAxis,
     this.secondaryMeasureAxis,
     common.SeriesRendererConfig defaultRenderer,
-    List<common.SeriesRendererConfig> customSeriesRenderers,
+    List<common.SeriesRendererConfig<T, D>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,

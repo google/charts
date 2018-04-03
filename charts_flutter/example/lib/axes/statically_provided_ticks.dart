@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// Example of axis using statically provided ticks.
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -44,6 +47,36 @@ class StaticallyProvidedTicks extends StatelessWidget {
     );
   }
 
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory StaticallyProvidedTicks.withRandomData() {
+    return new StaticallyProvidedTicks(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final globalSalesData = [
+      new OrdinalSales('2014', random.nextInt(100) * 100),
+      new OrdinalSales('2015', random.nextInt(100) * 100),
+      new OrdinalSales('2016', random.nextInt(100) * 100),
+      new OrdinalSales('2017', random.nextInt(100) * 100),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+        id: 'Global Revenue',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: globalSalesData,
+      ),
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
+
   @override
   Widget build(BuildContext context) {
     // Create the ticks to be used the domain axis.
@@ -63,7 +96,7 @@ class StaticallyProvidedTicks extends StatelessWidget {
       new charts.TickSpec('2017'),
     ];
 
-    return new charts.BarChart(
+    return new charts.BarChart<OrdinalSales>(
       seriesList,
       animate: animate,
       domainAxis: new charts.OrdinalAxisSpec(

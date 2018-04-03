@@ -29,9 +29,10 @@ class IntegerOnlyMeasureAxis extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(
+    return new charts.TimeSeriesChart<MyRow>(
       seriesList,
       animate: animate,
       // Provides a custom axis ensuring that the ticks are in whole numbers.

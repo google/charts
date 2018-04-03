@@ -36,8 +36,8 @@ import 'time_series_chart.dart' show TimeSeriesChart;
 
 /// Widget that inflates to a [CustomPaint] that implements common [ChartContext].
 class ChartContainer<T, D> extends CustomPaint {
-  final BaseChart chartWidget;
-  final BaseChart oldChartWidget;
+  final BaseChart<T, D> chartWidget;
+  final BaseChart<T, D> oldChartWidget;
   final ChartState chartState;
   final double animationValue;
   final bool rtl;

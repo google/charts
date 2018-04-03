@@ -52,9 +52,10 @@ export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
+export 'src/chart/common/processed_series.dart' show ImmutableSeries;
 export 'src/chart/common/selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType, SelectionModelListener;
-export 'src/chart/common/series_renderer.dart' show SeriesRenderer;
+export 'src/chart/common/series_renderer.dart' show SeriesRenderer, rendererKey;
 export 'src/chart/common/series_renderer_config.dart'
     show RendererAttributeKey, SeriesRendererConfig;
 export 'src/chart/layout/layout_config.dart' show LayoutConfig, MarginSpec;
@@ -79,7 +80,11 @@ export 'src/common/rtl_spec.dart' show RTLSpec, AxisPosition;
 export 'src/common/style/material_style.dart' show MaterialStyle;
 export 'src/common/style/style_factory.dart' show StyleFactory;
 export 'src/common/symbol_renderer.dart'
-    show SymbolRenderer, RoundedRectSymbolRenderer;
+    show
+        SymbolRenderer,
+        RoundedRectSymbolRenderer,
+        LineSymbolRenderer,
+        PointSymbolRenderer;
 export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;

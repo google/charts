@@ -24,6 +24,7 @@ class RTLLineChart extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     // Charts will determine if RTL is enabled by checking the directionality by
@@ -39,7 +40,7 @@ class RTLLineChart extends StatelessWidget {
     // Domain axis' first domain starts on the right and grows left.
     return new Directionality(
         textDirection: TextDirection.rtl,
-        child: new charts.LineChart(
+        child: new charts.LineChart<LinearSales>(
           seriesList,
           animate: animate,
         ));

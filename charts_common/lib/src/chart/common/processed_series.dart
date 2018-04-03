@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import '../cartesian/axis/axis.dart' show Axis;
+import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../common/chart_canvas.dart' show FillPatternType;
 import '../../data/series.dart'
     show AccessorFn, Series, SeriesAttributes, AttributeKey;
@@ -35,9 +36,11 @@ class MutableSeries<T, D> extends ImmutableSeries<T, D> {
   AccessorFn<T, num> measureOffsetFn;
   AccessorFn<T, Color> colorFn;
   AccessorFn<T, FillPatternType> fillPatternFn;
-  AccessorFn<T, String> labelAccessorFn;
   AccessorFn<T, num> radiusPxFn;
   AccessorFn<T, num> strokeWidthPxFn;
+  AccessorFn<T, String> labelAccessorFn;
+  AccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn;
+  AccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn;
 
   List<int> dashPattern;
 
@@ -63,6 +66,9 @@ class MutableSeries<T, D> extends ImmutableSeries<T, D> {
     fillPatternFn = series.fillPatternFn;
     labelAccessorFn =
         series.labelAccessorFn ?? (d, i) => domainFn(d, i).toString();
+    insideLabelStyleAccessorFn = series.insideLabelStyleAccessorFn;
+    outsideLabelStyleAccessorFn = series.outsideLabelStyleAccessorFn;
+
     radiusPxFn = series.radiusPxFn;
     strokeWidthPxFn = series.strokeWidthPxFn;
 
@@ -88,6 +94,8 @@ class MutableSeries<T, D> extends ImmutableSeries<T, D> {
     colorFn = other.colorFn;
     fillPatternFn = other.fillPatternFn;
     labelAccessorFn = other.labelAccessorFn;
+    insideLabelStyleAccessorFn = other.insideLabelStyleAccessorFn;
+    outsideLabelStyleAccessorFn = other.outsideLabelStyleAccessorFn;
     radiusPxFn = other.radiusPxFn;
     strokeWidthPxFn = other.strokeWidthPxFn;
 
@@ -130,6 +138,8 @@ abstract class ImmutableSeries<T, D> {
   AccessorFn<T, Color> get colorFn;
   AccessorFn<T, FillPatternType> get fillPatternFn;
   AccessorFn<T, String> get labelAccessorFn;
+  AccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn;
+  AccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn;
   AccessorFn<T, num> get radiusPxFn;
   AccessorFn<T, num> get strokeWidthPxFn;
 

@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// Example of timeseries chart with custom measure and domain formatters.
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -33,9 +36,46 @@ class CustomAxisTickFormatters extends StatelessWidget {
     );
   }
 
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory CustomAxisTickFormatters.withRandomData() {
+    return new CustomAxisTickFormatters(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<MyRow, DateTime>> _createRandomData() {
+    final random = new Random();
+
+    final data = [
+      new MyRow(new DateTime(2017, 9, 25), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 9, 26), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 9, 27), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 9, 28), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 9, 29), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 9, 30), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 10, 01), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 10, 02), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 10, 03), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 10, 04), random.nextInt(100)),
+      new MyRow(new DateTime(2017, 10, 05), random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<MyRow, DateTime>(
+        id: 'Cost',
+        domainFn: (MyRow row, _) => row.timeStamp,
+        measureFn: (MyRow row, _) => row.cost,
+        data: data,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
+
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(seriesList,
+    return new charts.TimeSeriesChart<MyRow>(seriesList,
         animate: animate,
         // Sets up a currency formatter for the measure axis.
         primaryMeasureAxis: new charts.NumericAxisSpec(

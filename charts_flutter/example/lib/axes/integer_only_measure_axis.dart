@@ -19,6 +19,9 @@
 ///
 /// This is done by customizing the measure axis and setting
 /// [dataIsInWholeNumbers] on the tick provider.
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -37,9 +40,46 @@ class IntegerOnlyMeasureAxis extends StatelessWidget {
     );
   }
 
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory IntegerOnlyMeasureAxis.withRandomData() {
+    return new IntegerOnlyMeasureAxis(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<MyRow, DateTime>> _createRandomData() {
+    final random = new Random();
+
+    final data = [
+      new MyRow(new DateTime(2017, 9, 25), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 9, 26), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 9, 27), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 9, 28), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 9, 29), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 9, 30), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 10, 01), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 10, 02), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 10, 03), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 10, 04), random.nextDouble().round()),
+      new MyRow(new DateTime(2017, 10, 05), random.nextDouble().round()),
+    ];
+
+    return [
+      new charts.Series<MyRow, DateTime>(
+        id: 'Headcount',
+        domainFn: (MyRow row, _) => row.timeStamp,
+        measureFn: (MyRow row, _) => row.headcount,
+        data: data,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
+
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(
+    return new charts.TimeSeriesChart<MyRow>(
       seriesList,
       animate: animate,
       // Provides a custom axis ensuring that the ticks are in whole numbers.

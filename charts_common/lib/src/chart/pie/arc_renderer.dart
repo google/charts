@@ -25,7 +25,6 @@ import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../common/series_renderer.dart' show BaseSeriesRenderer;
 import '../../common/color.dart' show Color;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../data/series.dart' show AttributeKey;
 import 'arc_renderer_config.dart' show ArcRendererConfig;
@@ -56,10 +55,10 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
   ArcRenderer({String rendererId, ArcRendererConfig<T, D> config})
       : config = config ?? new ArcRendererConfig(),
-        super(rendererId: rendererId ?? 'arc', layoutPositionOrder: 10);
-
-  @override
-  SymbolRenderer get symbolRenderer => config.symbolRenderer;
+        super(
+            rendererId: rendererId ?? 'arc',
+            layoutPositionOrder: 10,
+            symbolRenderer: config?.symbolRenderer);
 
   @override
   void onAttach(BaseChart<T, D> chart) {
@@ -239,7 +238,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
           // from 0.
           if (animatingArc == null) {
             animatingArc = new _AnimatedArc<T, D>(arcKey, datum)
-              ..setNewTarget(new _ArcRendererElement()
+              ..setNewTarget(new _ArcRendererElement<T, D>()
                 ..color = colorFn(datum, arcIndex)
                 ..startAngle = previousEndAngle
                 ..endAngle = previousEndAngle);
@@ -256,7 +255,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
           // Get the arcElement we are going to setup.
           // Optimization to prevent allocation in non-animating case.
-          final arcElement = new _ArcRendererElement()
+          final arcElement = new _ArcRendererElement<T, D>()
             ..color = colorFn(datum, arcIndex)
             ..startAngle = details.startAngle
             ..endAngle = details.endAngle;
