@@ -24,9 +24,10 @@ class SimpleTimeSeriesChart extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(
+    return new charts.TimeSeriesChart<TimeSeriesSales>(
       seriesList,
       animate: animate,
       // Optionally pass in a [DateTimeFactory] used by the chart. The factory

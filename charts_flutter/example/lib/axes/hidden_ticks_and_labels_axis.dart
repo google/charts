@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// No Axis Example
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -31,6 +34,36 @@ class HiddenTicksAndLabelsAxis extends StatelessWidget {
       animate: false,
     );
   }
+
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory HiddenTicksAndLabelsAxis.withRandomData() {
+    return new HiddenTicksAndLabelsAxis(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final globalSalesData = [
+      new OrdinalSales('2014', random.nextInt(100) * 100),
+      new OrdinalSales('2015', random.nextInt(100) * 100),
+      new OrdinalSales('2016', random.nextInt(100) * 100),
+      new OrdinalSales('2017', random.nextInt(100) * 100),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+        id: 'Global Revenue',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: globalSalesData,
+      ),
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
 
   @override
   Widget build(BuildContext context) {

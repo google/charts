@@ -21,6 +21,9 @@
 ///
 /// Additional annotations may be added simply by adding additional
 /// [Charts.RangeAnnotationSegment] items to the list.
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -38,6 +41,36 @@ class TimeSeriesRangeAnnotationChart extends StatelessWidget {
       animate: false,
     );
   }
+
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory TimeSeriesRangeAnnotationChart.withRandomData() {
+    return new TimeSeriesRangeAnnotationChart(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<TimeSeriesSales, DateTime>> _createRandomData() {
+    final random = new Random();
+
+    final data = [
+      new TimeSeriesSales(new DateTime(2017, 9, 19), random.nextInt(100)),
+      new TimeSeriesSales(new DateTime(2017, 9, 26), random.nextInt(100)),
+      new TimeSeriesSales(new DateTime(2017, 10, 3), random.nextInt(100)),
+      new TimeSeriesSales(new DateTime(2017, 10, 10), random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<TimeSeriesSales, DateTime>(
+        id: 'Sales',
+        domainFn: (TimeSeriesSales sales, _) => sales.time,
+        measureFn: (TimeSeriesSales sales, _) => sales.sales,
+        data: data,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
 
   @override
   Widget build(BuildContext context) {

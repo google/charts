@@ -31,6 +31,9 @@
 /// These semantic node descriptions are read out loud by the OS screen reader
 /// when the user taps within the bounding box, or when the user cycles through
 /// the screen's elements (such as swiping left and right).
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -48,6 +51,51 @@ class DomainA11yExploreBarChart extends StatelessWidget {
       animate: false,
     );
   }
+
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory DomainA11yExploreBarChart.withRandomData() {
+    return new DomainA11yExploreBarChart(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final mobileData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final tabletData = [
+      // Purposely missing data to show that only measures that are available
+      // are vocalized.
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+        id: 'Mobile Sales',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: mobileData,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Tablet Sales',
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: tabletData,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
 
   /// An example of how to generate a customized vocalization for
   /// [DomainA11yExploreBehavior] from a list of [SeriesDatum]s.

@@ -24,6 +24,7 @@ class RTLSeriesLegend extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     // Charts will determine if RTL is enabled by checking the directionality by
@@ -48,7 +49,7 @@ class RTLSeriesLegend extends StatelessWidget {
     // work with the correct directionality.
     return new Directionality(
         textDirection: TextDirection.rtl,
-        child: new charts.BarChart(
+        child: new charts.BarChart<OrdinalSales>(
           seriesList,
           animate: animate,
           behaviors: [

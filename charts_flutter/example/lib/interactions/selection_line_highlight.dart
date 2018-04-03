@@ -12,7 +12,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -30,6 +32,36 @@ class SelectionLineHighlight extends StatelessWidget {
       animate: false,
     );
   }
+
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory SelectionLineHighlight.withRandomData() {
+    return new SelectionLineHighlight(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<LinearSales, num>> _createRandomData() {
+    final random = new Random();
+
+    final data = [
+      new LinearSales(0, random.nextInt(100)),
+      new LinearSales(1, random.nextInt(100)),
+      new LinearSales(2, random.nextInt(100)),
+      new LinearSales(3, random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<LinearSales, int>(
+        id: 'Sales',
+        domainFn: (LinearSales sales, _) => sales.year,
+        measureFn: (LinearSales sales, _) => sales.sales,
+        data: data,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
 
   @override
   Widget build(BuildContext context) {

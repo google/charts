@@ -36,6 +36,7 @@ class StaticallyProvidedTicks extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     // Create the ticks to be used the domain axis.
@@ -55,7 +56,7 @@ class StaticallyProvidedTicks extends StatelessWidget {
       new charts.TickSpec('2017'),
     ];
 
-    return new charts.BarChart(
+    return new charts.BarChart<OrdinalSales>(
       seriesList,
       animate: animate,
       domainAxis: new charts.OrdinalAxisSpec(

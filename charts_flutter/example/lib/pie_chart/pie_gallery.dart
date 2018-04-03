@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Random;
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'donut.dart';
@@ -26,53 +24,13 @@ List<GalleryScaffold> buildGallery() {
       listTileIcon: new Icon(Icons.pie_chart),
       title: 'Simple Pie Chart',
       subtitle: 'With a single series',
-      childBuilder: (List<charts.Series> series) => new SimplePieChart(series),
-      seriesListBuilder: _createSingleSeries,
+      childBuilder: () => new SimplePieChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.pie_chart),
       title: 'Simple Donut Chart',
       subtitle: 'With a single series and a hole in the middle',
-      childBuilder: (List<charts.Series> series) => new DonutPieChart(series),
-      seriesListBuilder: _createSingleSeries,
+      childBuilder: () => new DonutPieChart.withRandomData(),
     ),
-  ];
-}
-
-/// Sample linear data type.
-class LinearSales {
-  final int year;
-  final int sales;
-
-  LinearSales(this.year, this.sales);
-}
-
-/// Create one series with random data.
-List<charts.Series<LinearSales, int>> _createSingleSeries() {
-  final random = new Random();
-
-  // Generate sorted data, so that the largest slice is first in the chart.
-  final sales = [
-    random.nextInt(100),
-    random.nextInt(100),
-    random.nextInt(100),
-    random.nextInt(100),
-  ];
-  sales.sort();
-
-  final data = [
-    new LinearSales(0, sales[3]),
-    new LinearSales(1, sales[2]),
-    new LinearSales(2, sales[1]),
-    new LinearSales(3, sales[0]),
-  ];
-
-  return [
-    new charts.Series<LinearSales, int>(
-      id: 'Sales',
-      domainFn: (LinearSales sales, _) => sales.year,
-      measureFn: (LinearSales sales, _) => sales.sales,
-      data: data,
-    )
   ];
 }

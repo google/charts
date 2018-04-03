@@ -27,15 +27,16 @@ class LegendOptions extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart(
+    return new charts.BarChart<OrdinalSales>(
       seriesList,
       animate: animate,
       barGroupingType: charts.BarGroupingType.grouped,
-        // Add the legend behavior to the chart to turn on legends.
-        // This example shows how to change the position and justification of
-        // the legend, in addition to altering the max rows and padding.
+      // Add the legend behavior to the chart to turn on legends.
+      // This example shows how to change the position and justification of
+      // the legend, in addition to altering the max rows and padding.
       behaviors: [
         new charts.SeriesLegend(
           // Positions for "start" and "end" will be left and right respectively

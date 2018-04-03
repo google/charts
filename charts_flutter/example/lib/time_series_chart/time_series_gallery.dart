@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Random;
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'range_annotation.dart';
@@ -26,46 +24,13 @@ List<GalleryScaffold> buildGallery() {
       listTileIcon: new Icon(Icons.show_chart),
       title: 'Time Series Chart',
       subtitle: 'Simple single time series chart',
-      childBuilder: (List<charts.Series> series) =>
-          new SimpleTimeSeriesChart(series),
-      seriesListBuilder: _createSingleSeries,
+      childBuilder: () => new SimpleTimeSeriesChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
       title: 'Range Annotation Time Series Chart',
       subtitle: 'Time series chart with future range annotation',
-      childBuilder: (List<charts.Series> series) =>
-          new TimeSeriesRangeAnnotationChart(series),
-      seriesListBuilder: _createSingleSeries,
+      childBuilder: () => new TimeSeriesRangeAnnotationChart.withRandomData(),
     ),
-  ];
-}
-
-/// Sample time series data type.
-class TimeSeriesSales {
-  final DateTime time;
-  final int sales;
-
-  TimeSeriesSales(this.time, this.sales);
-}
-
-/// Create one series with random data.
-List<charts.Series<TimeSeriesSales, DateTime>> _createSingleSeries() {
-  final random = new Random();
-
-  final data = [
-    new TimeSeriesSales(new DateTime(2017, 9, 19), random.nextInt(100)),
-    new TimeSeriesSales(new DateTime(2017, 9, 26), random.nextInt(100)),
-    new TimeSeriesSales(new DateTime(2017, 10, 3), random.nextInt(100)),
-    new TimeSeriesSales(new DateTime(2017, 10, 10), random.nextInt(100)),
-  ];
-
-  return [
-    new charts.Series<TimeSeriesSales, DateTime>(
-      id: 'Sales',
-      domainFn: (TimeSeriesSales sales, _) => sales.time,
-      measureFn: (TimeSeriesSales sales, _) => sales.sales,
-      data: data,
-    )
   ];
 }
