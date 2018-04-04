@@ -19,8 +19,8 @@ matrix:
         - flutter doctor
       script:
         - cd charts_common
-        - pub get
-        - pub run test
+        #- pub get
+        #- pub run test
         - cd ../charts_flutter
         - flutter test
 
