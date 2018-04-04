@@ -3,7 +3,7 @@ matrix:
     # Job 1) Run tests
     - os: linux
       env:
-        - SHARD=Analyze
+        - SHARD=Tests
       sudo: false
       addons:
         apt:
