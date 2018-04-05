@@ -42,8 +42,8 @@ class Color {
         g = color.g,
         b = color.b,
         a = color.a,
-        _darker = darker ?? color.darker,
-        _lighter = lighter ?? color.lighter;
+        _darker = darker ?? color._darker,
+        _lighter = lighter ?? color._lighter;
 
   /// Construct the color from a hex code string, of the format #RRGGBB.
   factory Color.fromHex({String code}) {
