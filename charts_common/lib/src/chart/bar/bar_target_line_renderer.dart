@@ -242,7 +242,7 @@ class _BarTargetLineRendererElement extends BaseBarRendererElement {
 
   _BarTargetLineRendererElement.clone(_BarTargetLineRendererElement other)
       : super.clone(other) {
-    points = other.points;
+    points = new List<Point<int>>.from(other.points);
     roundEndCaps = other.roundEndCaps;
   }
 

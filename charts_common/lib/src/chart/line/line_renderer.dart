@@ -313,11 +313,12 @@ class _LineRendererElement<T, D> {
 
   _LineRendererElement<T, D> clone() {
     return new _LineRendererElement<T, D>()
-      ..points = this.points
-      ..color = this.color
-      ..dashPattern = this.dashPattern
-      ..measureAxisPosition = this.measureAxisPosition
-      ..strokeWidthPx = this.strokeWidthPx;
+      ..points = new List<_DatumPoint<T, D>>.from(points)
+      ..color = color != null ? new Color.fromOther(color: color) : null
+      ..dashPattern =
+          dashPattern != null ? new List<int>.from(dashPattern) : null
+      ..measureAxisPosition = measureAxisPosition
+      ..strokeWidthPx = strokeWidthPx;
   }
 
   void updateAnimationPercent(_LineRendererElement previous,
@@ -411,7 +412,7 @@ class _AnimatedLine<T, D> {
   void setNewTarget(_LineRendererElement<T, D> newTarget) {
     animatingOut = false;
     _currentLine ??= newTarget.clone();
-    _previousLine = _currentLine;
+    _previousLine = _currentLine.clone();
     _targetLine = newTarget;
   }
 

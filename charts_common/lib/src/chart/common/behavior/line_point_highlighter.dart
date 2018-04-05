@@ -443,7 +443,7 @@ class _AnimatedPoint<T, D> {
   void setNewTarget(_PointRendererElement<T, D> newTarget) {
     animatingOut = false;
     _currentPoint ??= newTarget.clone();
-    _previousPoint = _currentPoint;
+    _previousPoint = _currentPoint.clone();
     _targetPoint = newTarget;
   }
 

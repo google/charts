@@ -31,7 +31,8 @@ abstract class BaseBarRendererElement {
 
   BaseBarRendererElement.clone(BaseBarRendererElement other) {
     barStackIndex = other.barStackIndex;
-    color = other.color;
+    color =
+        other.color != null ? new Color.fromOther(color: other.color) : null;
     cumulativeTotal = other.cumulativeTotal;
     fillPattern = other.fillPattern;
     measureAxisPosition = other.measureAxisPosition;
@@ -85,7 +86,7 @@ abstract class BaseAnimatedBar<T, D, R extends BaseBarRendererElement> {
   void setNewTarget(R newTarget) {
     animatingOut = false;
     _currentBar ??= clone(newTarget);
-    _previousBar = _currentBar;
+    _previousBar = clone(_currentBar);
     _targetBar = newTarget;
   }
 

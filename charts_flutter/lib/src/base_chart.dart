@@ -77,7 +77,7 @@ abstract class BaseChart<T, D> extends StatefulWidget {
       this.layoutConfig})
       : this.animate = animate ?? true,
         this.animationDuration =
-            animationDuration ?? const Duration(milliseconds: 750);
+            animationDuration ?? const Duration(milliseconds: 300);
 
   @override
   BaseChartState<T, D> createState() => new BaseChartState<T, D>();
