@@ -9,7 +9,8 @@
 | --- | --- | --- | --- |
 | Simple<br>[![](example/bar_charts/simple_thumb.png)](example/bar_charts/simple) | Stacked<br>[![](example/bar_charts/stacked_thumb.png)](example/bar_charts/stacked) | Grouped<br>[![](example/bar_charts/grouped_thumb.png)](example/bar_charts/grouped) | Grouped Stacked<br>[![](example/bar_charts/grouped_stacked_thumb.png)](example/bar_charts/grouped_stacked) |
 | Grouped Target Line<br>[![](example/bar_charts/grouped_target_line_thumb.png)](example/bar_charts/grouped_target_line) | Stacked Horizontal<br>[![](example/bar_charts/stacked_horizontal_thumb.png)](example/bar_charts/stacked_horizontal) | Stacked Target Line<br>[![](example/bar_charts/stacked_target_line_thumb.png)](example/bar_charts/stacked_target_line) | Horizontal<br>[![](example/bar_charts/horizontal_thumb.png)](example/bar_charts/horizontal) |
-| Horizontal Bar Label<br>[![](example/bar_charts/horizontal_bar_label_thumb.png)](example/bar_charts/horizontal_bar_label) | Spark Bar<br>[![](example/bar_charts/spark_bar_thumb.png)](example/bar_charts/spark_bar) | Pattern Forward Hatch<br>[![](example/bar_charts/pattern_forward_hatch_thumb.png)](example/bar_charts/pattern_forward_hatch) | Horizontal Pattern Forward Hatch<br>[![](example/bar_charts/horizontal_pattern_forward_hatch_thumb.png)](example/bar_charts/horizontal_pattern_forward_hatch) |
+| Horizontal Bar Label<br>[![](example/bar_charts/horizontal_bar_label_thumb.png)](example/bar_charts/horizontal_bar_label) | Horizontal Bar Label Custom<br>[![](example/bar_charts/horizontal_bar_label_custom_thumb.png)](example/bar_charts/horizontal_bar_label_custom) | Spark Bar<br>[![](example/bar_charts/spark_bar_thumb.png)](example/bar_charts/spark_bar) | Pattern Forward Hatch<br>[![](example/bar_charts/pattern_forward_hatch_thumb.png)](example/bar_charts/pattern_forward_hatch) |
+| Horizontal Pattern Forward Hatch<br>[![](example/bar_charts/horizontal_pattern_forward_hatch_thumb.png)](example/bar_charts/horizontal_pattern_forward_hatch) | | | |
 
 
 ### Time Series Charts
@@ -47,7 +48,7 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Selection Bar Highlight<br>[![](example/interactions/selection_bar_highlight_thumb.png)](example/interactions/selection_bar_highlight) | Selection Line Highlight<br>[![](example/interactions/selection_line_highlight_thumb.png)](example/interactions/selection_line_highlight) | Selection Callback Example<br>[![](example/interactions/selection_callback_example_thumb.png)](example/interactions/selection_callback_example) | |
+| Selection Callback Example<br>[![](example/interactions/selection_callback_example_thumb.png)](example/interactions/selection_callback_example) | Selection Callback Example<br>[![](example/interactions/selection_callback_example_thumb.png)](example/interactions/selection_callback_example) | | |
 
 
 ### a11y
@@ -69,6 +70,12 @@
 | | | | |
 | --- | --- | --- | --- |
 | Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Legend Options<br>[![](example/legends/legend_options_thumb.png)](example/legends/legend_options) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) | |
+
+
+### Hovercards
+
+| | | | |
+| --- | --- | --- | --- |
 
 [//]: (END_EXAMPLES)
 
