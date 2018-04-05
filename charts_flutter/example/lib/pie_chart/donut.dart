@@ -46,7 +46,7 @@ class DonutPieChart extends StatelessWidget {
   }
 
   /// Create random data.
-  static List<charts.Series<LinearSales, num>> _createRandomData() {
+  static List<charts.Series<LinearSales, int>> _createRandomData() {
     final random = new Random();
 
     final data = [
