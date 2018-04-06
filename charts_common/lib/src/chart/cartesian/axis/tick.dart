@@ -29,8 +29,5 @@ class Tick<D> {
   /// Location on the axis where this tick is rendered (in canvas coordinates).
   double locationPx;
 
-  /// This tick is being animated out.
-  bool markedForRemoval;
-
   Tick({@required this.value, @required this.textElement, this.locationPx});
 }

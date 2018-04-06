@@ -35,6 +35,10 @@ abstract class TextElement {
 
   set maxWidthStrategy(MaxWidthStrategy maxWidthStrategy);
 
+  /// The opacity of this element, in addition to the alpha set on the color
+  /// of this element.
+  set opacity(double opacity);
+
   // The text of this [TextElement].
   String get text;
 

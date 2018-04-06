@@ -56,7 +56,7 @@ class BaseTickDrawStrategyImpl<D> extends BaseTickDrawStrategy<D> {
       Rectangle<int> drawAreaBounds}) {}
 }
 
-/// Fake [TextElement] which returns the
+/// Fake [TextElement] for testing.
 ///
 /// [baseline] returns the same value as the [verticalSliceWidth] specified.
 class FakeTextElement implements TextElement {
@@ -66,6 +66,7 @@ class FakeTextElement implements TextElement {
   int maxWidth;
   MaxWidthStrategy maxWidthStrategy;
   TextDirection textDirection;
+  double opacity;
 
   FakeTextElement(
     this.text,

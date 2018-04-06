@@ -68,6 +68,7 @@ class FakeTextElement implements TextElement {
   int maxWidth;
   MaxWidthStrategy maxWidthStrategy;
   TextDirection textDirection;
+  double opacity;
 
   FakeTextElement(this.text);
 
