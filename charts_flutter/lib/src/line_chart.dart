@@ -26,7 +26,7 @@ class LineChart<T> extends BaseChart<T, num> {
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
-    common.LineRendererConfig defaultRenderer,
+    common.LineRendererConfig<T, num> defaultRenderer,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,

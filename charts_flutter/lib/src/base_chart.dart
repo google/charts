@@ -46,7 +46,7 @@ abstract class BaseChart<T, D> extends StatefulWidget {
   final LayoutConfig layoutConfig;
 
   // Default renderer used to draw series data on the chart.
-  final common.SeriesRendererConfig defaultRenderer;
+  final common.SeriesRendererConfig<T, D> defaultRenderer;
 
   /// Include the default interactions or not.
   final bool defaultInteractions;

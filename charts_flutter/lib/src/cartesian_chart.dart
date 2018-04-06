@@ -41,7 +41,7 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
     this.domainAxis,
     this.primaryMeasureAxis,
     this.secondaryMeasureAxis,
-    common.SeriesRendererConfig defaultRenderer,
+    common.SeriesRendererConfig<T, D> defaultRenderer,
     List<common.SeriesRendererConfig<T, D>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
