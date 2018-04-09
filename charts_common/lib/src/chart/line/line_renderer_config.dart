@@ -20,8 +20,8 @@ import '../common/series_renderer_config.dart'
 import 'line_renderer.dart' show LineRenderer;
 
 /// Configuration for a line renderer.
-class LineRendererConfig extends LayoutViewConfig
-    implements SeriesRendererConfig {
+class LineRendererConfig<T, D> extends LayoutViewConfig
+    implements SeriesRendererConfig<T, D> {
   final String customRendererId;
 
   final SymbolRenderer symbolRenderer;
@@ -41,7 +41,7 @@ class LineRendererConfig extends LayoutViewConfig
       this.symbolRenderer});
 
   @override
-  LineRenderer build() {
-    return new LineRenderer(config: this, rendererId: customRendererId);
+  LineRenderer<T, D> build() {
+    return new LineRenderer<T, D>(config: this, rendererId: customRendererId);
   }
 }

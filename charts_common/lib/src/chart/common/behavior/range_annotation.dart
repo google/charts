@@ -321,8 +321,8 @@ class _AnnotationElement<T, D> {
 
   _AnnotationElement<T, D> clone() {
     return new _AnnotationElement<T, D>()
-      ..annotation = this.annotation
-      ..color = this.color
+      ..annotation = new _DatumAnnotation.from(annotation)
+      ..color = color != null ? new Color.fromOther(color: color) : null
       ..label = this.label
       ..labelPosition = labelPosition;
   }
@@ -376,7 +376,7 @@ class _AnimatedAnnotation<T, D> {
   void setNewTarget(_AnnotationElement<T, D> newTarget) {
     animatingOut = false;
     _currentAnnotation ??= newTarget.clone();
-    _previousAnnotation = _currentAnnotation;
+    _previousAnnotation = _currentAnnotation.clone();
     _targetAnnotation = newTarget;
   }
 

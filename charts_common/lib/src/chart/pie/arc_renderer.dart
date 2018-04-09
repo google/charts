@@ -390,7 +390,7 @@ class _ArcRendererElement<T, D> {
     return new _ArcRendererElement<T, D>()
       ..startAngle = startAngle
       ..endAngle = endAngle
-      ..color = color;
+      ..color = new Color.fromOther(color: color);
   }
 
   void updateAnimationPercent(_ArcRendererElement previous,
@@ -448,7 +448,7 @@ class _AnimatedArc<T, D> {
   void setNewTarget(_ArcRendererElement<T, D> newTarget) {
     animatingOut = false;
     _currentArc ??= newTarget.clone();
-    _previousArc = _currentArc;
+    _previousArc = _currentArc.clone();
     _targetArc = newTarget;
   }
 

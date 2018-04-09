@@ -47,7 +47,7 @@ abstract class BaseChart<T, D> {
   int _chartWidth;
   int _chartHeight;
 
-  Duration transition = const Duration(milliseconds: 750);
+  Duration transition = const Duration(milliseconds: 300);
   double animationPercent;
 
   bool _animationsTemporarilyDisabled = false;

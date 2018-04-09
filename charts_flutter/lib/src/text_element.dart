@@ -42,6 +42,8 @@ class TextElement implements common.TextElement {
 
   common.TextMeasurement _measurement;
 
+  double _opacity;
+
   TextElement(this.text, {common.TextStyle style}) : _textStyle = style;
 
   @override
@@ -93,6 +95,14 @@ class TextElement implements common.TextElement {
   }
 
   @override
+  set opacity(double opacity) {
+    if (opacity != _opacity) {
+      _painterReady = false;
+      _opacity = opacity;
+    }
+  }
+
+  @override
   common.TextMeasurement get measurement {
     if (!_painterReady) {
       _refreshPainter();
@@ -122,8 +132,13 @@ class TextElement implements common.TextElement {
 
   /// Create text painter and measure based on current settings
   void _refreshPainter() {
-    final color = new Color.fromARGB(textStyle.color.a, textStyle.color.r,
-        textStyle.color.g, textStyle.color.b);
+    _opacity ??= 1.0;
+    var color = new Color.fromARGB(
+      (textStyle.color.a * _opacity).round(),
+      textStyle.color.r,
+      textStyle.color.g,
+      textStyle.color.b,
+    );
 
     _textPainter = new TextPainter(
         text: new TextSpan(

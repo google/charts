@@ -435,8 +435,12 @@ abstract class BaseBarRenderer<T, D, R extends BaseBarRendererElement,
     }
 
     _barStackMap.forEach((String stackKey, List<B> barStack) {
-      final barElements = barStack.map(
-          (B animatingBar) => animatingBar.getCurrentBar(animationPercent));
+      // Turn this into a list so that the getCurrentBar isn't called more than
+      // once for each animationPercent if the barElements are iterated more
+      // than once.
+      final barElements = barStack
+          .map((B animatingBar) => animatingBar.getCurrentBar(animationPercent))
+          .toList();
 
       paintBar(canvas, animationPercent, barElements);
     });

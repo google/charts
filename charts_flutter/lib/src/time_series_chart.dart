@@ -36,7 +36,7 @@ class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
     common.AxisSpec domainAxis,
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
-    common.LineRendererConfig defaultRenderer,
+    common.LineRendererConfig<T, DateTime> defaultRenderer,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig<T, DateTime>> selectionModels,
     LayoutConfig layoutConfig,

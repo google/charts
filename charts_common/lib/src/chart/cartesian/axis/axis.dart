@@ -21,6 +21,7 @@ import '../../common/chart_canvas.dart' show ChartCanvas;
 import '../../common/chart_context.dart' show ChartContext;
 import '../../layout/layout_view.dart'
     show LayoutView, LayoutPosition, LayoutViewConfig, ViewMeasuredSizes;
+import 'axis_tick.dart' show AxisTicks;
 import 'linear/linear_scale.dart' show LinearScale;
 import 'ordinal_extents.dart' show OrdinalExtents;
 import 'ordinal_scale.dart' show OrdinalScale;
@@ -72,6 +73,9 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
   /// [Scale] of this axis.
   final S _scale;
 
+  /// Previous [Scale] of this axis, used to calculate tick animation.
+  S _previousScale;
+
   /// [TickProvider] for this axis.
   TickProvider<D, E, S> tickProvider;
 
@@ -112,7 +116,11 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
   /// Viewport changes not allowed.
   bool lockAxis = false;
 
-  List<Tick> _ticks;
+  /// Ticks provided by the tick provider.
+  List<Tick> _providedTicks;
+
+  /// Ticks used by the axis for drawing.
+  final _axisTicks = <AxisTicks<D>>[];
 
   Rectangle<int> _componentBounds;
   Rectangle<int> _drawAreaBounds;
@@ -126,9 +134,6 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
 
   @override
   double get stepSize => _scale.stepSize;
-
-  /// Ticks for this axis.
-  List<Tick> get ticks => _ticks;
 
   /// Configures whether the viewport should be reset back to default values
   /// when the domain is reset.
@@ -181,19 +186,15 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
     _scale.range = new ScaleOutputExtent(start, end);
   }
 
-  void updateTicks() {
-    if (lockAxis) {
-      return;
-    }
-
-    if (updateTickLocationOnly) {
-      _ticks.forEach((t) => t.locationPx = _scale[t.value]);
+  /// Request ticks from tick provider.
+  void updateProvidedTicks() {
+    if (lockAxis || updateTickLocationOnly) {
       return;
     }
 
     // TODO: Ensure that tick providers take manually configured
     // viewport settings into account, so that we still get the right number.
-    _ticks = tickProvider.getTicks(
+    _providedTicks = tickProvider.getTicks(
         context: context,
         graphicsFactory: graphicsFactory,
         scale: _scale,
@@ -202,6 +203,39 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
         tickDrawStrategy: tickDrawStrategy,
         orientation: axisOrientation,
         viewportExtensionEnabled: _autoViewport);
+  }
+
+  /// Updates the ticks that are actually used for drawing.
+  void updateAxisTicks() {
+    final providedTicks = new List.from(_providedTicks ?? []);
+
+    for (AxisTicks<D> animatedTick in _axisTicks) {
+      final tick = providedTicks?.firstWhere(
+          (t) => t.value == animatedTick.value,
+          orElse: () => null);
+
+      if (tick != null) {
+        // Update target for all existing ticks
+        animatedTick.setNewTarget(_scale[tick.value]);
+        providedTicks.remove(tick);
+      } else {
+        // Animate out ticks that do not exist any more.
+        animatedTick.animateOut(_scale[animatedTick.value]);
+      }
+    }
+
+    // Add new ticks
+    providedTicks?.forEach((tick) {
+      final animatedTick = new AxisTicks<D>(tick);
+      if (_previousScale != null) {
+        animatedTick.animateInFrom(_previousScale[tick.value]);
+      }
+      _axisTicks.add(animatedTick);
+    });
+
+    // Save a copy of the current scale to be used as the previous scale when
+    // ticks are updated.
+    _previousScale = _scale.copy();
   }
 
   /// Configures the zoom and translate.
@@ -312,18 +346,18 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
 
   ViewMeasuredSizes _measureVerticalAxis(int maxWidth, int maxHeight) {
     setOutputRange(maxHeight, 0);
-    updateTicks();
+    updateProvidedTicks();
 
     return tickDrawStrategy.measureVerticallyDrawnTicks(
-        ticks, maxWidth, maxHeight);
+        _providedTicks, maxWidth, maxHeight);
   }
 
   ViewMeasuredSizes _measureHorizontalAxis(int maxWidth, int maxHeight) {
     setOutputRange(0, maxWidth);
-    updateTicks();
+    updateProvidedTicks();
 
     return tickDrawStrategy.measureHorizontallyDrawnTicks(
-        ticks, maxWidth, maxHeight);
+        _providedTicks, maxWidth, maxHeight);
   }
 
   /// Layout this component.
@@ -349,7 +383,10 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
     if (_scale.range != outputRange) {
       _scale.range = outputRange;
     }
-    updateTicks();
+    updateProvidedTicks();
+    // Update animated ticks in layout, because updateTicks are called during
+    // measure and we don't want to update the animation at that time.
+    updateAxisTicks();
   }
 
   @override
@@ -365,8 +402,13 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
 
   @override
   void paint(ChartCanvas canvas, double animationPercent) {
-    for (Tick tick in ticks) {
-      tickDrawStrategy.draw(canvas, tick,
+    if (animationPercent == 1.0) {
+      _axisTicks.removeWhere((t) => t.markedForRemoval);
+    }
+
+    for (AxisTicks<D> animatedTick in _axisTicks) {
+      tickDrawStrategy.draw(
+          canvas, animatedTick..setCurrentTick(animationPercent),
           orientation: axisOrientation,
           axisBounds: _componentBounds,
           drawAreaBounds: _drawAreaBounds);

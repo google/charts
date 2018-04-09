@@ -211,13 +211,13 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
   @override
   void onSkipLayout() {
     // Update ticks only when skipping layout.
-    domainAxis.updateTicks();
+    domainAxis.updateProvidedTicks();
 
     if (_usePrimaryMeasureAxis) {
-      _primaryMeasureAxis.updateTicks();
+      _primaryMeasureAxis.updateProvidedTicks();
     }
     if (_useSecondaryMeasureAxis) {
-      _secondaryMeasureAxis.updateTicks();
+      _secondaryMeasureAxis.updateProvidedTicks();
     }
 
     super.onSkipLayout();
