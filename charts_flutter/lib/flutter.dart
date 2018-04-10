@@ -36,6 +36,7 @@ export 'package:charts_common/src/chart/cartesian/axis/spec/date_time_axis_spec.
         DateTimeAxisSpec,
         AutoDateTimeTickFormatterSpec,
         AutoDateTimeTickProviderSpec,
+        DayTickProviderSpec,
         TimeFormatterSpec,
         StaticDateTimeTickProviderSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
