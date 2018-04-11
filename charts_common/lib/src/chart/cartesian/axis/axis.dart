@@ -186,8 +186,14 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
     _scale.range = new ScaleOutputExtent(start, end);
   }
 
+  /// Request update ticks from tick provider and update the painted ticks.
+  void updateTicks() {
+    _updateProvidedTicks();
+    _updateAxisTicks();
+  }
+
   /// Request ticks from tick provider.
-  void updateProvidedTicks() {
+  void _updateProvidedTicks() {
     if (lockAxis || updateTickLocationOnly) {
       return;
     }
@@ -206,7 +212,11 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
   }
 
   /// Updates the ticks that are actually used for drawing.
-  void updateAxisTicks() {
+  void _updateAxisTicks() {
+    if (lockAxis) {
+      return;
+    }
+
     final providedTicks = new List.from(_providedTicks ?? []);
 
     for (AxisTicks<D> animatedTick in _axisTicks) {
@@ -346,7 +356,7 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
 
   ViewMeasuredSizes _measureVerticalAxis(int maxWidth, int maxHeight) {
     setOutputRange(maxHeight, 0);
-    updateProvidedTicks();
+    _updateProvidedTicks();
 
     return tickDrawStrategy.measureVerticallyDrawnTicks(
         _providedTicks, maxWidth, maxHeight);
@@ -354,7 +364,7 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
 
   ViewMeasuredSizes _measureHorizontalAxis(int maxWidth, int maxHeight) {
     setOutputRange(0, maxWidth);
-    updateProvidedTicks();
+    _updateProvidedTicks();
 
     return tickDrawStrategy.measureHorizontallyDrawnTicks(
         _providedTicks, maxWidth, maxHeight);
@@ -383,10 +393,10 @@ abstract class Axis<D, E extends Extents, S extends MutableScale<D, E>>
     if (_scale.range != outputRange) {
       _scale.range = outputRange;
     }
-    updateProvidedTicks();
+    _updateProvidedTicks();
     // Update animated ticks in layout, because updateTicks are called during
     // measure and we don't want to update the animation at that time.
-    updateAxisTicks();
+    _updateAxisTicks();
   }
 
   @override

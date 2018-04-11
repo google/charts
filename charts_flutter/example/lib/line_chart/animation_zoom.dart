@@ -48,12 +48,11 @@ class LineAnimationZoomChart extends StatelessWidget {
   static List<charts.Series<LinearSales, num>> _createRandomData() {
     final random = new Random();
 
-    final data = [
-      new LinearSales(0, random.nextInt(100)),
-      new LinearSales(1, random.nextInt(100)),
-      new LinearSales(2, random.nextInt(100)),
-      new LinearSales(3, random.nextInt(100)),
-    ];
+    final data = <LinearSales>[];
+
+    for (var i = 0; i < 100; i++) {
+      data.add(new LinearSales(i, random.nextInt(100)));
+    }
 
     return [
       new charts.Series<LinearSales, int>(

@@ -177,7 +177,7 @@ class PanBehavior<T, D> implements ChartBehavior<T, D> {
     cartesianChart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis =
         false;
 
-    _chart.redraw(skipAnimation: true);
+    _chart.redraw();
   }
 
   /// Cancels the handling of any current panning event.
