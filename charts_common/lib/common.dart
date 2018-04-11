@@ -31,11 +31,16 @@ export 'src/chart/common/behavior/a11y/a11y_explore_behavior.dart'
 export 'src/chart/common/behavior/a11y/a11y_node.dart' show A11yNode;
 export 'src/chart/common/behavior/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior, VocalizationCallback;
-export 'src/chart/common/behavior/chart_behavior.dart' show ChartBehavior;
+export 'src/chart/common/behavior/chart_behavior.dart'
+    show
+        BehaviorPosition,
+        ChartBehavior,
+        InsideJustification,
+        OutsideJustification;
 export 'src/chart/common/behavior/domain_highlighter.dart'
     show DomainHighlighter;
 export 'src/chart/common/behavior/legend/legend.dart'
-    show SeriesLegend, LegendState;
+    show LegendCellPadding, LegendState, SeriesLegend;
 export 'src/chart/common/behavior/legend/legend_entry.dart' show LegendEntry;
 export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter;
@@ -59,7 +64,8 @@ export 'src/chart/common/series_renderer.dart' show SeriesRenderer, rendererKey;
 export 'src/chart/common/series_renderer_config.dart'
     show RendererAttributeKey, SeriesRendererConfig;
 export 'src/chart/layout/layout_config.dart' show LayoutConfig, MarginSpec;
-export 'src/chart/layout/layout_view.dart' show LayoutPosition, ViewMargin;
+export 'src/chart/layout/layout_view.dart'
+    show LayoutPosition, ViewMargin, ViewMeasuredSizes;
 export 'src/chart/line/line_chart.dart' show LineChart;
 export 'src/chart/line/line_renderer.dart' show LineRenderer;
 export 'src/chart/line/line_renderer_config.dart' show LineRendererConfig;

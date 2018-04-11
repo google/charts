@@ -14,7 +14,12 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
-import 'package:charts_common/common.dart' as common show ChartBehavior;
+import 'package:charts_common/common.dart' as common
+    show
+        BehaviorPosition,
+        InsideJustification,
+        OutsideJustification,
+        ChartBehavior;
 import 'package:meta/meta.dart' show immutable;
 import 'package:flutter/widgets.dart' show BuildContext, Widget;
 
@@ -48,51 +53,16 @@ abstract class BuildableBehavior<B extends common.ChartBehavior> {
   Widget build(BuildContext context);
 
   /// The position on the widget.
-  BuildablePosition get position;
+  common.BehaviorPosition get position;
 
   /// Justification of the widget, if [position] is top, bottom, start, or end.
-  OutsideJustification get outsideJustification;
+  common.OutsideJustification get outsideJustification;
 
-  /// Justification of the widget if [position] is [BuildablePosition.inside].
-  InsideJustification get insideJustification;
+  /// Justification of the widget if [position] is [common.BehaviorPosition.inside].
+  common.InsideJustification get insideJustification;
 
   /// Chart's draw area bounds are used for positioning.
   Rectangle<int> get drawAreaBounds;
-}
-
-/// Position of a widget within the custom chart layout.
-///
-/// Outside positions are [top], [bottom], [start], and [end].
-///
-/// [top] widget positioned at the top, with the chart positioned below the
-/// widget and height reduced by the height of the widget.
-/// [bottom] widget positioned below the chart, and the chart's height is
-/// reduced by the height of the widget.
-/// [start] widget is positioned at the left of the chart (or the right if RTL),
-/// the chart's width is reduced by the width of the widget.
-/// [end] widget is positioned at the right of the chart (or the left if RTL),
-/// the chart's width is reduced by the width of the widget.
-/// [inside] widget is layered on top of the chart.
-enum BuildablePosition {
-  top,
-  bottom,
-  start,
-  end,
-  inside,
-}
-
-/// Justification for buildable widgets positioned outside [BuildablePosition].
-enum OutsideJustification {
-  startDrawArea,
-  start,
-  endDrawArea,
-  end,
-}
-
-/// Justification for buildable widgets positioned [BuildablePosition.inside].
-enum InsideJustification {
-  topStart,
-  topEnd,
 }
 
 /// Types of gestures accepted by a chart.

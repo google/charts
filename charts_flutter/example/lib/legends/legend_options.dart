@@ -123,7 +123,7 @@ class LegendOptions extends StatelessWidget {
           // For rtl, "start" and "end" will be right and left respectively.
           // Since this example has directionality of ltr, the legend is
           // positioned on the right side of the chart.
-          position: charts.BuildablePosition.end,
+          position: charts.BehaviorPosition.end,
           // For a legend that is positioned on the left or right of the chart,
           // setting the justification for [endDrawArea] is aligned to the
           // bottom of the chart draw area.
