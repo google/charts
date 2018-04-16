@@ -54,9 +54,13 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
             layoutPositionOrder: 10,
             symbolRenderer: config?.symbolRenderer);
 
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
+  @override
+  void configureSeries(List<MutableSeries<T, D>> seriesList) {
     assignMissingColors(seriesList, emptyCategoryUsesSinglePalette: false);
+  }
 
+  @override
+  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
     seriesList.forEach((MutableSeries<T, D> series) {
       var elements = <_LineRendererElement<T, D>>[];
 

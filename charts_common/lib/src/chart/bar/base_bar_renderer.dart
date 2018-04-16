@@ -97,6 +97,7 @@ abstract class BaseBarRenderer<T, D, R extends BaseBarRendererElement,
           symbolRenderer: config?.symbolRenderer,
         );
 
+  @override
   void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
     var barGroupIndex = 0;
 

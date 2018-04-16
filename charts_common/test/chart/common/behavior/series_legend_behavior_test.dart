@@ -17,6 +17,7 @@ import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
 import 'package:charts_common/src/chart/common/series_renderer.dart';
 import 'package:charts_common/src/chart/common/behavior/legend/legend.dart';
+import 'package:charts_common/src/chart/common/behavior/legend/legend_entry_generator.dart';
 import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
 import 'package:charts_common/src/common/color.dart';
@@ -31,8 +32,36 @@ class ConcreteChart extends BaseChart<MyRow, String> {
   List<DatumDetails<MyRow, String>> getDatumDetails(SelectionModelType _) =>
       null;
 
+  void callOnPreProcess(List<MutableSeries<MyRow, String>> seriesList) {
+    fireOnPreprocess(seriesList);
+  }
+
   void callOnPostProcess(List<MutableSeries<MyRow, String>> seriesList) {
     fireOnPostprocess(seriesList);
+  }
+}
+
+class ConcreteSeriesLegend<T, D> extends SeriesLegend<T, D> {
+  ConcreteSeriesLegend(
+      {SelectionModelType selectionModelType,
+      LegendEntryGenerator<T, D> legendEntryGenerator})
+      : super(
+            selectionModelType: selectionModelType,
+            legendEntryGenerator: legendEntryGenerator);
+
+  @override
+  void hideSeries(String seriesId) {
+    super.hideSeries(seriesId);
+  }
+
+  @override
+  void showSeries(String seriesId) {
+    super.showSeries(seriesId);
+  }
+
+  @override
+  bool isSeriesHidden(String seriesId) {
+    return super.isSeriesHidden(seriesId);
   }
 }
 
@@ -78,6 +107,7 @@ void main() {
     final legend = new SeriesLegend(selectionModelType: selectionType);
 
     legend.attachTo(chart);
+    chart.callOnPreProcess(seriesList);
     chart.callOnPostProcess(seriesList);
 
     final legendEntries = legend.legendState.legendEntries;
@@ -93,12 +123,78 @@ void main() {
     expect(legendEntries[1].isSelected, isFalse);
   });
 
+  test('default hidden series are removed from list during pre process', () {
+    final seriesList = [series1, series2];
+    final selectionType = SelectionModelType.info;
+    final legend = new ConcreteSeriesLegend(selectionModelType: selectionType);
+
+    legend.defaultHiddenSeries = ['s2'];
+
+    legend.attachTo(chart);
+    chart.callOnPreProcess(seriesList);
+
+    expect(legend.isSeriesHidden('s1'), isFalse);
+    expect(legend.isSeriesHidden('s2'), isTrue);
+
+    expect(seriesList, hasLength(1));
+    expect(seriesList[0].id, equals('s1'));
+  });
+
+  test('hidden series are removed from list after chart pre process', () {
+    final seriesList = [series1, series2];
+    final selectionType = SelectionModelType.info;
+    final legend = new ConcreteSeriesLegend(selectionModelType: selectionType);
+
+    legend.attachTo(chart);
+    legend.hideSeries('s1');
+    chart.callOnPreProcess(seriesList);
+
+    expect(legend.isSeriesHidden('s1'), isTrue);
+    expect(legend.isSeriesHidden('s2'), isFalse);
+
+    expect(seriesList, hasLength(1));
+    expect(seriesList[0].id, equals('s2'));
+  });
+
+  test('hidden and re-shown series is in the list after chart pre process', () {
+    final seriesList = [series1, series2];
+    final seriesList2 = [series1, series2];
+    final selectionType = SelectionModelType.info;
+    final legend = new ConcreteSeriesLegend(selectionModelType: selectionType);
+
+    legend.attachTo(chart);
+
+    // First hide the series.
+    legend.hideSeries('s1');
+    chart.callOnPreProcess(seriesList);
+
+    expect(legend.isSeriesHidden('s1'), isTrue);
+    expect(legend.isSeriesHidden('s2'), isFalse);
+
+    expect(seriesList, hasLength(1));
+    expect(seriesList[0].id, equals('s2'));
+
+    // Then un-hide the series. This second list imitates the behavior of the
+    // chart, which creates a fresh copy of the original data from the user
+    // during each draw cycle.
+    legend.showSeries('s1');
+    chart.callOnPreProcess(seriesList2);
+
+    expect(legend.isSeriesHidden('s1'), isFalse);
+    expect(legend.isSeriesHidden('s2'), isFalse);
+
+    expect(seriesList2, hasLength(2));
+    expect(seriesList2[0].id, equals('s1'));
+    expect(seriesList2[1].id, equals('s2'));
+  });
+
   test('selected series legend entry is updated', () {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
     final legend = new SeriesLegend(selectionModelType: selectionType);
 
     legend.attachTo(chart);
+    chart.callOnPreProcess(seriesList);
     chart.callOnPostProcess(seriesList);
     chart.getSelectionModel(selectionType).updateSelection([], [series1]);
 

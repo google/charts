@@ -50,12 +50,11 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
       {BarTargetLineRendererConfig config, String rendererId})
       : super(config: config, rendererId: rendererId, layoutPositionOrder: 11);
 
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
+  @override
+  void configureSeries(List<MutableSeries<T, D>> seriesList) {
     seriesList.forEach((MutableSeries<T, D> series) {
       series.colorFn ??= (T datum, int index) => _color;
     });
-
-    super.preprocessSeries(seriesList);
   }
 
   @override

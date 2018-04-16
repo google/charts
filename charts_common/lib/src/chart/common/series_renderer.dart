@@ -51,6 +51,14 @@ abstract class SeriesRenderer<T, D> extends LayoutView {
 
   void onDetach(BaseChart<T, D> chart);
 
+  /// Performs basic configuration for the series, before it is pre-processed.
+  ///
+  /// Typically, a series renderer should assign color mapping functions to
+  /// series that do not have them.
+  void configureSeries(List<MutableSeries<T, D>> seriesList);
+
+  /// Pre-calculates some details for the series that will be needed later
+  /// during the drawing phase.
   void preprocessSeries(List<MutableSeries<T, D>> seriesList);
 
   void configureDomainAxes(List<MutableSeries<T, D>> seriesList);
@@ -195,6 +203,9 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
 
   @override
   Rectangle<int> get componentBounds => this._drawAreaBounds;
+
+  @override
+  void configureSeries(List<MutableSeries<T, D>> seriesList) {}
 
   @override
   void preprocessSeries(List<MutableSeries<T, D>> seriesList) {}

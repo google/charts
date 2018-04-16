@@ -57,11 +57,9 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
         super(config: config, rendererId: rendererId, layoutPositionOrder: 10);
 
   @override
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
+  void configureSeries(List<MutableSeries<T, D>> seriesList) {
     assignMissingColors(getOrderedSeriesList(seriesList),
         emptyCategoryUsesSinglePalette: true);
-
-    super.preprocessSeries(seriesList);
   }
 
   @override

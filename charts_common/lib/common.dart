@@ -40,8 +40,15 @@ export 'src/chart/common/behavior/chart_behavior.dart'
 export 'src/chart/common/behavior/domain_highlighter.dart'
     show DomainHighlighter;
 export 'src/chart/common/behavior/legend/legend.dart'
-    show LegendCellPadding, LegendState, SeriesLegend;
+    show
+        Legend,
+        LegendCellPadding,
+        LegendState,
+        LegendTapHandling,
+        SeriesLegend;
 export 'src/chart/common/behavior/legend/legend_entry.dart' show LegendEntry;
+export 'src/chart/common/behavior/legend/legend_entry_generator.dart'
+    show LegendEntryGenerator;
 export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter;
 export 'src/chart/common/behavior/range_annotation.dart'

@@ -333,6 +333,8 @@ abstract class BaseChart<T, D> {
     // TODO: Handle exiting renderers.
     _animationsTemporarilyDisabled = skipAnimation;
 
+    configureSeries(seriesList);
+
     // Allow listeners to manipulate the processed seriesList.
     fireOnPreprocess(seriesList);
 
@@ -354,8 +356,28 @@ abstract class BaseChart<T, D> {
     return s;
   }
 
+  /// Preprocess series to assign missing color functions.
+  void configureSeries(List<MutableSeries<T, D>> seriesList) {
+    Map<String, List<MutableSeries<T, D>>> rendererToSeriesList = {};
+
+    // Build map of rendererIds to SeriesLists. This map can't be re-used later
+    // in the preprocessSeries call because some behaviors might alter the
+    // seriesList.
+    seriesList.forEach((MutableSeries<T, D> series) {
+      String rendererId = series.getAttr(rendererIdKey);
+      rendererToSeriesList.putIfAbsent(rendererId, () => []).add(series);
+    });
+
+    // Have each renderer add missing color functions to their seriesLists.
+    rendererToSeriesList
+        .forEach((String rendererId, List<MutableSeries<T, D>> seriesList) {
+      getSeriesRenderer(rendererId).configureSeries(seriesList);
+    });
+  }
+
   /// Preprocess series to allow stacking and other mutations.
-  /// Build a map rendererId to series.
+  ///
+  /// Build a map of rendererId to series.
   Map<String, List<MutableSeries<T, D>>> preprocessSeries(
       List<MutableSeries<T, D>> seriesList) {
     Map<String, List<MutableSeries<T, D>>> rendererToSeriesList = {};
