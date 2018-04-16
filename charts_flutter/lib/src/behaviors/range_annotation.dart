@@ -56,5 +56,8 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
   String get role => 'RangeAnnotation';
 
   @override
+  int get hashCode => this.runtimeType.hashCode;
+
+  @override
   bool operator ==(Object o) => o is RangeAnnotation;
 }
