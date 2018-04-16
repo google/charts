@@ -19,6 +19,9 @@ import '../../../common/chart_context.dart' show ChartContext;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../time/auto_adjusting_date_time_tick_provider.dart'
     show AutoAdjustingDateTimeTickProvider;
+import '../time/time_range_tick_provider_impl.dart'
+    show TimeRangeTickProviderImpl;
+import '../time/day_time_stepper.dart' show DayTimeStepper;
 import '../time/date_time_tick_formatter.dart' show DateTimeTickFormatter;
 import '../time/hour_tick_formatter.dart' show HourTickFormatter;
 import '../time/time_tick_formatter.dart' show TimeTickFormatter;
@@ -96,6 +99,26 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
 
   @override
   int get hashCode => includeTime?.hashCode ?? 0;
+}
+
+/// [TickProviderSpec] that sets up time ticks with days increments only.
+@immutable
+class DayTickProviderSpec implements DateTimeTickProviderSpec {
+  final List<int> increments;
+  DayTickProviderSpec({this.increments});
+
+  /// Creates a [TickProviderSpec] that dynamically chooses ticks based on the
+  /// extents of the data, limited to day increments.
+  ///
+  /// [increments] specify the number of day increments that can be chosen from
+  /// when searching for the appropriate tick intervals.
+  @override
+  AutoAdjustingDateTimeTickProvider createTickProvider(ChartContext context) {
+    return new AutoAdjustingDateTimeTickProvider.createWith([
+      new TimeRangeTickProviderImpl(new DayTimeStepper(context.dateTimeFactory,
+          allowedTickIncrements: increments))
+    ]);
+  }
 }
 
 /// [TickProviderSpec] that allows you to specific the ticks to be used.

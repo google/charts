@@ -36,6 +36,7 @@ export 'package:charts_common/src/chart/cartesian/axis/spec/date_time_axis_spec.
         DateTimeAxisSpec,
         AutoDateTimeTickFormatterSpec,
         AutoDateTimeTickProviderSpec,
+        DayTickProviderSpec,
         TimeFormatterSpec,
         StaticDateTimeTickProviderSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
@@ -60,7 +61,11 @@ export 'package:charts_common/src/chart/common/behavior/a11y/a11y_explore_behavi
 export 'package:charts_common/src/chart/common/behavior/a11y/domain_a11y_explore_behavior.dart'
     show VocalizationCallback;
 export 'package:charts_common/src/chart/common/behavior/chart_behavior.dart'
-    show ChartBehavior;
+    show
+        BehaviorPosition,
+        ChartBehavior,
+        InsideJustification,
+        OutsideJustification;
 export 'package:charts_common/src/chart/common/behavior/range_annotation.dart'
     show RangeAnnotationAxisType, RangeAnnotationSegment;
 export 'package:charts_common/src/chart/common/behavior/select_nearest.dart'
@@ -103,8 +108,6 @@ export 'src/bar_chart.dart';
 export 'src/base_chart.dart' show LayoutConfig;
 export 'src/behaviors/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior;
-export 'src/behaviors/chart_behavior.dart'
-    show BuildablePosition, OutsideJustification, InsideJustification;
 export 'src/behaviors/domain_highlighter.dart' show DomainHighlighter;
 export 'src/behaviors/legend/series_legend.dart' show SeriesLegend;
 export 'src/behaviors/line_point_highlighter.dart' show LinePointHighlighter;

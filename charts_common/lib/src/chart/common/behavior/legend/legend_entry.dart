@@ -32,6 +32,18 @@ class LegendEntry<T, D> {
   final Color color;
   bool isSelected;
 
+  /// Indicates whether this is in the first row of a tabular layout.
+  bool inFirstRow;
+
+  /// Indicates whether this is in the first column of a tabular layout.
+  bool inFirstColumn;
+
+  /// Indicates whether this is in the last row of a tabular layout.
+  bool inLastRow;
+
+  /// Indicates whether this is in the last column of a tabular layout.
+  bool inLastColumn;
+
   // TODO: Forward the default formatters from series and allow for
   // native legends to provide separate formatters.
 
@@ -41,7 +53,11 @@ class LegendEntry<T, D> {
       this.domain,
       this.value,
       this.color,
-      this.isSelected: false});
+      this.isSelected: false,
+      this.inFirstRow,
+      this.inFirstColumn,
+      this.inLastRow,
+      this.inLastColumn});
 
   /// Get the native symbol renderer stored in the series.
   SymbolRenderer get symbolRenderer =>

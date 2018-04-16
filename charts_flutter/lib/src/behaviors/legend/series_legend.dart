@@ -14,18 +14,17 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show SeriesLegend, SelectionModelType;
+    show
+        BehaviorPosition,
+        InsideJustification,
+        OutsideJustification,
+        SeriesLegend,
+        SelectionModelType;
 import 'package:flutter/widgets.dart' show BuildContext, EdgeInsets, Widget;
 import 'package:meta/meta.dart' show immutable;
 import '../../chart_container.dart' show ChartContainerRenderObject;
 import '../chart_behavior.dart'
-    show
-        BuildableBehavior,
-        BuildablePosition,
-        ChartBehavior,
-        GestureType,
-        InsideJustification,
-        OutsideJustification;
+    show BuildableBehavior, ChartBehavior, GestureType;
 import 'legend_content_builder.dart'
     show LegendContentBuilder, TabularLegendContentBuilder;
 import 'legend_layout.dart' show TabularLegendLayout;
@@ -41,11 +40,11 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   final LegendContentBuilder contentBuilder;
 
   /// Position of the legend relative to the chart.
-  final BuildablePosition position;
+  final common.BehaviorPosition position;
 
   /// Justification of the legend relative to the chart
-  final OutsideJustification outsideJustification;
-  final InsideJustification insideJustification;
+  final common.OutsideJustification outsideJustification;
+  final common.InsideJustification insideJustification;
 
   static const defaultCellPadding = const EdgeInsets.all(8.0);
 
@@ -77,25 +76,25 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// new row. By default there is no limit. The max columns created is the
   /// smaller of desiredMaxColumns and number of legend entries.
   factory SeriesLegend({
-    BuildablePosition position,
-    OutsideJustification outsideJustification,
-    InsideJustification insideJustification,
+    common.BehaviorPosition position,
+    common.OutsideJustification outsideJustification,
+    common.InsideJustification insideJustification,
     bool horizontalFirst,
     int desiredMaxRows,
     int desiredMaxColumns,
     EdgeInsets cellPadding,
   }) {
     // Set defaults if empty.
-    position ??= BuildablePosition.top;
-    outsideJustification ??= OutsideJustification.startDrawArea;
-    insideJustification ??= InsideJustification.topStart;
+    position ??= common.BehaviorPosition.top;
+    outsideJustification ??= common.OutsideJustification.startDrawArea;
+    insideJustification ??= common.InsideJustification.topStart;
     cellPadding ??= defaultCellPadding;
 
     // Set the tabular layout settings to match the position if it is not
     // specified.
-    horizontalFirst ??= (position == BuildablePosition.top ||
-        position == BuildablePosition.bottom ||
-        position == BuildablePosition.inside);
+    horizontalFirst ??= (position == common.BehaviorPosition.top ||
+        position == common.BehaviorPosition.bottom ||
+        position == common.BehaviorPosition.inside);
     final layoutBuilder = horizontalFirst
         ? new TabularLegendLayout.horizontalFirst(
             desiredMaxColumns: desiredMaxColumns, cellPadding: cellPadding)
@@ -152,13 +151,15 @@ class _FlutterSeriesLegend<T, D> extends common.SeriesLegend<T, D>
   }
 
   @override
-  BuildablePosition get position => config.position;
+  common.BehaviorPosition get position => config.position;
 
   @override
-  OutsideJustification get outsideJustification => config.outsideJustification;
+  common.OutsideJustification get outsideJustification =>
+      config.outsideJustification;
 
   @override
-  InsideJustification get insideJustification => config.insideJustification;
+  common.InsideJustification get insideJustification =>
+      config.insideJustification;
 
   @override
   Widget build(BuildContext context) =>

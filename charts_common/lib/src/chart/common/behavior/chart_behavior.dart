@@ -27,3 +27,38 @@ abstract class ChartBehavior<T, D> {
   /// Removes the behavior from a chart.
   void removeFrom(BaseChart<T, D> chart);
 }
+
+/// Position of a component within the chart layout.
+///
+/// Outside positions are [top], [bottom], [start], and [end].
+///
+/// [top] component positioned at the top, with the chart positioned below the
+/// component and height reduced by the height of the component.
+/// [bottom] component positioned below the chart, and the chart's height is
+/// reduced by the height of the component.
+/// [start] component is positioned at the left of the chart (or the right if
+/// RTL), the chart's width is reduced by the width of the component.
+/// [end] component is positioned at the right of the chart (or the left if
+/// RTL), the chart's width is reduced by the width of the component.
+/// [inside] component is layered on top of the chart.
+enum BehaviorPosition {
+  top,
+  bottom,
+  start,
+  end,
+  inside,
+}
+
+/// Justification for components positioned outside [BehaviorPosition].
+enum OutsideJustification {
+  startDrawArea,
+  start,
+  endDrawArea,
+  end,
+}
+
+/// Justification for components positioned [BehaviorPosition.inside].
+enum InsideJustification {
+  topStart,
+  topEnd,
+}
