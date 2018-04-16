@@ -207,8 +207,7 @@ class SimpleOrdinalScale implements OrdinalScale {
     if (domainIndex != null) {
       // Update the translate so that the scale starts half a step before the
       // chosen domain.
-      final viewportTranslatePx =
-          -(_cachedStepSizePixels * _domain.indexOf(startingDomain));
+      final viewportTranslatePx = -(_cachedStepSizePixels * domainIndex);
       setViewportSettings(_viewportScale, viewportTranslatePx);
     }
   }
