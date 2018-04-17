@@ -23,6 +23,8 @@ export 'package:charts_common/src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType;
 export 'package:charts_common/src/chart/cartesian/axis/axis.dart'
     show measureAxisIdKey;
+export 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart'
+    show SimpleTickFormatterBase;
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
@@ -30,7 +32,12 @@ export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/none_draw_s
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/axis_spec.dart'
-    show TickLabelAnchor, TickLabelJustification, TextStyleSpec, LineStyleSpec;
+    show
+        TickLabelAnchor,
+        TickLabelJustification,
+        TextStyleSpec,
+        LineStyleSpec,
+        TickFormatterSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
     show
         DateTimeAxisSpec,
