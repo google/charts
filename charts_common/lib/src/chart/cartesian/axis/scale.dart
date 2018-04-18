@@ -26,7 +26,7 @@ import 'dart:math' as math show max, min;
 /// process.
 ///
 /// [D] is the domain class type for the values passed in.
-abstract class Scale<D, E extends Extents> {
+abstract class Scale<D> {
   /// Applies the scale function to the [domainValue].
   ///
   /// Returns the pixel location for the given [domainValue] or null if the
@@ -95,13 +95,10 @@ abstract class Scale<D, E extends Extents> {
   /// data to the left.
   double get viewportTranslatePx;
 
-  /// Returns the domain extent visible in the viewport of the drawArea.
-  E get viewportDomain;
-
   /// Returns a mutable copy of the scale.
   ///
   /// Mutating the returned scale will not effect the original one.
-  MutableScale<D, E> copy();
+  MutableScale<D> copy();
 }
 
 /// Mutable extension of the [Scale] definition.
@@ -110,7 +107,7 @@ abstract class Scale<D, E extends Extents> {
 /// of the area to draw on.
 ///
 /// [D] the domain class type for the values passed in.
-abstract class MutableScale<D, E extends Extents> extends Scale<D, E> {
+abstract class MutableScale<D> extends Scale<D> {
   /// Reset the domain for this [Scale].
   void resetDomain();
 
@@ -144,11 +141,6 @@ abstract class MutableScale<D, E extends Extents> extends Scale<D, E> {
   /// likely <= 0 which shifts the start of the data before the edge of the
   /// chart giving us a pan.
   void setViewportSettings(double viewportScale, double viewportTranslatePx);
-
-  /// Sets the domain extent visible in the viewport of the drawArea.
-  ///
-  /// Invalidates the viewportScale & viewportTranslatePx.
-  set viewportDomain(E extents);
 
   /// Sets the configuration used to determine the rangeBand (bar group width).
   set rangeBandConfig(RangeBandConfig barGroupWidthConfig);
@@ -315,4 +307,4 @@ class StepSizeConfig {
 }
 
 // TODO: make other extent subclasses plural.
-abstract class Extents {}
+abstract class Extents<D> {}

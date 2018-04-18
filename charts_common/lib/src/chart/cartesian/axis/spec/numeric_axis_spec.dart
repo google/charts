@@ -20,15 +20,13 @@ import '../../../common/chart_context.dart' show ChartContext;
 import '../numeric_tick_provider.dart' show NumericTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../tick_formatter.dart' show NumericTickFormatter;
-import '../numeric_extents.dart' show NumericExtents;
-import '../numeric_scale.dart' show NumericScale;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
 
 /// [AxisSpec] specialized for numeric/continuous axes like the measure axis.
 @immutable
-class NumericAxisSpec extends AxisSpec<num, NumericExtents, NumericScale> {
+class NumericAxisSpec extends AxisSpec<num> {
   /// Creates a [AxisSpec] that specialized for numeric data.
   ///
   /// [renderSpec] spec used to configure how the ticks and labels
@@ -55,8 +53,7 @@ class NumericAxisSpec extends AxisSpec<num, NumericExtents, NumericScale> {
       other is NumericAxisSpec && super == (other);
 }
 
-abstract class NumericTickProviderSpec
-    extends TickProviderSpec<num, NumericExtents, NumericScale> {}
+abstract class NumericTickProviderSpec extends TickProviderSpec<num> {}
 
 abstract class NumericTickFormatterSpec extends TickFormatterSpec<num> {}
 
@@ -137,9 +134,8 @@ class StaticNumericTickProviderSpec implements NumericTickProviderSpec {
   StaticNumericTickProviderSpec(this.tickSpecs);
 
   @override
-  StaticTickProvider<num, NumericExtents, NumericScale> createTickProvider(
-          ChartContext context) =>
-      new StaticTickProvider<num, NumericExtents, NumericScale>(tickSpecs);
+  StaticTickProvider<num> createTickProvider(ChartContext context) =>
+      new StaticTickProvider<num>(tickSpecs);
 
   @override
   bool operator ==(Object other) =>

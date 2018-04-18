@@ -15,13 +15,11 @@
 
 import '../tick_provider.dart' show BaseTickProvider;
 import '../time/date_time_extents.dart' show DateTimeExtents;
-import '../time/date_time_scale.dart' show DateTimeScale;
 
 /// Provides ticks for a particular time unit.
 ///
 /// Used by [AutoAdjustingDateTimeTickProvider].
-abstract class TimeRangeTickProvider
-    extends BaseTickProvider<DateTime, DateTimeExtents, DateTimeScale> {
+abstract class TimeRangeTickProvider extends BaseTickProvider<DateTime> {
   /// Returns if this tick provider will produce a sufficient number of ticks
   /// for [domainExtents].
   bool providesSufficientTicksForRange(DateTimeExtents domainExtents);

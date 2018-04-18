@@ -17,7 +17,7 @@ import 'package:meta/meta.dart' show required;
 
 import '../scale.dart' show Extents;
 
-class DateTimeExtents extends Extents {
+class DateTimeExtents extends Extents<DateTime> {
   final DateTime start;
   final DateTime end;
 

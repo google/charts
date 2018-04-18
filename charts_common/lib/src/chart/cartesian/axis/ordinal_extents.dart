@@ -17,7 +17,7 @@ import 'dart:collection' show HashSet;
 import 'scale.dart' show Extents;
 
 /// A range of ordinals.
-class OrdinalExtents extends Extents {
+class OrdinalExtents extends Extents<String> {
   final List<String> _range;
 
   /// The extents representing the ordinal values in [range].

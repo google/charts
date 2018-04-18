@@ -17,7 +17,7 @@ import 'package:meta/meta.dart' show required;
 import '../../common/chart_context.dart' show ChartContext;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import 'axis.dart' show AxisOrientation;
-import 'scale.dart' show MutableScale, Extents;
+import 'scale.dart' show MutableScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart' show TickFormatter;
 import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
@@ -25,8 +25,7 @@ import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 /// A strategy for selecting values for axis ticks based on the domain values.
 ///
 /// [D] is the domain type.
-abstract class TickProvider<D, E extends Extents,
-    S extends MutableScale<D, E>> {
+abstract class TickProvider<D> {
   /// Returns a list of ticks in value order that should be displayed.
   ///
   /// This method should not return null. If no ticks are desired an empty list
@@ -40,7 +39,7 @@ abstract class TickProvider<D, E extends Extents,
   List<Tick<D>> getTicks({
     @required ChartContext context,
     @required GraphicsFactory graphicsFactory,
-    @required S scale,
+    @required covariant MutableScale<D> scale,
     @required TickFormatter<D> formatter,
     @required Map<D, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
@@ -50,8 +49,7 @@ abstract class TickProvider<D, E extends Extents,
 }
 
 /// A base tick provider.
-abstract class BaseTickProvider<D, E extends Extents,
-    S extends MutableScale<D, E>> implements TickProvider<D, E, S> {
+abstract class BaseTickProvider<D> implements TickProvider<D> {
   const BaseTickProvider();
 
   /// Create ticks from [domainValues].
@@ -59,7 +57,7 @@ abstract class BaseTickProvider<D, E extends Extents,
     List<D> domainValues, {
     @required ChartContext context,
     @required GraphicsFactory graphicsFactory,
-    @required S scale,
+    @required MutableScale<D> scale,
     @required TickFormatter<D> formatter,
     @required Map<D, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,

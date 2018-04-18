@@ -42,8 +42,7 @@ import 'tick_provider.dart' show BaseTickProvider;
 /// * Alternate rendering is not used to avoid collisions.
 /// * Provide the least amount of domain range covering all data points (while
 /// still selecting "nice" ticks values.
-class NumericTickProvider
-    extends BaseTickProvider<num, NumericExtents, NumericScale> {
+class NumericTickProvider extends BaseTickProvider<num> {
   /// Used to determine the automatic tick count calculation.
   static const MIN_DIPS_BETWEEN_TICKS = 25;
 

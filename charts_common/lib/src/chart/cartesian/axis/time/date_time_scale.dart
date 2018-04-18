@@ -23,7 +23,7 @@ import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 /// [DateTimeScale] is a wrapper for [LinearScale].
 /// [DateTime] values are converted to millisecondsSinceEpoch and passed to the
 /// [LinearScale].
-class DateTimeScale extends MutableScale<DateTime, DateTimeExtents> {
+class DateTimeScale extends MutableScale<DateTime> {
   final DateTimeFactory dateTimeFactory;
   final LinearScale _linearScale;
 
@@ -80,7 +80,6 @@ class DateTimeScale extends MutableScale<DateTime, DateTimeExtents> {
     _linearScale.resetViewportSettings();
   }
 
-  @override
   DateTimeExtents get viewportDomain {
     final extents = _linearScale.viewportDomain;
     return new DateTimeExtents(
@@ -90,7 +89,6 @@ class DateTimeScale extends MutableScale<DateTime, DateTimeExtents> {
             .createDateTimeFromMilliSecondsSinceEpoch(extents.max.toInt()));
   }
 
-  @override
   set viewportDomain(DateTimeExtents extents) {
     _linearScale.viewportDomain = new NumericExtents(
         extents.start.millisecondsSinceEpoch,

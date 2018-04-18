@@ -15,7 +15,6 @@
 
 import 'dart:math' show min, max;
 
-import 'ordinal_extents.dart' show OrdinalExtents;
 import 'ordinal_scale.dart' show OrdinalScale;
 import 'ordinal_scale_domain_info.dart' show OrdinalScaleDomainInfo;
 import 'scale.dart'
@@ -231,18 +230,6 @@ class SimpleOrdinalScale implements OrdinalScale {
     }
     return _domain.getDomainAtIndex(
         (-_viewportTranslatePx / _cachedStepSizePixels).ceil().toInt());
-  }
-
-  @override
-  set viewportDomain(OrdinalExtents extents) {
-    // TODO: Implement
-    throw new UnimplementedError('no domain viewport support for ordinal yet.');
-  }
-
-  @override
-  OrdinalExtents get viewportDomain {
-    // TODO: Implement
-    throw new UnimplementedError('no domain viewport support for ordinal yet.');
   }
 
   @override

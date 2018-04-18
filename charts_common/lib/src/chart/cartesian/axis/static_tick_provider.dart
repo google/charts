@@ -17,7 +17,7 @@ import 'package:meta/meta.dart' show required;
 import '../../common/chart_context.dart' show ChartContext;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import 'axis.dart' show AxisOrientation;
-import 'scale.dart' show MutableScale, Extents;
+import 'scale.dart' show MutableScale;
 import 'tick.dart' show Tick;
 import 'spec/tick_spec.dart' show TickSpec;
 import 'tick_formatter.dart' show TickFormatter;
@@ -28,8 +28,7 @@ import 'tick_provider.dart' show TickProvider;
 ///
 /// The [TextStyle] is not overridden during tick draw strategy decorateTicks.
 /// If it is null, then the default is used.
-class StaticTickProvider<D, E extends Extents, S extends MutableScale<D, E>>
-    extends TickProvider<D, E, S> {
+class StaticTickProvider<D> extends TickProvider<D> {
   final List<TickSpec<D>> tickSpec;
 
   StaticTickProvider(this.tickSpec);
@@ -38,7 +37,7 @@ class StaticTickProvider<D, E extends Extents, S extends MutableScale<D, E>>
   List<Tick<D>> getTicks({
     @required ChartContext context,
     @required GraphicsFactory graphicsFactory,
-    @required S scale,
+    @required MutableScale<D> scale,
     @required TickFormatter<D> formatter,
     @required Map<D, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,

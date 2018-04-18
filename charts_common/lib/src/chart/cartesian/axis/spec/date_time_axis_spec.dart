@@ -27,16 +27,13 @@ import '../time/hour_tick_formatter.dart' show HourTickFormatter;
 import '../time/time_tick_formatter.dart' show TimeTickFormatter;
 import '../time/time_tick_formatter_impl.dart'
     show CalendarField, TimeTickFormatterImpl;
-import '../time/date_time_extents.dart' show DateTimeExtents;
-import '../time/date_time_scale.dart' show DateTimeScale;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
 
 /// [AxisSpec] specialized for Timeseries charts.
 @immutable
-class DateTimeAxisSpec
-    extends AxisSpec<DateTime, DateTimeExtents, DateTimeScale> {
+class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// Creates a [AxisSpec] that specialized for timeseries charts.
   ///
   /// [renderSpec] spec used to configure how the ticks and labels
@@ -64,8 +61,7 @@ class DateTimeAxisSpec
       other is DateTimeAxisSpec && super == (other);
 }
 
-abstract class DateTimeTickProviderSpec
-    extends TickProviderSpec<DateTime, DateTimeExtents, DateTimeScale> {}
+abstract class DateTimeTickProviderSpec extends TickProviderSpec<DateTime> {}
 
 abstract class DateTimeTickFormatterSpec extends TickFormatterSpec<DateTime> {}
 
@@ -129,10 +125,8 @@ class StaticDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
   StaticDateTimeTickProviderSpec(this.tickSpecs);
 
   @override
-  StaticTickProvider<DateTime, DateTimeExtents, DateTimeScale>
-      createTickProvider(ChartContext context) =>
-          new StaticTickProvider<DateTime, DateTimeExtents, DateTimeScale>(
-              tickSpecs);
+  StaticTickProvider<DateTime> createTickProvider(ChartContext context) =>
+      new StaticTickProvider<DateTime>(tickSpecs);
 
   @override
   bool operator ==(Object other) =>

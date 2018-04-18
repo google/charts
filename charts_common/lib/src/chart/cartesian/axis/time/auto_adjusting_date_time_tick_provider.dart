@@ -23,7 +23,6 @@ import '../tick.dart' show Tick;
 import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import '../tick_formatter.dart' show TickFormatter;
 import '../tick_provider.dart' show TickProvider;
-import 'date_time_extents.dart' show DateTimeExtents;
 import 'date_time_scale.dart' show DateTimeScale;
 import 'day_time_stepper.dart' show DayTimeStepper;
 import 'hour_time_stepper.dart' show HourTimeStepper;
@@ -44,8 +43,7 @@ import 'time_range_tick_provider_impl.dart' show TimeRangeTickProviderImpl;
 ///
 /// Once a tick provider is chosen the selection of ticks is done by the child
 /// tick provider.
-class AutoAdjustingDateTimeTickProvider
-    implements TickProvider<DateTime, DateTimeExtents, DateTimeScale> {
+class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
   /// List of tick providers to be selected from.
   final List<TimeRangeTickProvider> _potentialTickProviders;
 

@@ -19,15 +19,13 @@ import '../../../common/chart_context.dart' show ChartContext;
 import '../ordinal_tick_provider.dart' show OrdinalTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../tick_formatter.dart' show OrdinalTickFormatter;
-import '../ordinal_extents.dart' show OrdinalExtents;
-import '../ordinal_scale.dart' show OrdinalScale;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
 
 /// [AxisSpec] specialized for ordinal/non-continuous axes typically for bars.
 @immutable
-class OrdinalAxisSpec extends AxisSpec<String, OrdinalExtents, OrdinalScale> {
+class OrdinalAxisSpec extends AxisSpec<String> {
   /// Creates a [AxisSpec] that specialized for ordinal domain charts.
   ///
   /// [renderSpec] spec used to configure how the ticks and labels
@@ -54,8 +52,7 @@ class OrdinalAxisSpec extends AxisSpec<String, OrdinalExtents, OrdinalScale> {
       other is OrdinalAxisSpec && super == (other);
 }
 
-abstract class OrdinalTickProviderSpec
-    extends TickProviderSpec<String, OrdinalExtents, OrdinalScale> {}
+abstract class OrdinalTickProviderSpec extends TickProviderSpec<String> {}
 
 abstract class OrdinalTickFormatterSpec extends TickFormatterSpec<String> {}
 
@@ -82,9 +79,8 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   StaticOrdinalTickProviderSpec(this.tickSpecs);
 
   @override
-  StaticTickProvider<String, OrdinalExtents, OrdinalScale> createTickProvider(
-          ChartContext context) =>
-      new StaticTickProvider<String, OrdinalExtents, OrdinalScale>(tickSpecs);
+  StaticTickProvider<String> createTickProvider(ChartContext context) =>
+      new StaticTickProvider<String>(tickSpecs);
 
   @override
   bool operator ==(Object other) =>
