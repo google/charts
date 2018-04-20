@@ -27,6 +27,13 @@
 | Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | |
 
 
+### Scatter Plot Charts
+
+| | | | |
+| --- | --- | --- | --- |
+| Simple<br>[![](example/scatter_plot_charts/simple_thumb.png)](example/scatter_plot_charts/simple) | | | |
+
+
 ### Pie Charts
 
 | | | | |

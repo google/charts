@@ -93,6 +93,8 @@ export 'package:charts_common/src/chart/layout/layout_view.dart'
     show LayoutPosition, ViewMargin;
 export 'package:charts_common/src/chart/line/line_renderer_config.dart'
     show LineRendererConfig;
+export 'package:charts_common/src/chart/scatter_plot/point_renderer_config.dart'
+    show PointRendererConfig;
 export 'package:charts_common/src/chart/pie/arc_renderer_config.dart'
     show ArcRendererConfig;
 export 'package:charts_common/src/common/color.dart' show Color;
@@ -124,6 +126,7 @@ export 'src/behaviors/zoom/pan_and_zoom_behavior.dart' show PanAndZoomBehavior;
 export 'src/behaviors/zoom/pan_behavior.dart' show PanBehavior;
 export 'src/line_chart.dart';
 export 'src/pie_chart.dart';
+export 'src/scatter_plot_chart.dart';
 export 'src/selection_model_config.dart' show SelectionModelConfig;
 export 'src/symbol_renderer.dart'
     show SymbolRenderer, RoundedRectSymbolRenderer;

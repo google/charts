@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show protected;
+
 import 'axis/axis.dart'
     show
         Axis,
@@ -49,9 +51,14 @@ class NumericCartesianChart<T> extends CartesianChart<T, num> {
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);
     _domainAxis.context = context;
+    initDomainAxis(context, graphicsFactory);
+    addView(_domainAxis);
+  }
+
+  @protected
+  void initDomainAxis(ChartContext context, GraphicsFactory graphicsFactory) {
     _domainAxis.tickDrawStrategy = new SmallTickRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
-    addView(_domainAxis);
   }
 
   @override

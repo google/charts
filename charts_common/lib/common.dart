@@ -79,6 +79,10 @@ export 'src/chart/line/line_renderer_config.dart' show LineRendererConfig;
 export 'src/chart/pie/arc_renderer.dart' show ArcRenderer;
 export 'src/chart/pie/arc_renderer_config.dart' show ArcRendererConfig;
 export 'src/chart/pie/pie_chart.dart' show PieChart;
+export 'src/chart/scatter_plot/point_renderer.dart' show PointRenderer;
+export 'src/chart/scatter_plot/point_renderer_config.dart'
+    show PointRendererConfig;
+export 'src/chart/scatter_plot/scatter_plot_chart.dart' show ScatterPlotChart;
 export 'src/chart/time_series/time_series_chart.dart' show TimeSeriesChart;
 export 'src/common/color.dart' show Color;
 export 'src/common/date_time_factory.dart'
