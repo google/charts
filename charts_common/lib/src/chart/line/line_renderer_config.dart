@@ -28,17 +28,29 @@ class LineRendererConfig<T, D> extends LayoutViewConfig
 
   final rendererAttributes = new RendererAttributes();
 
+  /// Radius of points on the line, if [includePoints] is enabled.
+  final double radiusPx;
+
   /// Stroke width of the line.
   final double strokeWidthPx;
 
   /// Dash pattern for the line.
   final List<int> dashPattern;
 
+  /// Configures whether a line representing the data will be drawn.
+  final bool includeLine;
+
+  /// Configures whether points representing the data will be drawn.
+  final bool includePoints;
+
   LineRendererConfig(
       {this.customRendererId,
+      this.radiusPx = 3.5,
       this.strokeWidthPx = 2.0,
       this.dashPattern,
-      this.symbolRenderer});
+      this.symbolRenderer,
+      this.includeLine = true,
+      this.includePoints = false});
 
   @override
   LineRenderer<T, D> build() {

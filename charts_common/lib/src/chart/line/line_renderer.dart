@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
-import 'dart:math' show Point;
+import 'dart:math' show Rectangle, Point;
 
 import 'package:meta/meta.dart' show required;
 
@@ -24,6 +24,8 @@ import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../scatter_plot/point_renderer.dart' show PointRenderer;
+import '../scatter_plot/point_renderer_config.dart' show PointRendererConfig;
 import '../../common/color.dart' show Color;
 import '../../data/series.dart' show AttributeKey;
 import 'line_renderer_config.dart' show LineRendererConfig;
@@ -33,6 +35,8 @@ const lineElementsKey =
 
 class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
   final LineRendererConfig config;
+
+  PointRenderer _pointRenderer;
 
   /// Store a map of series drawn on the chart, mapped by series name.
   ///
@@ -52,11 +56,27 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
         super(
             rendererId: rendererId ?? 'line',
             layoutPositionOrder: 10,
-            symbolRenderer: config?.symbolRenderer);
+            symbolRenderer: config?.symbolRenderer) {
+    _pointRenderer = new PointRenderer<T, D>(
+        config: new PointRendererConfig<T, D>(radiusPx: this.config.radiusPx));
+  }
+
+  @override
+  void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
+    super.layout(componentBounds, drawAreaBounds);
+
+    if (config.includePoints) {
+      _pointRenderer.layout(componentBounds, drawAreaBounds);
+    }
+  }
 
   @override
   void configureSeries(List<MutableSeries<T, D>> seriesList) {
     assignMissingColors(seriesList, emptyCategoryUsesSinglePalette: false);
+
+    if (config.includePoints) {
+      _pointRenderer.configureSeries(seriesList);
+    }
   }
 
   @override
@@ -87,6 +107,10 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
 
       series.setAttr(lineElementsKey, elements);
     });
+
+    if (config.includePoints) {
+      _pointRenderer.preprocessSeries(seriesList);
+    }
   }
 
   void update(
@@ -180,6 +204,10 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
         }
       }
     });
+
+    if (config.includePoints) {
+      _pointRenderer.update(seriesList, isAnimatingThisDraw);
+    }
   }
 
   void paint(ChartCanvas canvas, double animationPercent) {
@@ -211,6 +239,10 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
             strokeWidthPx: line.strokeWidthPx);
       });
     });
+
+    if (config.includePoints) {
+      _pointRenderer.paint(canvas, animationPercent);
+    }
   }
 
   _DatumPoint<T, D> _getPoint(

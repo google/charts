@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'animation_zoom.dart';
 import 'dash_pattern.dart';
+import 'points.dart';
 import 'range_annotation.dart';
 import 'simple.dart';
 
@@ -27,6 +28,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Simple Line Chart',
       subtitle: 'With a single series and default line point highlighter',
       childBuilder: () => new SimpleLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Points Line Chart',
+      subtitle: 'Line chart with points on a single series',
+      childBuilder: () => new PointsLineChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
