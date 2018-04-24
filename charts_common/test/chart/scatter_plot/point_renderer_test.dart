@@ -29,7 +29,9 @@ class MyRow {
   final int campaign;
   final int clickCount;
   final double radius;
-  MyRow(this.campaignString, this.campaign, this.clickCount, this.radius);
+  final String shape;
+  MyRow(this.campaignString, this.campaign, this.clickCount, this.radius,
+      this.shape);
 }
 
 void main() {
@@ -38,11 +40,11 @@ void main() {
 
   setUp(() {
     var myFakeDesktopData = [
-      new MyRow('MyCampaign1', 0, 5, 3.0),
-      new MyRow('MyCampaign2', 10, 25, 5.0),
-      new MyRow('MyCampaign3', 12, 75, 4.0),
+      new MyRow('MyCampaign1', 0, 5, 3.0, null),
+      new MyRow('MyCampaign2', 10, 25, 5.0, 'shape 1'),
+      new MyRow('MyCampaign3', 12, 75, 4.0, 'shape 2'),
       // This datum should always get a default radiusPx value.
-      new MyRow('MyCampaign4', 13, 225, null),
+      new MyRow('MyCampaign4', 13, 225, null, null),
     ];
 
     final maxMeasure = 300;
@@ -89,6 +91,11 @@ void main() {
       expect(elementsList[1].radiusPx, equals(5.0));
       expect(elementsList[2].radiusPx, equals(4.0));
       expect(elementsList[3].radiusPx, equals(3.5));
+
+      expect(elementsList[0].symbolRendererId, equals(defaultSymbolRendererId));
+      expect(elementsList[1].symbolRendererId, equals(defaultSymbolRendererId));
+      expect(elementsList[2].symbolRendererId, equals(defaultSymbolRendererId));
+      expect(elementsList[3].symbolRendererId, equals(defaultSymbolRendererId));
     });
 
     test('with numeric data and missing radiusPxFn', () {
@@ -112,6 +119,53 @@ void main() {
       expect(elementsList[1].radiusPx, equals(2.0));
       expect(elementsList[2].radiusPx, equals(2.0));
       expect(elementsList[3].radiusPx, equals(2.0));
+    });
+
+    test('with custom symbol renderer ID in data', () {
+      renderer =
+          new PointRenderer<dynamic, num>(config: new PointRendererConfig());
+
+      numericSeriesList[0]
+          .setAttr(pointSymbolRendererFnKey, (MyRow row, _) => row.shape);
+
+      renderer.preprocessSeries(numericSeriesList);
+
+      expect(numericSeriesList.length, equals(1));
+
+      // Validate Desktop series.
+      var series = numericSeriesList[0];
+
+      var elementsList = series.getAttr(pointElementsKey);
+      expect(elementsList.length, equals(4));
+
+      expect(elementsList[0].symbolRendererId, equals(defaultSymbolRendererId));
+      expect(elementsList[1].symbolRendererId, equals('shape 1'));
+      expect(elementsList[2].symbolRendererId, equals('shape 2'));
+      expect(elementsList[3].symbolRendererId, equals(defaultSymbolRendererId));
+    });
+
+    test('with custom symbol renderer ID in series and data', () {
+      renderer =
+          new PointRenderer<dynamic, num>(config: new PointRendererConfig());
+
+      numericSeriesList[0]
+          .setAttr(pointSymbolRendererFnKey, (MyRow row, _) => row.shape);
+      numericSeriesList[0].setAttr(pointSymbolRendererIdKey, 'shape 0');
+
+      renderer.preprocessSeries(numericSeriesList);
+
+      expect(numericSeriesList.length, equals(1));
+
+      // Validate Desktop series.
+      var series = numericSeriesList[0];
+
+      var elementsList = series.getAttr(pointElementsKey);
+      expect(elementsList.length, equals(4));
+
+      expect(elementsList[0].symbolRendererId, equals('shape 0'));
+      expect(elementsList[1].symbolRendererId, equals('shape 1'));
+      expect(elementsList[2].symbolRendererId, equals('shape 2'));
+      expect(elementsList[3].symbolRendererId, equals('shape 0'));
     });
   });
 }

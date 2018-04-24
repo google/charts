@@ -28,7 +28,7 @@ abstract class SymbolRenderer implements common.SymbolRenderer {
   /// Used by SymbolRenderers that wrap a common symbol renderer.
   @override
   void paint(
-      common.ChartCanvas canvas, Rectangle<int> bounds, common.Color color) {}
+      common.ChartCanvas canvas, Rectangle<num> bounds, common.Color color) {}
 
   /// Used by Charts Flutter library implementation only.
   ///
@@ -64,7 +64,7 @@ class _SymbolCustomPaint extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final bounds =
-        new Rectangle<int>(0, 0, size.width.toInt(), size.height.toInt());
+        new Rectangle<num>(0, 0, size.width.toInt(), size.height.toInt());
     final commonColor = new common.Color(
         r: color.red, g: color.green, b: color.blue, a: color.alpha);
     symbolRenderer.paint(new ChartCanvas(canvas), bounds, commonColor);

@@ -18,7 +18,7 @@ import 'color.dart' show Color;
 import '../chart/common/chart_canvas.dart' show ChartCanvas;
 
 abstract class SymbolRenderer {
-  void paint(ChartCanvas canvas, Rectangle<int> bounds, Color color);
+  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color);
 
   bool shouldRepaint(covariant SymbolRenderer oldRenderer);
 }
@@ -29,7 +29,7 @@ class RoundedRectSymbolRenderer extends SymbolRenderer {
 
   RoundedRectSymbolRenderer({double radius}) : radius = radius ?? 1.0;
 
-  void paint(ChartCanvas canvas, Rectangle<int> bounds, Color color) {
+  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
     canvas.drawRRect(bounds,
         fill: color,
         stroke: color,
@@ -63,7 +63,7 @@ class LineSymbolRenderer extends SymbolRenderer {
 
   LineSymbolRenderer({double strokeWidth}) : strokeWidth = strokeWidth ?? 4;
 
-  void paint(ChartCanvas canvas, Rectangle<int> bounds, Color color) {
+  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
     final centerHeight = (bounds.bottom - bounds.top) / 2;
 
     // Adjust the length so the total width includes the rounded pixels.
@@ -101,16 +101,30 @@ class LineSymbolRenderer extends SymbolRenderer {
   int get hashCode => strokeWidth.hashCode;
 }
 
+/// Circle symbol renderer.
 class PointSymbolRenderer extends SymbolRenderer {
   PointSymbolRenderer();
 
-  void paint(ChartCanvas canvas, Rectangle<int> bounds, Color color) {
+  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
     final center = new Point(
-      (bounds.right - bounds.left) / 2,
-      (bounds.bottom - bounds.top) / 2,
+      bounds.left + (bounds.width / 2),
+      bounds.top + (bounds.height / 2),
     );
     final radius = min(bounds.width, bounds.height) / 2;
     canvas.drawPoint(point: center, fill: color, radius: radius);
+  }
+
+  bool shouldRepaint(PointSymbolRenderer oldRenderer) {
+    return this != oldRenderer;
+  }
+}
+
+/// Rectangle symbol renderer.
+class RectSymbolRenderer extends SymbolRenderer {
+  RectSymbolRenderer();
+
+  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
+    canvas.drawRect(bounds, fill: color);
   }
 
   bool shouldRepaint(PointSymbolRenderer oldRenderer) {

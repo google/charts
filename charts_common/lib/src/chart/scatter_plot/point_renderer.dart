@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
-import 'dart:math' show Point;
+import 'dart:math' show Point, Rectangle;
 
 import 'package:meta/meta.dart' show required;
 
@@ -25,11 +25,21 @@ import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../../common/color.dart' show Color;
-import '../../data/series.dart' show AttributeKey;
+import '../../common/symbol_renderer.dart' show PointSymbolRenderer;
+import '../../data/series.dart' show AccessorFn, AttributeKey;
 import 'point_renderer_config.dart' show PointRendererConfig;
 
 const pointElementsKey =
     const AttributeKey<List<_PointRendererElement>>('PointRenderer.elements');
+
+const pointSymbolRendererFnKey =
+    const AttributeKey<AccessorFn<dynamic, String>>(
+        'PointRenderer.symbolRendererFn');
+
+const pointSymbolRendererIdKey =
+    const AttributeKey<String>('PointRenderer.symbolRendererId');
+
+const defaultSymbolRendererId = '__default__';
 
 class PointRenderer<T, D> extends BaseCartesianRenderer<T, D> {
   final PointRendererConfig config;
@@ -53,7 +63,8 @@ class PointRenderer<T, D> extends BaseCartesianRenderer<T, D> {
         super(
             rendererId: rendererId ?? 'point',
             layoutPositionOrder: 10,
-            symbolRenderer: config?.symbolRenderer);
+            symbolRenderer:
+                config?.symbolRenderer ?? new PointSymbolRenderer());
 
   @override
   void configureSeries(List<MutableSeries<T, D>> seriesList) {
@@ -69,6 +80,8 @@ class PointRenderer<T, D> extends BaseCartesianRenderer<T, D> {
       var radiusPxFn = series.radiusPxFn;
       radiusPxFn ??= (_, __) => config.radiusPx;
 
+      final symbolRendererFn = series.getAttr(pointSymbolRendererFnKey);
+
       for (var index = 0; index < series.data.length; index++) {
         T datum = series.data[index];
 
@@ -77,8 +90,19 @@ class PointRenderer<T, D> extends BaseCartesianRenderer<T, D> {
         var radiusPx = radiusPxFn(datum, index);
         radiusPx ??= config.radiusPx;
 
+        // Get the ID of the [SymbolRenderer] for this point. An ID may be
+        // specified on the datum, or on the series. If neither is specified,
+        // fall back to the default.
+        String symbolRendererId;
+        if (symbolRendererFn != null) {
+          symbolRendererId = symbolRendererFn(datum, index);
+        }
+        symbolRendererId ??= series.getAttr(pointSymbolRendererIdKey);
+        symbolRendererId ??= defaultSymbolRendererId;
+
         var details = new _PointRendererElement<T, D>()
-          ..radiusPx = radiusPx.toDouble();
+          ..radiusPx = radiusPx.toDouble()
+          ..symbolRendererId = symbolRendererId;
 
         elements.add(details);
       }
@@ -149,7 +173,8 @@ class PointRenderer<T, D> extends BaseCartesianRenderer<T, D> {
               ..color = colorFn(datum, index)
               ..measureAxisPosition = measureAxis.getLocation(0.0)
               ..point = point
-              ..radiusPx = details.radiusPx);
+              ..radiusPx = details.radiusPx
+              ..symbolRendererId = details.symbolRendererId);
 
           pointList.add(animatingPoint);
         }
@@ -162,7 +187,8 @@ class PointRenderer<T, D> extends BaseCartesianRenderer<T, D> {
           ..color = colorFn(datum, index)
           ..measureAxisPosition = measureAxis.getLocation(0.0)
           ..point = point
-          ..radiusPx = details.radiusPx;
+          ..radiusPx = details.radiusPx
+          ..symbolRendererId = details.symbolRendererId;
 
         animatingPoint.setNewTarget(pointElement);
       }
@@ -200,8 +226,24 @@ class PointRenderer<T, D> extends BaseCartesianRenderer<T, D> {
               (_AnimatedPoint<T, D> animatingPoint) =>
                   animatingPoint.getCurrentPoint(animationPercent))
           .forEach((_PointRendererElement point) {
-        canvas.drawPoint(
-            point: point.point, fill: point.color, radius: point.radiusPx);
+        final bounds = new Rectangle<double>(
+            point.point.x - point.radiusPx,
+            point.point.y - point.radiusPx,
+            point.radiusPx * 2,
+            point.radiusPx * 2);
+
+        if (point.symbolRendererId == defaultSymbolRendererId) {
+          symbolRenderer.paint(canvas, bounds, point.color);
+        } else {
+          final id = point.symbolRendererId;
+          if (!config.customSymbolRenderers.containsKey(id)) {
+            throw new ArgumentError(
+                'Invalid custom symbol renderer id "${id}"');
+          }
+
+          final customRenderer = config.customSymbolRenderers[id];
+          customRenderer.paint(canvas, bounds, point.color);
+        }
       });
     });
   }
@@ -306,13 +348,15 @@ class _PointRendererElement<T, D> {
   Color color;
   double measureAxisPosition;
   double radiusPx;
+  String symbolRendererId;
 
   _PointRendererElement<T, D> clone() {
     return new _PointRendererElement<T, D>()
       ..point = new _DatumPoint<T, D>.from(point)
       ..color = color != null ? new Color.fromOther(color: color) : null
       ..measureAxisPosition = measureAxisPosition
-      ..radiusPx = radiusPx;
+      ..radiusPx = radiusPx
+      ..symbolRendererId = symbolRendererId;
   }
 
   void updateAnimationPercent(_PointRendererElement previous,
