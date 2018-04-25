@@ -28,6 +28,7 @@ import 'package:charts_common/src/chart/cartesian/axis/collision_report.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_scale.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
+import 'package:charts_common/src/chart/cartesian/axis/tick_provider.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_extents.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
 import 'package:mockito/mockito.dart';
@@ -404,5 +405,71 @@ void main() {
     expect(ticks[2].value, equals(103));
     expect(ticks[3].value, equals(104));
     expect(ticks[4].value, equals(105));
+  });
+
+  test('handles tick hint for non zero ticks', () {
+    final drawStrategy = new FakeDrawStrategy(10, 10);
+    when(scale.viewportDomain).thenReturn(new NumericExtents(20.0, 35.0));
+    when(scale.rangeWidth).thenReturn(1000);
+
+    // Step Size: 3,
+    // Previous start tick: 10
+    // Previous window: 10 - 25
+    // Previous ticks: 10, 13, 16, 19, 22, 25
+    final tickHint = new TickHint(10, 25, tickCount: 6);
+
+    final ticks = tickProvider.getTicks(
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+      tickHint: tickHint,
+    );
+
+    // New adjusted ticks for window 20 - 35
+    // Should have ticks 22, 25, 28, 31, 34, 37
+    expect(ticks, hasLength(6));
+    expect(ticks[0].value, equals(22));
+    expect(ticks[1].value, equals(25));
+    expect(ticks[2].value, equals(28));
+    expect(ticks[3].value, equals(31));
+    expect(ticks[4].value, equals(34));
+    expect(ticks[5].value, equals(37));
+  });
+
+  test('handles tick hint for negative starting ticks', () {
+    final drawStrategy = new FakeDrawStrategy(10, 10);
+    when(scale.viewportDomain).thenReturn(new NumericExtents(-35.0, -20.0));
+    when(scale.rangeWidth).thenReturn(1000);
+
+    // Step Size: 3,
+    // Previous start tick: -25
+    // Previous window: -25 to -10
+    // Previous ticks: -25, -22, -19, -16, -13, -10
+    final tickHint = new TickHint(-25, -10, tickCount: 6);
+
+    final ticks = tickProvider.getTicks(
+      context: context,
+      graphicsFactory: graphicsFactory,
+      scale: scale,
+      formatter: formatter,
+      formatterValueCache: <num, String>{},
+      tickDrawStrategy: drawStrategy,
+      orientation: null,
+      tickHint: tickHint,
+    );
+
+    // New adjusted ticks for window -35 to -20
+    // Should have ticks -34, -31, -28, -25, -22, -19
+    expect(ticks, hasLength(6));
+    expect(ticks[0].value, equals(-34));
+    expect(ticks[1].value, equals(-31));
+    expect(ticks[2].value, equals(-28));
+    expect(ticks[3].value, equals(-25));
+    expect(ticks[4].value, equals(-22));
+    expect(ticks[5].value, equals(-19));
   });
 }

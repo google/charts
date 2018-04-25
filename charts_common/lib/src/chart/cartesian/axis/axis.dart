@@ -96,15 +96,6 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// If the axis line should always be drawn.
   bool forceDrawAxisLine;
 
-  /// Used by Charts Common library implementation only.
-  ///
-  /// If true, ticks get updated location only.
-  ///
-  /// This is used in pan / zoom behavior for a domain axis to prevent ticks
-  /// from being recalculated for each drag update event between the start of a
-  /// drag and the end of a drag.
-  bool updateTickLocationOnly = false;
-
   /// If true, do not allow axis to be modified.
   ///
   /// Ticks (including their location) are not updated.
@@ -190,7 +181,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
   /// Request ticks from tick provider.
   void _updateProvidedTicks() {
-    if (lockAxis || updateTickLocationOnly) {
+    if (lockAxis) {
       return;
     }
 

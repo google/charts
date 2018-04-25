@@ -23,4 +23,7 @@ abstract class TimeRangeTickProvider extends BaseTickProvider<DateTime> {
   /// Returns if this tick provider will produce a sufficient number of ticks
   /// for [domainExtents].
   bool providesSufficientTicksForRange(DateTimeExtents domainExtents);
+
+  /// Find the closet step size, from provided step size, in milliseconds.
+  int getClosestStepSize(int stepSize);
 }

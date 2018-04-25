@@ -22,7 +22,7 @@ import 'tick.dart' show Tick;
 import 'spec/tick_spec.dart' show TickSpec;
 import 'tick_formatter.dart' show TickFormatter;
 import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
-import 'tick_provider.dart' show TickProvider;
+import 'tick_provider.dart' show TickProvider, TickHint;
 
 /// A strategy that uses the ticks provided and only assigns positioning.
 ///
@@ -43,6 +43,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled: false,
+    TickHint<D> tickHint,
   }) {
     final ticks = <Tick<D>>[];
 

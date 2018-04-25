@@ -21,7 +21,7 @@ import 'ordinal_scale.dart' show OrdinalScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart' show TickFormatter;
 import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
-import 'tick_provider.dart' show BaseTickProvider;
+import 'tick_provider.dart' show BaseTickProvider, TickHint;
 
 /// A strategy for selecting ticks to draw given ordinal domain values.
 class OrdinalTickProvider extends BaseTickProvider<String> {
@@ -38,6 +38,7 @@ class OrdinalTickProvider extends BaseTickProvider<String> {
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled: false,
+    TickHint<String> tickHint,
   }) {
     return createTicks(scale.domain.domains,
         context: context,

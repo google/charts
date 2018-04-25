@@ -22,7 +22,7 @@ import '../axis.dart' show AxisOrientation;
 import '../tick.dart' show Tick;
 import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import '../tick_formatter.dart' show TickFormatter;
-import '../tick_provider.dart' show TickProvider;
+import '../tick_provider.dart' show TickProvider, TickHint;
 import 'date_time_scale.dart' show DateTimeScale;
 import 'day_time_stepper.dart' show DayTimeStepper;
 import 'hour_time_stepper.dart' show HourTimeStepper;
@@ -99,10 +99,26 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled: false,
+    TickHint<DateTime> tickHint,
   }) {
+    List<TimeRangeTickProvider> tickProviders;
+
+    /// If tick hint is provided, use the closest tick provider, otherwise
+    /// look through the tick providers for one that provides sufficient ticks
+    /// for the viewport.
+    if (tickHint != null) {
+      tickProviders = [_getClosestTickProvider(tickHint)];
+    } else {
+      tickProviders = _potentialTickProviders;
+    }
+
+    final lastTickProvider = tickProviders.last;
+
     final viewport = scale.viewportDomain;
-    for (final tickProvider in _potentialTickProviders) {
-      if (tickProvider.providesSufficientTicksForRange(viewport)) {
+    for (final tickProvider in tickProviders) {
+      final isLastProvider = (tickProvider == lastTickProvider);
+      if (isLastProvider ||
+          tickProvider.providesSufficientTicksForRange(viewport)) {
         return tickProvider.getTicks(
           context: context,
           graphicsFactory: graphicsFactory,
@@ -115,15 +131,28 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
       }
     }
 
-    return _potentialTickProviders.last.getTicks(
-      context: context,
-      graphicsFactory: graphicsFactory,
-      scale: scale,
-      formatter: formatter,
-      formatterValueCache: formatterValueCache,
-      tickDrawStrategy: tickDrawStrategy,
-      orientation: orientation,
-    );
+    return <Tick<DateTime>>[];
+  }
+
+  /// Find the closest tick provider based on the tick hint.
+  TimeRangeTickProvider _getClosestTickProvider(TickHint<DateTime> tickHint) {
+    final stepSize = ((tickHint.end.difference(tickHint.start).inMilliseconds) /
+            (tickHint.tickCount - 1))
+        .round();
+
+    int minDifference;
+    TimeRangeTickProvider closestTickProvider;
+
+    for (final tickProvider in _potentialTickProviders) {
+      final difference =
+          (stepSize - tickProvider.getClosestStepSize(stepSize)).abs();
+      if (minDifference == null || minDifference > difference) {
+        minDifference = difference;
+        closestTickProvider = tickProvider;
+      }
+    }
+
+    return closestTickProvider;
   }
 
   static TimeRangeTickProvider createYearTickProvider(

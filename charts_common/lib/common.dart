@@ -58,6 +58,8 @@ export 'src/chart/common/behavior/select_nearest.dart'
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
     show PanAndZoomBehavior;
 export 'src/chart/common/behavior/zoom/pan_behavior.dart' show PanBehavior;
+export 'src/chart/common/behavior/zoom/panning_tick_provider.dart'
+    show PanningTickProviderMode;
 export 'src/chart/common/canvas_shapes.dart'
     show CanvasBarStack, CanvasPie, CanvasPieSlice, CanvasRect;
 export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;

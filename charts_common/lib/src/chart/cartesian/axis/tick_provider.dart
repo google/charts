@@ -34,8 +34,10 @@ abstract class TickProvider<D> {
   /// [graphicsFactory] The graphics factory used for text measurement.
   /// [scale] The scale of the data.
   /// [formatter] The formatter to use for generating tick labels.
-  /// [axisOrientation] Orientation of this axis ticks.
+  /// [orientation] Orientation of this axis ticks.
   /// [tickDrawStrategy] Draw strategy for ticks.
+  /// [viewportExtensionEnabled] allow extending the viewport for 'niced' ticks.
+  /// [tickHint] tick values for provider to calculate a desired tick range.
   List<Tick<D>> getTicks({
     @required ChartContext context,
     @required GraphicsFactory graphicsFactory,
@@ -45,6 +47,7 @@ abstract class TickProvider<D> {
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled: false,
+    TickHint<D> tickHint,
   });
 }
 
@@ -82,4 +85,18 @@ abstract class BaseTickProvider<D> implements TickProvider<D> {
 
     return ticks;
   }
+}
+
+/// A hint for the tick provider to determine step size and tick count.
+class TickHint<D> {
+  /// The starting hint tick value.
+  final D start;
+
+  /// The ending hint tick value.
+  final D end;
+
+  /// Number of ticks.
+  final int tickCount;
+
+  TickHint(this.start, this.end, {this.tickCount});
 }
