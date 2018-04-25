@@ -170,14 +170,21 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
       for (var index = 0; index < series.data.length; index++) {
         T datum = series.data[index];
 
-        pointList.add(_getPoint(
+        final datumPoint = _getPoint(
             datum,
             domainFn(datum, index),
             series,
             domainAxis,
             measureFn(datum, index),
             measureOffsetFn(datum, index),
-            measureAxis));
+            measureAxis);
+
+        // Only add the point if it is within the draw area bounds.
+        if (datumPoint.x != null &&
+            datumPoint.x >= drawBounds.left &&
+            datumPoint.x <= drawBounds.right) {
+          pointList.add(datumPoint);
+        }
 
         color = colorFn(series.data[index], index);
       }
