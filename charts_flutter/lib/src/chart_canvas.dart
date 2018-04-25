@@ -200,6 +200,18 @@ class ChartCanvas implements common.ChartCanvas {
         .paint(canvas, new Offset(offsetX.toDouble(), offsetY.toDouble()));
   }
 
+  @override
+  void setClipBounds(Rectangle<int> clipBounds) {
+    canvas
+      ..save()
+      ..clipRect(_getRect(clipBounds));
+  }
+
+  @override
+  void resetClipBounds() {
+    canvas.restore();
+  }
+
   /// Convert dart:math [Rectangle] to Flutter [Rect].
   Rect _getRect(Rectangle<num> rectangle) {
     return new Rect.fromLTWH(

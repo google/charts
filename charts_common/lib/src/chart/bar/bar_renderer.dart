@@ -186,7 +186,7 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
 
     // TODO: Change _roundingRadiusPx to use CornerRadiusCalculator
     // in BarRendererConfig. Also need to have a way to configure the calculator
-    canvas.drawBarStack(new CanvasBarStack(
+    final barStack = new CanvasBarStack(
       bars,
       radius: _roundingRadiusPx,
       stackedBarPadding: _stackedBarPadding,
@@ -194,7 +194,39 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
       roundTopRight: rtl ? false : true,
       roundBottomLeft: rtl ? true : false,
       roundBottomRight: renderingVertically || rtl ? false : true,
-    ));
+    );
+
+    // If bar stack's range width is:
+    // * Within the component bounds, then draw the bar stack.
+    // * Partially out of component bounds, then clip the stack where it is out
+    // of bounds.
+    // * Fully out of component bounds, do not draw.
+
+    final barOutsideBounds = renderingVertically
+        ? barStack.fullStackRect.left < componentBounds.left ||
+            barStack.fullStackRect.right > componentBounds.right
+        : barStack.fullStackRect.top < componentBounds.top ||
+            barStack.fullStackRect.bottom > componentBounds.bottom;
+
+    // TODO: When we have initial viewport, add image test for
+    // clipping.
+    if (barOutsideBounds) {
+      final clipBounds = _getBarStackBounds(barStack.fullStackRect);
+
+      // Do not draw the bar stack if it is completely outside of the component
+      // bounds.
+      if (clipBounds.width <= 0 || clipBounds.height <= 0) {
+        return;
+      }
+
+      canvas.setClipBounds(clipBounds);
+    }
+
+    canvas.drawBarStack(barStack);
+
+    if (barOutsideBounds) {
+      canvas.resetClipBounds();
+    }
 
     // Decorate the bar segments if there is a decorator.
     barRendererDecorator?.decorate(barElements, canvas, graphicsFactory,
@@ -202,6 +234,37 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
         animationPercent: animationPercent,
         renderingVertically: renderingVertically,
         rtl: rtl);
+  }
+
+  /// Calculate the clipping region for a rectangle that represents the full bar
+  /// stack.
+  Rectangle<int> _getBarStackBounds(Rectangle<int> barStackRect) {
+    int left;
+    int right;
+    int top;
+    int bottom;
+
+    if (renderingVertically) {
+      // Only clip at the start and end so that the bar's width stays within
+      // the viewport, but any bar decorations above the bar can still show.
+      left = max(componentBounds.left, barStackRect.left);
+      right = min(componentBounds.right, barStackRect.right);
+      top = componentBounds.top;
+      bottom = componentBounds.bottom;
+    } else {
+      // Only clip at the top and bottom so that the bar's height stays within
+      // the viewport, but any bar decorations to the right of the bar can still
+      // show.
+      left = componentBounds.left;
+      right = componentBounds.right;
+      top = max(componentBounds.top, barStackRect.top);
+      bottom = min(componentBounds.bottom, barStackRect.bottom);
+    }
+
+    final width = right - left;
+    final height = bottom - top;
+
+    return new Rectangle(left, top, width, height);
   }
 
   /// Generates a set of bounds that describe a bar.

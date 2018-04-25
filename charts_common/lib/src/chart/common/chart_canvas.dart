@@ -81,6 +81,14 @@ abstract class ChartCanvas {
   void drawBarStack(CanvasBarStack canvasBarStack);
 
   void drawText(TextElement textElement, int offsetX, int offsetY);
+
+  /// Request the canvas to clip to [clipBounds].
+  ///
+  /// Applies to all operations until [restClipBounds] is called.
+  void setClipBounds(Rectangle<int> clipBounds);
+
+  /// Restore
+  void resetClipBounds();
 }
 
 Color getAnimatedColor(Color previous, Color target, double animationPercent) {
