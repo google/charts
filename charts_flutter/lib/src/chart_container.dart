@@ -159,7 +159,14 @@ class ChartContainerRenderObject<T, D> extends RenderCustomPaint
       _chartState.setAnimation(transition);
     }
 
-    SchedulerBinding.instance.addPostFrameCallback(startAnimationController);
+    if (SchedulerBinding.instance.hasScheduledFrame) {
+      SchedulerBinding.instance.addPostFrameCallback(startAnimationController);
+    } else {
+      // Sometimes chart behaviors try to draw the chart "outside" of a Flutter
+      // draw cycle. Adding a post frame callback in this case does nothing. To
+      // work around this, trigger animation directly.
+      startAnimationController(null);
+    }
   }
 
   /// Request Flutter to rebuild the widget/container of chart.

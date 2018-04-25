@@ -32,6 +32,10 @@ class ConcreteChart extends BaseChart<MyRow, String> {
   List<DatumDetails<MyRow, String>> getDatumDetails(SelectionModelType _) =>
       null;
 
+  void callOnDraw(List<MutableSeries<MyRow, String>> seriesList) {
+    fireOnDraw(seriesList);
+  }
+
   void callOnPreProcess(List<MutableSeries<MyRow, String>> seriesList) {
     fireOnPreprocess(seriesList);
   }
@@ -107,6 +111,7 @@ void main() {
     final legend = new SeriesLegend(selectionModelType: selectionType);
 
     legend.attachTo(chart);
+    chart.callOnDraw(seriesList);
     chart.callOnPreProcess(seriesList);
     chart.callOnPostProcess(seriesList);
 
@@ -131,6 +136,7 @@ void main() {
     legend.defaultHiddenSeries = ['s2'];
 
     legend.attachTo(chart);
+    chart.callOnDraw(seriesList);
     chart.callOnPreProcess(seriesList);
 
     expect(legend.isSeriesHidden('s1'), isFalse);
@@ -147,6 +153,7 @@ void main() {
 
     legend.attachTo(chart);
     legend.hideSeries('s1');
+    chart.callOnDraw(seriesList);
     chart.callOnPreProcess(seriesList);
 
     expect(legend.isSeriesHidden('s1'), isTrue);
@@ -166,6 +173,7 @@ void main() {
 
     // First hide the series.
     legend.hideSeries('s1');
+    chart.callOnDraw(seriesList);
     chart.callOnPreProcess(seriesList);
 
     expect(legend.isSeriesHidden('s1'), isTrue);
@@ -178,6 +186,7 @@ void main() {
     // chart, which creates a fresh copy of the original data from the user
     // during each draw cycle.
     legend.showSeries('s1');
+    chart.callOnDraw(seriesList2);
     chart.callOnPreProcess(seriesList2);
 
     expect(legend.isSeriesHidden('s1'), isFalse);
@@ -194,6 +203,7 @@ void main() {
     final legend = new SeriesLegend(selectionModelType: selectionType);
 
     legend.attachTo(chart);
+    chart.callOnDraw(seriesList);
     chart.callOnPreProcess(seriesList);
     chart.callOnPostProcess(seriesList);
     chart.getSelectionModel(selectionType).updateSelection([], [series1]);
@@ -212,6 +222,63 @@ void main() {
     expect(legendEntries[1].label, equals('s2'));
     expect(legendEntries[1].color, equals(red));
     expect(legendEntries[1].isSelected, isFalse);
+  });
+
+  test('hidden series removed from chart and later readded is visible', () {
+    final seriesList = [series1, series2];
+    final selectionType = SelectionModelType.info;
+    final legend = new ConcreteSeriesLegend(selectionModelType: selectionType);
+
+    legend.attachTo(chart);
+
+    // First hide the series.
+    legend.hideSeries('s1');
+    chart.callOnDraw(seriesList);
+    chart.callOnPreProcess(seriesList);
+
+    expect(legend.isSeriesHidden('s1'), isTrue);
+    expect(legend.isSeriesHidden('s2'), isFalse);
+
+    expect(seriesList, hasLength(1));
+    expect(seriesList[0].id, equals('s2'));
+
+    // Validate that drawing the same set of series again maintains the hidden
+    // states.
+    final seriesList2 = [series1, series2];
+
+    chart.callOnDraw(seriesList2);
+    chart.callOnPreProcess(seriesList2);
+
+    expect(legend.isSeriesHidden('s1'), isTrue);
+    expect(legend.isSeriesHidden('s2'), isFalse);
+
+    expect(seriesList2, hasLength(1));
+    expect(seriesList2[0].id, equals('s2'));
+
+    // Next, redraw the chart with only the visible series2.
+    final seriesList3 = [series2];
+
+    chart.callOnDraw(seriesList3);
+    chart.callOnPreProcess(seriesList3);
+
+    expect(legend.isSeriesHidden('s2'), isFalse);
+
+    expect(seriesList3, hasLength(1));
+    expect(seriesList3[0].id, equals('s2'));
+
+    // Finally, add series1 back to the chart, and validate that it is not
+    // hidden.
+    final seriesList4 = [series1, series2];
+
+    chart.callOnDraw(seriesList4);
+    chart.callOnPreProcess(seriesList4);
+
+    expect(legend.isSeriesHidden('s1'), isFalse);
+    expect(legend.isSeriesHidden('s2'), isFalse);
+
+    expect(seriesList4, hasLength(2));
+    expect(seriesList4[0].id, equals('s1'));
+    expect(seriesList4[1].id, equals('s2'));
   });
 }
 
