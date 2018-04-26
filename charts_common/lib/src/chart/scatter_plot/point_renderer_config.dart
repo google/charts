@@ -20,8 +20,8 @@ import '../common/series_renderer_config.dart'
 import 'point_renderer.dart' show PointRenderer, pointSymbolRendererIdKey;
 
 /// Configuration for a line renderer.
-class PointRendererConfig<T, D> extends LayoutViewConfig
-    implements SeriesRendererConfig<T, D> {
+class PointRendererConfig<D> extends LayoutViewConfig
+    implements SeriesRendererConfig<D> {
   final String customRendererId;
 
   /// Renderer used to draw the points. Defaults to a circle.
@@ -47,7 +47,7 @@ class PointRendererConfig<T, D> extends LayoutViewConfig
       this.customSymbolRenderers});
 
   @override
-  PointRenderer<T, D> build() {
-    return new PointRenderer<T, D>(config: this, rendererId: customRendererId);
+  PointRenderer<D> build() {
+    return new PointRenderer<D>(config: this, rendererId: customRendererId);
   }
 }

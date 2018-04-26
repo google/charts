@@ -22,10 +22,10 @@ import '../../processed_series.dart' show ImmutableSeries;
 ///
 /// [T] the datum class type for the series passed in.
 /// [D] the domain class type for the datum.
-class LegendEntry<T, D> {
+class LegendEntry<D> {
   final String label;
-  final ImmutableSeries<T, D> series;
-  final T datum;
+  final ImmutableSeries<D> series;
+  final dynamic datum;
   final int datumIndex;
   final D domain;
   final double value;

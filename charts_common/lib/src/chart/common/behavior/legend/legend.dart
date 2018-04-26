@@ -42,7 +42,7 @@ import 'per_series_legend_entry_generator.dart';
 /// Series legend behavior for charts.
 ///
 /// By default this behavior creates a legend entry per series.
-class SeriesLegend<T, D> extends Legend<T, D> {
+class SeriesLegend<D> extends Legend<D> {
   /// List of currently hidden series, by ID.
   final _hiddenSeriesList = new Set<String>();
 
@@ -51,7 +51,7 @@ class SeriesLegend<T, D> extends Legend<T, D> {
 
   SeriesLegend(
       {SelectionModelType selectionModelType,
-      LegendEntryGenerator<T, D> legendEntryGenerator})
+      LegendEntryGenerator<D> legendEntryGenerator})
       : super(
             selectionModelType: selectionModelType ?? SelectionModelType.info,
             legendEntryGenerator:
@@ -82,17 +82,17 @@ class SeriesLegend<T, D> extends Legend<T, D> {
   /// removed from the chart data. The goal is to allow any metric that is
   /// removed from a chart, and later re-added to it, to be visible to the user.
   @override
-  void onData(List<MutableSeries<T, D>> seriesList) {
+  void onData(List<MutableSeries<D>> seriesList) {
     // If a series was removed from the chart, remove it from our current list
     // of hidden series.
-    final seriesIds = seriesList.map((MutableSeries<T, D> series) => series.id);
+    final seriesIds = seriesList.map((MutableSeries<D> series) => series.id);
 
     _hiddenSeriesList.removeWhere((String id) => !seriesIds.contains(id));
   }
 
   @override
-  void preProcessSeriesList(List<MutableSeries<T, D>> seriesList) {
-    seriesList.removeWhere((MutableSeries<T, D> series) {
+  void preProcessSeriesList(List<MutableSeries<D>> seriesList) {
+    seriesList.removeWhere((MutableSeries<D> series) {
       return _hiddenSeriesList.contains(series.id);
     });
   }
@@ -127,15 +127,15 @@ class SeriesLegend<T, D> extends Legend<T, D> {
 /// visual content of legends is done on the native platforms. This allows users
 /// to specify customized content for legends using the native platform (ex. for
 /// Flutter, using widgets).
-abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
+abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   final SelectionModelType selectionModelType;
   final legendState = new LegendState();
-  final LegendEntryGenerator<T, D> legendEntryGenerator;
+  final LegendEntryGenerator<D> legendEntryGenerator;
 
   String _title;
 
   BaseChart _chart;
-  LifecycleListener<T, D> _lifecycleListener;
+  LifecycleListener<D> _lifecycleListener;
 
   Rectangle<int> _componentBounds;
   Rectangle<int> _drawAreaBounds;
@@ -150,7 +150,7 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
 
   LegendTapHandling _legendTapHandling = LegendTapHandling.hide;
 
-  List<MutableSeries<T, D>> _currentSeriesList;
+  List<MutableSeries<D>> _currentSeriesList;
 
   Legend({this.selectionModelType, this.legendEntryGenerator}) {
     _lifecycleListener = new LifecycleListener(
@@ -209,10 +209,10 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
 
   /// Resets any hidden series data when new data is drawn on the chart.
   @protected
-  void onData(List<MutableSeries<T, D>> seriesList) {}
+  void onData(List<MutableSeries<D>> seriesList) {}
 
   /// Store off a copy of the series list for use when we render the legend.
-  void _preProcess(List<MutableSeries<T, D>> seriesList) {
+  void _preProcess(List<MutableSeries<D>> seriesList) {
     _currentSeriesList = new List.from(seriesList);
     preProcessSeriesList(seriesList);
   }
@@ -220,10 +220,10 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
   /// Overridable method that may be used by concrete [Legend] instances to
   /// manipulate the series list.
   @protected
-  void preProcessSeriesList(List<MutableSeries<T, D>> seriesList) {}
+  void preProcessSeriesList(List<MutableSeries<D>> seriesList) {}
 
   /// Build LegendEntries from list of series.
-  void _postProcess(List<MutableSeries<T, D>> seriesList) {
+  void _postProcess(List<MutableSeries<D>> seriesList) {
     legendState._legendEntries =
         legendEntryGenerator.getLegendEntries(_currentSeriesList);
     updateLegend();
@@ -243,7 +243,7 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
   void updateLegend() {}
 
   @override
-  void attachTo(BaseChart<T, D> chart) {
+  void attachTo(BaseChart<D> chart) {
     _chart = chart;
     chart.addLifecycleListener(_lifecycleListener);
     chart
@@ -334,11 +334,11 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
 }
 
 /// Stores legend data used by native legend content builder.
-class LegendState<T, D> {
-  List<LegendEntry<T, D>> _legendEntries;
+class LegendState<D> {
+  List<LegendEntry<D>> _legendEntries;
   SelectionModel _selectionModel;
 
-  List<LegendEntry<T, D>> get legendEntries => _legendEntries;
+  List<LegendEntry<D>> get legendEntries => _legendEntries;
   SelectionModel get selectionModel => _selectionModel;
 }
 

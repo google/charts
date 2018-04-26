@@ -166,7 +166,7 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
     final children = <Widget>[
       new SizedBox(
           height: 150.0,
-          child: new charts.TimeSeriesChart<TimeSeriesSales>(
+          child: new charts.TimeSeriesChart(
             widget.seriesList,
             animate: widget.animate,
             selectionModels: [

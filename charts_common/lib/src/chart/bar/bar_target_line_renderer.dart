@@ -30,8 +30,8 @@ import '../../common/color.dart' show Color;
 ///
 /// Usually paired with a BarRenderer to display target metrics alongside actual
 /// metrics.
-class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
-    _BarTargetLineRendererElement, _AnimatedBarTargetLine<T, D>> {
+class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
+    _BarTargetLineRendererElement, _AnimatedBarTargetLine<D>> {
   /// If we are grouped, use this spacing between the bars in a group.
   final _barGroupInnerPadding = 2;
 
@@ -51,14 +51,14 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
       : super(config: config, rendererId: rendererId, layoutPositionOrder: 11);
 
   @override
-  void configureSeries(List<MutableSeries<T, D>> seriesList) {
-    seriesList.forEach((MutableSeries<T, D> series) {
-      series.colorFn ??= (T datum, int index) => _color;
+  void configureSeries(List<MutableSeries<D>> seriesList) {
+    seriesList.forEach((MutableSeries<D> series) {
+      series.colorFn ??= (_) => _color;
     });
   }
 
   @override
-  _BarTargetLineRendererElement getBaseDetails(T datum, int index) {
+  _BarTargetLineRendererElement getBaseDetails(dynamic datum, int index) {
     final BarTargetLineRendererConfig localConfig = config;
     return new _BarTargetLineRendererElement()
       ..roundEndCaps = localConfig.roundEndCaps;
@@ -67,10 +67,10 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
   /// Generates an [_AnimatedBarTargetLine] to represent the previous and
   /// current state of one bar target line on the chart.
   @override
-  _AnimatedBarTargetLine<T, D> makeAnimatedBar(
+  _AnimatedBarTargetLine<D> makeAnimatedBar(
       {String key,
-      ImmutableSeries<T, D> series,
-      T datum,
+      ImmutableSeries<D> series,
+      dynamic datum,
       Color color,
       _BarTargetLineRendererElement details,
       D domainValue,
@@ -298,12 +298,12 @@ class _BarTargetLineRendererElement extends BaseBarRendererElement {
   }
 }
 
-class _AnimatedBarTargetLine<T, D>
-    extends BaseAnimatedBar<T, D, _BarTargetLineRendererElement> {
+class _AnimatedBarTargetLine<D>
+    extends BaseAnimatedBar<D, _BarTargetLineRendererElement> {
   _AnimatedBarTargetLine(
       {@required String key,
-      @required T datum,
-      @required ImmutableSeries<T, D> series,
+      @required dynamic datum,
+      @required ImmutableSeries<D> series,
       @required D domainValue})
       : super(key: key, datum: datum, series: series, domainValue: domainValue);
 

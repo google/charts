@@ -33,7 +33,7 @@ import 'line_renderer_config.dart' show LineRendererConfig;
 const lineElementsKey =
     const AttributeKey<List<_LineRendererElement>>('LineRenderer.elements');
 
-class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
+class LineRenderer<D> extends BaseCartesianRenderer<D> {
   final LineRendererConfig config;
 
   PointRenderer _pointRenderer;
@@ -42,7 +42,7 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
-  final _seriesLineMap = new LinkedHashMap<String, List<_AnimatedLine<T, D>>>();
+  final _seriesLineMap = new LinkedHashMap<String, List<_AnimatedLine<D>>>();
 
   // Store a list of lines that exist in the series data.
   //
@@ -57,8 +57,8 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
             rendererId: rendererId ?? 'line',
             layoutPositionOrder: 10,
             symbolRenderer: config?.symbolRenderer) {
-    _pointRenderer = new PointRenderer<T, D>(
-        config: new PointRendererConfig<T, D>(radiusPx: this.config.radiusPx));
+    _pointRenderer = new PointRenderer<D>(
+        config: new PointRendererConfig<D>(radiusPx: this.config.radiusPx));
   }
 
   @override
@@ -71,7 +71,7 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
   }
 
   @override
-  void configureSeries(List<MutableSeries<T, D>> seriesList) {
+  void configureSeries(List<MutableSeries<D>> seriesList) {
     assignMissingColors(seriesList, emptyCategoryUsesSinglePalette: false);
 
     if (config.includePoints) {
@@ -80,9 +80,9 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
   }
 
   @override
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
-    seriesList.forEach((MutableSeries<T, D> series) {
-      var elements = <_LineRendererElement<T, D>>[];
+  void preprocessSeries(List<MutableSeries<D>> seriesList) {
+    seriesList.forEach((MutableSeries<D> series) {
+      var elements = <_LineRendererElement<D>>[];
 
       var strokeWidthPxFn = series.strokeWidthPxFn;
 
@@ -90,15 +90,14 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
         series.dashPattern = config.dashPattern;
       }
 
-      var details = new _LineRendererElement<T, D>();
+      var details = new _LineRendererElement<D>();
 
       // Since we do not currently support segments for lines, just grab the
       // stroke width from the first datum for each series.
       //
       // TODO: Support stroke width per datum with line segments.
       if (series.data.length > 0 && strokeWidthPxFn != null) {
-        T datum = series.data[0];
-        details.strokeWidthPx = strokeWidthPxFn(datum, 0).toDouble();
+        details.strokeWidthPx = strokeWidthPxFn(0).toDouble();
       } else {
         details.strokeWidthPx = this.config.strokeWidthPx;
       }
@@ -113,11 +112,10 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
     }
   }
 
-  void update(
-      List<ImmutableSeries<T, D>> seriesList, bool isAnimatingThisDraw) {
+  void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
-    seriesList.forEach((ImmutableSeries<T, D> series) {
+    seriesList.forEach((ImmutableSeries<D> series) {
       var domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
       var domainFn = series.domainFn;
       var measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
@@ -136,25 +134,25 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
       _LineRendererElement details = elementsList[0];
 
       // If we already have a AnimatingLine for that index, use it.
-      _AnimatedLine<T, D> animatingLine;
+      _AnimatedLine<D> animatingLine;
       if (lineList.length > 0) {
         animatingLine = lineList[0];
       } else {
         // Create a new line and have it animate in from axis.
-        var pointList = <_DatumPoint<T, D>>[];
+        var pointList = <_DatumPoint<D>>[];
         Color color;
         for (var index = 0; index < series.data.length; index++) {
-          T datum = series.data[index];
+          final datum = series.data[index];
 
-          pointList.add(_getPoint(datum, domainFn(datum, index), series,
-              domainAxis, 0.0, 0.0, measureAxis));
+          pointList.add(_getPoint(datum, domainFn(index), series, domainAxis,
+              0.0, 0.0, measureAxis));
 
-          color = colorFn(series.data[index], index);
+          color = colorFn(index);
         }
 
-        animatingLine = new _AnimatedLine<T, D>(
+        animatingLine = new _AnimatedLine<D>(
             key: lineKey, overlaySeries: series.overlaySeries)
-          ..setNewTarget(new _LineRendererElement<T, D>()
+          ..setNewTarget(new _LineRendererElement<D>()
             ..color = color
             ..points = pointList
             ..dashPattern = dashPattern
@@ -165,19 +163,13 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
       }
 
       // Create a new line using the final point locations.
-      var pointList = <_DatumPoint<T, D>>[];
+      var pointList = <_DatumPoint<D>>[];
       Color color;
       for (var index = 0; index < series.data.length; index++) {
-        T datum = series.data[index];
+        final datum = series.data[index];
 
-        final datumPoint = _getPoint(
-            datum,
-            domainFn(datum, index),
-            series,
-            domainAxis,
-            measureFn(datum, index),
-            measureOffsetFn(datum, index),
-            measureAxis);
+        final datumPoint = _getPoint(datum, domainFn(index), series, domainAxis,
+            measureFn(index), measureOffsetFn(index), measureAxis);
 
         // Only add the point if it is within the draw area bounds.
         if (datumPoint.x != null &&
@@ -186,14 +178,14 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
           pointList.add(datumPoint);
         }
 
-        color = colorFn(series.data[index], index);
+        color = colorFn(index);
       }
 
       // Update the set of lines that still exist in the series data.
       _currentKeys.add(lineKey);
 
       // Get the lineElement we are going to setup.
-      final lineElement = new _LineRendererElement<T, D>()
+      final lineElement = new _LineRendererElement<D>()
         ..points = pointList
         ..color = color
         ..dashPattern = dashPattern
@@ -204,7 +196,7 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
     });
 
     // Animate out lines that don't exist anymore.
-    _seriesLineMap.forEach((String key, List<_AnimatedLine<T, D>> lines) {
+    _seriesLineMap.forEach((String key, List<_AnimatedLine<D>> lines) {
       for (var line in lines) {
         if (_currentKeys.contains(line.key) != true) {
           line.animateOut();
@@ -222,8 +214,8 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
     if (animationPercent == 1.0) {
       final keysToRemove = <String>[];
 
-      _seriesLineMap.forEach((String key, List<_AnimatedLine<T, D>> lines) {
-        lines.removeWhere((_AnimatedLine<T, D> line) => line.animatingOut);
+      _seriesLineMap.forEach((String key, List<_AnimatedLine<D>> lines) {
+        lines.removeWhere((_AnimatedLine<D> line) => line.animatingOut);
 
         if (lines.isEmpty) {
           keysToRemove.add(key);
@@ -233,11 +225,10 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
       keysToRemove.forEach((String key) => _seriesLineMap.remove(key));
     }
 
-    _seriesLineMap.forEach((String key, List<_AnimatedLine<T, D>> lines) {
+    _seriesLineMap.forEach((String key, List<_AnimatedLine<D>> lines) {
       lines
-          .map<_LineRendererElement<T, D>>(
-              (_AnimatedLine<T, D> animatingLine) =>
-                  animatingLine.getCurrentLine(animationPercent))
+          .map<_LineRendererElement<D>>((_AnimatedLine<D> animatingLine) =>
+              animatingLine.getCurrentLine(animationPercent))
           .forEach((_LineRendererElement line) {
         canvas.drawLine(
             dashPattern: line.dashPattern,
@@ -252,10 +243,10 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
     }
   }
 
-  _DatumPoint<T, D> _getPoint(
-      T datum,
+  _DatumPoint<D> _getPoint(
+      dynamic datum,
       D domainValue,
-      ImmutableSeries<T, D> series,
+      ImmutableSeries<D> series,
       ImmutableAxis<D> domainAxis,
       num measureValue,
       num measureOffsetValue,
@@ -265,7 +256,7 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
     final measurePosition =
         measureAxis.getLocation(measureValue + measureOffsetValue);
 
-    return new _DatumPoint<T, D>(
+    return new _DatumPoint<D>(
         datum: datum,
         domain: domainValue,
         series: series,
@@ -274,21 +265,21 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
   }
 
   @override
-  List<DatumDetails<T, D>> getNearestDatumDetailPerSeries(
+  List<DatumDetails<D>> getNearestDatumDetailPerSeries(
       Point<double> chartPoint) {
-    final nearest = <DatumDetails<T, D>>[];
+    final nearest = <DatumDetails<D>>[];
 
     // Was it even in the drawArea?
     if (!componentBounds.containsPoint(chartPoint)) {
       return nearest;
     }
 
-    _seriesLineMap.values.forEach((List<_AnimatedLine<T, D>> seriesSegments) {
-      _DatumPoint<T, D> nearestPoint;
+    _seriesLineMap.values.forEach((List<_AnimatedLine<D>> seriesSegments) {
+      _DatumPoint<D> nearestPoint;
       double nearestDomainDistance = 10000.0;
       double nearestMeasureDistance = 10000.0;
 
-      seriesSegments.forEach((_AnimatedLine<T, D> segment) {
+      seriesSegments.forEach((_AnimatedLine<D> segment) {
         if (segment.overlaySeries) {
           return;
         }
@@ -313,7 +304,7 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
 
       // Found a point, add it to the list.
       if (nearestPoint != null) {
-        nearest.add(new DatumDetails<T, D>(
+        nearest.add(new DatumDetails<D>(
             datum: nearestPoint.datum,
             domain: nearestPoint.domain,
             series: nearestPoint.series,
@@ -329,16 +320,16 @@ class LineRenderer<T, D> extends BaseCartesianRenderer<T, D> {
   }
 }
 
-class _DatumPoint<T, D> extends Point<double> {
-  final T datum;
+class _DatumPoint<D> extends Point<double> {
+  final dynamic datum;
   final D domain;
-  final ImmutableSeries<T, D> series;
+  final ImmutableSeries<D> series;
 
   _DatumPoint({this.datum, this.domain, this.series, double x, double y})
       : super(x, y);
 
-  factory _DatumPoint.from(_DatumPoint<T, D> other, [double x, double y]) {
-    return new _DatumPoint<T, D>(
+  factory _DatumPoint.from(_DatumPoint<D> other, [double x, double y]) {
+    return new _DatumPoint<D>(
         datum: other.datum,
         domain: other.domain,
         series: other.series,
@@ -347,16 +338,16 @@ class _DatumPoint<T, D> extends Point<double> {
   }
 }
 
-class _LineRendererElement<T, D> {
-  List<_DatumPoint<T, D>> points;
+class _LineRendererElement<D> {
+  List<_DatumPoint<D>> points;
   Color color;
   List<int> dashPattern;
   double measureAxisPosition;
   double strokeWidthPx;
 
-  _LineRendererElement<T, D> clone() {
-    return new _LineRendererElement<T, D>()
-      ..points = new List<_DatumPoint<T, D>>.from(points)
+  _LineRendererElement<D> clone() {
+    return new _LineRendererElement<D>()
+      ..points = new List<_DatumPoint<D>>.from(points)
       ..color = color != null ? new Color.fromOther(color: color) : null
       ..dashPattern =
           dashPattern != null ? new List<int>.from(dashPattern) : null
@@ -375,13 +366,13 @@ class _LineRendererElement<T, D> {
       // If we have more points than the previous line, animate in the new point
       // by starting its measure position at the last known official point.
       // TODO: Can this be done in setNewTarget instead?
-      _DatumPoint<T, D> previousPoint;
+      _DatumPoint<D> previousPoint;
       if (previous.points.length - 1 >= pointIndex) {
         previousPoint = previous.points[pointIndex];
         lastPoint = previousPoint;
       } else {
         previousPoint =
-            new _DatumPoint<T, D>.from(targetPoint, targetPoint.x, lastPoint.y);
+            new _DatumPoint<D>.from(targetPoint, targetPoint.x, lastPoint.y);
       }
 
       var x = ((targetPoint.x - previousPoint.x) * animationPercent) +
@@ -391,9 +382,9 @@ class _LineRendererElement<T, D> {
           previousPoint.y;
 
       if (points.length - 1 >= pointIndex) {
-        points[pointIndex] = new _DatumPoint<T, D>.from(targetPoint, x, y);
+        points[pointIndex] = new _DatumPoint<D>.from(targetPoint, x, y);
       } else {
-        points.add(new _DatumPoint<T, D>.from(targetPoint, x, y));
+        points.add(new _DatumPoint<D>.from(targetPoint, x, y));
       }
     }
 
@@ -410,13 +401,13 @@ class _LineRendererElement<T, D> {
   }
 }
 
-class _AnimatedLine<T, D> {
+class _AnimatedLine<D> {
   final String key;
   final bool overlaySeries;
 
-  _LineRendererElement<T, D> _previousLine;
-  _LineRendererElement<T, D> _targetLine;
-  _LineRendererElement<T, D> _currentLine;
+  _LineRendererElement<D> _previousLine;
+  _LineRendererElement<D> _targetLine;
+  _LineRendererElement<D> _currentLine;
 
   // Flag indicating whether this line is being animated out of the chart.
   bool animatingOut = false;
@@ -434,11 +425,11 @@ class _AnimatedLine<T, D> {
     var newTarget = _currentLine.clone();
 
     // Set the target measure value to the axis position for all points.
-    var newPoints = <_DatumPoint<T, D>>[];
+    var newPoints = <_DatumPoint<D>>[];
     for (var index = 0; index < newTarget.points.length; index++) {
       var targetPoint = newTarget.points[index];
 
-      newPoints.add(new _DatumPoint<T, D>.from(targetPoint, targetPoint.x,
+      newPoints.add(new _DatumPoint<D>.from(targetPoint, targetPoint.x,
           newTarget.measureAxisPosition.roundToDouble()));
     }
 
@@ -452,14 +443,14 @@ class _AnimatedLine<T, D> {
     animatingOut = true;
   }
 
-  void setNewTarget(_LineRendererElement<T, D> newTarget) {
+  void setNewTarget(_LineRendererElement<D> newTarget) {
     animatingOut = false;
     _currentLine ??= newTarget.clone();
     _previousLine = _currentLine.clone();
     _targetLine = newTarget;
   }
 
-  _LineRendererElement<T, D> getCurrentLine(double animationPercent) {
+  _LineRendererElement<D> getCurrentLine(double animationPercent) {
     if (animationPercent == 1.0 || _previousLine == null) {
       _currentLine = _targetLine;
       _previousLine = _targetLine;

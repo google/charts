@@ -20,12 +20,12 @@ import 'base_chart.dart' show BaseChart, LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class PieChart<T, D> extends BaseChart<T, D> {
+class PieChart<D> extends BaseChart<D> {
   PieChart(
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
-    common.ArcRendererConfig<T, D> defaultRenderer,
+    common.ArcRendererConfig<D> defaultRenderer,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,
@@ -44,8 +44,8 @@ class PieChart<T, D> extends BaseChart<T, D> {
         );
 
   @override
-  common.PieChart<T, D> createCommonChart(BaseChartState chartState) =>
-      new common.PieChart<T, D>(layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.PieChart<D> createCommonChart(BaseChartState chartState) =>
+      new common.PieChart<D>(layoutConfig: layoutConfig?.commonLayoutConfig);
 
   @override
   void addDefaultInteractions(List<ChartBehavior> behaviors) {

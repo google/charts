@@ -1,3 +1,18 @@
+// Copyright 2018 the Charts project authors. Please see the AUTHORS file
+// for details.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import 'dart:math' show Rectangle;
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
@@ -12,24 +27,24 @@ class MockContext extends Mock implements ChartContext {}
 
 class MockAxis extends Mock implements Axis {}
 
-class FakeCartesianChart extends CartesianChart<MyRow, String> {
+class FakeCartesianChart extends CartesianChart<String> {
   @override
   Rectangle<int> drawAreaBounds;
 
   @override
   Axis domainAxis;
 
-  void callFireOnPostprocess(List<MutableSeries<MyRow, String>> seriesList) {
+  void callFireOnPostprocess(List<MutableSeries<String>> seriesList) {
     fireOnPostprocess(seriesList);
   }
 }
 
 void main() {
   FakeCartesianChart chart;
-  DomainA11yExploreBehavior<MyRow, String> behavior;
+  DomainA11yExploreBehavior<String> behavior;
   MockAxis domainAxis;
 
-  MutableSeries<MyRow, String> _series1;
+  MutableSeries<String> _series1;
   final _s1D1 = new MyRow('s1d1', 11, 'a11yd1');
   final _s1D2 = new MyRow('s1d2', 12, 'a11yd2');
   final _s1D3 = new MyRow('s1d3', 13, 'a11yd3');
@@ -38,7 +53,7 @@ void main() {
     chart = new FakeCartesianChart()
       ..drawAreaBounds = new Rectangle(50, 20, 150, 80);
 
-    behavior = new DomainA11yExploreBehavior<MyRow, String>(
+    behavior = new DomainA11yExploreBehavior<String>(
         vocalizationCallback: domainVocalization);
     behavior.attachTo(chart);
 

@@ -21,7 +21,7 @@ import '../common/chart_canvas.dart' show FillPatternType;
 import '../../common/symbol_renderer.dart';
 
 /// Configuration for a bar renderer.
-class BarRendererConfig<T> extends BaseBarRendererConfig<T, String> {
+class BarRendererConfig extends BaseBarRendererConfig<String> {
   /// Calculator for determining the corner radius of a bar.
   final CornerRadiusCalculator cornerRadiusCalculator;
 
@@ -50,9 +50,8 @@ class BarRendererConfig<T> extends BaseBarRendererConfig<T, String> {
             symbolRenderer: symbolRenderer);
 
   @override
-  BarRenderer<T, String> build() {
-    return new BarRenderer<T, String>(
-        config: this, rendererId: customRendererId);
+  BarRenderer<String> build() {
+    return new BarRenderer<String>(config: this, rendererId: customRendererId);
   }
 
   @override

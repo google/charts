@@ -46,22 +46,22 @@ void main() {
   /////////////////////////////////////////
   // Convenience methods for creating mocks.
   /////////////////////////////////////////
-  MutableSeries<MyRow, int> _makeSeries({String id, int measureOffset = 0}) {
+  MutableSeries<int> _makeSeries({String id, int measureOffset = 0}) {
     final data = <MyRow>[
       new MyRow(1000, measureOffset + 10),
       new MyRow(2000, measureOffset + 20),
       new MyRow(3000, measureOffset + 30),
     ];
 
-    final series = new MutableSeries<MyRow, int>(new Series(
+    final series = new MutableSeries<int>(new Series<MyRow, int>(
       id: id,
       data: data,
       domainFn: (MyRow row, _) => row.timestamp,
       measureFn: (MyRow row, _) => row.clickCount,
     ));
 
-    series.measureOffsetFn = (_, __) => 0.0;
-    series.colorFn = (_, __) => new Color.fromHex(code: '#000000');
+    series.measureOffsetFn = (_) => 0.0;
+    series.colorFn = (_) => new Color.fromHex(code: '#000000');
 
     // Mock the Domain axis results.
     final domainAxis = new MockAxis();
@@ -85,10 +85,10 @@ void main() {
     return series;
   }
 
-  LineRenderer<MyRow, int> renderer;
+  LineRenderer<int> renderer;
 
   setUp(() {
-    renderer = new LineRenderer<MyRow, int>(
+    renderer = new LineRenderer<int>(
         config: new LineRendererConfig(strokeWidthPx: 1.0));
     final layoutBounds = new Rectangle<int>(70, 20, 200, 100);
     renderer.layout(layoutBounds, layoutBounds);
@@ -101,7 +101,7 @@ void main() {
   group('edge cases', () {
     test('hit target with missing data in series still selects others', () {
       // Setup
-      final seriesList = <MutableSeries<MyRow, int>>[
+      final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo')..data.clear(),
         _makeSeries(id: 'bar'),
       ];
@@ -126,7 +126,7 @@ void main() {
 
     test('all series without data is skipped', () {
       // Setup
-      final seriesList = <MutableSeries<MyRow, int>>[
+      final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo')..data.clear(),
         _makeSeries(id: 'bar')..data.clear(),
       ];
@@ -144,7 +144,7 @@ void main() {
 
     test('single overlay series is skipped', () {
       // Setup
-      final seriesList = <MutableSeries<MyRow, int>>[
+      final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo')..overlaySeries = true,
         _makeSeries(id: 'bar'),
       ];
@@ -169,7 +169,7 @@ void main() {
 
     test('all overlay series is skipped', () {
       // Setup
-      final seriesList = <MutableSeries<MyRow, int>>[
+      final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo')..overlaySeries = true,
         _makeSeries(id: 'bar')..overlaySeries = true,
       ];
@@ -192,7 +192,7 @@ void main() {
   group('LineRenderer', () {
     test('hit test works', () {
       // Setup
-      final seriesList = <MutableSeries<MyRow, int>>[_makeSeries(id: 'foo')];
+      final seriesList = <MutableSeries<int>>[_makeSeries(id: 'foo')];
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -213,7 +213,7 @@ void main() {
 
     test('hit test expands to multiple series', () {
       // Setup bar series is 20 measure higher than foo.
-      final seriesList = <MutableSeries<MyRow, int>>[
+      final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar', measureOffset: 20),
       ];
@@ -246,7 +246,7 @@ void main() {
     test('hit test expands with missing data in series', () {
       // Setup bar series is 20 measure higher than foo and is missing the
       // middle point.
-      final seriesList = <MutableSeries<MyRow, int>>[
+      final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar', measureOffset: 20)..data.removeAt(1),
       ];
@@ -279,7 +279,7 @@ void main() {
 
     test('hit test works for points above drawArea', () {
       // Setup
-      final seriesList = <MutableSeries<MyRow, int>>[
+      final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo')..data[1].clickCount = 500
       ];
       renderer.preprocessSeries(seriesList);
@@ -302,7 +302,7 @@ void main() {
 
     test('no selection for points outside of viewport', () {
       // Setup
-      final seriesList = <MutableSeries<MyRow, int>>[
+      final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo')..data.add(new MyRow(-1000, 20))
       ];
       renderer.preprocessSeries(seriesList);

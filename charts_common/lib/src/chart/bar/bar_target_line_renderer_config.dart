@@ -19,7 +19,7 @@ import 'bar_target_line_renderer.dart' show BarTargetLineRenderer;
 import '../common/chart_canvas.dart' show FillPatternType;
 
 /// Configuration for a bar target line renderer.
-class BarTargetLineRendererConfig<T> extends BaseBarRendererConfig<T, String> {
+class BarTargetLineRendererConfig extends BaseBarRendererConfig<String> {
   /// The number of pixels that the line will extend beyond the bandwidth at the
   /// edges of the bar group.
   ///
@@ -57,8 +57,8 @@ class BarTargetLineRendererConfig<T> extends BaseBarRendererConfig<T, String> {
             strokeWidthPx: strokeWidthPx);
 
   @override
-  BarTargetLineRenderer<T, String> build() {
-    return new BarTargetLineRenderer<T, String>(
+  BarTargetLineRenderer<String> build() {
+    return new BarTargetLineRenderer<String>(
         config: this, rendererId: customRendererId);
   }
 

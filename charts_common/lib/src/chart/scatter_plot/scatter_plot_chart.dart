@@ -22,13 +22,13 @@ import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 
-class ScatterPlotChart<T> extends NumericCartesianChart<T> {
+class ScatterPlotChart extends NumericCartesianChart {
   ScatterPlotChart({bool vertical, LayoutConfig layoutConfig})
       : super(vertical: vertical, layoutConfig: layoutConfig);
 
   @override
-  SeriesRenderer<T, num> makeDefaultRenderer() {
-    return new PointRenderer<T, num>()
+  SeriesRenderer<num> makeDefaultRenderer() {
+    return new PointRenderer<num>()
       ..rendererId = SeriesRenderer.defaultRendererId;
   }
 

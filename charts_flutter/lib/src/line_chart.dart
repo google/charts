@@ -21,12 +21,12 @@ import 'base_chart.dart' show BaseChart, LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class LineChart<T> extends BaseChart<T, num> {
+class LineChart extends BaseChart<num> {
   LineChart(
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
-    common.LineRendererConfig<T, num> defaultRenderer,
+    common.LineRendererConfig<num> defaultRenderer,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,
@@ -45,8 +45,8 @@ class LineChart<T> extends BaseChart<T, num> {
         );
 
   @override
-  common.LineChart<T> createCommonChart(BaseChartState chartState) =>
-      new common.LineChart<T>(layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.LineChart createCommonChart(BaseChartState chartState) =>
+      new common.LineChart(layoutConfig: layoutConfig?.commonLayoutConfig);
 
   @override
   void addDefaultInteractions(List<ChartBehavior> behaviors) {

@@ -28,7 +28,7 @@ import 'panning_tick_provider.dart';
 ///
 /// Panning is supported by clicking and dragging the mouse for web, or tapping
 /// and dragging on the chart for mobile devices.
-class PanBehavior<T, D> implements ChartBehavior<T, D> {
+class PanBehavior<D> implements ChartBehavior<D> {
   /// Listens for drag gestures.
   GestureListener _listener;
 
@@ -42,10 +42,10 @@ class PanBehavior<T, D> implements ChartBehavior<T, D> {
   String get role => 'Pan';
 
   /// The chart to which the behavior is attached.
-  CartesianChart<T, D> _chart;
+  CartesianChart<D> _chart;
 
   @protected
-  CartesianChart<T, D> get chart => _chart;
+  CartesianChart<D> get chart => _chart;
 
   /// Flag which is enabled to indicate that the user is "panning" the chart.
   bool _isPanning = false;
@@ -70,7 +70,7 @@ class PanBehavior<T, D> implements ChartBehavior<T, D> {
 
   /// Injects the behavior into a chart.
   @override
-  attachTo(BaseChart<T, D> chart) {
+  attachTo(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
       throw new ArgumentError(
           'PanBehavior can only be attached to a CartesianChart');
@@ -90,7 +90,7 @@ class PanBehavior<T, D> implements ChartBehavior<T, D> {
 
   /// Removes the behavior from a chart.
   @override
-  removeFrom(BaseChart<T, D> chart) {
+  removeFrom(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
       throw new ArgumentError(
           'PanBehavior can only be attached to a CartesianChart');

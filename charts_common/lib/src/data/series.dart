@@ -27,18 +27,18 @@ class Series<T, D> {
 
   final List<T> data;
 
-  final AccessorFn<T, D> domainFn;
-  final AccessorFn<T, num> measureFn;
-  final AccessorFn<T, num> measureUpperBoundFn;
-  final AccessorFn<T, num> measureLowerBoundFn;
-  final AccessorFn<T, num> measureOffsetFn;
-  final AccessorFn<T, Color> colorFn;
-  final AccessorFn<T, FillPatternType> fillPatternFn;
-  final AccessorFn<T, num> radiusPxFn;
-  final AccessorFn<T, num> strokeWidthPxFn;
-  final AccessorFn<T, String> labelAccessorFn;
-  final AccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn;
-  final AccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn;
+  final AccessorFn<D> domainFn;
+  final AccessorFn<num> measureFn;
+  final AccessorFn<num> measureUpperBoundFn;
+  final AccessorFn<num> measureLowerBoundFn;
+  final AccessorFn<num> measureOffsetFn;
+  final AccessorFn<Color> colorFn;
+  final AccessorFn<FillPatternType> fillPatternFn;
+  final AccessorFn<num> radiusPxFn;
+  final AccessorFn<num> strokeWidthPxFn;
+  final AccessorFn<String> labelAccessorFn;
+  final AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;
+  final AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
 
   final List<int> dashPattern;
 
@@ -46,7 +46,81 @@ class Series<T, D> {
   // the non-required ones be final?
   final SeriesAttributes attributes = new SeriesAttributes();
 
-  Series({
+  factory Series(
+      {@required String id,
+      @required List<T> data,
+      @required TypedAccessorFn<T, D> domainFn,
+      @required TypedAccessorFn<T, num> measureFn,
+      String displayName,
+      TypedAccessorFn<T, Color> colorFn,
+      List<int> dashPattern,
+      TypedAccessorFn<T, FillPatternType> fillPatternFn,
+      TypedAccessorFn<T, String> labelAccessorFn,
+      TypedAccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn,
+      TypedAccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn,
+      TypedAccessorFn<T, num> measureLowerBoundFn,
+      TypedAccessorFn<T, num> measureOffsetFn,
+      TypedAccessorFn<T, num> measureUpperBoundFn,
+      bool overlaySeries = false,
+      TypedAccessorFn<T, num> radiusPxFn,
+      String seriesCategory,
+      TypedAccessorFn<T, num> strokeWidthPxFn}) {
+    // Wrap typed accessors.
+    final _domainFn = (int index) => domainFn(data[index], index);
+    final _measureFn = (int index) => measureFn(data[index], index);
+    final _colorFn =
+        colorFn == null ? null : (int index) => colorFn(data[index], index);
+    final _fillPatternFn = fillPatternFn == null
+        ? null
+        : (int index) => fillPatternFn(data[index], index);
+    final _labelAccessorFn = labelAccessorFn == null
+        ? null
+        : (int index) => labelAccessorFn(data[index], index);
+    final _insideLabelStyleAccessorFn = insideLabelStyleAccessorFn == null
+        ? null
+        : (int index) => insideLabelStyleAccessorFn(data[index], index);
+    final _outsideLabelStyleAccessorFn = outsideLabelStyleAccessorFn == null
+        ? null
+        : (int index) => outsideLabelStyleAccessorFn(data[index], index);
+    final _measureLowerBoundFn = measureLowerBoundFn == null
+        ? null
+        : (int index) => measureLowerBoundFn(data[index], index);
+    final _measureOffsetFn = measureOffsetFn == null
+        ? null
+        : (int index) => measureOffsetFn(data[index], index);
+    final _measureUpperBoundFn = measureUpperBoundFn == null
+        ? null
+        : (int index) => measureUpperBoundFn(data[index], index);
+    final _radiusPxFn = radiusPxFn == null
+        ? null
+        : (int index) => radiusPxFn(data[index], index);
+    final _strokeWidthPxFn = strokeWidthPxFn == null
+        ? null
+        : (int index) => strokeWidthPxFn(data[index], index);
+
+    return new Series._internal(
+      id: id,
+      data: data,
+      domainFn: _domainFn,
+      measureFn: _measureFn,
+      displayName: displayName,
+      colorFn: _colorFn,
+      dashPattern: dashPattern,
+      fillPatternFn: _fillPatternFn,
+      labelAccessorFn: _labelAccessorFn,
+      insideLabelStyleAccessorFn: _insideLabelStyleAccessorFn,
+      outsideLabelStyleAccessorFn: _outsideLabelStyleAccessorFn,
+      measureLowerBoundFn: _measureLowerBoundFn,
+      measureOffsetFn: _measureOffsetFn,
+      measureUpperBoundFn: _measureUpperBoundFn,
+      overlaySeries: overlaySeries,
+      radiusPxFn: _radiusPxFn,
+      seriesCategory: seriesCategory,
+      strokeWidthPxFn: _strokeWidthPxFn,
+    );
+  }
+
+  Series._internal({
     @required this.id,
     @required this.data,
     @required this.domainFn,
@@ -83,7 +157,9 @@ class Series<T, D> {
 /// such usage.
 ///
 /// Otherwise, [index] must be a valid subscript into a list of `series.length`.
-typedef R AccessorFn<T, R>(T datum, int index);
+typedef R AccessorFn<R>(int index);
+
+typedef R TypedAccessorFn<T, R>(T datum, int index);
 
 class AttributeKey<R> extends TypedKey<R> {
   const AttributeKey(String uniqueKey) : super(uniqueKey);

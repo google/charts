@@ -25,7 +25,7 @@ import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/date_time_factory.dart'
     show DateTimeFactory, LocalDateTimeFactory;
 
-class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
+class TimeSeriesChart extends CartesianChart<DateTime> {
   final DateTimeAxis domainAxis;
   final DateTimeFactory dateTimeFactory;
 
@@ -45,8 +45,8 @@ class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
   }
 
   @override
-  SeriesRenderer<T, DateTime> makeDefaultRenderer() {
-    return new LineRenderer<T, DateTime>()
+  SeriesRenderer<DateTime> makeDefaultRenderer() {
+    return new LineRenderer<DateTime>()
       ..rendererId = SeriesRenderer.defaultRendererId;
   }
 }

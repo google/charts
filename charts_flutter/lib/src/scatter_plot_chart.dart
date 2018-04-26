@@ -20,12 +20,12 @@ import 'base_chart.dart' show BaseChart, LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class ScatterPlotChart<T> extends BaseChart<T, num> {
+class ScatterPlotChart extends BaseChart<num> {
   ScatterPlotChart(
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
-    common.PointRendererConfig<T, num> defaultRenderer,
+    common.PointRendererConfig<num> defaultRenderer,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,
@@ -44,7 +44,7 @@ class ScatterPlotChart<T> extends BaseChart<T, num> {
         );
 
   @override
-  common.ScatterPlotChart<T> createCommonChart(BaseChartState chartState) =>
-      new common.ScatterPlotChart<T>(
+  common.ScatterPlotChart createCommonChart(BaseChartState chartState) =>
+      new common.ScatterPlotChart(
           layoutConfig: layoutConfig?.commonLayoutConfig);
 }

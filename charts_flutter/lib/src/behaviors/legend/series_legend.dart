@@ -129,8 +129,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
       this.defaultHiddenSeries});
 
   @override
-  common.SeriesLegend<T, D> createCommonBehavior<T, D>() =>
-      new _FlutterSeriesLegend<T, D>(this);
+  common.SeriesLegend<D> createCommonBehavior<D>() =>
+      new _FlutterSeriesLegend<D>(this);
 
   @override
   void updateCommonBehavior(common.SeriesLegend commonBehavior) {
@@ -149,7 +149,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
 }
 
 /// Flutter specific wrapper on the common Legend for building content.
-class _FlutterSeriesLegend<T, D> extends common.SeriesLegend<T, D>
+class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
     implements BuildableBehavior, TappableLegend {
   SeriesLegend config;
 

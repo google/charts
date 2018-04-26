@@ -90,16 +90,16 @@ void main() {
       new MyRow('camp1', 10),
     ];
 
-    final series = new MutableSeries<MyRow, String>(new Series(
+    final series = new MutableSeries<String>(new Series(
       id: id,
       data: data,
-      domainFn: (MyRow row, _) => row.campaign,
-      measureFn: (MyRow row, _) => row.clickCount,
+      domainFn: (dynamic row, _) => row.campaign,
+      measureFn: (dynamic row, _) => row.clickCount,
       seriesCategory: seriesCategory,
     ));
 
-    series.measureOffsetFn = (_, __) => 0.0;
-    series.colorFn = (_, __) => new Color.fromHex(code: '#000000');
+    series.measureOffsetFn = (_) => 0.0;
+    series.colorFn = (_) => new Color.fromHex(code: '#000000');
 
     // Mock the Domain axis results.
     final domainAxis = new MockAxis();

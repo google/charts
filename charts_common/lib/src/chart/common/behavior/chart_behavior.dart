@@ -18,14 +18,14 @@ import '../base_chart.dart';
 /// Interface for adding behavior to a chart.
 ///
 /// For example pan and zoom are implemented via behavior strategies.
-abstract class ChartBehavior<T, D> {
+abstract class ChartBehavior<D> {
   String get role;
 
   /// Injects the behavior into a chart.
-  void attachTo(BaseChart<T, D> chart);
+  void attachTo(BaseChart<D> chart);
 
   /// Removes the behavior from a chart.
-  void removeFrom(BaseChart<T, D> chart);
+  void removeFrom(BaseChart<D> chart);
 }
 
 /// Position of a component within the chart layout.

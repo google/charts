@@ -36,7 +36,7 @@ class MyRow {
 
 void main() {
   PointRenderer renderer;
-  List<MutableSeries<MyRow, int>> numericSeriesList;
+  List<MutableSeries<int>> numericSeriesList;
 
   setUp(() {
     var myFakeDesktopData = [
@@ -50,7 +50,7 @@ void main() {
     final maxMeasure = 300;
 
     numericSeriesList = [
-      new MutableSeries<MyRow, int>(new Series<MyRow, int>(
+      new MutableSeries<int>(new Series<MyRow, int>(
           id: 'Desktop',
           colorFn: (MyRow row, _) {
             // Color bucket the measure column value into 3 distinct colors.
@@ -74,8 +74,7 @@ void main() {
 
   group('preprocess', () {
     test('with numeric data and simple points', () {
-      renderer =
-          new PointRenderer<dynamic, num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<num>(config: new PointRendererConfig());
 
       renderer.preprocessSeries(numericSeriesList);
 
@@ -99,7 +98,7 @@ void main() {
     });
 
     test('with numeric data and missing radiusPxFn', () {
-      renderer = new PointRenderer<dynamic, num>(
+      renderer = new PointRenderer<num>(
           config: new PointRendererConfig(radiusPx: 2.0));
 
       // Remove the radiusPxFn to test configured defaults.
@@ -122,11 +121,10 @@ void main() {
     });
 
     test('with custom symbol renderer ID in data', () {
-      renderer =
-          new PointRenderer<dynamic, num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<num>(config: new PointRendererConfig());
 
-      numericSeriesList[0]
-          .setAttr(pointSymbolRendererFnKey, (MyRow row, _) => row.shape);
+      numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
+          (int index) => numericSeriesList[0].data[index].shape);
 
       renderer.preprocessSeries(numericSeriesList);
 
@@ -145,11 +143,10 @@ void main() {
     });
 
     test('with custom symbol renderer ID in series and data', () {
-      renderer =
-          new PointRenderer<dynamic, num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<num>(config: new PointRendererConfig());
 
-      numericSeriesList[0]
-          .setAttr(pointSymbolRendererFnKey, (MyRow row, _) => row.shape);
+      numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
+          (int index) => numericSeriesList[0].data[index].shape);
       numericSeriesList[0].setAttr(pointSymbolRendererIdKey, 'shape 0');
 
       renderer.preprocessSeries(numericSeriesList);

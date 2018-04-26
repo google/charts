@@ -24,31 +24,30 @@ import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:test/test.dart';
 
-class ConcreteChart extends BaseChart<MyRow, String> {
+class ConcreteChart extends BaseChart<String> {
   @override
-  SeriesRenderer<MyRow, String> makeDefaultRenderer() => null;
+  SeriesRenderer<String> makeDefaultRenderer() => null;
 
   @override
-  List<DatumDetails<MyRow, String>> getDatumDetails(SelectionModelType _) =>
-      null;
+  List<DatumDetails<String>> getDatumDetails(SelectionModelType _) => null;
 
-  void callOnDraw(List<MutableSeries<MyRow, String>> seriesList) {
+  void callOnDraw(List<MutableSeries<String>> seriesList) {
     fireOnDraw(seriesList);
   }
 
-  void callOnPreProcess(List<MutableSeries<MyRow, String>> seriesList) {
+  void callOnPreProcess(List<MutableSeries<String>> seriesList) {
     fireOnPreprocess(seriesList);
   }
 
-  void callOnPostProcess(List<MutableSeries<MyRow, String>> seriesList) {
+  void callOnPostProcess(List<MutableSeries<String>> seriesList) {
     fireOnPostprocess(seriesList);
   }
 }
 
-class ConcreteSeriesLegend<T, D> extends SeriesLegend<T, D> {
+class ConcreteSeriesLegend<D> extends SeriesLegend<D> {
   ConcreteSeriesLegend(
       {SelectionModelType selectionModelType,
-      LegendEntryGenerator<T, D> legendEntryGenerator})
+      LegendEntryGenerator<D> legendEntryGenerator})
       : super(
             selectionModelType: selectionModelType,
             legendEntryGenerator: legendEntryGenerator);
@@ -70,12 +69,12 @@ class ConcreteSeriesLegend<T, D> extends SeriesLegend<T, D> {
 }
 
 void main() {
-  MutableSeries<MyRow, String> series1;
+  MutableSeries<String> series1;
   final s1D1 = new MyRow('s1d1', 11);
   final s1D2 = new MyRow('s1d2', 12);
   final s1D3 = new MyRow('s1d3', 13);
 
-  MutableSeries<MyRow, String> series2;
+  MutableSeries<String> series2;
   final s2D1 = new MyRow('s2d1', 21);
   final s2D2 = new MyRow('s2d2', 22);
   final s2D3 = new MyRow('s2d3', 23);
@@ -94,7 +93,7 @@ void main() {
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
         colorFn: (_, __) => blue))
-      ..measureFn = (_, __) => 0.0;
+      ..measureFn = (_) => 0.0;
 
     series2 = new MutableSeries(new Series<MyRow, String>(
         id: 's2',
@@ -102,7 +101,7 @@ void main() {
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
         colorFn: (_, __) => red))
-      ..measureFn = (_, __) => 0.0;
+      ..measureFn = (_) => 0.0;
   });
 
   test('Legend entries created on chart post process', () {

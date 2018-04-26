@@ -21,17 +21,16 @@ import '../../processed_series.dart' show MutableSeries;
 ///
 /// [T] the datum class type for chart.
 /// [D] the domain class type for the datum.
-abstract class LegendEntryGenerator<T, D> {
+abstract class LegendEntryGenerator<D> {
   /// Generates a list of legend entries based on the series drawn on the chart.
   ///
   /// [seriesList] Processed series list.
-  List<LegendEntry<T, D>> getLegendEntries(
-      List<MutableSeries<T, D>> seriesList);
+  List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList);
 
   /// Update the list of legend entries based on the selection model.
   ///
   /// [seriesList] Processed series list.
   /// [selectionModel] Selection model to query selected state.
-  void updateLegendEntries(List<LegendEntry<T, D>> legendEntries,
-      SelectionModel<T, D> selectionModel);
+  void updateLegendEntries(
+      List<LegendEntry<D>> legendEntries, SelectionModel<D> selectionModel);
 }

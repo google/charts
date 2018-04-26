@@ -25,7 +25,7 @@ import '../../data/series.dart' show AccessorFn;
 import 'bar_renderer.dart' show ImmutableBarRendererElement;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 
-class BarLabelDecorator<T, D> extends BarRendererDecorator<T, D> {
+class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   // Default configuration
   static const _defaultLabelPosition = BarLabelPosition.auto;
   static const _defaultLabelPadding = 5;
@@ -61,7 +61,7 @@ class BarLabelDecorator<T, D> extends BarRendererDecorator<T, D> {
             outsideLabelStyleSpec ?? _defaultOutsideLabelStyle;
 
   @override
-  void decorate(Iterable<ImmutableBarRendererElement<T, D>> barElements,
+  void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
       ChartCanvas canvas, GraphicsFactory graphicsFactory,
       {@required Rectangle drawBounds,
       @required double animationPercent,
@@ -84,18 +84,19 @@ class BarLabelDecorator<T, D> extends BarRendererDecorator<T, D> {
 
     for (var element in barElements) {
       final labelFn = element.series.labelAccessorFn;
-      final label = (labelFn != null) ? labelFn(element.datum, null) : null;
+      final datumIndex = element.index;
+      final label = (labelFn != null) ? labelFn(datumIndex) : null;
 
       // If there are custom styles, use that instead of the default or the
       // style defined for the entire decorator.
       final datumInsideLabelStyle = _getDatumStyle(
           element.series.insideLabelStyleAccessorFn,
-          element.datum,
+          datumIndex,
           graphicsFactory,
           defaultStyle: insideLabelStyle);
       final datumOutsideLabelStyle = _getDatumStyle(
           element.series.outsideLabelStyleAccessorFn,
-          element.datum,
+          datumIndex,
           graphicsFactory,
           defaultStyle: outsideLabelStyle);
 
@@ -180,10 +181,10 @@ class BarLabelDecorator<T, D> extends BarRendererDecorator<T, D> {
   }
 
   /// Helper function to get datum specific style
-  TextStyle _getDatumStyle(AccessorFn<T, TextStyleSpec> labelFn, T datum,
+  TextStyle _getDatumStyle(AccessorFn<TextStyleSpec> labelFn, int datumIndex,
       GraphicsFactory graphicsFactory,
       {TextStyle defaultStyle}) {
-    final styleSpec = (labelFn != null) ? labelFn(datum, null) : null;
+    final styleSpec = (labelFn != null) ? labelFn(datumIndex) : null;
     return (styleSpec != null)
         ? _getTextStyle(graphicsFactory, styleSpec)
         : defaultStyle;

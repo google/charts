@@ -47,10 +47,10 @@ abstract class BaseBarRendererElement {
   }
 }
 
-abstract class BaseAnimatedBar<T, D, R extends BaseBarRendererElement> {
+abstract class BaseAnimatedBar<D, R extends BaseBarRendererElement> {
   final String key;
-  T datum;
-  ImmutableSeries<T, D> series;
+  dynamic datum;
+  ImmutableSeries<D> series;
   D domainValue;
 
   R _previousBar;
