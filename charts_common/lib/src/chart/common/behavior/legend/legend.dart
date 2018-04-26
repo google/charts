@@ -43,10 +43,8 @@ import 'per_series_legend_entry_generator.dart';
 ///
 /// By default this behavior creates a legend entry per series.
 class SeriesLegend<T, D> extends Legend<T, D> {
-  /// List of currently hidden series, by ID.
   final _hiddenSeriesList = new Set<String>();
 
-  /// List of series IDs that should be hidden by default.
   List<String> _defaultHiddenSeries;
 
   SeriesLegend(
@@ -57,37 +55,16 @@ class SeriesLegend<T, D> extends Legend<T, D> {
             legendEntryGenerator:
                 legendEntryGenerator ?? new PerSeriesLegendEntryGenerator());
 
-  /// Sets a list of series IDs that should be hidden by default on first chart
-  /// draw.
-  ///
-  /// This will also reset the current list of hidden series, filling it in with
-  /// the new default list.
+  /// Sets a list of series IDs that should be hidden by default when the chart
+  /// is drawn.
   set defaultHiddenSeries(List<String> defaultHiddenSeries) {
     _defaultHiddenSeries = defaultHiddenSeries;
-
-    _hiddenSeriesList.clear();
 
     if (_defaultHiddenSeries != null) {
       _defaultHiddenSeries.forEach((String seriesId) {
         hideSeries(seriesId);
       });
     }
-  }
-
-  /// Gets a list of series IDs that should be hidden by default on first chart
-  /// draw.
-  List<String> get defaultHiddenSeries => _defaultHiddenSeries;
-
-  /// Remove series IDs from the currently hidden list if those series have been
-  /// removed from the chart data. The goal is to allow any metric that is
-  /// removed from a chart, and later re-added to it, to be visible to the user.
-  @override
-  void onData(List<MutableSeries<T, D>> seriesList) {
-    // If a series was removed from the chart, remove it from our current list
-    // of hidden series.
-    final seriesIds = seriesList.map((MutableSeries<T, D> series) => series.id);
-
-    _hiddenSeriesList.removeWhere((String id) => !seriesIds.contains(id));
   }
 
   @override
@@ -97,25 +74,17 @@ class SeriesLegend<T, D> extends Legend<T, D> {
     });
   }
 
-  /// Hides the data for a series on the chart by [seriesId].
-  ///
-  /// The entry in the legend for this series will be grayed out to indicate
-  /// that it is hidden.
   @protected
   void hideSeries(String seriesId) {
     _hiddenSeriesList.add(seriesId);
   }
 
-  /// Shows the data for a series on the chart by [seriesId].
-  ///
-  /// The entry in the legend for this series will be returned to its normal
-  /// color if it was previously hidden.
   @protected
   void showSeries(String seriesId) {
     _hiddenSeriesList.removeWhere((String id) => id == seriesId);
   }
 
-  /// Returns whether or not a given series [seriesId] is currently hidden.
+  @protected
   bool isSeriesHidden(String seriesId) {
     return _hiddenSeriesList.contains(seriesId);
   }
@@ -154,7 +123,7 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
 
   Legend({this.selectionModelType, this.legendEntryGenerator}) {
     _lifecycleListener = new LifecycleListener(
-        onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
+        onPostprocess: _postProcess, onPreprocess: _preProcess);
   }
 
   String get title => _title;
@@ -206,10 +175,6 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
   set legendTapHandling(LegendTapHandling legendTapHandling) {
     _legendTapHandling = legendTapHandling;
   }
-
-  /// Resets any hidden series data when new data is drawn on the chart.
-  @protected
-  void onData(List<MutableSeries<T, D>> seriesList) {}
 
   /// Store off a copy of the series list for use when we render the legend.
   void _preProcess(List<MutableSeries<T, D>> seriesList) {

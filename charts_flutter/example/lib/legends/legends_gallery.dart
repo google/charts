@@ -18,7 +18,6 @@ import '../gallery_scaffold.dart';
 import 'simple_series_legend.dart';
 import 'legend_options.dart';
 import 'legend_custom_symbol.dart';
-import 'default_hidden_series_legend.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -40,12 +39,6 @@ List<GalleryScaffold> buildGallery() {
       title: 'Series Legend Custom Symbol',
       subtitle: 'A series legend using a custom symbol renderer',
       childBuilder: () => new LegendWithCustomSymbol.withRandomData(),
-    ),
-    new GalleryScaffold(
-      listTileIcon: new Icon(Icons.insert_chart),
-      title: 'Default Hidden Series Legend',
-      subtitle: 'A series legend showing a series hidden by default',
-      childBuilder: () => new DefaultHiddenSeriesLegend.withRandomData(),
     ),
   ];
 }

@@ -217,7 +217,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
         providedTicks.remove(tick);
       } else {
         // Animate out ticks that do not exist any more.
-        animatedTick.animateOut(_scale[animatedTick.value].toDouble());
+        animatedTick.animateOut(_scale[animatedTick.value]);
       }
     }
 
@@ -225,7 +225,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     providedTicks?.forEach((tick) {
       final animatedTick = new AxisTicks<D>(tick);
       if (_previousScale != null) {
-        animatedTick.animateInFrom(_previousScale[tick.value].toDouble());
+        animatedTick.animateInFrom(_previousScale[tick.value]);
       }
       _axisTicks.add(animatedTick);
     });

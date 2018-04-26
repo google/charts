@@ -76,7 +76,7 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Legend Options<br>[![](example/legends/legend_options_thumb.png)](example/legends/legend_options) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) | Default Hidden Series Legend<br>[![](example/legends/default_hidden_series_legend_thumb.png)](example/legends/default_hidden_series_legend) |
+| Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Legend Options<br>[![](example/legends/legend_options_thumb.png)](example/legends/legend_options) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) | |
 
 
 ### Hovercards

@@ -17,8 +17,6 @@ import 'package:charts_common/common.dart' as common
     show
         BehaviorPosition,
         InsideJustification,
-        LegendEntry,
-        LegendTapHandling,
         OutsideJustification,
         SeriesLegend,
         SelectionModelType;
@@ -27,7 +25,6 @@ import 'package:meta/meta.dart' show immutable;
 import '../../chart_container.dart' show ChartContainerRenderObject;
 import '../chart_behavior.dart'
     show BuildableBehavior, ChartBehavior, GestureType;
-import 'legend.dart' show TappableLegend;
 import 'legend_content_builder.dart'
     show LegendContentBuilder, TabularLegendContentBuilder;
 import 'legend_layout.dart' show TabularLegendLayout;
@@ -50,8 +47,6 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   final common.InsideJustification insideJustification;
 
   static const defaultCellPadding = const EdgeInsets.all(8.0);
-
-  final List<String> defaultHiddenSeries;
 
   /// Create a new tabular layout legend.
   ///
@@ -80,9 +75,6 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// [desiredMaxColumns] the max columns to use before laying out items in a
   /// new row. By default there is no limit. The max columns created is the
   /// smaller of desiredMaxColumns and number of legend entries.
-  ///
-  /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
-  /// first chart draw.
   factory SeriesLegend({
     common.BehaviorPosition position,
     common.OutsideJustification outsideJustification,
@@ -91,7 +83,6 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     int desiredMaxRows,
     int desiredMaxColumns,
     EdgeInsets cellPadding,
-    List<String> defaultHiddenSeries,
   }) {
     // Set defaults if empty.
     position ??= common.BehaviorPosition.top;
@@ -116,8 +107,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         selectionModelType: common.SelectionModelType.info,
         position: position,
         outsideJustification: outsideJustification,
-        insideJustification: insideJustification,
-        defaultHiddenSeries: defaultHiddenSeries);
+        insideJustification: insideJustification);
   }
 
   SeriesLegend._internal(
@@ -125,8 +115,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
       this.selectionModelType,
       this.position,
       this.outsideJustification,
-      this.insideJustification,
-      this.defaultHiddenSeries});
+      this.insideJustification});
 
   @override
   common.SeriesLegend<T, D> createCommonBehavior<T, D>() =>
@@ -150,13 +139,11 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
 
 /// Flutter specific wrapper on the common Legend for building content.
 class _FlutterSeriesLegend<T, D> extends common.SeriesLegend<T, D>
-    implements BuildableBehavior, TappableLegend {
+    implements BuildableBehavior {
   SeriesLegend config;
 
   _FlutterSeriesLegend(this.config)
-      : super(selectionModelType: config.selectionModelType) {
-    super.defaultHiddenSeries = config.defaultHiddenSeries;
-  }
+      : super(selectionModelType: config.selectionModelType);
 
   @override
   void updateLegend() {
@@ -176,36 +163,5 @@ class _FlutterSeriesLegend<T, D> extends common.SeriesLegend<T, D>
 
   @override
   Widget build(BuildContext context) =>
-      config.contentBuilder.build(context, legendState, this);
-
-  @override
-  onLegendEntryTapUp(common.LegendEntry detail) {
-    switch (legendTapHandling) {
-      case common.LegendTapHandling.hide:
-        _hideSeries(detail);
-        break;
-
-      case common.LegendTapHandling.none:
-      default:
-        break;
-    }
-  }
-
-  /// Handles tap events by hiding or un-hiding entries tapped in the legend.
-  ///
-  /// Tapping on a visible series in the legend will hide it. Tapping on a
-  /// hidden series will make it visible again.
-  void _hideSeries(common.LegendEntry detail) {
-    final seriesId = detail.series.id;
-
-    // Handle the event by toggling the hidden state of the target.
-    if (isSeriesHidden(seriesId)) {
-      showSeries(seriesId);
-    } else {
-      hideSeries(seriesId);
-    }
-
-    // Redraw the chart to actually hide hidden series.
-    chart.redraw(skipLayout: true, skipAnimation: false);
-  }
+      config.contentBuilder.build(context, legendState);
 }
