@@ -159,6 +159,12 @@ class ChartContainerRenderObject<T, D> extends RenderCustomPaint
       _chartState.setAnimation(transition);
     }
 
+    // Sometimes chart behaviors try to draw the chart outside of a Flutter draw
+    // cycle. Schedule a frame manually to handle these cases.
+    if (!SchedulerBinding.instance.hasScheduledFrame) {
+      SchedulerBinding.instance.scheduleFrame();
+    }
+
     SchedulerBinding.instance.addPostFrameCallback(startAnimationController);
   }
 
