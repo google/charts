@@ -26,9 +26,9 @@ class PointsLineChart extends StatelessWidget {
 
 
   @override
-  Widget build(BuildContext context)
-  {
-    return new charts.LineChart<LinearSales>(seriesList, animate: animate,
+  Widget build(BuildContext context) {
+    return new charts.LineChart(seriesList,
+        animate: animate,
         defaultRenderer: new charts.LineRendererConfig(includePoints: true));
   }
 

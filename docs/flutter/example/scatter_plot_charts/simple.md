@@ -27,8 +27,7 @@ class SimpleScatterPlotChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.ScatterPlotChart<LinearSales>(seriesList,
-        animate: animate);
+    return new charts.ScatterPlotChart(seriesList, animate: animate);
   }
 
   /// Create one series with sample hard coded data.
