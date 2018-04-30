@@ -120,7 +120,7 @@ class SimpleOrdinalScale implements OrdinalScale {
           (_cachedStepSizePixels * i);
     }
     // If it wasn't found
-    return 0;
+    return 0.0;
   }
 
   @override
