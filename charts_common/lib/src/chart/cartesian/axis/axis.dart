@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle, min, max;
+import 'package:meta/meta.dart' show protected;
 
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../data/series.dart' show AttributeKey;
@@ -26,6 +27,8 @@ import 'linear/linear_scale.dart' show LinearScale;
 import 'ordinal_tick_provider.dart' show OrdinalTickProvider;
 import 'numeric_tick_provider.dart' show NumericTickProvider;
 import 'scale.dart' show MutableScale, ScaleOutputExtent, Scale;
+import 'numeric_extents.dart' show NumericExtents;
+import 'numeric_scale.dart' show NumericScale;
 import 'simple_ordinal_scale.dart' show SimpleOrdinalScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart'
@@ -256,7 +259,13 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
         drawAreaWidth: drawAreaWidth);
 
     _scale.setViewportSettings(viewportScale, viewportTranslatePx);
+
+    /// Axis saves the viewport settings.
+    saveViewportSettings(_scale);
   }
+
+  @protected
+  void saveViewportSettings(MutableScale<D> scale);
 
   /// Returns the current viewport scale.
   ///
@@ -380,11 +389,18 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     if (_scale.range != outputRange) {
       _scale.range = outputRange;
     }
+
+    setViewport(_scale);
+
     _updateProvidedTicks();
     // Update animated ticks in layout, because updateTicks are called during
     // measure and we don't want to update the animation at that time.
     _updateAxisTicks();
   }
+
+  /// Set the axis viewport.
+  @protected
+  void setViewport(MutableScale<D> scale);
 
   @override
   Rectangle<int> get componentBounds => this._componentBounds;
@@ -424,6 +440,21 @@ class NumericAxis extends Axis<num> {
           tickFormatter: new NumericTickFormatter(),
           scale: new LinearScale(),
         );
+
+  NumericExtents viewport;
+
+  @override
+  void setViewport(MutableScale<num> scale) {
+    if (viewport != null) {
+      (scale as NumericScale).viewportDomain = viewport;
+    }
+  }
+
+  /// Save the viewport from [scale] back onto the axis.
+  @override
+  void saveViewportSettings(MutableScale<num> scale) {
+    viewport = (scale as NumericScale).viewportDomain;
+  }
 }
 
 class OrdinalAxis extends Axis<String> {
@@ -436,4 +467,32 @@ class OrdinalAxis extends Axis<String> {
           tickFormatter: tickFormatter ?? const OrdinalTickFormatter(),
           scale: new SimpleOrdinalScale(),
         );
+
+  OrdinalViewport viewport;
+
+  /// Sets the viewport to cover [viewportDataSize] data points starting at
+  /// [startingDomain] value.
+  @override
+  void setViewport(MutableScale<String> scale) {
+    if (viewport != null) {
+      final SimpleOrdinalScale scale = _scale;
+      scale.setViewport(viewport.dataSize, viewport.startingDomain);
+    }
+  }
+
+  /// Save the viewport from [scale] back onto the axis.
+  @override
+  void saveViewportSettings(MutableScale<String> scale) {
+    final SimpleOrdinalScale scale = _scale;
+    viewport = new OrdinalViewport(
+        scale.viewportStartingDomain, scale.viewportDataSize);
+  }
+}
+
+/// Viewport to cover [dataSize] data points starting at [startingDomain] value.
+class OrdinalViewport {
+  final String startingDomain;
+  final int dataSize;
+
+  OrdinalViewport(this.startingDomain, this.dataSize);
 }

@@ -14,18 +14,22 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show LineChart, RTLSpec, Series, LineRendererConfig;
+    show AxisSpec, LineChart, RTLSpec, Series, LineRendererConfig;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
-import 'base_chart.dart' show BaseChart, LayoutConfig;
+import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
+import 'cartesian_chart.dart' show CartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class LineChart extends BaseChart<num> {
+class LineChart extends CartesianChart<num> {
   LineChart(
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
+    common.AxisSpec domainAxis,
+    common.AxisSpec primaryMeasureAxis,
+    common.AxisSpec secondaryMeasureAxis,
     common.LineRendererConfig<num> defaultRenderer,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
@@ -36,6 +40,9 @@ class LineChart extends BaseChart<num> {
           seriesList,
           animate: animate,
           animationDuration: animationDuration,
+          domainAxis: domainAxis,
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer,
           behaviors: behaviors,
           selectionModels: selectionModels,

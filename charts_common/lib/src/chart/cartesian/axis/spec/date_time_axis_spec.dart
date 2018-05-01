@@ -15,10 +15,14 @@
 
 import 'package:meta/meta.dart' show immutable;
 
+import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
+import '../axis.dart' show Axis;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../time/auto_adjusting_date_time_tick_provider.dart'
     show AutoAdjustingDateTimeTickProvider;
+import '../time/date_time_axis.dart' show DateTimeAxis;
+import '../time/date_time_extents.dart' show DateTimeExtents;
 import '../time/time_range_tick_provider_impl.dart'
     show TimeRangeTickProviderImpl;
 import '../time/day_time_stepper.dart' show DayTimeStepper;
@@ -34,6 +38,11 @@ import 'tick_spec.dart' show TickSpec;
 /// [AxisSpec] specialized for Timeseries charts.
 @immutable
 class DateTimeAxisSpec extends AxisSpec<DateTime> {
+  /// Sets viewport for this Axis.
+  ///
+  /// If pan / zoom behaviors are set, this is the initial viewport.
+  final DateTimeExtents viewport;
+
   /// Creates a [AxisSpec] that specialized for timeseries charts.
   ///
   /// [renderSpec] spec used to configure how the ticks and labels
@@ -50,6 +59,7 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
     DateTimeTickProviderSpec tickProviderSpec,
     DateTimeTickFormatterSpec tickFormatterSpec,
     bool showAxisLine,
+    this.viewport,
   }) : super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec,
@@ -57,8 +67,20 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
             showAxisLine: showAxisLine);
 
   @override
+  configure(Axis<DateTime> axis, ChartContext context,
+      GraphicsFactory graphicsFactory) {
+    super.configure(axis, context, graphicsFactory);
+
+    if (axis is DateTimeAxis && axis.viewport == null) {
+      axis.viewport = viewport;
+    }
+  }
+
+  @override
   bool operator ==(Object other) =>
-      other is DateTimeAxisSpec && super == (other);
+      other is DateTimeAxisSpec &&
+      viewport == other.viewport &&
+      super == (other);
 }
 
 abstract class DateTimeTickProviderSpec extends TickProviderSpec<DateTime> {}

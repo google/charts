@@ -15,10 +15,12 @@
 
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../axis.dart' show Axis;
+import '../scale.dart' show MutableScale;
 import '../tick_formatter.dart' show TickFormatter;
 import '../tick_provider.dart' show TickProvider;
 import 'auto_adjusting_date_time_tick_provider.dart'
     show AutoAdjustingDateTimeTickProvider;
+import 'date_time_extents.dart' show DateTimeExtents;
 import 'date_time_scale.dart' show DateTimeScale;
 import 'date_time_tick_formatter.dart' show DateTimeTickFormatter;
 
@@ -33,4 +35,19 @@ class DateTimeAxis extends Axis<DateTime> {
               tickFormatter ?? new DateTimeTickFormatter(dateTimeFactory),
           scale: new DateTimeScale(dateTimeFactory),
         );
+
+  DateTimeExtents viewport;
+
+  @override
+  void setViewport(MutableScale<DateTime> scale) {
+    if (viewport != null) {
+      (scale as DateTimeScale).viewportDomain = viewport;
+    }
+  }
+
+  /// Save the viewport from [scale] back onto the axis.
+  @override
+  void saveViewportSettings(MutableScale<DateTime> scale) {
+    viewport = (scale as DateTimeScale).viewportDomain;
+  }
 }

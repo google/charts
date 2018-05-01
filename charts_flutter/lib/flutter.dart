@@ -22,7 +22,9 @@ export 'package:charts_common/src/chart/bar/bar_target_line_renderer_config.dart
 export 'package:charts_common/src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType;
 export 'package:charts_common/src/chart/cartesian/axis/axis.dart'
-    show measureAxisIdKey;
+    show measureAxisIdKey, OrdinalViewport;
+export 'package:charts_common/src/chart/cartesian/axis/numeric_extents.dart'
+    show NumericExtents;
 export 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart'
     show SimpleTickFormatterBase;
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
@@ -60,6 +62,8 @@ export 'package:charts_common/src/chart/cartesian/axis/spec/ordinal_axis_spec.da
         StaticOrdinalTickProviderSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/tick_spec.dart'
     show TickSpec;
+export 'package:charts_common/src/chart/cartesian/axis/time/date_time_extents.dart'
+    show DateTimeExtents;
 export 'package:charts_common/src/chart/cartesian/cartesian_chart.dart'
     show CartesianChart;
 export 'package:charts_common/src/chart/common/base_chart.dart' show BaseChart;

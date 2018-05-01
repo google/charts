@@ -23,6 +23,7 @@ import 'horizontal.dart';
 import 'horizontal_bar_label.dart';
 import 'horizontal_bar_label_custom.dart';
 import 'horizontal_pattern_forward_hatch.dart';
+import 'initial_viewport.dart';
 import 'pattern_forward_hatch.dart';
 import 'simple.dart';
 import 'stacked.dart';
@@ -122,6 +123,12 @@ List<GalleryScaffold> buildGallery() {
       subtitle: 'Horizontal Pattern Forward Hatch Bar Chart',
       childBuilder: () =>
           new HorizontalPatternForwardHatchBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Bar Chart with initial viewport',
+      subtitle: 'Single series with initial viewport',
+      childBuilder: () => new InitialViewportBarChart.withRandomData(),
     ),
   ];
 }
