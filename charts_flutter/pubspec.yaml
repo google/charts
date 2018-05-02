@@ -8,7 +8,10 @@ environment:
   sdk: '>=1.23.0 <2.0.0'
 
 dependencies:
-  charts_common: 0.2.0
+  charts_common:
+    git:
+      url: https://github.com/kgiannakakis/charts.git
+      path: charts_common
   collection: ^1.14.5
   flutter:
     sdk: flutter
