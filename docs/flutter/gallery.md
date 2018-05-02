@@ -24,8 +24,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Points<br>[![](example/line_charts/points_thumb.png)](example/line_charts/points) | Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) |
-| Initial Viewport<br>[![](example/line_charts/initial_viewport_thumb.png)](example/line_charts/initial_viewport) | | | |
+| Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Points<br>[![](example/line_charts/points_thumb.png)](example/line_charts/points) | Stacked Area<br>[![](example/line_charts/stacked_area_thumb.png)](example/line_charts/stacked_area) | Area And Line<br>[![](example/line_charts/area_and_line_thumb.png)](example/line_charts/area_and_line) |
+| Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | Initial Viewport<br>[![](example/line_charts/initial_viewport_thumb.png)](example/line_charts/initial_viewport) | |
 
 
 ### Scatter Plot Charts

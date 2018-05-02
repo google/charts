@@ -14,7 +14,13 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show AxisSpec, LineChart, RTLSpec, Series, LineRendererConfig;
+    show
+        AxisSpec,
+        LineChart,
+        RTLSpec,
+        Series,
+        LineRendererConfig,
+        SeriesRendererConfig;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'base_chart.dart' show LayoutConfig;
@@ -31,6 +37,7 @@ class LineChart extends CartesianChart<num> {
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
     common.LineRendererConfig<num> defaultRenderer,
+    List<common.SeriesRendererConfig<num>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig> selectionModels,
     common.RTLSpec rtlSpec,
@@ -44,6 +51,7 @@ class LineChart extends CartesianChart<num> {
           primaryMeasureAxis: primaryMeasureAxis,
           secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer,
+          customSeriesRenderers: customSeriesRenderers,
           behaviors: behaviors,
           selectionModels: selectionModels,
           rtlSpec: rtlSpec,

@@ -30,6 +30,7 @@ import 'canvas/circle_sector_painter.dart' show CircleSectorPainter;
 import 'canvas/line_painter.dart' show LinePainter;
 import 'canvas/pie_painter.dart' show PiePainter;
 import 'canvas/point_painter.dart' show PointPainter;
+import 'canvas/polygon_painter.dart' show PolygonPainter;
 
 class ChartCanvas implements common.ChartCanvas {
   final Canvas canvas;
@@ -39,6 +40,7 @@ class ChartCanvas implements common.ChartCanvas {
   LinePainter _linePainter;
   PiePainter _piePainter;
   PointPainter _pointPainter;
+  PolygonPainter _polygonPainter;
 
   ChartCanvas(this.canvas);
 
@@ -95,6 +97,22 @@ class ChartCanvas implements common.ChartCanvas {
         point: point,
         fill: fill,
         radius: radius);
+  }
+
+  @override
+  void drawPolygon(
+      {List<Point> points,
+      common.Color fill,
+      common.Color stroke,
+      double strokeWidthPx}) {
+    _polygonPainter ??= new PolygonPainter();
+    _polygonPainter.draw(
+        canvas: canvas,
+        paint: _paint,
+        points: points,
+        fill: fill,
+        stroke: stroke,
+        strokeWidthPx: strokeWidthPx);
   }
 
   @override

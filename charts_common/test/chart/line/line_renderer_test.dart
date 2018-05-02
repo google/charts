@@ -129,6 +129,11 @@ void main() {
       var element = elementsList[0];
       expect(element.strokeWidthPx, equals(2.0));
 
+      expect(series.measureOffsetFn(0), 0);
+      expect(series.measureOffsetFn(1), 0);
+      expect(series.measureOffsetFn(2), 0);
+      expect(series.measureOffsetFn(3), 0);
+
       // Validate Tablet series.
       series = numericSeriesList[1];
 
@@ -138,6 +143,11 @@ void main() {
       element = elementsList[0];
       expect(element.strokeWidthPx, equals(1.25));
 
+      expect(series.measureOffsetFn(0), 0);
+      expect(series.measureOffsetFn(1), 0);
+      expect(series.measureOffsetFn(2), 0);
+      expect(series.measureOffsetFn(3), 0);
+
       // Validate Mobile series.
       series = numericSeriesList[2];
 
@@ -146,6 +156,62 @@ void main() {
 
       element = elementsList[0];
       expect(element.strokeWidthPx, equals(3.0));
+
+      expect(series.measureOffsetFn(0), 0);
+      expect(series.measureOffsetFn(1), 0);
+      expect(series.measureOffsetFn(2), 0);
+      expect(series.measureOffsetFn(3), 0);
+    });
+
+    test('with numeric data and stacked lines', () {
+      renderer = new LineRenderer<num>(
+          config: new LineRendererConfig(stacked: true, strokeWidthPx: 2.0));
+
+      renderer.preprocessSeries(numericSeriesList);
+
+      expect(numericSeriesList.length, equals(3));
+
+      // Validate Desktop series.
+      var series = numericSeriesList[0];
+
+      var elementsList = series.getAttr(lineElementsKey);
+      expect(elementsList.length, equals(1));
+
+      var element = elementsList[0];
+      expect(element.strokeWidthPx, equals(2.0));
+
+      expect(series.measureOffsetFn(0), 0);
+      expect(series.measureOffsetFn(1), 0);
+      expect(series.measureOffsetFn(2), 0);
+      expect(series.measureOffsetFn(3), 0);
+
+      // Validate Tablet series.
+      series = numericSeriesList[1];
+
+      elementsList = series.getAttr(lineElementsKey);
+      expect(elementsList.length, equals(1));
+
+      element = elementsList[0];
+      expect(element.strokeWidthPx, equals(1.25));
+
+      expect(series.measureOffsetFn(0), 5);
+      expect(series.measureOffsetFn(1), 25);
+      expect(series.measureOffsetFn(2), 100);
+      expect(series.measureOffsetFn(3), 75);
+
+      // Validate Mobile series.
+      series = numericSeriesList[2];
+
+      elementsList = series.getAttr(lineElementsKey);
+      expect(elementsList.length, equals(1));
+
+      element = elementsList[0];
+      expect(element.strokeWidthPx, equals(3.0));
+
+      expect(series.measureOffsetFn(0), 10);
+      expect(series.measureOffsetFn(1), 50);
+      expect(series.measureOffsetFn(2), 200);
+      expect(series.measureOffsetFn(3), 150);
     });
 
     test('with ordinal data and simple lines', () {

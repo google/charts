@@ -61,6 +61,19 @@ abstract class ChartCanvas {
   /// Renders a simple point.
   void drawPoint({Point point, Color fill, double radius});
 
+  /// Renders a polygon shape described by a set of points.
+  ///
+  /// [points] describes the vertices of the polygon. The last point will always
+  /// be connected to the first point to close the shape.
+  ///
+  /// [fill] configures the color inside the polygon. The shape will be
+  /// transparent if this is not provided.
+  ///
+  /// [stroke] and [strokeWidthPx] configure the color and thickness of the
+  /// edges of the polygon. Both must be provided together for a line to appear.
+  void drawPolygon(
+      {List<Point> points, Color fill, Color stroke, double strokeWidthPx});
+
   /// Renders a simple rectangle.
   void drawRect(Rectangle<num> bounds, {Color fill, Color stroke});
 
