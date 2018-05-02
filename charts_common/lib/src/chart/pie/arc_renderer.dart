@@ -344,11 +344,11 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
   /// Assigns colors to series that are missing their colorFn.
   @override
-  assignMissingColors(Iterable<MutableSeries> seriesList,
+  assignMissingColors(Iterable<MutableSeries<T, D>> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
     int maxMissing = 0;
 
-    seriesList.forEach((MutableSeries series) {
+    seriesList.forEach((MutableSeries<T, D> series) {
       if (series.colorFn == null) {
         maxMissing = max(maxMissing, series.data.length);
       }
@@ -358,7 +358,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
       final colorPalettes = StyleFactory.style.getOrderedPalettes(1);
       final colorPalette = colorPalettes[0].makeShades(maxMissing);
 
-      seriesList.forEach((MutableSeries series) {
+      seriesList.forEach((MutableSeries<T, D> series) {
         if (series.colorFn == null) {
           series.colorFn = (_, index) => colorPalette[index];
         }
