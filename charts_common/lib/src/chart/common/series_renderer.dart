@@ -187,6 +187,14 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
           final color = colorsByCategory[category][colorIndex];
           series.colorFn = (_) => color;
         }
+
+        // Fill color defaults to the series color if no accessor is provided.
+        series.fillColorFn ??= (int index) => series.colorFn(index);
+      });
+    } else {
+      seriesList.forEach((MutableSeries series) {
+        // Fill color defaults to the series color if no accessor is provided.
+        series.fillColorFn ??= (int index) => series.colorFn(index);
       });
     }
   }

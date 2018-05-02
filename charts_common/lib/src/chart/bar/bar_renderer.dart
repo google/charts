@@ -75,6 +75,7 @@ class BarRenderer<D>
   _AnimatedBar<D> makeAnimatedBar(
       {String key,
       ImmutableSeries<D> series,
+      List<int> dashPattern,
       dynamic datum,
       Color color,
       _BarRendererElement<D> details,
@@ -85,6 +86,7 @@ class BarRenderer<D>
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
+      Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
@@ -93,6 +95,7 @@ class BarRenderer<D>
         key: key, datum: datum, series: series, domainValue: domainValue)
       ..setNewTarget(makeBarRendererElement(
           color: color,
+          dashPattern: dashPattern,
           details: details,
           domainValue: domainValue,
           domainAxis: domainAxis,
@@ -101,6 +104,7 @@ class BarRenderer<D>
           measureOffsetValue: measureOffsetValue,
           measureAxisPosition: measureAxisPosition,
           measureAxis: measureAxis,
+          fillColor: fillColor,
           fillPattern: fillPattern,
           strokeWidthPx: strokeWidthPx,
           barGroupIndex: barGroupIndex,
@@ -112,6 +116,7 @@ class BarRenderer<D>
   @override
   _BarRendererElement<D> makeBarRendererElement(
       {Color color,
+      List<int> dashPattern,
       _BarRendererElement<D> details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
@@ -120,15 +125,18 @@ class BarRenderer<D>
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
+      Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
       int numBarGroups}) {
     return new _BarRendererElement<D>()
       ..color = color
-      ..roundPx = details.roundPx
-      ..measureAxisPosition = measureAxisPosition
+      ..dashPattern = dashPattern
+      ..fillColor = fillColor
       ..fillPattern = fillPattern
+      ..measureAxisPosition = measureAxisPosition
+      ..roundPx = details.roundPx
       ..strokeWidthPx = strokeWidthPx
       ..bounds = _getBarBounds(
           domainValue,
@@ -181,7 +189,11 @@ class BarRenderer<D>
       }
 
       bars.add(new CanvasRect(bounds,
-          fill: bar.color, pattern: bar.fillPattern, stroke: bar.color));
+          dashPattern: bar.dashPattern,
+          fill: bar.fillColor,
+          pattern: bar.fillPattern,
+          stroke: bar.color,
+          strokeWidthPx: bar.strokeWidthPx));
     }
 
     // TODO: Change _roundingRadiusPx to use CornerRadiusCalculator

@@ -35,6 +35,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<num> measureLowerBoundFn;
   AccessorFn<num> measureOffsetFn;
   AccessorFn<Color> colorFn;
+  AccessorFn<Color> fillColorFn;
   AccessorFn<FillPatternType> fillPatternFn;
   AccessorFn<num> radiusPxFn;
   AccessorFn<num> strokeWidthPxFn;
@@ -63,6 +64,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     measureOffsetFn = series.measureOffsetFn;
 
     colorFn = series.colorFn;
+    fillColorFn = series.fillColorFn;
     fillPatternFn = series.fillPatternFn;
     labelAccessorFn = series.labelAccessorFn ?? (i) => domainFn(i).toString();
     insideLabelStyleAccessorFn = series.insideLabelStyleAccessorFn;
@@ -91,6 +93,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     measureOffsetFn = other.measureOffsetFn;
 
     colorFn = other.colorFn;
+    fillColorFn = other.fillColorFn;
     fillPatternFn = other.fillPatternFn;
     labelAccessorFn = other.labelAccessorFn;
     insideLabelStyleAccessorFn = other.insideLabelStyleAccessorFn;
@@ -135,6 +138,7 @@ abstract class ImmutableSeries<D> {
   AccessorFn<num> get measureLowerBoundFn;
   AccessorFn<num> get measureOffsetFn;
   AccessorFn<Color> get colorFn;
+  AccessorFn<Color> get fillColorFn;
   AccessorFn<FillPatternType> get fillPatternFn;
   AccessorFn<String> get labelAccessorFn;
   AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;

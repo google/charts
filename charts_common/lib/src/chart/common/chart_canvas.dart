@@ -75,7 +75,8 @@ abstract class ChartCanvas {
       {List<Point> points, Color fill, Color stroke, double strokeWidthPx});
 
   /// Renders a simple rectangle.
-  void drawRect(Rectangle<num> bounds, {Color fill, Color stroke});
+  void drawRect(Rectangle<num> bounds,
+      {Color fill, Color stroke, double strokeWidthPx});
 
   /// Renders a rounded rectangle.
   void drawRRect(Rectangle<num> bounds,

@@ -119,10 +119,23 @@ class ChartCanvas implements common.ChartCanvas {
   void drawRect(Rectangle<num> bounds,
       {common.Color fill,
       common.FillPatternType pattern,
-      common.Color stroke}) {
+      common.Color stroke,
+      double strokeWidthPx}) {
+    final drawStroke =
+        (strokeWidthPx != null && strokeWidthPx > 0.0 && stroke != null);
+
+    final strokeWidthOffset = (drawStroke ? strokeWidthPx : 0);
+
+    // Factor out stroke width, if a stroke is enabled.
+    final myBounds = new Rectangle<num>(
+        bounds.left + strokeWidthOffset / 2,
+        bounds.top + strokeWidthOffset / 2,
+        bounds.width - strokeWidthOffset,
+        bounds.height - strokeWidthOffset);
+
     switch (pattern) {
       case common.FillPatternType.forwardHatch:
-        _drawForwardHatchPattern(bounds, canvas, fill: fill);
+        _drawForwardHatchPattern(myBounds, canvas, fill: fill);
         break;
 
       case common.FillPatternType.solid:
@@ -131,8 +144,19 @@ class ChartCanvas implements common.ChartCanvas {
         _paint.color = new Color.fromARGB(fill.a, fill.r, fill.g, fill.b);
         _paint.style = PaintingStyle.fill;
 
-        canvas.drawRect(_getRect(bounds), _paint);
+        canvas.drawRect(_getRect(myBounds), _paint);
         break;
+    }
+
+    // [Canvas.drawRect] does not support drawing a rectangle with both a fill
+    // and a stroke at this time. Use a separate rect for the stroke.
+    if (drawStroke) {
+      _paint.color = new Color.fromARGB(stroke.a, stroke.r, stroke.g, stroke.b);
+      _paint.strokeJoin = StrokeJoin.round;
+      _paint.strokeWidth = strokeWidthPx;
+      _paint.style = PaintingStyle.stroke;
+
+      canvas.drawRect(_getRect(myBounds), _paint);
     }
   }
 
@@ -182,9 +206,13 @@ class ChartCanvas implements common.ChartCanvas {
     // Draw each bar.
     for (var barIndex = 0; barIndex < barStack.segments.length; barIndex++) {
       // TODO: Add configuration for hiding stack line.
+      // TODO: Don't draw stroke on bottom of bars.
       final segment = barStack.segments[barIndex];
       drawRect(segment.bounds,
-          fill: segment.fill, pattern: segment.pattern, stroke: segment.stroke);
+          fill: segment.fill,
+          pattern: segment.pattern,
+          stroke: segment.stroke,
+          strokeWidthPx: segment.strokeWidthPx);
     }
 
     if (roundedCorners) {

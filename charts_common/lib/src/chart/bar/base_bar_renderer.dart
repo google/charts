@@ -123,6 +123,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       var fillPatternFn = series.fillPatternFn;
       var strokeWidthPxFn = series.strokeWidthPxFn;
 
+      series.dashPattern ??= config.dashPattern;
+
       // Identifies which stack the series will go in, by default a single
       // stack.
       var stackKey = '__defaultKey__';
@@ -269,6 +271,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       var measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
       var measureFn = series.measureFn;
       var colorFn = series.colorFn;
+      var dashPattern = series.dashPattern;
+      var fillColorFn = series.fillColorFn;
       var seriesStackKey = series.getAttr(stackKeyKey);
       var barGroupIndex = series.getAttr(barGroupIndexKey);
       var measureAxisPosition = measureAxis.getLocation(0.0);
@@ -313,10 +317,12 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
               datum: datum,
               barGroupIndex: barGroupIndex,
               color: colorFn(barIndex),
+              dashPattern: dashPattern,
               details: details,
               domainValue: domainFn(barIndex),
               domainAxis: domainAxis,
               domainWidth: domainAxis.rangeBand.round(),
+              fillColor: fillColorFn(barIndex),
               fillPattern: details.fillPattern,
               measureValue: 0.0,
               measureOffsetValue: 0.0,
@@ -347,10 +353,12 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         BaseBarRendererElement barElement = makeBarRendererElement(
             barGroupIndex: series.getAttr(barGroupIndexKey),
             color: colorFn(barIndex),
+            dashPattern: dashPattern,
             details: details,
             domainValue: domainFn(barIndex),
             domainAxis: domainAxis,
             domainWidth: domainAxis.rangeBand.round(),
+            fillColor: fillColorFn(barIndex),
             fillPattern: details.fillPattern,
             measureValue: measureFn(barIndex),
             measureOffsetValue: details.measureOffset,
@@ -387,6 +395,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       dynamic datum,
       int barGroupIndex,
       Color color,
+      List<int> dashPattern,
       R details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
@@ -396,6 +405,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       int numBarGroups,
+      Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx});
 
@@ -404,6 +414,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   R makeBarRendererElement(
       {int barGroupIndex,
       Color color,
+      List<int> dashPattern,
       R details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
@@ -413,6 +424,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       int numBarGroups,
+      Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx});
 

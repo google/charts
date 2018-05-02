@@ -46,6 +46,9 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
 
   final List<int> barWeights;
 
+  /// Dash pattern for the stroke line around the edges of the bar.
+  final List<int> dashPattern;
+
   /// Defines the way multiple series of bars are rendered per domain.
   final BarGroupingType groupingType;
 
@@ -63,6 +66,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   BaseBarRendererConfig(
       {this.customRendererId,
       this.barWeights,
+      this.dashPattern,
       this.groupingType = BarGroupingType.grouped,
       this.minBarLengthPx = 0,
       this.fillPattern,
@@ -90,6 +94,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     }
     return o.customRendererId == customRendererId &&
         new ListEquality().equals(o.barWeights, barWeights) &&
+        o.dashPattern == dashPattern &&
         o.fillPattern == fillPattern &&
         o.groupingType == groupingType &&
         o.minBarLengthPx == minBarLengthPx &&
@@ -102,6 +107,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     var hash = 1;
     hash = hash * 31 + (customRendererId?.hashCode ?? 0);
     hash = hash * 31 + (barWeights?.hashCode ?? 0);
+    hash = hash * 31 + (dashPattern?.hashCode ?? 0);
     hash = hash * 31 + (fillPattern?.hashCode ?? 0);
     hash = hash * 31 + (groupingType?.hashCode ?? 0);
     hash = hash * 31 + (minBarLengthPx?.hashCode ?? 0);

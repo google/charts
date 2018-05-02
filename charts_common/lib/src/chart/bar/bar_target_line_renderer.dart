@@ -54,6 +54,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   void configureSeries(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
       series.colorFn ??= (_) => _color;
+      series.fillColorFn ??= (_) => _color;
     });
   }
 
@@ -72,6 +73,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       ImmutableSeries<D> series,
       dynamic datum,
       Color color,
+      List<int> dashPattern,
       _BarTargetLineRendererElement details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
@@ -80,6 +82,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
+      Color fillColor,
       FillPatternType fillPattern,
       int barGroupIndex,
       int numBarGroups,
@@ -89,6 +92,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       ..setNewTarget(makeBarRendererElement(
           color: color,
           details: details,
+          dashPattern: dashPattern,
           domainValue: domainValue,
           domainAxis: domainAxis,
           domainWidth: domainWidth,
@@ -96,6 +100,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
           measureOffsetValue: measureOffsetValue,
           measureAxisPosition: measureAxisPosition,
           measureAxis: measureAxis,
+          fillColor: fillColor,
           fillPattern: fillPattern,
           strokeWidthPx: strokeWidthPx,
           barGroupIndex: barGroupIndex,
@@ -107,6 +112,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   @override
   _BarTargetLineRendererElement makeBarRendererElement(
       {Color color,
+      List<int> dashPattern,
       _BarTargetLineRendererElement details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
@@ -115,15 +121,18 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
+      Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
       int numBarGroups}) {
     return new _BarTargetLineRendererElement()
       ..color = color
-      ..roundEndCaps = details.roundEndCaps
-      ..measureAxisPosition = measureAxisPosition
+      ..dashPattern = dashPattern
+      ..fillColor = fillColor
       ..fillPattern = fillPattern
+      ..measureAxisPosition = measureAxisPosition
+      ..roundEndCaps = details.roundEndCaps
       ..strokeWidthPx = strokeWidthPx
       ..points = _getTargetLinePoints(
           domainValue,

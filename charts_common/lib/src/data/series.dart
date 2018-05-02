@@ -32,7 +32,13 @@ class Series<T, D> {
   final AccessorFn<num> measureUpperBoundFn;
   final AccessorFn<num> measureLowerBoundFn;
   final AccessorFn<num> measureOffsetFn;
+
+  /// [colorFn] returns the rendered stroke color for a given data value.
   final AccessorFn<Color> colorFn;
+
+  /// [fillColorFn] returns the rendered fill color for a given data value. If
+  /// not provided, then [colorFn] will be used as a fallback.
+  final AccessorFn<Color> fillColorFn;
   final AccessorFn<FillPatternType> fillPatternFn;
   final AccessorFn<num> radiusPxFn;
   final AccessorFn<num> strokeWidthPxFn;
@@ -54,6 +60,7 @@ class Series<T, D> {
       String displayName,
       TypedAccessorFn<T, Color> colorFn,
       List<int> dashPattern,
+      TypedAccessorFn<T, Color> fillColorFn,
       TypedAccessorFn<T, FillPatternType> fillPatternFn,
       TypedAccessorFn<T, String> labelAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn,
@@ -70,6 +77,9 @@ class Series<T, D> {
     final _measureFn = (int index) => measureFn(data[index], index);
     final _colorFn =
         colorFn == null ? null : (int index) => colorFn(data[index], index);
+    final _fillColorFn = fillColorFn == null
+        ? null
+        : (int index) => fillColorFn(data[index], index);
     final _fillPatternFn = fillPatternFn == null
         ? null
         : (int index) => fillPatternFn(data[index], index);
@@ -106,6 +116,7 @@ class Series<T, D> {
       displayName: displayName,
       colorFn: _colorFn,
       dashPattern: dashPattern,
+      fillColorFn: _fillColorFn,
       fillPatternFn: _fillPatternFn,
       labelAccessorFn: _labelAccessorFn,
       insideLabelStyleAccessorFn: _insideLabelStyleAccessorFn,
@@ -128,6 +139,7 @@ class Series<T, D> {
     this.displayName,
     this.colorFn,
     this.dashPattern,
+    this.fillColorFn,
     this.fillPatternFn,
     this.labelAccessorFn,
     this.insideLabelStyleAccessorFn,

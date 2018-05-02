@@ -21,6 +21,7 @@ import 'palette.dart' show Palette;
 /// @link https://material.io/guidelines/style/color.html#color-color-palette
 class MaterialPalette {
   static const black = const Color(r: 0, g: 0, b: 0);
+  static const transparent = const Color(r: 0, g: 0, b: 0, a: 0);
   static const white = const Color(r: 255, g: 255, b: 255);
 
   static Palette get blue => const MaterialBlue();

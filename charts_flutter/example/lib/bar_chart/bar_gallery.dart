@@ -16,6 +16,7 @@
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'grouped.dart';
+import 'grouped_fill_color.dart';
 import 'grouped_single_target_line.dart';
 import 'grouped_stacked.dart';
 import 'grouped_target_line.dart';
@@ -27,6 +28,7 @@ import 'initial_viewport.dart';
 import 'pattern_forward_hatch.dart';
 import 'simple.dart';
 import 'stacked.dart';
+import 'stacked_fill_color.dart';
 import 'stacked_horizontal.dart';
 import 'stacked_target_line.dart';
 import 'spark_bar.dart';
@@ -109,6 +111,18 @@ List<GalleryScaffold> buildGallery() {
       title: 'Spark Bar Chart',
       subtitle: 'Spark Bar Chart',
       childBuilder: () => new SparkBar.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Grouped Fill Color Bar Chart',
+      subtitle: 'Grouped bar chart with fill colors',
+      childBuilder: () => new GroupedFillColorBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Stacked Fill Color Bar Chart',
+      subtitle: 'Stacked bar chart with fill colors',
+      childBuilder: () => new StackedFillColorBarChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.insert_chart),
