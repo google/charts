@@ -104,12 +104,12 @@ abstract class BaseChart<D> {
     _gestureProxy.listeners.remove(listener);
   }
 
-  LifecycleListener addLifecycleListener(LifecycleListener listener) {
+  LifecycleListener addLifecycleListener(LifecycleListener<D> listener) {
     _lifecycleListeners.add(listener);
     return listener;
   }
 
-  bool removeLifecycleListener(LifecycleListener listener) =>
+  bool removeLifecycleListener(LifecycleListener<D> listener) =>
       _lifecycleListeners.remove(listener);
 
   /// Returns a SelectionModel for the given type. Lazy creates one upon first

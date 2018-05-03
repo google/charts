@@ -49,7 +49,7 @@ class ConcreteChart extends CartesianChart {
   Axis get domainAxis => _domainAxis;
 }
 
-class ConcreteNumericAxis extends Axis {
+class ConcreteNumericAxis extends Axis<num> {
   ConcreteNumericAxis()
       : super(
           tickProvider: new MockTickProvider(),

@@ -130,8 +130,9 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       // Draw text is called twice (once for each bar) and all 3 parameters were
       // captured. Total parameters captured expected to be 6.
       expect(captured, hasLength(6));
@@ -169,8 +170,9 @@ void main() {
               animationPercent: 1.0,
               renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(6));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -195,8 +197,9 @@ void main() {
               animationPercent: 1.0,
               renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(6));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -219,8 +222,9 @@ void main() {
               animationPercent: 1.0,
               renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(190));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -253,8 +257,9 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       // Draw text is called twice (once for each bar) and all 3 parameters were
       // captured. Total parameters captured expected to be 6.
       expect(captured, hasLength(6));
@@ -290,8 +295,9 @@ void main() {
               animationPercent: 1.0,
               renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(10));
       expect(captured[0].textDirection, equals(TextDirection.rtl));
@@ -316,8 +322,9 @@ void main() {
               renderingVertically: false,
               rtl: true);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(10));
       expect(captured[0].textDirection, equals(TextDirection.rtl));
@@ -342,8 +349,9 @@ void main() {
               renderingVertically: false,
               rtl: true);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(10));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -364,7 +372,7 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      verifyNever(canvas.drawText(any, any, any));
+      verifyNever(canvas.drawText(typed(any), typed(any), typed(any)));
     });
 
     test('Skip label if label is null or empty', () {
@@ -381,7 +389,7 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      verifyNever(canvas.drawText(any, any, any));
+      verifyNever(canvas.drawText(typed(any), typed(any), typed(any)));
     });
 
     test('Skip label if no width available', () {
@@ -398,7 +406,7 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      verifyNever(canvas.drawText(any, any, any));
+      verifyNever(canvas.drawText(typed(any), typed(any), typed(any)));
     });
   });
 }

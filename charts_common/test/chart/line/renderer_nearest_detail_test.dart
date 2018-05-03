@@ -38,7 +38,9 @@ class MyRow {
 
 class MockChart extends Mock implements CartesianChart {}
 
-class MockAxis extends Mock implements Axis {}
+class MockDomainAxis extends Mock implements Axis<int> {}
+
+class MockMeasureAxis extends Mock implements Axis<num> {}
 
 class MockCanvas extends Mock implements ChartCanvas {}
 
@@ -64,7 +66,7 @@ void main() {
     series.colorFn = (_) => new Color.fromHex(code: '#000000');
 
     // Mock the Domain axis results.
-    final domainAxis = new MockAxis();
+    final domainAxis = new MockDomainAxis();
     when(domainAxis.rangeBand).thenReturn(100.0);
     when(domainAxis.getLocation(1000)).thenReturn(70.0);
     when(domainAxis.getLocation(2000)).thenReturn(70.0 + 100);
@@ -72,7 +74,7 @@ void main() {
     series.setAttr(domainAxisKey, domainAxis);
 
     // Mock the Measure axis results.
-    final measureAxis = new MockAxis();
+    final measureAxis = new MockMeasureAxis();
     for (var i = 0; i <= 100; i++) {
       when(measureAxis.getLocation(i.toDouble()))
           .thenReturn(20.0 + 100.0 - i.toDouble());

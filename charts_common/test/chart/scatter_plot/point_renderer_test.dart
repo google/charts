@@ -124,7 +124,7 @@ void main() {
       renderer = new PointRenderer<num>(config: new PointRendererConfig());
 
       numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
-          (int index) => numericSeriesList[0].data[index].shape);
+          (int index) => numericSeriesList[0].data[index].shape as String);
 
       renderer.preprocessSeries(numericSeriesList);
 
@@ -146,7 +146,7 @@ void main() {
       renderer = new PointRenderer<num>(config: new PointRendererConfig());
 
       numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
-          (int index) => numericSeriesList[0].data[index].shape);
+          (int index) => numericSeriesList[0].data[index].shape as String);
       numericSeriesList[0].setAttr(pointSymbolRendererIdKey, 'shape 0');
 
       renderer.preprocessSeries(numericSeriesList);

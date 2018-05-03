@@ -107,7 +107,7 @@ void main() {
   test('Legend entries created on chart post process', () {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
-    final legend = new SeriesLegend(selectionModelType: selectionType);
+    final legend = new SeriesLegend<String>(selectionModelType: selectionType);
 
     legend.attachTo(chart);
     chart.callOnDraw(seriesList);
@@ -130,7 +130,8 @@ void main() {
   test('default hidden series are removed from list during pre process', () {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
-    final legend = new ConcreteSeriesLegend(selectionModelType: selectionType);
+    final legend =
+        new ConcreteSeriesLegend<String>(selectionModelType: selectionType);
 
     legend.defaultHiddenSeries = ['s2'];
 
@@ -148,7 +149,8 @@ void main() {
   test('hidden series are removed from list after chart pre process', () {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
-    final legend = new ConcreteSeriesLegend(selectionModelType: selectionType);
+    final legend =
+        new ConcreteSeriesLegend<String>(selectionModelType: selectionType);
 
     legend.attachTo(chart);
     legend.hideSeries('s1');
@@ -166,7 +168,8 @@ void main() {
     final seriesList = [series1, series2];
     final seriesList2 = [series1, series2];
     final selectionType = SelectionModelType.info;
-    final legend = new ConcreteSeriesLegend(selectionModelType: selectionType);
+    final legend =
+        new ConcreteSeriesLegend<String>(selectionModelType: selectionType);
 
     legend.attachTo(chart);
 
@@ -199,7 +202,7 @@ void main() {
   test('selected series legend entry is updated', () {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
-    final legend = new SeriesLegend(selectionModelType: selectionType);
+    final legend = new SeriesLegend<String>(selectionModelType: selectionType);
 
     legend.attachTo(chart);
     chart.callOnDraw(seriesList);
@@ -226,7 +229,8 @@ void main() {
   test('hidden series removed from chart and later readded is visible', () {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
-    final legend = new ConcreteSeriesLegend(selectionModelType: selectionType);
+    final legend =
+        new ConcreteSeriesLegend<String>(selectionModelType: selectionType);
 
     legend.attachTo(chart);
 

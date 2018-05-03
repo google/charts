@@ -45,7 +45,9 @@ class MockContext extends Mock implements ChartContext {}
 
 class MockChart extends Mock implements CartesianChart {}
 
-class MockAxis extends Mock implements Axis {}
+class MockOrdinalAxis extends Mock implements Axis<String> {}
+
+class MockNumericAxis extends Mock implements Axis<num> {}
 
 class MockCanvas extends Mock implements ChartCanvas {}
 
@@ -102,7 +104,7 @@ void main() {
     series.colorFn = (_) => new Color.fromHex(code: '#000000');
 
     // Mock the Domain axis results.
-    final domainAxis = new MockAxis();
+    final domainAxis = new MockOrdinalAxis();
     when(domainAxis.rangeBand).thenReturn(100.0);
     final domainOffset = vertical ? 70.0 : 20.0;
     when(domainAxis.getLocation('camp0'))
@@ -124,7 +126,7 @@ void main() {
     series.setAttr(domainAxisKey, domainAxis);
 
     // Mock the Measure axis results.
-    final measureAxis = new MockAxis();
+    final measureAxis = new MockNumericAxis();
     if (vertical) {
       when(measureAxis.getLocation(0.0)).thenReturn(20.0 + 100.0);
       when(measureAxis.getLocation(10.0)).thenReturn(20.0 + 100.0 - 10.0);

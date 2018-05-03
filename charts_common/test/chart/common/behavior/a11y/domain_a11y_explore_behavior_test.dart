@@ -25,7 +25,7 @@ import 'package:test/test.dart';
 
 class MockContext extends Mock implements ChartContext {}
 
-class MockAxis extends Mock implements Axis {}
+class MockAxis extends Mock implements Axis<String> {}
 
 class FakeCartesianChart extends CartesianChart<String> {
   @override
@@ -209,7 +209,7 @@ void main() {
   test('creates nodes with minimum width', () {
     // A behavior with minimum width of 50
     final behaviorWithMinWidth =
-        new DomainA11yExploreBehavior(minimumWidth: 50.0);
+        new DomainA11yExploreBehavior<String>(minimumWidth: 50.0);
     behaviorWithMinWidth.attachTo(chart);
 
     // A LTR chart
