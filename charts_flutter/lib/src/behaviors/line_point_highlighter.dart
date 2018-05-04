@@ -15,7 +15,7 @@
 
 import 'package:charts_common/common.dart' as common
     show LinePointHighlighter, SelectionModelType;
-
+import 'package:flutter/widgets.dart' show hashValues;
 import 'package:meta/meta.dart' show immutable;
 
 import 'chart_behavior.dart' show ChartBehavior, GestureType;
@@ -72,9 +72,18 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
   String get role => 'LinePointHighlighter-${selectionModelType.toString()}';
 
   @override
-  bool operator ==(Object o) =>
-      o is LinePointHighlighter && selectionModelType == o.selectionModelType;
+  bool operator ==(Object o) {
+    return o is LinePointHighlighter &&
+        defaultRadiusPx == o.defaultRadiusPx &&
+        radiusPaddingPx == o.radiusPaddingPx &&
+        showHorizontalFollowLine == o.showHorizontalFollowLine &&
+        showVerticalFollowLine == o.showVerticalFollowLine &&
+        selectionModelType == o.selectionModelType;
+  }
 
   @override
-  int get hashCode => selectionModelType.hashCode;
+  int get hashCode {
+    return hashValues(selectionModelType, defaultRadiusPx, radiusPaddingPx,
+        showHorizontalFollowLine, showVerticalFollowLine);
+  }
 }

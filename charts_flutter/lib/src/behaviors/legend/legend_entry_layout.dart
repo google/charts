@@ -97,4 +97,10 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
       legend.onLegendEntryTapUp(legendEntry);
     };
   }
+
+  bool operator ==(Object other) => other is SimpleLegendEntryLayout;
+
+  int get hashCode {
+    return this.runtimeType.hashCode;
+  }
 }

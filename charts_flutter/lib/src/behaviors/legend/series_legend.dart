@@ -22,7 +22,9 @@ import 'package:charts_common/common.dart' as common
         OutsideJustification,
         SeriesLegend,
         SelectionModelType;
-import 'package:flutter/widgets.dart' show BuildContext, EdgeInsets, Widget;
+import 'package:collection/collection.dart' show ListEquality;
+import 'package:flutter/widgets.dart'
+    show BuildContext, EdgeInsets, Widget, hashValues;
 import 'package:meta/meta.dart' show immutable;
 import '../../chart_container.dart' show ChartContainerRenderObject;
 import '../chart_behavior.dart'
@@ -141,11 +143,21 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   String get role => 'legend-${selectionModelType.toString()}';
 
   @override
-  bool operator ==(Object o) =>
-      o is SeriesLegend && selectionModelType == o.selectionModelType;
+  bool operator ==(Object o) {
+    return o is SeriesLegend &&
+        selectionModelType == o.selectionModelType &&
+        contentBuilder == o.contentBuilder &&
+        position == o.position &&
+        outsideJustification == o.outsideJustification &&
+        insideJustification == o.insideJustification &&
+        new ListEquality().equals(defaultHiddenSeries, o.defaultHiddenSeries);
+  }
 
   @override
-  int get hashCode => selectionModelType.hashCode;
+  int get hashCode {
+    return hashValues(selectionModelType, contentBuilder, position,
+        outsideJustification, insideJustification, defaultHiddenSeries);
+  }
 }
 
 /// Flutter specific wrapper on the common Legend for building content.

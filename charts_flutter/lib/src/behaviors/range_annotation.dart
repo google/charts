@@ -15,7 +15,8 @@
 
 import 'package:charts_common/common.dart' as common
     show Color, MaterialPalette, RangeAnnotation, RangeAnnotationSegment;
-
+import 'package:collection/collection.dart' show ListEquality;
+import 'package:flutter/widgets.dart' show hashValues;
 import 'package:meta/meta.dart' show immutable;
 
 import 'chart_behavior.dart' show ChartBehavior, GestureType;
@@ -56,5 +57,13 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
   String get role => 'RangeAnnotation';
 
   @override
-  bool operator ==(Object o) => o is RangeAnnotation;
+  bool operator ==(Object o) {
+    return o is RangeAnnotation &&
+        new ListEquality().equals(annotations, o.annotations) &&
+        defaultColor == defaultColor &&
+        extendAxis == extendAxis;
+  }
+
+  @override
+  int get hashCode => hashValues(annotations, defaultColor, extendAxis);
 }
