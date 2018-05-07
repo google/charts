@@ -1,23 +1,31 @@
-# Initial Viewport Line Chart Example
+# Numeric Initial Viewport Axes Example
 
-![](initial_viewport_full.png)
+![](numeric_initial_viewport_full.png)
 
 Example:
 
 ```
-/// Line chart example showing how to set initial viewport.
+/// Example of setting an initial viewport for ordinal axis.
+///
+/// This allows for specifying the specific range of data to show that differs
+/// from what was provided in the series list.
+///
+/// In this example, the series list has numeric data from 0 to 10, but we
+/// want to show from 3 to 7.
+/// We can do this by specifying an [NumericExtents] in [NumericAxisSpec].
+
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-class InitialViewportLineChart extends StatelessWidget {
+class NumericInitialViewport extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  InitialViewportLineChart(this.seriesList, {this.animate});
+  NumericInitialViewport(this.seriesList, {this.animate});
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory InitialViewportLineChart.withSampleData() {
-    return new InitialViewportLineChart(
+  factory NumericInitialViewport.withSampleData() {
+    return new NumericInitialViewport(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,

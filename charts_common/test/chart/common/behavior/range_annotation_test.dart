@@ -56,12 +56,6 @@ class ConcreteNumericAxis extends Axis<num> {
           tickFormatter: new NumericTickFormatter(),
           scale: new LinearScale(),
         );
-
-  @override
-  void setViewport(_) {}
-
-  @override
-  void saveViewportSettings(_) {}
 }
 
 class MockTickProvider extends Mock implements NumericTickProvider {}

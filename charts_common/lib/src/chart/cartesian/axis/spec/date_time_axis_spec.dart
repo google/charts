@@ -71,8 +71,8 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
       GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 
-    if (axis is DateTimeAxis && axis.viewport == null) {
-      axis.viewport = viewport;
+    if (axis is DateTimeAxis && viewport != null) {
+      axis.setScaleViewport(viewport);
     }
   }
 

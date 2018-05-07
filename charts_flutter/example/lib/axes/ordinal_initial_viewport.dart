@@ -13,22 +13,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Bar chart example showing how to set an initial viewport
+/// Example of setting an initial viewport for ordinal axis.
+///
+/// This allows for specifying the specific range of data to show that differs
+/// from what was provided in the series list.
+///
+/// In this example, the series list has ordinal data from year 2014 to 2030,
+/// but we want to show starting at 2018 and we only want to show 4 values.
+/// We can do this by specifying an [OrdinalViewport] in [OrdinalAxisSpec].
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-class InitialViewportBarChart extends StatelessWidget {
+class OrdinalInitialViewport extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  InitialViewportBarChart(this.seriesList, {this.animate});
+  OrdinalInitialViewport(this.seriesList, {this.animate});
 
   /// Creates a [BarChart] with sample data and no transition.
-  factory InitialViewportBarChart.withSampleData() {
-    return new InitialViewportBarChart(
+  factory OrdinalInitialViewport.withSampleData() {
+    return new OrdinalInitialViewport(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -39,8 +47,8 @@ class InitialViewportBarChart extends StatelessWidget {
   // This section is excluded from being copied to the gallery.
   // It is used for creating random series data to demonstrate animation in
   // the example app only.
-  factory InitialViewportBarChart.withRandomData() {
-    return new InitialViewportBarChart(_createRandomData());
+  factory OrdinalInitialViewport.withRandomData() {
+    return new OrdinalInitialViewport(_createRandomData());
   }
 
   /// Create random data.

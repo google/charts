@@ -13,22 +13,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Line chart example showing how to set initial viewport.
+/// Example of setting an initial viewport for ordinal axis.
+///
+/// This allows for specifying the specific range of data to show that differs
+/// from what was provided in the series list.
+///
+/// In this example, the series list has numeric data from 0 to 10, but we
+/// want to show from 3 to 7.
+/// We can do this by specifying an [NumericExtents] in [NumericAxisSpec].
+
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-class InitialViewportLineChart extends StatelessWidget {
+class NumericInitialViewport extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  InitialViewportLineChart(this.seriesList, {this.animate});
+  NumericInitialViewport(this.seriesList, {this.animate});
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory InitialViewportLineChart.withSampleData() {
-    return new InitialViewportLineChart(
+  factory NumericInitialViewport.withSampleData() {
+    return new NumericInitialViewport(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -39,8 +47,8 @@ class InitialViewportLineChart extends StatelessWidget {
   // This section is excluded from being copied to the gallery.
   // It is used for creating random series data to demonstrate animation in
   // the example app only.
-  factory InitialViewportLineChart.withRandomData() {
-    return new InitialViewportLineChart(_createRandomData());
+  factory NumericInitialViewport.withRandomData() {
+    return new NumericInitialViewport(_createRandomData());
   }
 
   /// Create random data.

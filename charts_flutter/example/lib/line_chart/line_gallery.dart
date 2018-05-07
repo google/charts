@@ -18,7 +18,6 @@ import '../gallery_scaffold.dart';
 import 'animation_zoom.dart';
 import 'area_and_line.dart';
 import 'dash_pattern.dart';
-import 'initial_viewport.dart';
 import 'points.dart';
 import 'range_annotation.dart';
 import 'simple.dart';
@@ -67,12 +66,6 @@ List<GalleryScaffold> buildGallery() {
       title: 'Pan and Zoom Line Chart',
       subtitle: 'Simple line chart pan and zoom behaviors enabled',
       childBuilder: () => new LineAnimationZoomChart.withRandomData(),
-    ),
-    new GalleryScaffold(
-      listTileIcon: new Icon(Icons.show_chart),
-      title: 'Line Chart with initial viewport',
-      subtitle: 'Initial viewport is set to a subset of the data',
-      childBuilder: () => new InitialViewportLineChart.withRandomData(),
     ),
   ];
 }

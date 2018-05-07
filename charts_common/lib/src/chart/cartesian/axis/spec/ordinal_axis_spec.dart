@@ -60,8 +60,8 @@ class OrdinalAxisSpec extends AxisSpec<String> {
       GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 
-    if (axis is OrdinalAxis && axis.viewport == null) {
-      axis.viewport = viewport;
+    if (axis is OrdinalAxis && viewport != null) {
+      axis.setScaleViewport(viewport);
     }
   }
 

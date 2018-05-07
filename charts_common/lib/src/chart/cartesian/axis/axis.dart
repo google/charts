@@ -118,6 +118,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   Axis({this.tickProvider, this.tickFormatter, MutableScale<D> scale})
       : this._scale = scale;
 
+  @protected
+  MutableScale<D> get mutableScale => _scale;
+
   /// Rangeband for this axis.
   @override
   double get rangeBand => _scale.rangeBand;
@@ -259,13 +262,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
         drawAreaWidth: drawAreaWidth);
 
     _scale.setViewportSettings(viewportScale, viewportTranslatePx);
-
-    /// Axis saves the viewport settings.
-    saveViewportSettings(_scale);
   }
-
-  @protected
-  void saveViewportSettings(MutableScale<D> scale);
 
   /// Returns the current viewport scale.
   ///
@@ -390,17 +387,11 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       _scale.range = outputRange;
     }
 
-    setViewport(_scale);
-
     _updateProvidedTicks();
     // Update animated ticks in layout, because updateTicks are called during
     // measure and we don't want to update the animation at that time.
     _updateAxisTicks();
   }
-
-  /// Set the axis viewport.
-  @protected
-  void setViewport(MutableScale<D> scale);
 
   @override
   Rectangle<int> get componentBounds => this._componentBounds;
@@ -441,19 +432,9 @@ class NumericAxis extends Axis<num> {
           scale: new LinearScale(),
         );
 
-  NumericExtents viewport;
-
-  @override
-  void setViewport(MutableScale<num> scale) {
-    if (viewport != null) {
-      (scale as NumericScale).viewportDomain = viewport;
-    }
-  }
-
-  /// Save the viewport from [scale] back onto the axis.
-  @override
-  void saveViewportSettings(MutableScale<num> scale) {
-    viewport = (scale as NumericScale).viewportDomain;
+  void setScaleViewport(NumericExtents viewport) {
+    autoViewport = false;
+    (_scale as NumericScale).viewportDomain = viewport;
   }
 }
 
@@ -468,24 +449,29 @@ class OrdinalAxis extends Axis<String> {
           scale: new SimpleOrdinalScale(),
         );
 
-  OrdinalViewport viewport;
-
-  /// Sets the viewport to cover [viewportDataSize] data points starting at
-  /// [startingDomain] value.
-  @override
-  void setViewport(MutableScale<String> scale) {
-    if (viewport != null) {
-      final SimpleOrdinalScale scale = _scale;
-      scale.setViewport(viewport.dataSize, viewport.startingDomain);
-    }
+  void setScaleViewport(OrdinalViewport viewport) {
+    autoViewport = false;
+    (_scale as SimpleOrdinalScale)
+        .setViewport(viewport.dataSize, viewport.startingDomain);
   }
 
-  /// Save the viewport from [scale] back onto the axis.
   @override
-  void saveViewportSettings(MutableScale<String> scale) {
-    final SimpleOrdinalScale scale = _scale;
-    viewport = new OrdinalViewport(
-        scale.viewportStartingDomain, scale.viewportDataSize);
+  void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
+    super.layout(componentBounds, drawAreaBounds);
+
+    // We are purposely clearing the viewport starting domain and data size
+    // post layout.
+    //
+    // Originally we set a flag in [setScaleViewport] to recalculate viewport
+    // settings on next scale update and then reset the flag. This doesn't work
+    // because chart's measure cycle provides different ranges to the scale,
+    // causing the scale to update multiple times before it is finalized after
+    // layout.
+    //
+    // By resetting the viewport after layout, we guarantee the correct range
+    // was used to apply the viewport and behaviors that update the viewport
+    // based on translate and scale changes will not be affected (pan/zoom).
+    (_scale as SimpleOrdinalScale).setViewport(null, null);
   }
 }
 

@@ -62,8 +62,8 @@ class NumericAxisSpec extends AxisSpec<num> {
       Axis<num> axis, ChartContext context, GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 
-    if (axis is NumericAxis && axis.viewport == null) {
-      axis.viewport = viewport;
+    if (axis is NumericAxis && viewport != null) {
+      axis.setScaleViewport(viewport);
     }
   }
 

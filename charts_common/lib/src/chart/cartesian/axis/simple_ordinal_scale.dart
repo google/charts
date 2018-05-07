@@ -44,6 +44,9 @@ class SimpleOrdinalScale implements OrdinalScale {
   double _cachedRangeBandShift;
   double _cachedRangeBandSize;
 
+  int _viewportDataSize;
+  String _viewportStartingDomain;
+
   SimpleOrdinalScale() : _domain = new OrdinalScaleDomainInfo();
 
   SimpleOrdinalScale._copy(SimpleOrdinalScale other)
@@ -189,20 +192,31 @@ class SimpleOrdinalScale implements OrdinalScale {
 
   @override
   void setViewport(int viewportDataSize, String startingDomain) {
-    if (viewportDataSize <= 0) {
+    if (startingDomain != null &&
+        viewportDataSize != null &&
+        viewportDataSize <= 0) {
       throw new ArgumentError('viewportDataSize can' 't be less than 1.');
     }
+
+    _scaleChanged = true;
+    _viewportDataSize = viewportDataSize;
+    _viewportStartingDomain = startingDomain;
+  }
+
+  /// Update this scale's viewport using settings [_viewportDataSize] and
+  /// [_viewportStartingDomain].
+  void _updateViewport() {
     setViewportSettings(1.0, 0.0);
-    _updateScale();
+    _recalculateScale();
     if (_domain.isEmpty) {
       return;
     }
 
     // Update the scale with zoom level to help find the correct translate.
     setViewportSettings(
-        _domain.size / min(viewportDataSize, _domain.size), 0.0);
-    _updateScale();
-    final domainIndex = _domain.indexOf(startingDomain);
+        _domain.size / min(_viewportDataSize, _domain.size), 0.0);
+    _recalculateScale();
+    final domainIndex = _domain.indexOf(_viewportStartingDomain);
     if (domainIndex != null) {
       // Update the translate so that the scale starts half a step before the
       // chosen domain.
@@ -282,6 +296,14 @@ class SimpleOrdinalScale implements OrdinalScale {
   }
 
   void _updateScale() {
+    if (_viewportStartingDomain != null && _viewportDataSize != null) {
+      // Update viewport recalculates the scale.
+      _updateViewport();
+    }
+    _recalculateScale();
+  }
+
+  void _recalculateScale() {
     final stepSizePixels = _domain.isEmpty
         ? 0.0
         : _viewportScale * (rangeWidth.toDouble() / _domain.size.toDouble());
