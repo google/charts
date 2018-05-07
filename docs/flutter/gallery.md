@@ -32,7 +32,7 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/scatter_plot_charts/simple_thumb.png)](example/scatter_plot_charts/simple) | | | |
+| Simple<br>[![](example/scatter_plot_charts/simple_thumb.png)](example/scatter_plot_charts/simple) | Comparison Points<br>[![](example/scatter_plot_charts/comparison_points_thumb.png)](example/scatter_plot_charts/comparison_points) | | |
 
 
 ### Pie Charts

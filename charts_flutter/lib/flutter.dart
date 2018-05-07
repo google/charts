@@ -97,6 +97,8 @@ export 'package:charts_common/src/chart/layout/layout_view.dart'
     show LayoutPosition, ViewMargin;
 export 'package:charts_common/src/chart/line/line_renderer_config.dart'
     show LineRendererConfig;
+export 'package:charts_common/src/chart/scatter_plot/comparison_points_decorator.dart'
+    show ComparisonPointsDecorator;
 export 'package:charts_common/src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
 export 'package:charts_common/src/chart/pie/arc_renderer_config.dart'
@@ -111,6 +113,8 @@ export 'package:charts_common/src/common/material_palette.dart'
 export 'package:charts_common/src/common/performance.dart' show Performance;
 export 'package:charts_common/src/common/rtl_spec.dart'
     show RTLSpec, AxisPosition;
+export 'package:charts_common/src/common/symbol_renderer.dart'
+    show CylinderSymbolRenderer;
 export 'package:charts_common/src/common/style/material_style.dart'
     show MaterialStyle;
 export 'package:charts_common/src/common/style/style_factory.dart'

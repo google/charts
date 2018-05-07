@@ -18,11 +18,15 @@ import '../layout/layout_view.dart' show LayoutViewConfig;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import 'point_renderer.dart' show PointRenderer, pointSymbolRendererIdKey;
+import 'point_renderer_decorator.dart' show PointRendererDecorator;
 
 /// Configuration for a line renderer.
 class PointRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
   final String customRendererId;
+
+  /// List of decorators applied to rendered points.
+  final List<PointRendererDecorator> pointRendererDecorators;
 
   /// Renderer used to draw the points. Defaults to a circle.
   final SymbolRenderer symbolRenderer;
@@ -42,6 +46,7 @@ class PointRendererConfig<D> extends LayoutViewConfig
 
   PointRendererConfig(
       {this.customRendererId,
+      this.pointRendererDecorators = const [],
       this.radiusPx = 3.5,
       this.symbolRenderer,
       this.customSymbolRenderers});

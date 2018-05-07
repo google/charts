@@ -103,7 +103,7 @@ export 'src/common/symbol_renderer.dart'
         SymbolRenderer,
         RoundedRectSymbolRenderer,
         LineSymbolRenderer,
-        PointSymbolRenderer;
+        CircleSymbolRenderer;
 export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;

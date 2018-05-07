@@ -17,10 +17,22 @@ import 'dart:math' show Rectangle, Point, min;
 import 'color.dart' show Color;
 import '../chart/common/chart_canvas.dart' show ChartCanvas;
 
-abstract class SymbolRenderer {
-  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color);
+/// Strategy for rendering a symbol.
+abstract class BaseSymbolRenderer {
+  bool shouldRepaint(covariant BaseSymbolRenderer oldRenderer);
+}
 
-  bool shouldRepaint(covariant SymbolRenderer oldRenderer);
+/// Strategy for rendering a symbol bounded within a box.
+abstract class SymbolRenderer extends BaseSymbolRenderer {
+  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color);
+}
+
+/// Strategy for rendering a symbol centered around a point.
+///
+/// An optional second point can describe an extended symbol.
+abstract class PointSymbolRenderer extends BaseSymbolRenderer {
+  void paint(ChartCanvas canvas, Point<double> p1, double radius, Color color,
+      {Point<double> p2});
 }
 
 /// Rounded rectangular symbol with corners having [radius].
@@ -102,8 +114,8 @@ class LineSymbolRenderer extends SymbolRenderer {
 }
 
 /// Circle symbol renderer.
-class PointSymbolRenderer extends SymbolRenderer {
-  PointSymbolRenderer();
+class CircleSymbolRenderer extends SymbolRenderer {
+  CircleSymbolRenderer();
 
   void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
     final center = new Point(
@@ -114,7 +126,7 @@ class PointSymbolRenderer extends SymbolRenderer {
     canvas.drawPoint(point: center, fill: color, radius: radius);
   }
 
-  bool shouldRepaint(PointSymbolRenderer oldRenderer) {
+  bool shouldRepaint(CircleSymbolRenderer oldRenderer) {
     return this != oldRenderer;
   }
 }
@@ -127,7 +139,36 @@ class RectSymbolRenderer extends SymbolRenderer {
     canvas.drawRect(bounds, fill: color);
   }
 
-  bool shouldRepaint(PointSymbolRenderer oldRenderer) {
+  bool shouldRepaint(RectSymbolRenderer oldRenderer) {
+    return this != oldRenderer;
+  }
+}
+
+/// Cylinder symbol renderer.
+class CylinderSymbolRenderer extends PointSymbolRenderer {
+  CylinderSymbolRenderer();
+
+  void paint(ChartCanvas canvas, Point<double> p1, double radius, Color color,
+      {Point<double> p2}) {
+    if (p1 == null) {
+      throw new ArgumentError('Invalid point p1 "${p1}"');
+    }
+
+    if (p2 == null) {
+      throw new ArgumentError('Invalid point p2 "${p2}"');
+    }
+
+    var adjustedP1 = new Point<double>(p1.x, p1.y);
+    var adjustedP2 = new Point<double>(p2.x, p2.y);
+
+    canvas.drawLine(
+        points: [adjustedP1, adjustedP2],
+        stroke: color,
+        roundEndCaps: true,
+        strokeWidthPx: radius * 2);
+  }
+
+  bool shouldRepaint(CylinderSymbolRenderer oldRenderer) {
     return this != oldRenderer;
   }
 }

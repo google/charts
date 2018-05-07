@@ -57,6 +57,10 @@ class LinePainter {
       paint.style = PaintingStyle.stroke;
 
       if (dashPattern == null || dashPattern.isEmpty) {
+        if (roundEndCaps == true) {
+          paint.strokeCap = StrokeCap.round;
+        }
+
         _drawSolidLine(canvas, paint, points);
       } else {
         _drawDashedLine(canvas, paint, points, dashPattern);

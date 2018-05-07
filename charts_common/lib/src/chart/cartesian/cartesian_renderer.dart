@@ -52,8 +52,10 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @override
   void configureDomainAxes(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
-      var domainAxis = series.getAttr(domainAxisKey);
-      var domainFn = series.domainFn;
+      final domainAxis = series.getAttr(domainAxisKey);
+      final domainFn = series.domainFn;
+      final domainLowerBoundFn = series.domainLowerBoundFn;
+      final domainUpperBoundFn = series.domainUpperBoundFn;
 
       if (domainAxis == null) {
         return;
@@ -62,12 +64,22 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
       if (renderingVertically) {
         for (int i = 0; i < series.data.length; i++) {
           domainAxis.addDomainValue(domainFn(i));
+
+          if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
+            domainAxis.addDomainValue(domainLowerBoundFn(i));
+            domainAxis.addDomainValue(domainUpperBoundFn(i));
+          }
         }
       } else {
         // When rendering horizontally, domains are displayed from top to bottom
         // in order to match visual display in legend.
         for (int i = series.data.length - 1; i >= 0; i--) {
           domainAxis.addDomainValue(domainFn(i));
+
+          if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
+            domainAxis.addDomainValue(domainLowerBoundFn(i));
+            domainAxis.addDomainValue(domainUpperBoundFn(i));
+          }
         }
       }
     });
@@ -76,14 +88,14 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @override
   void configureMeasureAxes(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
-      var domainAxis = series.getAttr(domainAxisKey);
-      var domainFn = series.domainFn;
+      final domainAxis = series.getAttr(domainAxisKey);
+      final domainFn = series.domainFn;
 
       if (domainAxis == null) {
         return;
       }
 
-      var measureAxis = series.getAttr(measureAxisKey);
+      final measureAxis = series.getAttr(measureAxisKey);
       if (measureAxis == null) {
         return;
       }
@@ -100,12 +112,22 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
   void addMeasureValuesFor(
       MutableSeries<D> series, Axis measureAxis, int startIndex, int endIndex) {
+    final measureFn = series.measureFn;
+    final measureOffsetFn = series.measureOffsetFn;
+    final measureLowerBoundFn = series.measureLowerBoundFn;
+    final measureUpperBoundFn = series.measureUpperBoundFn;
+
     for (int i = startIndex; i <= endIndex; i++) {
-      final measure = series.measureFn(i);
+      final measure = measureFn(i);
 
       if (measure != null) {
-        measureAxis
-            .addDomainValue(series.measureFn(i) + series.measureOffsetFn(i));
+        final measureOffset = measureOffsetFn(i);
+        measureAxis.addDomainValue(measure + measureOffset);
+
+        if (measureLowerBoundFn != null && measureUpperBoundFn != null) {
+          measureAxis.addDomainValue(measureLowerBoundFn(i) + measureOffset);
+          measureAxis.addDomainValue(measureUpperBoundFn(i) + measureOffset);
+        }
       }
     }
   }

@@ -28,9 +28,11 @@ class Series<T, D> {
   final List<T> data;
 
   final AccessorFn<D> domainFn;
+  final AccessorFn<D> domainLowerBoundFn;
+  final AccessorFn<D> domainUpperBoundFn;
   final AccessorFn<num> measureFn;
-  final AccessorFn<num> measureUpperBoundFn;
   final AccessorFn<num> measureLowerBoundFn;
+  final AccessorFn<num> measureUpperBoundFn;
   final AccessorFn<num> measureOffsetFn;
 
   /// [colorFn] returns the rendered stroke color for a given data value.
@@ -60,14 +62,16 @@ class Series<T, D> {
       String displayName,
       TypedAccessorFn<T, Color> colorFn,
       List<int> dashPattern,
+      TypedAccessorFn<T, D> domainLowerBoundFn,
+      TypedAccessorFn<T, D> domainUpperBoundFn,
       TypedAccessorFn<T, Color> fillColorFn,
       TypedAccessorFn<T, FillPatternType> fillPatternFn,
       TypedAccessorFn<T, String> labelAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn,
       TypedAccessorFn<T, num> measureLowerBoundFn,
-      TypedAccessorFn<T, num> measureOffsetFn,
       TypedAccessorFn<T, num> measureUpperBoundFn,
+      TypedAccessorFn<T, num> measureOffsetFn,
       bool overlaySeries = false,
       TypedAccessorFn<T, num> radiusPxFn,
       String seriesCategory,
@@ -77,6 +81,12 @@ class Series<T, D> {
     final _measureFn = (int index) => measureFn(data[index], index);
     final _colorFn =
         colorFn == null ? null : (int index) => colorFn(data[index], index);
+    final _domainLowerBoundFn = domainLowerBoundFn == null
+        ? null
+        : (int index) => domainLowerBoundFn(data[index], index);
+    final _domainUpperBoundFn = domainUpperBoundFn == null
+        ? null
+        : (int index) => domainUpperBoundFn(data[index], index);
     final _fillColorFn = fillColorFn == null
         ? null
         : (int index) => fillColorFn(data[index], index);
@@ -95,12 +105,12 @@ class Series<T, D> {
     final _measureLowerBoundFn = measureLowerBoundFn == null
         ? null
         : (int index) => measureLowerBoundFn(data[index], index);
-    final _measureOffsetFn = measureOffsetFn == null
-        ? null
-        : (int index) => measureOffsetFn(data[index], index);
     final _measureUpperBoundFn = measureUpperBoundFn == null
         ? null
         : (int index) => measureUpperBoundFn(data[index], index);
+    final _measureOffsetFn = measureOffsetFn == null
+        ? null
+        : (int index) => measureOffsetFn(data[index], index);
     final _radiusPxFn = radiusPxFn == null
         ? null
         : (int index) => radiusPxFn(data[index], index);
@@ -116,14 +126,16 @@ class Series<T, D> {
       displayName: displayName,
       colorFn: _colorFn,
       dashPattern: dashPattern,
+      domainLowerBoundFn: _domainLowerBoundFn,
+      domainUpperBoundFn: _domainUpperBoundFn,
       fillColorFn: _fillColorFn,
       fillPatternFn: _fillPatternFn,
       labelAccessorFn: _labelAccessorFn,
       insideLabelStyleAccessorFn: _insideLabelStyleAccessorFn,
       outsideLabelStyleAccessorFn: _outsideLabelStyleAccessorFn,
       measureLowerBoundFn: _measureLowerBoundFn,
-      measureOffsetFn: _measureOffsetFn,
       measureUpperBoundFn: _measureUpperBoundFn,
+      measureOffsetFn: _measureOffsetFn,
       overlaySeries: overlaySeries,
       radiusPxFn: _radiusPxFn,
       seriesCategory: seriesCategory,
@@ -139,14 +151,16 @@ class Series<T, D> {
     this.displayName,
     this.colorFn,
     this.dashPattern,
+    this.domainLowerBoundFn,
+    this.domainUpperBoundFn,
     this.fillColorFn,
     this.fillPatternFn,
     this.labelAccessorFn,
     this.insideLabelStyleAccessorFn,
     this.outsideLabelStyleAccessorFn,
     this.measureLowerBoundFn,
-    this.measureOffsetFn,
     this.measureUpperBoundFn,
+    this.measureOffsetFn,
     this.overlaySeries = false,
     this.radiusPxFn,
     this.seriesCategory,

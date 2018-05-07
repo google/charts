@@ -30,9 +30,11 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   List data;
 
   AccessorFn<D> domainFn;
+  AccessorFn<D> domainLowerBoundFn;
+  AccessorFn<D> domainUpperBoundFn;
   AccessorFn<num> measureFn;
-  AccessorFn<num> measureUpperBoundFn;
   AccessorFn<num> measureLowerBoundFn;
+  AccessorFn<num> measureUpperBoundFn;
   AccessorFn<num> measureOffsetFn;
   AccessorFn<Color> colorFn;
   AccessorFn<Color> fillColorFn;
@@ -57,10 +59,12 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
     data = series.data;
     domainFn = series.domainFn;
+    domainLowerBoundFn = series.domainLowerBoundFn;
+    domainUpperBoundFn = series.domainUpperBoundFn;
 
     measureFn = series.measureFn;
-    measureUpperBoundFn = series.measureUpperBoundFn;
     measureLowerBoundFn = series.measureLowerBoundFn;
+    measureUpperBoundFn = series.measureUpperBoundFn;
     measureOffsetFn = series.measureOffsetFn;
 
     colorFn = series.colorFn;
@@ -86,10 +90,12 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
     data = other.data;
     domainFn = other.domainFn;
+    domainLowerBoundFn = other.domainLowerBoundFn;
+    domainUpperBoundFn = other.domainUpperBoundFn;
 
     measureFn = other.measureFn;
-    measureUpperBoundFn = other.measureUpperBoundFn;
     measureLowerBoundFn = other.measureLowerBoundFn;
+    measureUpperBoundFn = other.measureUpperBoundFn;
     measureOffsetFn = other.measureOffsetFn;
 
     colorFn = other.colorFn;
@@ -133,9 +139,11 @@ abstract class ImmutableSeries<D> {
   List get data;
 
   AccessorFn<D> get domainFn;
+  AccessorFn<D> get domainLowerBoundFn;
+  AccessorFn<D> get domainUpperBoundFn;
   AccessorFn<num> get measureFn;
-  AccessorFn<num> get measureUpperBoundFn;
   AccessorFn<num> get measureLowerBoundFn;
+  AccessorFn<num> get measureUpperBoundFn;
   AccessorFn<num> get measureOffsetFn;
   AccessorFn<Color> get colorFn;
   AccessorFn<Color> get fillColorFn;
