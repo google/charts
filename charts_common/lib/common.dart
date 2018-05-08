@@ -39,6 +39,8 @@ export 'src/chart/common/behavior/chart_behavior.dart'
         OutsideJustification;
 export 'src/chart/common/behavior/domain_highlighter.dart'
     show DomainHighlighter;
+export 'src/chart/common/behavior/initial_selection.dart'
+    show InitialSelection, SeriesDatumConfig;
 export 'src/chart/common/behavior/legend/legend.dart'
     show
         Legend,

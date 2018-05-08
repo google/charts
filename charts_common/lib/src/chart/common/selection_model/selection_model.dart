@@ -39,8 +39,9 @@ class SelectionModel<D> {
 
   /// Updates the selection state. If mouse driven, [datumSelection] should be
   /// ordered by distance from mouse, closest first.
-  bool updateSelection(List<SeriesDatum<D>> datumSelection,
-      List<ImmutableSeries<D>> seriesList) {
+  bool updateSelection(
+      List<SeriesDatum<D>> datumSelection, List<ImmutableSeries<D>> seriesList,
+      {bool notifyListeners = true}) {
     if (locked) {
       return false;
     }
@@ -54,7 +55,7 @@ class SelectionModel<D> {
     final changed =
         !new ListEquality().equals(origSelectedDatum, _selectedDatum) ||
             !new ListEquality().equals(origSelectedSeries, _selectedSeries);
-    if (changed) {
+    if (notifyListeners && changed) {
       _listeners.forEach((listener) => listener(this));
     }
     return changed;

@@ -56,7 +56,7 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Selection Bar Highlight<br>[![](example/interactions/selection_bar_highlight_thumb.png)](example/interactions/selection_bar_highlight) | Selection Line Highlight<br>[![](example/interactions/selection_line_highlight_thumb.png)](example/interactions/selection_line_highlight) | Selection Callback Example<br>[![](example/interactions/selection_callback_example_thumb.png)](example/interactions/selection_callback_example) | |
+| Initial Selection<br>[![](example/interactions/initial_selection_thumb.png)](example/interactions/initial_selection) | Selection Bar Highlight<br>[![](example/interactions/selection_bar_highlight_thumb.png)](example/interactions/selection_bar_highlight) | Selection Line Highlight<br>[![](example/interactions/selection_line_highlight_thumb.png)](example/interactions/selection_line_highlight) | Selection Callback Example<br>[![](example/interactions/selection_callback_example_thumb.png)](example/interactions/selection_callback_example) |
 
 
 ### a11y
