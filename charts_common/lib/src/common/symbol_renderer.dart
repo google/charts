@@ -73,7 +73,7 @@ class LineSymbolRenderer extends SymbolRenderer {
   /// Thickness of the line stroke.
   final double strokeWidth;
 
-  LineSymbolRenderer({double strokeWidth}) : strokeWidth = strokeWidth ?? 4;
+  LineSymbolRenderer({double strokeWidth}) : strokeWidth = strokeWidth ?? 4.0;
 
   void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
     final centerHeight = (bounds.bottom - bounds.top) / 2;
