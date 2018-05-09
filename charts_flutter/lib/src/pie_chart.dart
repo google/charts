@@ -27,7 +27,7 @@ class PieChart<D> extends BaseChart<D> {
     Duration animationDuration,
     common.ArcRendererConfig<D> defaultRenderer,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<D>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
     bool defaultInteractions: true,

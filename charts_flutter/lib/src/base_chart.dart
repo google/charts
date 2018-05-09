@@ -186,12 +186,12 @@ abstract class BaseChart<D> extends StatefulWidget {
   }
 
   void _updateSelectionModel(
-      common.BaseChart chart, BaseChartState chartState) {
+      common.BaseChart<D> chart, BaseChartState<D> chartState) {
     final prevTypes = new List<common.SelectionModelType>.from(
         chartState.addedSelectionListenersByType.keys);
 
     // Update any listeners for each type.
-    selectionModels?.forEach((SelectionModelConfig model) {
+    selectionModels?.forEach((SelectionModelConfig<D> model) {
       final prevListener = chartState.addedSelectionListenersByType[model.type];
 
       if (!identical(model.listener, prevListener)) {

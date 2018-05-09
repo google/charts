@@ -27,7 +27,7 @@ class ScatterPlotChart extends BaseChart<num> {
     Duration animationDuration,
     common.PointRendererConfig<num> defaultRenderer,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<num>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
     bool defaultInteractions: true,

@@ -39,7 +39,7 @@ class LineChart extends CartesianChart<num> {
     common.LineRendererConfig<num> defaultRenderer,
     List<common.SeriesRendererConfig<num>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<num>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
     bool defaultInteractions: true,

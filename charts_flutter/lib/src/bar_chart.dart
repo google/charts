@@ -48,7 +48,7 @@ class BarChart extends CartesianChart<String> {
     common.BarRendererConfig defaultRenderer,
     List<common.SeriesRendererConfig<String>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<String>> selectionModels,
     common.RTLSpec rtlSpec,
     this.vertical: true,
     bool defaultInteractions: true,

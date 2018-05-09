@@ -47,7 +47,7 @@ class BaseChartState<D> extends State<BaseChart<D>>
   final addedCommonBehaviorsByRole = <String, common.ChartBehavior>{};
 
   final addedSelectionListenersByType =
-      <common.SelectionModelType, common.SelectionModelListener>{};
+      <common.SelectionModelType, common.SelectionModelListener<D>>{};
 
   static const chartContainerLayoutID = 'chartContainer';
 

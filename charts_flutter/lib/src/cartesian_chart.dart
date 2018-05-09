@@ -44,7 +44,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     common.SeriesRendererConfig<D> defaultRenderer,
     List<common.SeriesRendererConfig<D>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<D>> selectionModels,
     common.RTLSpec rtlSpec,
     bool defaultInteractions: true,
     LayoutConfig layoutConfig,
