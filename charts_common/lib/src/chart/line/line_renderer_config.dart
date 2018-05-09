@@ -68,13 +68,15 @@ class LineRendererConfig<D> extends LayoutViewConfig
       {this.customRendererId,
       this.radiusPx = 3.5,
       this.stacked = false,
-      this.strokeWidthPx = 2.0,
+      double strokeWidthPx = 2.0,
       this.dashPattern,
       this.includeLine = true,
       this.includePoints = false,
       this.includeArea = false,
       this.areaOpacity = 0.1,
-      this.symbolRenderer});
+      SymbolRenderer symbolRenderer})
+      : this.strokeWidthPx = strokeWidthPx,
+        this.symbolRenderer = symbolRenderer ?? new LineSymbolRenderer();
 
   @override
   LineRenderer<D> build() {

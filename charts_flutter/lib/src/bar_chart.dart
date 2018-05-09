@@ -30,7 +30,6 @@ import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'cartesian_chart.dart' show CartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
-import 'symbol_renderer.dart' show RoundedRectSymbolRenderer;
 
 @immutable
 class BarChart extends CartesianChart<String> {
@@ -64,8 +63,7 @@ class BarChart extends CartesianChart<String> {
           defaultRenderer: defaultRenderer ??
               new common.BarRendererConfig(
                   groupingType: barGroupingType,
-                  barRendererDecorator: barRendererDecorator,
-                  symbolRenderer: new RoundedRectSymbolRenderer()),
+                  barRendererDecorator: barRendererDecorator),
           customSeriesRenderers: customSeriesRenderers,
           behaviors: behaviors,
           selectionModels: selectionModels,

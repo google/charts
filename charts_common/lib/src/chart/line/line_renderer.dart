@@ -52,12 +52,17 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   // data.
   final _currentKeys = <String>[];
 
-  LineRenderer({String rendererId, LineRendererConfig config})
-      : this.config = config ?? new LineRendererConfig(),
-        super(
-            rendererId: rendererId ?? 'line',
+  factory LineRenderer({String rendererId, LineRendererConfig config}) {
+    return new LineRenderer._internal(
+        rendererId: rendererId ?? 'line',
+        config: config ?? new LineRendererConfig());
+  }
+
+  LineRenderer._internal({String rendererId, this.config})
+      : super(
+            rendererId: rendererId,
             layoutPositionOrder: 10,
-            symbolRenderer: config?.symbolRenderer) {
+            symbolRenderer: config.symbolRenderer) {
     _pointRenderer = new PointRenderer<D>(
         config: new PointRendererConfig<D>(radiusPx: this.config.radiusPx));
   }

@@ -15,7 +15,7 @@
 
 import 'dart:collection' show LinkedHashMap;
 import 'dart:math' show Point, Rectangle, max;
-import 'package:meta/meta.dart' show protected;
+import 'package:meta/meta.dart' show protected, required;
 
 import 'base_bar_renderer_config.dart' show BaseBarRendererConfig;
 import 'base_bar_renderer_element.dart'
@@ -27,6 +27,7 @@ import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../../common/color.dart' show Color;
+import '../../common/symbol_renderer.dart' show RoundedRectSymbolRenderer;
 import '../../data/series.dart' show AttributeKey;
 
 const barGroupIndexKey = const AttributeKey<int>('BarRenderer.barGroupIndex');
@@ -87,14 +88,15 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   ImmutableAxis<D> _prevDomainAxis;
 
   BaseBarRenderer(
-      {BaseBarRendererConfig config,
+      {@required BaseBarRendererConfig config,
       String rendererId,
       int layoutPositionOrder})
       : this.config = config,
         super(
           rendererId: rendererId,
           layoutPositionOrder: layoutPositionOrder,
-          symbolRenderer: config?.symbolRenderer,
+          symbolRenderer:
+              config?.symbolRenderer ?? new RoundedRectSymbolRenderer(),
         );
 
   @override

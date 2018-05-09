@@ -40,22 +40,22 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
     // A custom symbol renderer can ignore this size and use their own.
     final materialSymbolSize = new Size(12.0, 12.0);
 
-    final SymbolRenderer symbolRenderer =
-        legendEntry.symbolRenderer ?? new RoundedRectSymbolRenderer();
     final entryColor = legendEntry.color;
     var color = new Color.fromARGB(
         entryColor.a, entryColor.r, entryColor.g, entryColor.b);
 
-    // Make the sample image 26% opaque if the entry is hidden.
-    if (isHidden) {
-      color = color.withOpacity(0.26);
-    }
+    // Get the SymbolRendererBuilder wrapping a common.SymbolRenderer if needed.
+    final SymbolRendererBuilder symbolRendererBuilder =
+        legendEntry.symbolRenderer is SymbolRendererBuilder
+            ? legendEntry.symbolRenderer
+            : new SymbolRendererCanvas(legendEntry.symbolRenderer);
 
     return new GestureDetector(
-        child: symbolRenderer.build(
+        child: symbolRendererBuilder.build(
           context,
           size: materialSymbolSize,
           color: color,
+          enabled: !isHidden,
         ),
         onTapUp: makeTapUpCallback(context, legendEntry, legend));
   }

@@ -129,7 +129,7 @@ class SeriesLegend<D> extends Legend<D> {
 /// Flutter, using widgets).
 abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   final SelectionModelType selectionModelType;
-  final legendState = new LegendState();
+  final legendState = new LegendState<D>();
   final LegendEntryGenerator<D> legendEntryGenerator;
 
   String _title;

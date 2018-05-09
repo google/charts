@@ -18,7 +18,8 @@ import '../common/chart_canvas.dart' show FillPatternType;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import '../layout/layout_view.dart' show LayoutViewConfig;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
+import '../../common/symbol_renderer.dart'
+    show SymbolRenderer, RoundedRectSymbolRenderer;
 
 /// Shared configuration for bar chart renderers.
 ///
@@ -72,7 +73,8 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       this.fillPattern,
       this.stackHorizontalSeparator,
       this.strokeWidthPx = 0.0,
-      this.symbolRenderer});
+      SymbolRenderer symbolRenderer})
+      : this.symbolRenderer = symbolRenderer ?? new RoundedRectSymbolRenderer();
 
   /// Whether or not the bars should be organized into groups.
   bool get grouped =>
