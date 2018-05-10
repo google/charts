@@ -15,6 +15,7 @@
 
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
+import 'custom_rounded_bars.dart';
 import 'grouped.dart';
 import 'grouped_fill_color.dart';
 import 'grouped_single_target_line.dart';
@@ -136,6 +137,12 @@ List<GalleryScaffold> buildGallery() {
       subtitle: 'Horizontal Pattern Forward Hatch Bar Chart',
       childBuilder: () =>
           new HorizontalPatternForwardHatchBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Bar Chart with custom bar radius',
+      subtitle: 'Custom rounded bar corners',
+      childBuilder: () => new CustomRoundedBars.withRandomData(),
     ),
   ];
 }

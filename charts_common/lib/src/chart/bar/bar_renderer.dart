@@ -16,7 +16,7 @@
 import 'dart:math' show max, min, Rectangle;
 import 'package:meta/meta.dart' show required;
 
-import 'bar_renderer_config.dart' show BarRendererConfig;
+import 'bar_renderer_config.dart' show BarRendererConfig, CornerStrategy;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import 'base_bar_renderer.dart' show BaseBarRenderer;
 import 'base_bar_renderer_element.dart'
@@ -33,9 +33,6 @@ class BarRenderer<D>
     extends BaseBarRenderer<D, _BarRendererElement<D>, _AnimatedBar<D>> {
   /// If we are grouped, use this spacing between the bars in a group.
   final _barGroupInnerPadding = 2;
-
-  /// The radius to use for corner rounding.
-  final _roundingRadiusPx = 2;
 
   /// The padding between bar stacks.
   ///
@@ -64,10 +61,14 @@ class BarRenderer<D>
 
   @override
   _BarRendererElement<D> getBaseDetails(dynamic datum, int index) {
-    return new _BarRendererElement<D>()..roundPx = _roundingRadiusPx;
+    return new _BarRendererElement<D>();
   }
 
   bool get rtl => _chart.context.rtl;
+
+  CornerStrategy get cornerStrategy {
+    return (config as BarRendererConfig).cornerStrategy;
+  }
 
   /// Generates an [_AnimatedBar] to represent the previous and current state
   /// of one bar on the chart.
@@ -169,6 +170,9 @@ class BarRenderer<D>
     final unmodifiedBar =
         renderingVertically ? barElements.first : barElements.last;
 
+    // Find the max bar width from each segement to calculate corner radius.
+    int maxBarWidth = 0;
+
     for (var bar in barElements) {
       var bounds = bar.bounds;
 
@@ -194,13 +198,14 @@ class BarRenderer<D>
           pattern: bar.fillPattern,
           stroke: bar.color,
           strokeWidthPx: bar.strokeWidthPx));
+
+      maxBarWidth = max(
+          maxBarWidth, (renderingVertically ? bounds.width : bounds.height));
     }
 
-    // TODO: Change _roundingRadiusPx to use CornerRadiusCalculator
-    // in BarRendererConfig. Also need to have a way to configure the calculator
     final barStack = new CanvasBarStack(
       bars,
-      radius: _roundingRadiusPx,
+      radius: cornerStrategy.getRadius(maxBarWidth),
       stackedBarPadding: _stackedBarPadding,
       roundTopLeft: renderingVertically || rtl ? true : false,
       roundTopRight: rtl ? false : true,

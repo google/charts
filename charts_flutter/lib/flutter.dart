@@ -16,7 +16,11 @@
 export 'package:charts_common/src/chart/bar/bar_label_decorator.dart'
     show BarLabelDecorator, BarLabelAnchor, BarLabelPosition;
 export 'package:charts_common/src/chart/bar/bar_renderer_config.dart'
-    show BarRendererConfig;
+    show
+        BarRendererConfig,
+        CornerStrategy,
+        ConstCornerStrategy,
+        NoCornerStrategy;
 export 'package:charts_common/src/chart/bar/bar_target_line_renderer_config.dart'
     show BarTargetLineRendererConfig;
 export 'package:charts_common/src/chart/bar/base_bar_renderer_config.dart'
