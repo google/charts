@@ -33,7 +33,7 @@ const AttributeKey<String> rendererIdKey =
 const AttributeKey<SeriesRenderer> rendererKey =
     const AttributeKey<SeriesRenderer>('SeriesRenderer.renderer');
 
-abstract class SeriesRenderer<T, D> extends LayoutView {
+abstract class SeriesRenderer<D> extends LayoutView {
   static const defaultRendererId = 'default';
 
   SymbolRenderer get symbolRenderer;
@@ -47,25 +47,33 @@ abstract class SeriesRenderer<T, D> extends LayoutView {
   String get rendererId;
   set rendererId(String rendererId);
 
-  void onAttach(BaseChart<T, D> chart);
+  void onAttach(BaseChart<D> chart);
 
-  void onDetach(BaseChart<T, D> chart);
+  void onDetach(BaseChart<D> chart);
 
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList);
+  /// Performs basic configuration for the series, before it is pre-processed.
+  ///
+  /// Typically, a series renderer should assign color mapping functions to
+  /// series that do not have them.
+  void configureSeries(List<MutableSeries<D>> seriesList);
 
-  void configureDomainAxes(List<MutableSeries<T, D>> seriesList);
+  /// Pre-calculates some details for the series that will be needed later
+  /// during the drawing phase.
+  void preprocessSeries(List<MutableSeries<D>> seriesList);
 
-  void configureMeasureAxes(List<MutableSeries<T, D>> seriesList);
+  void configureDomainAxes(List<MutableSeries<D>> seriesList);
 
-  void update(List<ImmutableSeries<T, D>> seriesList, bool isAnimating);
+  void configureMeasureAxes(List<MutableSeries<D>> seriesList);
+
+  void update(List<ImmutableSeries<D>> seriesList, bool isAnimating);
 
   void paint(ChartCanvas canvas, double animationPercent);
 
-  List<DatumDetails<T, D>> getNearestDatumDetailPerSeries(
+  List<DatumDetails<D>> getNearestDatumDetailPerSeries(
       Point<double> chartPoint);
 }
 
-abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
+abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   final LayoutViewConfig layoutConfig;
 
   String rendererId;
@@ -94,10 +102,10 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
   }
 
   @override
-  void onAttach(BaseChart<T, D> chart) {}
+  void onAttach(BaseChart<D> chart) {}
 
   @override
-  void onDetach(BaseChart<T, D> chart) {}
+  void onDetach(BaseChart<D> chart) {}
 
   /// Assigns colors to series that are missing their colorFn.
   ///
@@ -107,7 +115,7 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
   ///     Setting it to false used different palettes (ie: s1 uses Blue500,
   ///     s2 uses Red500),
   @protected
-  assignMissingColors(Iterable<MutableSeries<T, D>> seriesList,
+  assignMissingColors(Iterable<MutableSeries<D>> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
     const defaultCategory = '__default__';
 
@@ -117,7 +125,7 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
     int maxMissing = 0;
     bool hasSpecifiedCategory = false;
 
-    seriesList.forEach((MutableSeries<T, D> series) {
+    seriesList.forEach((MutableSeries<D> series) {
       if (series.colorFn == null) {
         // If there is no category, give it a default category to match logic.
         String category = series.seriesCategory;
@@ -144,7 +152,7 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
           if (series.colorFn == null) {
             final color = palettes[index % palettes.length].shadeDefault;
             index++;
-            series.colorFn = (_, __) => color;
+            series.colorFn = (_) => color;
           }
         });
         return;
@@ -177,8 +185,16 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
           missingColorCountPerCategory[category] = colorIndex + 1;
 
           final color = colorsByCategory[category][colorIndex];
-          series.colorFn = (_, __) => color;
+          series.colorFn = (_) => color;
         }
+
+        // Fill color defaults to the series color if no accessor is provided.
+        series.fillColorFn ??= (int index) => series.colorFn(index);
+      });
+    } else {
+      seriesList.forEach((MutableSeries series) {
+        // Fill color defaults to the series color if no accessor is provided.
+        series.fillColorFn ??= (int index) => series.colorFn(index);
       });
     }
   }
@@ -197,11 +213,14 @@ abstract class BaseSeriesRenderer<T, D> implements SeriesRenderer<T, D> {
   Rectangle<int> get componentBounds => this._drawAreaBounds;
 
   @override
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {}
+  void configureSeries(List<MutableSeries<D>> seriesList) {}
 
   @override
-  void configureDomainAxes(List<MutableSeries<T, D>> seriesList) {}
+  void preprocessSeries(List<MutableSeries<D>> seriesList) {}
 
   @override
-  void configureMeasureAxes(List<MutableSeries<T, D>> seriesList) {}
+  void configureDomainAxes(List<MutableSeries<D>> seriesList) {}
+
+  @override
+  void configureMeasureAxes(List<MutableSeries<D>> seriesList) {}
 }

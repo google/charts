@@ -24,8 +24,8 @@ import '../common/series_renderer_config.dart'
 import 'arc_renderer.dart' show ArcRenderer;
 
 /// Configuration for an [ArcRenderer].
-class ArcRendererConfig<T, D> extends LayoutViewConfig
-    implements SeriesRendererConfig<T, D> {
+class ArcRendererConfig<D> extends LayoutViewConfig
+    implements SeriesRendererConfig<D> {
   final String customRendererId;
 
   final SymbolRenderer symbolRenderer;
@@ -67,7 +67,7 @@ class ArcRendererConfig<T, D> extends LayoutViewConfig
         this.noDataColor = StyleFactory.style.noDataColor;
 
   @override
-  ArcRenderer<T, D> build() {
-    return new ArcRenderer<T, D>(config: this, rendererId: customRendererId);
+  ArcRenderer<D> build() {
+    return new ArcRenderer<D>(config: this, rendererId: customRendererId);
   }
 }

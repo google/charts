@@ -128,7 +128,7 @@ class RTLSeriesLegend extends StatelessWidget {
     // work with the correct directionality.
     return new Directionality(
         textDirection: TextDirection.rtl,
-        child: new charts.BarChart<OrdinalSales>(
+        child: new charts.BarChart(
           seriesList,
           animate: animate,
           behaviors: [

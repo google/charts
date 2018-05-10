@@ -18,9 +18,9 @@ import 'package:meta/meta.dart' show immutable;
 import 'package:charts_common/common.dart' as common;
 
 @immutable
-class SelectionModelConfig<T, D> {
+class SelectionModelConfig<D> {
   final common.SelectionModelType type;
-  final common.SelectionModelListener<T, D> listener;
+  final common.SelectionModelListener<D> listener;
 
   SelectionModelConfig(
       {this.type = common.SelectionModelType.info, this.listener});

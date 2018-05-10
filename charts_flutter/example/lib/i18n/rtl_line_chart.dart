@@ -80,7 +80,7 @@ class RTLLineChart extends StatelessWidget {
     // Domain axis' first domain starts on the right and grows left.
     return new Directionality(
         textDirection: TextDirection.rtl,
-        child: new charts.LineChart<LinearSales>(
+        child: new charts.LineChart(
           seriesList,
           animate: animate,
         ));

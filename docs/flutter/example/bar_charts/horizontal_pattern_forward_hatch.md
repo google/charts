@@ -30,7 +30,7 @@ class HorizontalPatternForwardHatchBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart<OrdinalSales>(
+    return new charts.BarChart(
       seriesList,
       animate: animate,
       barGroupingType: charts.BarGroupingType.grouped,

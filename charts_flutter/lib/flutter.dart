@@ -16,13 +16,21 @@
 export 'package:charts_common/src/chart/bar/bar_label_decorator.dart'
     show BarLabelDecorator, BarLabelAnchor, BarLabelPosition;
 export 'package:charts_common/src/chart/bar/bar_renderer_config.dart'
-    show BarRendererConfig;
+    show
+        BarRendererConfig,
+        CornerStrategy,
+        ConstCornerStrategy,
+        NoCornerStrategy;
 export 'package:charts_common/src/chart/bar/bar_target_line_renderer_config.dart'
     show BarTargetLineRendererConfig;
 export 'package:charts_common/src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType;
 export 'package:charts_common/src/chart/cartesian/axis/axis.dart'
-    show measureAxisIdKey;
+    show measureAxisIdKey, OrdinalViewport;
+export 'package:charts_common/src/chart/cartesian/axis/numeric_extents.dart'
+    show NumericExtents;
+export 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart'
+    show SimpleTickFormatterBase;
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
@@ -30,7 +38,12 @@ export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/none_draw_s
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/axis_spec.dart'
-    show TickLabelAnchor, TickLabelJustification, TextStyleSpec, LineStyleSpec;
+    show
+        TickLabelAnchor,
+        TickLabelJustification,
+        TextStyleSpec,
+        LineStyleSpec,
+        TickFormatterSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
     show
         DateTimeAxisSpec,
@@ -53,6 +66,8 @@ export 'package:charts_common/src/chart/cartesian/axis/spec/ordinal_axis_spec.da
         StaticOrdinalTickProviderSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/tick_spec.dart'
     show TickSpec;
+export 'package:charts_common/src/chart/cartesian/axis/time/date_time_extents.dart'
+    show DateTimeExtents;
 export 'package:charts_common/src/chart/cartesian/cartesian_chart.dart'
     show CartesianChart;
 export 'package:charts_common/src/chart/common/base_chart.dart' show BaseChart;
@@ -66,6 +81,8 @@ export 'package:charts_common/src/chart/common/behavior/chart_behavior.dart'
         ChartBehavior,
         InsideJustification,
         OutsideJustification;
+export 'package:charts_common/src/chart/common/behavior/initial_selection.dart'
+    show SeriesDatumConfig;
 export 'package:charts_common/src/chart/common/behavior/range_annotation.dart'
     show RangeAnnotationAxisType, RangeAnnotationSegment;
 export 'package:charts_common/src/chart/common/behavior/select_nearest.dart'
@@ -86,6 +103,10 @@ export 'package:charts_common/src/chart/layout/layout_view.dart'
     show LayoutPosition, ViewMargin;
 export 'package:charts_common/src/chart/line/line_renderer_config.dart'
     show LineRendererConfig;
+export 'package:charts_common/src/chart/scatter_plot/comparison_points_decorator.dart'
+    show ComparisonPointsDecorator;
+export 'package:charts_common/src/chart/scatter_plot/point_renderer_config.dart'
+    show PointRendererConfig;
 export 'package:charts_common/src/chart/pie/arc_renderer_config.dart'
     show ArcRendererConfig;
 export 'package:charts_common/src/common/color.dart' show Color;
@@ -98,6 +119,8 @@ export 'package:charts_common/src/common/material_palette.dart'
 export 'package:charts_common/src/common/performance.dart' show Performance;
 export 'package:charts_common/src/common/rtl_spec.dart'
     show RTLSpec, AxisPosition;
+export 'package:charts_common/src/common/symbol_renderer.dart'
+    show CylinderSymbolRenderer;
 export 'package:charts_common/src/common/style/material_style.dart'
     show MaterialStyle;
 export 'package:charts_common/src/common/style/style_factory.dart'
@@ -109,6 +132,7 @@ export 'src/base_chart.dart' show LayoutConfig;
 export 'src/behaviors/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior;
 export 'src/behaviors/domain_highlighter.dart' show DomainHighlighter;
+export 'src/behaviors/initial_selection.dart' show InitialSelection;
 export 'src/behaviors/legend/series_legend.dart' show SeriesLegend;
 export 'src/behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 export 'src/behaviors/range_annotation.dart' show RangeAnnotation;
@@ -117,7 +141,7 @@ export 'src/behaviors/zoom/pan_and_zoom_behavior.dart' show PanAndZoomBehavior;
 export 'src/behaviors/zoom/pan_behavior.dart' show PanBehavior;
 export 'src/line_chart.dart';
 export 'src/pie_chart.dart';
+export 'src/scatter_plot_chart.dart';
 export 'src/selection_model_config.dart' show SelectionModelConfig;
-export 'src/symbol_renderer.dart'
-    show SymbolRenderer, RoundedRectSymbolRenderer;
+export 'src/symbol_renderer.dart' show CustomSymbolRenderer;
 export 'src/time_series_chart.dart';

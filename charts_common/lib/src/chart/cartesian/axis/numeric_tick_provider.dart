@@ -26,7 +26,7 @@ import 'numeric_scale.dart' show NumericScale;
 import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart' show TickFormatter;
-import 'tick_provider.dart' show BaseTickProvider;
+import 'tick_provider.dart' show BaseTickProvider, TickHint;
 
 /// Tick provider that allows you to specify how many ticks to present while
 /// also choosing tick values that appear "nice" or "rounded" to the user.  By
@@ -42,8 +42,7 @@ import 'tick_provider.dart' show BaseTickProvider;
 /// * Alternate rendering is not used to avoid collisions.
 /// * Provide the least amount of domain range covering all data points (while
 /// still selecting "nice" ticks values.
-class NumericTickProvider
-    extends BaseTickProvider<num, NumericExtents, NumericScale> {
+class NumericTickProvider extends BaseTickProvider<num> {
   /// Used to determine the automatic tick count calculation.
   static const MIN_DIPS_BETWEEN_TICKS = 25;
 
@@ -200,6 +199,39 @@ class NumericTickProvider
     }
   }
 
+  List<Tick<num>> _getTicksFromHint({
+    @required ChartContext context,
+    @required GraphicsFactory graphicsFactory,
+    @required NumericScale scale,
+    @required TickFormatter<num> formatter,
+    @required Map<num, String> formatterValueCache,
+    @required TickDrawStrategy tickDrawStrategy,
+    @required TickHint<num> tickHint,
+  }) {
+    final stepSize = (tickHint.end - tickHint.start) / (tickHint.tickCount - 1);
+    // Find the first tick that is greater than or equal to the min
+    // viewportDomain.
+    final tickZeroShift = tickHint.start -
+        (stepSize *
+            (tickHint.start >= 0
+                ? (tickHint.start / stepSize).floor()
+                : (tickHint.start / stepSize).ceil()));
+    final tickStart =
+        (scale.viewportDomain.min / stepSize).ceil() * stepSize + tickZeroShift;
+    final stepInfo = new _TickStepInfo(stepSize.abs(), tickStart);
+    final tickValues = _getTickValues(stepInfo, tickHint.tickCount);
+
+    // Create ticks from domain values.
+    return createTicks(tickValues,
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: formatterValueCache,
+        tickDrawStrategy: tickDrawStrategy,
+        stepSize: stepInfo.stepSize);
+  }
+
   @override
   List<Tick<num>> getTicks({
     @required ChartContext context,
@@ -210,12 +242,27 @@ class NumericTickProvider
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled: false,
+    TickHint<num> tickHint,
   }) {
     List<Tick<num>> ticks;
 
     _rangeWidth = scale.rangeWidth;
     _updateTickCounts();
     _updateDomainExtents(scale.viewportDomain);
+
+    // Bypass searching for a tick range since we are getting ticks using
+    // information in [tickHint].
+    if (tickHint != null) {
+      return _getTicksFromHint(
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: formatterValueCache,
+        tickDrawStrategy: tickDrawStrategy,
+        tickHint: tickHint,
+      );
+    }
 
     if (_hasTickParametersChanged() || ticks == null) {
       var selectedTicksRange = double.MAX_FINITE;

@@ -21,7 +21,7 @@ import '../common/series_renderer.dart' show SeriesRenderer;
 import '../common/selection_model/selection_model.dart' show SelectionModelType;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
 
-class PieChart<T, D> extends BaseChart<T, D> {
+class PieChart<D> extends BaseChart<D> {
   static final _defaultLayoutConfig = new LayoutConfig(
     topSpec: new MarginSpec.fromPixel(minPixel: 20),
     bottomSpec: new MarginSpec.fromPixel(minPixel: 20),
@@ -33,7 +33,7 @@ class PieChart<T, D> extends BaseChart<T, D> {
       : super(layoutConfig: layoutConfig ?? _defaultLayoutConfig);
 
   @override
-  void drawInternal(List<MutableSeries<T, D>> seriesList,
+  void drawInternal(List<MutableSeries<D>> seriesList,
       {bool skipAnimation, bool skipLayout}) {
     if (seriesList.length > 1) {
       throw new ArgumentError('PieChart can only render a single series');
@@ -43,11 +43,10 @@ class PieChart<T, D> extends BaseChart<T, D> {
   }
 
   @override
-  SeriesRenderer<T, D> makeDefaultRenderer() {
-    return new ArcRenderer<T, D>()
-      ..rendererId = SeriesRenderer.defaultRendererId;
+  SeriesRenderer<D> makeDefaultRenderer() {
+    return new ArcRenderer<D>()..rendererId = SeriesRenderer.defaultRendererId;
   }
 
   @override
-  List<DatumDetails<T, D>> getDatumDetails(SelectionModelType type) => [];
+  List<DatumDetails<D>> getDatumDetails(SelectionModelType type) => [];
 }

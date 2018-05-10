@@ -33,8 +33,8 @@ class MyRow {
 
 void main() {
   LineRenderer renderer;
-  List<MutableSeries<MyRow, int>> numericSeriesList;
-  List<MutableSeries<MyRow, String>> ordinalSeriesList;
+  List<MutableSeries<int>> numericSeriesList;
+  List<MutableSeries<String>> ordinalSeriesList;
 
   setUp(() {
     var myFakeDesktopData = [
@@ -59,61 +59,61 @@ void main() {
     ];
 
     numericSeriesList = [
-      new MutableSeries<MyRow, int>(new Series<MyRow, int>(
+      new MutableSeries<int>(new Series<MyRow, int>(
           id: 'Desktop',
           colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-          domainFn: (MyRow row, _) => row.campaign,
-          measureFn: (MyRow row, _) => row.clickCount,
-          measureOffsetFn: (MyRow row, _) => 0,
+          domainFn: (dynamic row, _) => row.campaign,
+          measureFn: (dynamic row, _) => row.clickCount,
+          measureOffsetFn: (_, __) => 0,
           data: myFakeDesktopData)),
-      new MutableSeries<MyRow, int>(new Series<MyRow, int>(
+      new MutableSeries<int>(new Series<MyRow, int>(
           id: 'Tablet',
           colorFn: (_, __) => MaterialPalette.red.shadeDefault,
-          domainFn: (MyRow row, _) => row.campaign,
-          measureFn: (MyRow row, _) => row.clickCount,
-          measureOffsetFn: (MyRow row, _) => 0,
-          strokeWidthPxFn: (MyRow row, _) => 1.25,
+          domainFn: (dynamic row, _) => row.campaign,
+          measureFn: (dynamic row, _) => row.clickCount,
+          measureOffsetFn: (_, __) => 0,
+          strokeWidthPxFn: (_, __) => 1.25,
           data: myFakeTabletData)),
-      new MutableSeries<MyRow, int>(new Series<MyRow, int>(
+      new MutableSeries<int>(new Series<MyRow, int>(
           id: 'Mobile',
           colorFn: (_, __) => MaterialPalette.green.shadeDefault,
-          domainFn: (MyRow row, _) => row.campaign,
-          measureFn: (MyRow row, _) => row.clickCount,
-          measureOffsetFn: (MyRow row, _) => 0,
-          strokeWidthPxFn: (MyRow row, _) => 3.0,
+          domainFn: (dynamic row, _) => row.campaign,
+          measureFn: (dynamic row, _) => row.clickCount,
+          measureOffsetFn: (_, __) => 0,
+          strokeWidthPxFn: (_, __) => 3.0,
           data: myFakeMobileData))
     ];
 
     ordinalSeriesList = [
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Desktop',
           colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-          domainFn: (MyRow row, _) => row.campaignString,
-          measureFn: (MyRow row, _) => row.clickCount,
-          measureOffsetFn: (MyRow row, _) => 0,
+          domainFn: (dynamic row, _) => row.campaignString,
+          measureFn: (dynamic row, _) => row.clickCount,
+          measureOffsetFn: (_, __) => 0,
           data: myFakeDesktopData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Tablet',
           colorFn: (_, __) => MaterialPalette.red.shadeDefault,
-          domainFn: (MyRow row, _) => row.campaignString,
-          measureFn: (MyRow row, _) => row.clickCount,
-          measureOffsetFn: (MyRow row, _) => 0,
-          strokeWidthPxFn: (MyRow row, _) => 1.25,
+          domainFn: (dynamic row, _) => row.campaignString,
+          measureFn: (dynamic row, _) => row.clickCount,
+          measureOffsetFn: (_, __) => 0,
+          strokeWidthPxFn: (_, __) => 1.25,
           data: myFakeTabletData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Mobile',
           colorFn: (_, __) => MaterialPalette.green.shadeDefault,
-          domainFn: (MyRow row, _) => row.campaignString,
-          measureFn: (MyRow row, _) => row.clickCount,
-          measureOffsetFn: (MyRow row, _) => 0,
-          strokeWidthPxFn: (MyRow row, _) => 3.0,
+          domainFn: (dynamic row, _) => row.campaignString,
+          measureFn: (dynamic row, _) => row.clickCount,
+          measureOffsetFn: (_, __) => 0,
+          strokeWidthPxFn: (_, __) => 3.0,
           data: myFakeMobileData))
     ];
   });
 
   group('preprocess', () {
     test('with numeric data and simple lines', () {
-      renderer = new LineRenderer<dynamic, num>(
+      renderer = new LineRenderer<num>(
           config: new LineRendererConfig(strokeWidthPx: 2.0));
 
       renderer.preprocessSeries(numericSeriesList);
@@ -129,6 +129,11 @@ void main() {
       var element = elementsList[0];
       expect(element.strokeWidthPx, equals(2.0));
 
+      expect(series.measureOffsetFn(0), 0);
+      expect(series.measureOffsetFn(1), 0);
+      expect(series.measureOffsetFn(2), 0);
+      expect(series.measureOffsetFn(3), 0);
+
       // Validate Tablet series.
       series = numericSeriesList[1];
 
@@ -138,6 +143,11 @@ void main() {
       element = elementsList[0];
       expect(element.strokeWidthPx, equals(1.25));
 
+      expect(series.measureOffsetFn(0), 0);
+      expect(series.measureOffsetFn(1), 0);
+      expect(series.measureOffsetFn(2), 0);
+      expect(series.measureOffsetFn(3), 0);
+
       // Validate Mobile series.
       series = numericSeriesList[2];
 
@@ -146,10 +156,66 @@ void main() {
 
       element = elementsList[0];
       expect(element.strokeWidthPx, equals(3.0));
+
+      expect(series.measureOffsetFn(0), 0);
+      expect(series.measureOffsetFn(1), 0);
+      expect(series.measureOffsetFn(2), 0);
+      expect(series.measureOffsetFn(3), 0);
+    });
+
+    test('with numeric data and stacked lines', () {
+      renderer = new LineRenderer<num>(
+          config: new LineRendererConfig(stacked: true, strokeWidthPx: 2.0));
+
+      renderer.preprocessSeries(numericSeriesList);
+
+      expect(numericSeriesList.length, equals(3));
+
+      // Validate Desktop series.
+      var series = numericSeriesList[0];
+
+      var elementsList = series.getAttr(lineElementsKey);
+      expect(elementsList.length, equals(1));
+
+      var element = elementsList[0];
+      expect(element.strokeWidthPx, equals(2.0));
+
+      expect(series.measureOffsetFn(0), 0);
+      expect(series.measureOffsetFn(1), 0);
+      expect(series.measureOffsetFn(2), 0);
+      expect(series.measureOffsetFn(3), 0);
+
+      // Validate Tablet series.
+      series = numericSeriesList[1];
+
+      elementsList = series.getAttr(lineElementsKey);
+      expect(elementsList.length, equals(1));
+
+      element = elementsList[0];
+      expect(element.strokeWidthPx, equals(1.25));
+
+      expect(series.measureOffsetFn(0), 5);
+      expect(series.measureOffsetFn(1), 25);
+      expect(series.measureOffsetFn(2), 100);
+      expect(series.measureOffsetFn(3), 75);
+
+      // Validate Mobile series.
+      series = numericSeriesList[2];
+
+      elementsList = series.getAttr(lineElementsKey);
+      expect(elementsList.length, equals(1));
+
+      element = elementsList[0];
+      expect(element.strokeWidthPx, equals(3.0));
+
+      expect(series.measureOffsetFn(0), 10);
+      expect(series.measureOffsetFn(1), 50);
+      expect(series.measureOffsetFn(2), 200);
+      expect(series.measureOffsetFn(3), 150);
     });
 
     test('with ordinal data and simple lines', () {
-      renderer = new LineRenderer<dynamic, String>(
+      renderer = new LineRenderer<String>(
           config: new LineRendererConfig(strokeWidthPx: 2.0));
 
       renderer.preprocessSeries(ordinalSeriesList);

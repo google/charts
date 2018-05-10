@@ -18,7 +18,8 @@ import '../common/chart_canvas.dart' show FillPatternType;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import '../layout/layout_view.dart' show LayoutViewConfig;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
+import '../../common/symbol_renderer.dart'
+    show SymbolRenderer, RoundedRectSymbolRenderer;
 
 /// Shared configuration for bar chart renderers.
 ///
@@ -38,13 +39,16 @@ import '../../common/symbol_renderer.dart' show SymbolRenderer;
 ///   offsets overlap. Note that bars for each series will be rendered in order,
 ///   such that bars from the last series will be "on top" of bars from previous
 ///   series.
-abstract class BaseBarRendererConfig<T, D> extends LayoutViewConfig
-    implements SeriesRendererConfig<T, D> {
+abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
+    implements SeriesRendererConfig<D> {
   final String customRendererId;
 
   final SymbolRenderer symbolRenderer;
 
   final List<int> barWeights;
+
+  /// Dash pattern for the stroke line around the edges of the bar.
+  final List<int> dashPattern;
 
   /// Defines the way multiple series of bars are rendered per domain.
   final BarGroupingType groupingType;
@@ -63,12 +67,14 @@ abstract class BaseBarRendererConfig<T, D> extends LayoutViewConfig
   BaseBarRendererConfig(
       {this.customRendererId,
       this.barWeights,
+      this.dashPattern,
       this.groupingType = BarGroupingType.grouped,
       this.minBarLengthPx = 0,
       this.fillPattern,
       this.stackHorizontalSeparator,
       this.strokeWidthPx = 0.0,
-      this.symbolRenderer});
+      SymbolRenderer symbolRenderer})
+      : this.symbolRenderer = symbolRenderer ?? new RoundedRectSymbolRenderer();
 
   /// Whether or not the bars should be organized into groups.
   bool get grouped =>
@@ -90,6 +96,7 @@ abstract class BaseBarRendererConfig<T, D> extends LayoutViewConfig
     }
     return o.customRendererId == customRendererId &&
         new ListEquality().equals(o.barWeights, barWeights) &&
+        o.dashPattern == dashPattern &&
         o.fillPattern == fillPattern &&
         o.groupingType == groupingType &&
         o.minBarLengthPx == minBarLengthPx &&
@@ -102,6 +109,7 @@ abstract class BaseBarRendererConfig<T, D> extends LayoutViewConfig
     var hash = 1;
     hash = hash * 31 + (customRendererId?.hashCode ?? 0);
     hash = hash * 31 + (barWeights?.hashCode ?? 0);
+    hash = hash * 31 + (dashPattern?.hashCode ?? 0);
     hash = hash * 31 + (fillPattern?.hashCode ?? 0);
     hash = hash * 31 + (groupingType?.hashCode ?? 0);
     hash = hash * 31 + (minBarLengthPx?.hashCode ?? 0);

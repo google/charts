@@ -56,7 +56,7 @@ class StaticallyProvidedTicks extends StatelessWidget {
       new charts.TickSpec('2017'),
     ];
 
-    return new charts.BarChart<OrdinalSales>(
+    return new charts.BarChart(
       seriesList,
       animate: animate,
       domainAxis: new charts.OrdinalAxisSpec(

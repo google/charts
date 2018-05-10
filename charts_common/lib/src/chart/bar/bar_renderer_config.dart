@@ -21,9 +21,9 @@ import '../common/chart_canvas.dart' show FillPatternType;
 import '../../common/symbol_renderer.dart';
 
 /// Configuration for a bar renderer.
-class BarRendererConfig<T> extends BaseBarRendererConfig<T, String> {
-  /// Calculator for determining the corner radius of a bar.
-  final CornerRadiusCalculator cornerRadiusCalculator;
+class BarRendererConfig extends BaseBarRendererConfig<String> {
+  /// Strategy for determining the corner radius of a bar.
+  final CornerStrategy cornerStrategy;
 
   /// Decorator for optionally decorating painted bars.
   final BarRendererDecorator barRendererDecorator;
@@ -31,7 +31,7 @@ class BarRendererConfig<T> extends BaseBarRendererConfig<T, String> {
   BarRendererConfig({
     String customRendererId,
     List<int> barWeights,
-    this.cornerRadiusCalculator,
+    CornerStrategy cornerStrategy,
     FillPatternType fillPattern,
     BarGroupingType groupingType,
     int minBarLengthPx = 0,
@@ -39,7 +39,8 @@ class BarRendererConfig<T> extends BaseBarRendererConfig<T, String> {
     double strokeWidthPx = 0.0,
     this.barRendererDecorator,
     SymbolRenderer symbolRenderer,
-  }) : super(
+  })  : cornerStrategy = cornerStrategy ?? const ConstCornerStrategy(2),
+        super(
             customRendererId: customRendererId,
             barWeights: barWeights,
             groupingType: groupingType ?? BarGroupingType.grouped,
@@ -50,9 +51,8 @@ class BarRendererConfig<T> extends BaseBarRendererConfig<T, String> {
             symbolRenderer: symbolRenderer);
 
   @override
-  BarRenderer<T, String> build() {
-    return new BarRenderer<T, String>(
-        config: this, rendererId: customRendererId);
+  BarRenderer<String> build() {
+    return new BarRenderer<String>(config: this, rendererId: customRendererId);
   }
 
   @override
@@ -63,18 +63,32 @@ class BarRendererConfig<T> extends BaseBarRendererConfig<T, String> {
     if (!(o is BarRendererConfig)) {
       return false;
     }
-    return o.cornerRadiusCalculator == cornerRadiusCalculator && super == (o);
+    return o.cornerStrategy == cornerStrategy && super == (o);
   }
 
   @override
   int get hashCode {
     var hash = super.hashCode;
-    hash = hash * 31 + (cornerRadiusCalculator?.hashCode ?? 0);
+    hash = hash * 31 + (cornerStrategy?.hashCode ?? 0);
     return hash;
   }
 }
 
-abstract class CornerRadiusCalculator {
+abstract class CornerStrategy {
   /// Returns the radius of the rounded corners in pixels.
   int getRadius(int barWidth);
+}
+
+/// Strategy for constant corner radius.
+class ConstCornerStrategy implements CornerStrategy {
+  final int radius;
+  const ConstCornerStrategy(this.radius);
+
+  @override
+  int getRadius(_) => radius;
+}
+
+/// Strategy for no corner radius.
+class NoCornerStrategy extends ConstCornerStrategy {
+  const NoCornerStrategy() : super(0);
 }

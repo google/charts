@@ -17,28 +17,35 @@ import 'dart:math' show Point;
 
 import 'package:meta/meta.dart' show protected;
 
-import '../../base_chart.dart';
-import '../../../cartesian/cartesian_chart.dart';
+import '../../../../common/gesture_listener.dart' show GestureListener;
+import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../../cartesian/axis/axis.dart' show Axis;
-import '../chart_behavior.dart';
-import '../../../../common/gesture_listener.dart';
+import '../../base_chart.dart' show BaseChart;
+import '../chart_behavior.dart' show ChartBehavior;
+import 'panning_tick_provider.dart';
 
 /// Adds domain axis panning support to a chart.
 ///
 /// Panning is supported by clicking and dragging the mouse for web, or tapping
 /// and dragging on the chart for mobile devices.
-class PanBehavior<T, D> implements ChartBehavior<T, D> {
-  @override
-  String get role => 'Pan';
-
+class PanBehavior<D> implements ChartBehavior<D> {
   /// Listens for drag gestures.
   GestureListener _listener;
 
-  /// The chart to which the behavior is attached.
-  BaseChart _chart;
+  /// Wrapped domain tick provider for pan and zoom behavior.
+  PanningTickProvider _domainAxisTickProvider;
 
   @protected
-  BaseChart get chart => _chart;
+  PanningTickProvider get domainAxisTickProvider => _domainAxisTickProvider;
+
+  @override
+  String get role => 'Pan';
+
+  /// The chart to which the behavior is attached.
+  CartesianChart<D> _chart;
+
+  @protected
+  CartesianChart<D> get chart => _chart;
 
   /// Flag which is enabled to indicate that the user is "panning" the chart.
   bool _isPanning = false;
@@ -62,32 +69,41 @@ class PanBehavior<T, D> implements ChartBehavior<T, D> {
   }
 
   /// Injects the behavior into a chart.
-  attachTo(BaseChart<T, D> chart) {
+  @override
+  attachTo(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
       throw new ArgumentError(
           'PanBehavior can only be attached to a CartesianChart');
     }
 
     _chart = chart;
-    chart.addGestureListener(_listener);
+    _chart.addGestureListener(_listener);
 
     // Disable the autoViewport feature to enable panning.
-    (_chart as CartesianChart).domainAxis?.autoViewport = false;
+    _chart.domainAxis?.autoViewport = false;
 
-    /// TODO: Lock the measure axis during panning & flinging.
+    // Wrap domain axis tick provider with the panning behavior one.
+    _domainAxisTickProvider =
+        new PanningTickProvider<D>(_chart.domainAxis.tickProvider);
+    _chart.domainAxis.tickProvider = _domainAxisTickProvider;
   }
 
   /// Removes the behavior from a chart.
-  removeFrom(BaseChart<T, D> chart) {
+  @override
+  removeFrom(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
       throw new ArgumentError(
           'PanBehavior can only be attached to a CartesianChart');
     }
 
-    chart.removeGestureListener(_listener);
+    _chart = chart;
+    _chart.removeGestureListener(_listener);
 
     // Restore the default autoViewport state.
-    (_chart as CartesianChart).domainAxis?.autoViewport = true;
+    _chart.domainAxis?.autoViewport = true;
+
+    // Restore the original tick providers
+    _chart.domainAxis.tickProvider = _domainAxisTickProvider.tickProvider;
 
     _chart = null;
   }
@@ -127,11 +143,17 @@ class PanBehavior<T, D> implements ChartBehavior<T, D> {
     }
 
     // Update the domain axis's viewport translate to pan the chart.
-    final domainAxis = (_chart as CartesianChart).domainAxis;
+    final domainAxis = _chart.domainAxis;
 
     if (domainAxis == null) {
       return false;
     }
+
+    // This is set during onDragUpdate and NOT onDragStart because we don't yet
+    // know during onDragStart whether pan/zoom behavior is panning or zooming.
+    // During panning, domain tick provider set to generate ticks with locked
+    // steps.
+    _domainAxisTickProvider.mode = PanningTickProviderMode.stepSizeLocked;
 
     double domainScalingFactor = domainAxis.viewportScalingFactor;
 
@@ -156,27 +178,24 @@ class PanBehavior<T, D> implements ChartBehavior<T, D> {
 
   @protected
   void onPanStart() {
-    final CartesianChart cartesianChart = _chart;
-    // When panning starts, domain axis should update tick location only.
-    // TODO: Panning should generate a set of ticks before and after
-    // current viewport that is used for panning.
-    cartesianChart.domainAxis.updateTickLocationOnly = true;
-    // When panning starts, measure axes should not update ticks or viewport.
-    cartesianChart.getMeasureAxis(null).lockAxis = true;
-    cartesianChart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis = true;
+    // When panning starts, measure tick provider should not update ticks.
+    // This is still needed because axis internally updates the tick location
+    // after the tick provider generates the ticks. If we do not tell the axis
+    // not to update the location of the measure axes, we get a jittery effect
+    // as the measure axes location changes ever so slightly during pan/zoom.
+    _chart.getMeasureAxis(null).lockAxis = true;
+    _chart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis = true;
   }
 
   @protected
   void onPanEnd() {
     cancelPanning();
 
-    final CartesianChart cartesianChart = _chart;
-    // When panning stops, allow axes to update ticks, and request redraw.
-    cartesianChart.domainAxis.updateTickLocationOnly = false;
-    cartesianChart.getMeasureAxis(null).lockAxis = false;
-    cartesianChart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis =
-        false;
-
+    // When panning stops, allow tick provider to update ticks, and then
+    // request redraw.
+    _domainAxisTickProvider.mode = PanningTickProviderMode.passThrough;
+    _chart.getMeasureAxis(null).lockAxis = false;
+    _chart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis = false;
     _chart.redraw();
   }
 

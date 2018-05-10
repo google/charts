@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show protected;
+
 import 'axis/axis.dart'
     show
         Axis,
@@ -39,7 +41,7 @@ import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/rtl_spec.dart' show AxisPosition;
 import '../../data/series.dart' show Series;
 
-class NumericCartesianChart<T> extends CartesianChart<T, num> {
+class NumericCartesianChart extends CartesianChart<num> {
   final NumericAxis _domainAxis;
 
   NumericCartesianChart({bool vertical, LayoutConfig layoutConfig})
@@ -49,16 +51,21 @@ class NumericCartesianChart<T> extends CartesianChart<T, num> {
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);
     _domainAxis.context = context;
+    initDomainAxis(context, graphicsFactory);
+    addView(_domainAxis);
+  }
+
+  @protected
+  void initDomainAxis(ChartContext context, GraphicsFactory graphicsFactory) {
     _domainAxis.tickDrawStrategy = new SmallTickRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
-    addView(_domainAxis);
   }
 
   @override
   Axis get domainAxis => _domainAxis;
 }
 
-class OrdinalCartesianChart<T> extends CartesianChart<T, String> {
+class OrdinalCartesianChart extends CartesianChart<String> {
   final OrdinalAxis _domainAxis;
 
   OrdinalCartesianChart({bool vertical, LayoutConfig layoutConfig})
@@ -77,7 +84,7 @@ class OrdinalCartesianChart<T> extends CartesianChart<T, String> {
   Axis get domainAxis => _domainAxis;
 }
 
-abstract class CartesianChart<T, D> extends BaseChart<T, D> {
+abstract class CartesianChart<D> extends BaseChart<D> {
   static final _defaultLayoutConfig = new LayoutConfig(
     topSpec: new MarginSpec.fromPixel(minPixel: 20),
     bottomSpec: new MarginSpec.fromPixel(minPixel: 20),
@@ -123,10 +130,10 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
       axisSpec.configure(_secondaryMeasureAxis, context, graphicsFactory);
 
   @override
-  MutableSeries<T, D> makeSeries(Series<T, D> series) {
-    MutableSeries<T, D> s = super.makeSeries(series);
+  MutableSeries<D> makeSeries(Series<dynamic, D> series) {
+    MutableSeries<D> s = super.makeSeries(series);
 
-    s.measureOffsetFn ??= (_, __) => 0;
+    s.measureOffsetFn ??= (_) => 0;
 
     // Setup the Axes
     s.setAttr(domainAxisKey, domainAxis);
@@ -137,13 +144,13 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
   }
 
   @override
-  SeriesRenderer<T, D> makeDefaultRenderer() {
+  SeriesRenderer<D> makeDefaultRenderer() {
     return new BarRenderer()..rendererId = SeriesRenderer.defaultRendererId;
   }
 
   @override
-  Map<String, List<MutableSeries<T, D>>> preprocessSeries(
-      List<MutableSeries<T, D>> seriesList) {
+  Map<String, List<MutableSeries<D>>> preprocessSeries(
+      List<MutableSeries<D>> seriesList) {
     var rendererToSeriesList = super.preprocessSeries(seriesList);
 
     // Check if primary or secondary measure axis is being used.
@@ -200,7 +207,7 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
     // Have each renderer configure the axes with their domain and measure
     // values.
     rendererToSeriesList
-        .forEach((String rendererId, List<MutableSeries<T, D>> seriesList) {
+        .forEach((String rendererId, List<MutableSeries<D>> seriesList) {
       getSeriesRenderer(rendererId).configureDomainAxes(seriesList);
       getSeriesRenderer(rendererId).configureMeasureAxes(seriesList);
     });
@@ -224,8 +231,7 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
   }
 
   @override
-  void onPostLayout(
-      Map<String, List<MutableSeries<T, D>>> rendererToSeriesList) {
+  void onPostLayout(Map<String, List<MutableSeries<D>>> rendererToSeriesList) {
     fireOnAxisConfigured();
 
     super.onPostLayout(rendererToSeriesList);
@@ -233,22 +239,20 @@ abstract class CartesianChart<T, D> extends BaseChart<T, D> {
 
   /// Returns a list of datum details from selection model of [type].
   @override
-  List<DatumDetails<T, D>> getDatumDetails(SelectionModelType type) {
-    final entries = <DatumDetails<T, D>>[];
+  List<DatumDetails<D>> getDatumDetails(SelectionModelType type) {
+    final entries = <DatumDetails<D>>[];
 
     getSelectionModel(type).selectedDatum.forEach((seriesDatum) {
       final series = seriesDatum.series;
       final datum = seriesDatum.datum;
+      final datumIndex = seriesDatum.index;
 
-      final domain = series.domainFn(datum, null);
-      final measure = series.measureFn(datum, null);
-      final color = series.colorFn(datum, null);
+      final domain = series.domainFn(datumIndex);
+      final measure = series.measureFn(datumIndex);
+      final color = series.colorFn(datumIndex);
 
-      final x =
-          series.getAttr(domainAxisKey).getLocation(series.domainFn(datum, -1));
-      final y = series
-          .getAttr(measureAxisKey)
-          .getLocation(series.measureFn(datum, -1));
+      final x = series.getAttr(domainAxisKey).getLocation(domain);
+      final y = series.getAttr(measureAxisKey).getLocation(measure);
 
       entries.add(new DatumDetails(
           datum: datum,

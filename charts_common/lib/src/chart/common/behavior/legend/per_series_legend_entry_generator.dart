@@ -22,22 +22,20 @@ import 'legend_entry_generator.dart';
 ///
 /// [T] the datum class type for chart.
 /// [D] the domain class type for the datum.
-class PerSeriesLegendEntryGenerator<T, D>
-    implements LegendEntryGenerator<T, D> {
+class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   const PerSeriesLegendEntryGenerator();
 
   @override
-  List<LegendEntry<T, D>> getLegendEntries(
-      List<MutableSeries<T, D>> seriesList) {
+  List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList) {
     return seriesList.map((series) {
-      final color = series.colorFn(null, null);
-      return new LegendEntry<T, D>(series, series.displayName, color: color);
+      final color = series.colorFn(0);
+      return new LegendEntry<D>(series, series.displayName, color: color);
     }).toList();
   }
 
   @override
-  void updateLegendEntries(List<LegendEntry<T, D>> legendEntries,
-      SelectionModel<T, D> selectionModel) {
+  void updateLegendEntries(
+      List<LegendEntry<D>> legendEntries, SelectionModel<D> selectionModel) {
     for (var entry in legendEntries) {
       entry.isSelected = selectionModel.selectedSeries
           .any((selectedSeries) => entry.series.id == selectedSeries.id);

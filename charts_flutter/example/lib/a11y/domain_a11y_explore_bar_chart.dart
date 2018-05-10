@@ -129,7 +129,7 @@ class DomainA11yExploreBarChart extends StatelessWidget {
         // Optionally provide a hint for the user to know how to trigger
         // explore mode.
         hint: 'Press and hold to enable explore',
-        child: new charts.BarChart<OrdinalSales>(
+        child: new charts.BarChart(
           seriesList,
           animate: animate,
           // To prevent conflict with the select nearest behavior that uses the

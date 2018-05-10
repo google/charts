@@ -54,14 +54,14 @@ enum SelectNearestTrigger {
 /// You can add one SelectNearest for each model type that you are updating.
 /// Any previous SelectNearest behavior for that selection model will be
 /// removed.
-class SelectNearest<T, D> implements ChartBehavior<T, D> {
+class SelectNearest<D> implements ChartBehavior<D> {
   GestureListener _listener;
 
   final SelectionModelType selectionModelType;
   final SelectNearestTrigger eventTrigger;
   final bool expandToDomain;
   final bool selectClosestSeries;
-  BaseChart<T, D> _chart;
+  BaseChart<D> _chart;
 
   bool delaySelect = false;
 
@@ -126,15 +126,15 @@ class SelectNearest<T, D> implements ChartBehavior<T, D> {
 
     var details = _chart.getNearestDatumDetailPerSeries(chartPoint);
 
-    final seriesList = <ImmutableSeries<T, D>>[];
-    final seriesDatumList = <SeriesDatum<T, D>>[];
+    final seriesList = <ImmutableSeries<D>>[];
+    final seriesDatumList = <SeriesDatum<D>>[];
 
     if (details.isNotEmpty) {
       details = expandToDomain ? _expandToDomain(details) : [details.first];
     }
 
     details.forEach((DatumDetails details) {
-      seriesDatumList.add(new SeriesDatum<T, D>(details.series, details.datum));
+      seriesDatumList.add(new SeriesDatum<D>(details.series, details.datum));
 
       if (selectClosestSeries && seriesList.isEmpty) {
         seriesList.add(details.series);
@@ -154,24 +154,24 @@ class SelectNearest<T, D> implements ChartBehavior<T, D> {
 
     _chart
         .getSelectionModel(selectionModelType)
-        .updateSelection(<SeriesDatum<T, D>>[], <ImmutableSeries<T, D>>[]);
+        .updateSelection(<SeriesDatum<D>>[], <ImmutableSeries<D>>[]);
     return false;
   }
 
-  List<DatumDetails<T, D>> _expandToDomain(List<DatumDetails<T, D>> details) =>
+  List<DatumDetails<D>> _expandToDomain(List<DatumDetails<D>> details) =>
       details
-          .where((DatumDetails<T, D> detail) =>
-              detail.domain == details.first.domain)
+          .where(
+              (DatumDetails<D> detail) => detail.domain == details.first.domain)
           .toList();
 
   @override
-  void attachTo(BaseChart<T, D> chart) {
+  void attachTo(BaseChart<D> chart) {
     _chart = chart;
     chart.addGestureListener(_listener);
   }
 
   @override
-  void removeFrom(BaseChart<T, D> chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart.removeGestureListener(_listener);
     _chart = null;
   }

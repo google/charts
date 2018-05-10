@@ -28,7 +28,7 @@ class DashPatternLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart<LinearSales>(seriesList, animate: animate);
+    return new charts.LineChart(seriesList, animate: animate);
   }
 
   /// Create three series with sample hard coded data.

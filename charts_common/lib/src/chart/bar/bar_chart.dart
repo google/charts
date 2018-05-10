@@ -18,13 +18,13 @@ import '../cartesian/cartesian_chart.dart' show OrdinalCartesianChart;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
 
-class BarChart<T> extends OrdinalCartesianChart<T> {
+class BarChart extends OrdinalCartesianChart {
   BarChart({bool vertical, LayoutConfig layoutConfig})
       : super(vertical: vertical, layoutConfig: layoutConfig);
 
   @override
-  SeriesRenderer<T, String> makeDefaultRenderer() {
-    return new BarRenderer<T, String>()
+  SeriesRenderer<String> makeDefaultRenderer() {
+    return new BarRenderer<String>()
       ..rendererId = SeriesRenderer.defaultRendererId;
   }
 }

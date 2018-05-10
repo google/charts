@@ -15,9 +15,8 @@
 
 import 'ordinal_scale_domain_info.dart' show OrdinalScaleDomainInfo;
 import 'scale.dart' show MutableScale;
-import 'ordinal_extents.dart' show OrdinalExtents;
 
-abstract class OrdinalScale extends MutableScale<String, OrdinalExtents> {
+abstract class OrdinalScale extends MutableScale<String> {
   /// The current domain collection with all added unique values.
   OrdinalScaleDomainInfo get domain;
 

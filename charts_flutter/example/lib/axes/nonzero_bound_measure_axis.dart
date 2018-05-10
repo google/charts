@@ -75,7 +75,7 @@ class NonzeroBoundMeasureAxis extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart<MyRow>(seriesList,
+    return new charts.TimeSeriesChart(seriesList,
         animate: animate,
         // Provide a tickProviderSpec which does NOT require that zero is
         // included.

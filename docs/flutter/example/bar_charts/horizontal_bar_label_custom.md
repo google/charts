@@ -30,12 +30,11 @@ class HorizontalBarLabelCustomChart extends StatelessWidget {
   // style, set the style accessor functions on the series.
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart<OrdinalSales>(
+    return new charts.BarChart(
       seriesList,
       animate: animate,
       vertical: false,
-      barRendererDecorator:
-          new charts.BarLabelDecorator<OrdinalSales, String>(),
+      barRendererDecorator: new charts.BarLabelDecorator<String>(),
       // Hide domain axis.
       domainAxis:
           new charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec()),

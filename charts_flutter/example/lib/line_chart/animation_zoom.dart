@@ -67,11 +67,9 @@ class LineAnimationZoomChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart<LinearSales>(seriesList,
-        animate: animate,
-        behaviors: [
-          new charts.PanAndZoomBehavior(),
-        ]);
+    return new charts.LineChart(seriesList, animate: animate, behaviors: [
+      new charts.PanAndZoomBehavior(),
+    ]);
   }
 
   /// Create one series with sample hard coded data.

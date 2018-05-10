@@ -8,7 +8,13 @@ environment:
   sdk: '>=1.23.0 <2.0.0'
 
 dependencies:
-  charts_common: 0.2.0
+  # Pointing this to a local path allows for pointing to the latest code
+  # in Github for open source development.
+  #
+  # The pub version of charts_flutter will point to the pub version of charts_common.
+  # The latest pub version is commented out and shown below as an example.
+  # charts_common: 0.2.0
+  charts_common: ../charts_common/
   collection: ^1.14.5
   flutter:
     sdk: flutter

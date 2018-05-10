@@ -17,15 +17,17 @@ import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'bar_secondary_axis.dart';
 import 'bar_secondary_axis_only.dart';
-import 'horizontal_bar_secondary_axis.dart';
-import 'short_tick_length_axis.dart';
-import 'custom_font_size_and_color.dart';
-import 'measure_axis_label_alignment.dart';
-import 'hidden_ticks_and_labels_axis.dart';
 import 'custom_axis_tick_formatters.dart';
+import 'custom_font_size_and_color.dart';
 import 'custom_measure_tick_count.dart';
+import 'hidden_ticks_and_labels_axis.dart';
 import 'integer_only_measure_axis.dart';
+import 'horizontal_bar_secondary_axis.dart';
+import 'measure_axis_label_alignment.dart';
+import 'numeric_initial_viewport.dart';
 import 'nonzero_bound_measure_axis.dart';
+import 'ordinal_initial_viewport.dart';
+import 'short_tick_length_axis.dart';
 import 'statically_provided_ticks.dart';
 
 List<GalleryScaffold> buildGallery() {
@@ -104,6 +106,18 @@ List<GalleryScaffold> buildGallery() {
       title: 'Non-zero bound Axis',
       subtitle: 'Timeseries with measure axis that does not include zero',
       childBuilder: () => new NonzeroBoundMeasureAxis.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Ordinal axis with initial viewport',
+      subtitle: 'Single series with initial viewport',
+      childBuilder: () => new OrdinalInitialViewport.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Numeric axis with initial viewport',
+      subtitle: 'Initial viewport is set to a subset of the data',
+      childBuilder: () => new NumericInitialViewport.withRandomData(),
     ),
   ];
 }
