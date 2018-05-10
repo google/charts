@@ -68,11 +68,14 @@ class MaterialStyle implements Style {
   }
 
   @override
-  Color get rangeAnnotationColor => MaterialPalette.gray.shade100;
+  Color get arcLabelOutsideLeaderLine => MaterialPalette.gray.shade600;
 
   @override
   Color get linePointHighlighterColor => MaterialPalette.gray.shade600;
 
   @override
   Color get noDataColor => MaterialPalette.gray.shade200;
+
+  @override
+  Color get rangeAnnotationColor => MaterialPalette.gray.shade100;
 }

@@ -28,15 +28,18 @@ import '../../common/color.dart' show Color;
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../data/series.dart' show AttributeKey;
 import 'arc_renderer_config.dart' show ArcRendererConfig;
+import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
 const arcElementsKey =
-    const AttributeKey<List<_ArcRendererElement>>('ArcRenderer.elements');
+    const AttributeKey<List<ArcRendererElement>>('ArcRenderer.elements');
 
 const arcSeriesTotalKey =
-    const AttributeKey<List<_ArcRendererElement>>('ArcRenderer.seriesTotal');
+    const AttributeKey<List<ArcRendererElement>>('ArcRenderer.seriesTotal');
 
 class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   final ArcRendererConfig<D> config;
+
+  final List<ArcRendererDecorator> arcRendererDecorators;
 
   BaseChart<D> _chart;
 
@@ -55,6 +58,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
   ArcRenderer({String rendererId, ArcRendererConfig<D> config})
       : config = config ?? new ArcRendererConfig(),
+        arcRendererDecorators = config?.arcRendererDecorators ?? [],
         super(
             rendererId: rendererId ?? 'arc',
             layoutPositionOrder: 10,
@@ -74,7 +78,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
-      var elements = <_ArcRendererElement<D>>[];
+      var elements = <ArcRendererElement<D>>[];
 
       var measureFn = series.measureFn;
 
@@ -104,11 +108,13 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         var angle = 2 * PI * .999999;
         var endAngle = startAngle + angle;
 
-        var details = new _ArcRendererElement<D>();
+        var details = new ArcRendererElement<D>();
         details.startAngle = startAngle;
         details.endAngle = endAngle;
+        details.index = 0;
         details.key = 0;
         details.measure = 0.0;
+        details.series = series;
 
         elements.add(details);
       } else {
@@ -123,11 +129,13 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           var angle = (measure / seriesTotal) * 2 * PI;
           var endAngle = startAngle + angle;
 
-          var details = new _ArcRendererElement<D>();
+          var details = new ArcRendererElement<D>();
           details.startAngle = startAngle;
           details.endAngle = endAngle;
+          details.index = arcIndex;
           details.key = arcIndex;
           details.measure = measure;
+          details.series = series;
 
           elements.add(details);
 
@@ -205,10 +213,11 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
         // Get the arcElement we are going to setup.
         // Optimization to prevent allocation in non-animating case.
-        final arcElement = new _ArcRendererElement<D>()
+        final arcElement = new ArcRendererElement<D>()
           ..color = config.noDataColor
           ..startAngle = details.startAngle
-          ..endAngle = details.endAngle;
+          ..endAngle = details.endAngle
+          ..series = series;
 
         animatingArc.setNewTarget(arcElement);
       } else {
@@ -238,10 +247,12 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           // from 0.
           if (animatingArc == null) {
             animatingArc = new _AnimatedArc<D>(arcKey, datum)
-              ..setNewTarget(new _ArcRendererElement<D>()
+              ..setNewTarget(new ArcRendererElement<D>()
                 ..color = colorFn(arcIndex)
                 ..startAngle = previousEndAngle
-                ..endAngle = previousEndAngle);
+                ..endAngle = previousEndAngle
+                ..index = arcIndex
+                ..series = series);
 
             arcList.arcs.add(animatingArc);
           } else {
@@ -255,10 +266,12 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
           // Get the arcElement we are going to setup.
           // Optimization to prevent allocation in non-animating case.
-          final arcElement = new _ArcRendererElement<D>()
+          final arcElement = new ArcRendererElement<D>()
             ..color = colorFn(arcIndex)
             ..startAngle = details.startAngle
-            ..endAngle = details.endAngle;
+            ..endAngle = details.endAngle
+            ..index = arcIndex
+            ..series = series;
 
           animatingArc.setNewTarget(arcElement);
         }
@@ -312,20 +325,55 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
     _seriesArcMap.forEach((String key, _AnimatedArcList<D> arcList) {
       final circleSectors = <CanvasPieSlice>[];
+      final arcElementsList = new ArcRendererElementList<D>()
+        ..arcs = <ArcRendererElement<D>>[]
+        ..center = arcList.center
+        ..innerRadius = arcList.innerRadius
+        ..radius = arcList.radius
+        ..startAngle = config.startAngle
+        ..stroke = arcList.stroke
+        ..strokeWidthPx = arcList.strokeWidthPx;
 
       arcList.arcs
-          .map<_ArcRendererElement<D>>((_AnimatedArc<D> animatingArc) =>
+          .map<ArcRendererElement<D>>((_AnimatedArc<D> animatingArc) =>
               animatingArc.getCurrentArc(animationPercent))
-          .forEach((_ArcRendererElement arc) {
+          .forEach((ArcRendererElement arc) {
         circleSectors.add(
             new CanvasPieSlice(arc.startAngle, arc.endAngle, fill: arc.color));
+
+        arcElementsList.arcs.add(arc);
       });
 
+      // Decorate the arcs with decorators that should appear below the main
+      // series data.
+      arcRendererDecorators
+          .where((ArcRendererDecorator decorator) => !decorator.renderAbove)
+          .forEach((ArcRendererDecorator decorator) {
+        decorator.decorate(arcElementsList, canvas, graphicsFactory,
+            drawBounds: drawBounds,
+            animationPercent: animationPercent,
+            rtl: rtl);
+      });
+
+      // Draw the arcs.
       canvas.drawPie(new CanvasPie(
           circleSectors, arcList.center, arcList.radius, arcList.innerRadius,
           stroke: arcList.stroke, strokeWidthPx: arcList.strokeWidthPx));
+
+      // Decorate the arcs with decorators that should appear above the main
+      // series data. This is the typical place for labels.
+      arcRendererDecorators
+          .where((ArcRendererDecorator decorator) => decorator.renderAbove)
+          .forEach((ArcRendererDecorator decorator) {
+        decorator.decorate(arcElementsList, canvas, graphicsFactory,
+            drawBounds: drawBounds,
+            animationPercent: animationPercent,
+            rtl: rtl);
+      });
     });
   }
+
+  bool get rtl => _chart?.context?.rtl ?? false;
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
@@ -379,22 +427,42 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   }
 }
 
-class _ArcRendererElement<D> {
+class ArcRendererElementList<D> {
+  List<ArcRendererElement<D>> arcs;
+  Point center;
+  double innerRadius;
+  double radius;
+  double startAngle;
+
+  /// Color of separator lines between arcs.
+  Color stroke;
+
+  /// Stroke width of separator lines between arcs.
+  double strokeWidthPx;
+}
+
+class ArcRendererElement<D> {
   double startAngle;
   double endAngle;
   Color color;
+  int index;
   num key;
   num measure;
+  ImmutableSeries<D> series;
 
-  _ArcRendererElement<D> clone() {
-    return new _ArcRendererElement<D>()
+  ArcRendererElement<D> clone() {
+    return new ArcRendererElement<D>()
       ..startAngle = startAngle
       ..endAngle = endAngle
-      ..color = new Color.fromOther(color: color);
+      ..color = new Color.fromOther(color: color)
+      ..index = index
+      ..key = key
+      ..measure = measure
+      ..series = series;
   }
 
-  void updateAnimationPercent(_ArcRendererElement previous,
-      _ArcRendererElement target, double animationPercent) {
+  void updateAnimationPercent(ArcRendererElement previous,
+      ArcRendererElement target, double animationPercent) {
     startAngle =
         ((target.startAngle - previous.startAngle) * animationPercent) +
             previous.startAngle;
@@ -409,9 +477,13 @@ class _ArcRendererElement<D> {
 class _AnimatedArcList<D> {
   final arcs = <_AnimatedArc<D>>[];
   Point center;
-  double radius;
   double innerRadius;
+  double radius;
+
+  /// Color of separator lines between arcs.
   Color stroke;
+
+  /// Stroke width of separator lines between arcs.
   double strokeWidthPx;
 }
 
@@ -419,9 +491,9 @@ class _AnimatedArc<D> {
   final String key;
   dynamic datum;
 
-  _ArcRendererElement<D> _previousArc;
-  _ArcRendererElement<D> _targetArc;
-  _ArcRendererElement<D> _currentArc;
+  ArcRendererElement<D> _previousArc;
+  ArcRendererElement<D> _targetArc;
+  ArcRendererElement<D> _currentArc;
 
   // Flag indicating whether this arc is being animated out of the chart.
   bool animatingOut = false;
@@ -445,14 +517,14 @@ class _AnimatedArc<D> {
     animatingOut = true;
   }
 
-  void setNewTarget(_ArcRendererElement<D> newTarget) {
+  void setNewTarget(ArcRendererElement<D> newTarget) {
     animatingOut = false;
     _currentArc ??= newTarget.clone();
     _previousArc = _currentArc.clone();
     _targetArc = newTarget;
   }
 
-  _ArcRendererElement<D> getCurrentArc(double animationPercent) {
+  ArcRendererElement<D> getCurrentArc(double animationPercent) {
     if (animationPercent == 1.0 || _previousArc == null) {
       _currentArc = _targetArc;
       _previousArc = _targetArc;

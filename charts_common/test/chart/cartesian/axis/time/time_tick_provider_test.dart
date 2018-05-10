@@ -24,8 +24,8 @@ void main() {
 
   group('Find closest step size from stepper', () {
     test('from exactly matching step size', () {
-      final stepper = AutoAdjustingDateTimeTickProvider
-          .createHourTickProvider(dateTimeFactory);
+      final stepper = AutoAdjustingDateTimeTickProvider.createHourTickProvider(
+          dateTimeFactory);
       final oneHourMs = (new Duration(hours: 1)).inMilliseconds;
       final closestStepSize = stepper.getClosestStepSize(oneHourMs);
 
@@ -34,8 +34,8 @@ void main() {
 
     test('choose smallest increment if step is smaller than smallest increment',
         () {
-      final stepper = AutoAdjustingDateTimeTickProvider
-          .createHourTickProvider(dateTimeFactory);
+      final stepper = AutoAdjustingDateTimeTickProvider.createHourTickProvider(
+          dateTimeFactory);
       final oneHourMs = (new Duration(hours: 1)).inMilliseconds;
       final closestStepSize = stepper
           .getClosestStepSize((new Duration(minutes: 56)).inMilliseconds);
@@ -45,8 +45,8 @@ void main() {
 
     test('choose largest increment if step is larger than largest increment',
         () {
-      final stepper = AutoAdjustingDateTimeTickProvider
-          .createHourTickProvider(dateTimeFactory);
+      final stepper = AutoAdjustingDateTimeTickProvider.createHourTickProvider(
+          dateTimeFactory);
       final oneDayMs = (new Duration(hours: 24)).inMilliseconds;
       final closestStepSize =
           stepper.getClosestStepSize((new Duration(hours: 25)).inMilliseconds);
@@ -55,8 +55,8 @@ void main() {
     });
 
     test('choose closest increment if exact not found', () {
-      final stepper = AutoAdjustingDateTimeTickProvider
-          .createHourTickProvider(dateTimeFactory);
+      final stepper = AutoAdjustingDateTimeTickProvider.createHourTickProvider(
+          dateTimeFactory);
       final threeHoursMs = (new Duration(hours: 3)).inMilliseconds;
       final closestStepSize = stepper.getClosestStepSize(
           (new Duration(hours: 3, minutes: 28)).inMilliseconds);

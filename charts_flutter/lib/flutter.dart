@@ -107,6 +107,8 @@ export 'package:charts_common/src/chart/scatter_plot/comparison_points_decorator
     show ComparisonPointsDecorator;
 export 'package:charts_common/src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
+export 'package:charts_common/src/chart/pie/arc_label_decorator.dart'
+    show ArcLabelDecorator, ArcLabelLeaderLineStyleSpec, ArcLabelPosition;
 export 'package:charts_common/src/chart/pie/arc_renderer_config.dart'
     show ArcRendererConfig;
 export 'package:charts_common/src/common/color.dart' show Color;

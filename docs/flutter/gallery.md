@@ -39,7 +39,7 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/pie_charts/simple_thumb.png)](example/pie_charts/simple) | Donut<br>[![](example/pie_charts/donut_thumb.png)](example/pie_charts/donut) | | |
+| Simple<br>[![](example/pie_charts/simple_thumb.png)](example/pie_charts/simple) | Outside Label<br>[![](example/pie_charts/outside_label_thumb.png)](example/pie_charts/outside_label) | Donut<br>[![](example/pie_charts/donut_thumb.png)](example/pie_charts/donut) | Auto Label<br>[![](example/pie_charts/auto_label_thumb.png)](example/pie_charts/auto_label) |
 
 
 ### Axes

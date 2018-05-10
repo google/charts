@@ -22,11 +22,15 @@ import '../layout/layout_view.dart' show LayoutViewConfig;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import 'arc_renderer.dart' show ArcRenderer;
+import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
 /// Configuration for an [ArcRenderer].
 class ArcRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
   final String customRendererId;
+
+  /// List of decorators applied to rendered arcs.
+  final List<ArcRendererDecorator> arcRendererDecorators;
 
   final SymbolRenderer symbolRenderer;
 
@@ -58,6 +62,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
 
   ArcRendererConfig(
       {this.customRendererId,
+      this.arcRendererDecorators = const [],
       this.arcRatio,
       this.arcWidth,
       this.startAngle = -PI / 2,
