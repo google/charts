@@ -1,4 +1,4 @@
-# 0.3.0-dev
+# 0.3.0
 * Simplified API by removing the requirement for specifying the datum type when creating a chart.
 For example, previously to construct a bar chart the syntax was 'new BarChart<MyDatumType>()'.
 The syntax is now cleaned up to be 'new BarChart()'. Please refer to the
