@@ -76,17 +76,16 @@ class HorizontalBarLabelChart extends StatelessWidget {
   // [insideLabelStyleSpec] and [outsideLabelStyleSpec].
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart<OrdinalSales>(
+    return new charts.BarChart(
       seriesList,
       animate: animate,
       vertical: false,
       // Set a bar label decorator.
       // Example configuring different styles for inside/outside:
-      //       barRendererDecorator: new Charts.BarLabelDecorator(
-      //          insideLabelStyleSpec: new Charts.TextStyleSpec(...),
-      //          outsideLabelStyleSpec: new Charts.TextStyleSpec(...)),
-      barRendererDecorator:
-          new charts.BarLabelDecorator<OrdinalSales, String>(),
+      //       barRendererDecorator: new charts.BarLabelDecorator(
+      //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
+      //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
+      barRendererDecorator: new charts.BarLabelDecorator<String>(),
       // Hide domain axis.
       domainAxis:
           new charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec()),

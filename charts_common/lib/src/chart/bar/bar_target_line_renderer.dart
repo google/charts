@@ -30,8 +30,8 @@ import '../../common/color.dart' show Color;
 ///
 /// Usually paired with a BarRenderer to display target metrics alongside actual
 /// metrics.
-class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
-    _BarTargetLineRendererElement, _AnimatedBarTargetLine<T, D>> {
+class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
+    _BarTargetLineRendererElement, _AnimatedBarTargetLine<D>> {
   /// If we are grouped, use this spacing between the bars in a group.
   final _barGroupInnerPadding = 2;
 
@@ -50,16 +50,16 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
       {BarTargetLineRendererConfig config, String rendererId})
       : super(config: config, rendererId: rendererId, layoutPositionOrder: 11);
 
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
-    seriesList.forEach((MutableSeries<T, D> series) {
-      series.colorFn ??= (T datum, int index) => _color;
+  @override
+  void configureSeries(List<MutableSeries<D>> seriesList) {
+    seriesList.forEach((MutableSeries<D> series) {
+      series.colorFn ??= (_) => _color;
+      series.fillColorFn ??= (_) => _color;
     });
-
-    super.preprocessSeries(seriesList);
   }
 
   @override
-  _BarTargetLineRendererElement getBaseDetails(T datum, int index) {
+  _BarTargetLineRendererElement getBaseDetails(dynamic datum, int index) {
     final BarTargetLineRendererConfig localConfig = config;
     return new _BarTargetLineRendererElement()
       ..roundEndCaps = localConfig.roundEndCaps;
@@ -68,11 +68,12 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
   /// Generates an [_AnimatedBarTargetLine] to represent the previous and
   /// current state of one bar target line on the chart.
   @override
-  _AnimatedBarTargetLine<T, D> makeAnimatedBar(
+  _AnimatedBarTargetLine<D> makeAnimatedBar(
       {String key,
-      ImmutableSeries<T, D> series,
-      T datum,
+      ImmutableSeries<D> series,
+      dynamic datum,
       Color color,
+      List<int> dashPattern,
       _BarTargetLineRendererElement details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
@@ -81,6 +82,7 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
+      Color fillColor,
       FillPatternType fillPattern,
       int barGroupIndex,
       int numBarGroups,
@@ -90,6 +92,7 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
       ..setNewTarget(makeBarRendererElement(
           color: color,
           details: details,
+          dashPattern: dashPattern,
           domainValue: domainValue,
           domainAxis: domainAxis,
           domainWidth: domainWidth,
@@ -97,6 +100,7 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
           measureOffsetValue: measureOffsetValue,
           measureAxisPosition: measureAxisPosition,
           measureAxis: measureAxis,
+          fillColor: fillColor,
           fillPattern: fillPattern,
           strokeWidthPx: strokeWidthPx,
           barGroupIndex: barGroupIndex,
@@ -108,6 +112,7 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
   @override
   _BarTargetLineRendererElement makeBarRendererElement(
       {Color color,
+      List<int> dashPattern,
       _BarTargetLineRendererElement details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
@@ -116,15 +121,18 @@ class BarTargetLineRenderer<T, D> extends BaseBarRenderer<T, D,
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
+      Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
       int numBarGroups}) {
     return new _BarTargetLineRendererElement()
       ..color = color
-      ..roundEndCaps = details.roundEndCaps
-      ..measureAxisPosition = measureAxisPosition
+      ..dashPattern = dashPattern
+      ..fillColor = fillColor
       ..fillPattern = fillPattern
+      ..measureAxisPosition = measureAxisPosition
+      ..roundEndCaps = details.roundEndCaps
       ..strokeWidthPx = strokeWidthPx
       ..points = _getTargetLinePoints(
           domainValue,
@@ -299,12 +307,12 @@ class _BarTargetLineRendererElement extends BaseBarRendererElement {
   }
 }
 
-class _AnimatedBarTargetLine<T, D>
-    extends BaseAnimatedBar<T, D, _BarTargetLineRendererElement> {
+class _AnimatedBarTargetLine<D>
+    extends BaseAnimatedBar<D, _BarTargetLineRendererElement> {
   _AnimatedBarTargetLine(
       {@required String key,
-      @required T datum,
-      @required ImmutableSeries<T, D> series,
+      @required dynamic datum,
+      @required ImmutableSeries<D> series,
       @required D domainValue})
       : super(key: key, datum: datum, series: series, domainValue: domainValue);
 

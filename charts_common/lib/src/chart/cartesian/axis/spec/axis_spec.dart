@@ -22,13 +22,12 @@ import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import '../axis.dart' show Axis;
 import '../tick_provider.dart' show TickProvider;
 import '../tick_formatter.dart' show TickFormatter;
-import '../scale.dart' show MutableScale, Extents;
 
 @immutable
-class AxisSpec<D, E extends Extents, S extends MutableScale<D, E>> {
+class AxisSpec<D> {
   final bool showAxisLine;
   final RenderSpec<D> renderSpec;
-  final TickProviderSpec<D, E, S> tickProviderSpec;
+  final TickProviderSpec<D> tickProviderSpec;
   final TickFormatterSpec<D> tickFormatterSpec;
 
   AxisSpec({
@@ -38,8 +37,8 @@ class AxisSpec<D, E extends Extents, S extends MutableScale<D, E>> {
     this.showAxisLine,
   });
 
-  configure(Axis<D, E, S> axis, ChartContext context,
-      GraphicsFactory graphicsFactory) {
+  configure(
+      Axis<D> axis, ChartContext context, GraphicsFactory graphicsFactory) {
     if (showAxisLine != null) {
       axis.forceDrawAxisLine = showAxisLine;
     }
@@ -77,9 +76,8 @@ class AxisSpec<D, E extends Extents, S extends MutableScale<D, E>> {
 }
 
 @immutable
-abstract class TickProviderSpec<D, E extends Extents,
-    S extends MutableScale<D, E>> {
-  TickProvider<D, E, S> createTickProvider(ChartContext context);
+abstract class TickProviderSpec<D> {
+  TickProvider<D> createTickProvider(ChartContext context);
 }
 
 @immutable

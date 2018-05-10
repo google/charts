@@ -19,8 +19,8 @@ import 'processed_series.dart' show ImmutableSeries;
 typedef DomainFormatter<D>(D domain);
 typedef MeasureFormatter(num measure);
 
-class DatumDetails<T, D> {
-  final T datum;
+class DatumDetails<D> {
+  final dynamic datum;
 
   /// Domain value of [datum].
   final D domain;
@@ -29,7 +29,7 @@ class DatumDetails<T, D> {
   final num measure;
 
   /// The series the [datum] is from.
-  final ImmutableSeries<T, D> series;
+  final ImmutableSeries<D> series;
 
   /// The color of this [datum].
   final Color color;

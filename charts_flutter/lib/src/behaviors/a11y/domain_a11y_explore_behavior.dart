@@ -15,7 +15,7 @@
 
 import 'package:charts_common/common.dart' as common
     show DomainA11yExploreBehavior, VocalizationCallback, ExploreModeTrigger;
-
+import 'package:flutter/widgets.dart' show hashValues;
 import '../chart_behavior.dart' show ChartBehavior, GestureType;
 
 /// Behavior that generates semantic nodes for each domain.
@@ -80,8 +80,8 @@ class DomainA11yExploreBehavior
   }
 
   @override
-  common.DomainA11yExploreBehavior<T, D> createCommonBehavior<T, D>() {
-    return new common.DomainA11yExploreBehavior<T, D>(
+  common.DomainA11yExploreBehavior<D> createCommonBehavior<D>() {
+    return new common.DomainA11yExploreBehavior<D>(
         vocalizationCallback: vocalizationCallback,
         exploreModeTrigger: exploreModeTrigger,
         minimumWidth: minimumWidth,
@@ -98,13 +98,15 @@ class DomainA11yExploreBehavior
   @override
   bool operator ==(Object o) =>
       o is DomainA11yExploreBehavior &&
+      vocalizationCallback == o.vocalizationCallback &&
       exploreModeTrigger == o.exploreModeTrigger &&
-      minimumWidth == minimumWidth;
+      minimumWidth == o.minimumWidth &&
+      exploreModeEnabledAnnouncement == o.exploreModeEnabledAnnouncement &&
+      exploreModeDisabledAnnouncement == o.exploreModeDisabledAnnouncement;
 
   @override
   int get hashCode {
-    var hashCode = minimumWidth.hashCode;
-    hashCode = hashCode * 37 + exploreModeTrigger.hashCode;
-    return hashCode;
+    return hashValues(minimumWidth, vocalizationCallback, exploreModeTrigger,
+        exploreModeEnabledAnnouncement, exploreModeDisabledAnnouncement);
   }
 }

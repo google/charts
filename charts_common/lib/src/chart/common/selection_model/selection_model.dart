@@ -29,18 +29,19 @@ import '../processed_series.dart' show ImmutableSeries, SeriesDatum;
 /// allow more complex highlighting. For example: a Hovercard that shows entries
 /// for each datum for a given domain/time, but highlights the closest entry to
 /// match up with highlighting/bolding of the line and legend.
-class SelectionModel<T, D> {
-  final _listeners = <SelectionModelListener<T, D>>[];
-  var _selectedDatum = <SeriesDatum<T, D>>[];
-  var _selectedSeries = <ImmutableSeries<T, D>>[];
+class SelectionModel<D> {
+  final _listeners = <SelectionModelListener<D>>[];
+  var _selectedDatum = <SeriesDatum<D>>[];
+  var _selectedSeries = <ImmutableSeries<D>>[];
 
   /// When set to true, prevents the model from being updated.
   bool locked = false;
 
   /// Updates the selection state. If mouse driven, [datumSelection] should be
   /// ordered by distance from mouse, closest first.
-  bool updateSelection(List<SeriesDatum<T, D>> datumSelection,
-      List<ImmutableSeries<T, D>> seriesList) {
+  bool updateSelection(
+      List<SeriesDatum<D>> datumSelection, List<ImmutableSeries<D>> seriesList,
+      {bool notifyListeners = true}) {
     if (locked) {
       return false;
     }
@@ -54,7 +55,7 @@ class SelectionModel<T, D> {
     final changed =
         !new ListEquality().equals(origSelectedDatum, _selectedDatum) ||
             !new ListEquality().equals(origSelectedSeries, _selectedSeries);
-    if (changed) {
+    if (notifyListeners && changed) {
       _listeners.forEach((listener) => listener(this));
     }
     return changed;
@@ -63,13 +64,15 @@ class SelectionModel<T, D> {
   /// Returns true if this [SelectionModel] has a selected datum.
   bool get hasDatumSelection => _selectedDatum.isNotEmpty;
 
-  bool isDatumSelected(ImmutableSeries<T, D> series, T datum) =>
-      _selectedDatum.contains(new SeriesDatum(series, datum));
+  bool isDatumSelected(ImmutableSeries<D> series, int index) {
+    final datum = index == null ? null : series.data[index];
+    return _selectedDatum.contains(new SeriesDatum(series, datum));
+  }
 
   /// Returns the selected [SeriesDatum] for this [SelectionModel].
   ///
   /// This is empty by default.
-  List<SeriesDatum<T, D>> get selectedDatum => _selectedDatum;
+  List<SeriesDatum<D>> get selectedDatum => _selectedDatum;
 
   /// Returns true if this [SelectionModel] has a selected series.
   bool get hasSeriesSelection => _selectedSeries.isNotEmpty;
@@ -77,18 +80,18 @@ class SelectionModel<T, D> {
   /// Returns the selected [ImmutableSeries] for this [SelectionModel].
   ///
   /// This is empty by default.
-  List<ImmutableSeries<T, D>> get selectedSeries => _selectedSeries;
+  List<ImmutableSeries<D>> get selectedSeries => _selectedSeries;
 
   /// Add a listener to be notified when this [SelectionModel] changes.
   ///
   /// Note: the listener will not be triggered if [updateSelection] is called
   /// resulting in the same selection state.
-  addSelectionListener(SelectionModelListener<T, D> listener) {
+  addSelectionListener(SelectionModelListener<D> listener) {
     _listeners.add(listener);
   }
 
   /// Remove listener from being notified when this [SelectionModel] changes.
-  removeSelectionListener(SelectionModelListener<T, D> listener) {
+  removeSelectionListener(SelectionModelListener<D> listener) {
     _listeners.remove(listener);
   }
 
@@ -99,7 +102,7 @@ class SelectionModel<T, D> {
 
 /// Callback for SelectionModel. It is triggered when the selection state
 /// changes.
-typedef SelectionModelListener<T, D>(SelectionModel<T, D> model);
+typedef SelectionModelListener<D>(SelectionModel<D> model);
 
 enum SelectionModelType {
   /// Typical Hover or Details event for viewing the details of the selected

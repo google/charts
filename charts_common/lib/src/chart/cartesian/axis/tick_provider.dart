@@ -17,7 +17,7 @@ import 'package:meta/meta.dart' show required;
 import '../../common/chart_context.dart' show ChartContext;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import 'axis.dart' show AxisOrientation;
-import 'scale.dart' show MutableScale, Extents;
+import 'scale.dart' show MutableScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart' show TickFormatter;
 import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
@@ -25,8 +25,7 @@ import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 /// A strategy for selecting values for axis ticks based on the domain values.
 ///
 /// [D] is the domain type.
-abstract class TickProvider<D, E extends Extents,
-    S extends MutableScale<D, E>> {
+abstract class TickProvider<D> {
   /// Returns a list of ticks in value order that should be displayed.
   ///
   /// This method should not return null. If no ticks are desired an empty list
@@ -35,23 +34,25 @@ abstract class TickProvider<D, E extends Extents,
   /// [graphicsFactory] The graphics factory used for text measurement.
   /// [scale] The scale of the data.
   /// [formatter] The formatter to use for generating tick labels.
-  /// [axisOrientation] Orientation of this axis ticks.
+  /// [orientation] Orientation of this axis ticks.
   /// [tickDrawStrategy] Draw strategy for ticks.
+  /// [viewportExtensionEnabled] allow extending the viewport for 'niced' ticks.
+  /// [tickHint] tick values for provider to calculate a desired tick range.
   List<Tick<D>> getTicks({
     @required ChartContext context,
     @required GraphicsFactory graphicsFactory,
-    @required S scale,
+    @required covariant MutableScale<D> scale,
     @required TickFormatter<D> formatter,
     @required Map<D, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled: false,
+    TickHint<D> tickHint,
   });
 }
 
 /// A base tick provider.
-abstract class BaseTickProvider<D, E extends Extents,
-    S extends MutableScale<D, E>> implements TickProvider<D, E, S> {
+abstract class BaseTickProvider<D> implements TickProvider<D> {
   const BaseTickProvider();
 
   /// Create ticks from [domainValues].
@@ -59,7 +60,7 @@ abstract class BaseTickProvider<D, E extends Extents,
     List<D> domainValues, {
     @required ChartContext context,
     @required GraphicsFactory graphicsFactory,
-    @required S scale,
+    @required MutableScale<D> scale,
     @required TickFormatter<D> formatter,
     @required Map<D, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
@@ -84,4 +85,18 @@ abstract class BaseTickProvider<D, E extends Extents,
 
     return ticks;
   }
+}
+
+/// A hint for the tick provider to determine step size and tick count.
+class TickHint<D> {
+  /// The starting hint tick value.
+  final D start;
+
+  /// The ending hint tick value.
+  final D end;
+
+  /// Number of ticks.
+  final int tickCount;
+
+  TickHint(this.start, this.end, {this.tickCount});
 }

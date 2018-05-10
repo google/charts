@@ -15,19 +15,24 @@
 
 import 'package:meta/meta.dart' show immutable;
 
+import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
+import '../axis.dart' show Axis, OrdinalAxis, OrdinalViewport;
 import '../ordinal_tick_provider.dart' show OrdinalTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../tick_formatter.dart' show OrdinalTickFormatter;
-import '../ordinal_extents.dart' show OrdinalExtents;
-import '../ordinal_scale.dart' show OrdinalScale;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
 
 /// [AxisSpec] specialized for ordinal/non-continuous axes typically for bars.
 @immutable
-class OrdinalAxisSpec extends AxisSpec<String, OrdinalExtents, OrdinalScale> {
+class OrdinalAxisSpec extends AxisSpec<String> {
+  /// Sets viewport for this Axis.
+  ///
+  /// If pan / zoom behaviors are set, this is the initial viewport.
+  final OrdinalViewport viewport;
+
   /// Creates a [AxisSpec] that specialized for ordinal domain charts.
   ///
   /// [renderSpec] spec used to configure how the ticks and labels
@@ -43,6 +48,7 @@ class OrdinalAxisSpec extends AxisSpec<String, OrdinalExtents, OrdinalScale> {
     OrdinalTickProviderSpec tickProviderSpec,
     OrdinalTickFormatterSpec tickFormatterSpec,
     bool showAxisLine,
+    this.viewport,
   }) : super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec,
@@ -50,12 +56,24 @@ class OrdinalAxisSpec extends AxisSpec<String, OrdinalExtents, OrdinalScale> {
             showAxisLine: showAxisLine);
 
   @override
-  bool operator ==(Object other) =>
-      other is OrdinalAxisSpec && super == (other);
+  configure(Axis<String> axis, ChartContext context,
+      GraphicsFactory graphicsFactory) {
+    super.configure(axis, context, graphicsFactory);
+
+    if (axis is OrdinalAxis && viewport != null) {
+      axis.setScaleViewport(viewport);
+    }
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is OrdinalAxisSpec &&
+        viewport == other.viewport &&
+        super == (other);
+  }
 }
 
-abstract class OrdinalTickProviderSpec
-    extends TickProviderSpec<String, OrdinalExtents, OrdinalScale> {}
+abstract class OrdinalTickProviderSpec extends TickProviderSpec<String> {}
 
 abstract class OrdinalTickFormatterSpec extends TickFormatterSpec<String> {}
 
@@ -82,9 +100,8 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   StaticOrdinalTickProviderSpec(this.tickSpecs);
 
   @override
-  StaticTickProvider<String, OrdinalExtents, OrdinalScale> createTickProvider(
-          ChartContext context) =>
-      new StaticTickProvider<String, OrdinalExtents, OrdinalScale>(tickSpecs);
+  StaticTickProvider<String> createTickProvider(ChartContext context) =>
+      new StaticTickProvider<String>(tickSpecs);
 
   @override
   bool operator ==(Object other) =>

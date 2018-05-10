@@ -35,9 +35,9 @@ import 'graphics_factory.dart' show GraphicsFactory;
 import 'time_series_chart.dart' show TimeSeriesChart;
 
 /// Widget that inflates to a [CustomPaint] that implements common [ChartContext].
-class ChartContainer<T, D> extends CustomPaint {
-  final BaseChart<T, D> chartWidget;
-  final BaseChart<T, D> oldChartWidget;
+class ChartContainer<D> extends CustomPaint {
+  final BaseChart<D> chartWidget;
+  final BaseChart<D> oldChartWidget;
   final ChartState chartState;
   final double animationValue;
   final bool rtl;
@@ -53,7 +53,7 @@ class ChartContainer<T, D> extends CustomPaint {
 
   @override
   RenderCustomPaint createRenderObject(BuildContext context) {
-    return new ChartContainerRenderObject<T, D>()..reconfigure(this);
+    return new ChartContainerRenderObject<D>()..reconfigure(this);
   }
 
   @override
@@ -64,10 +64,10 @@ class ChartContainer<T, D> extends CustomPaint {
 }
 
 /// [RenderCustomPaint] that implements common [ChartContext].
-class ChartContainerRenderObject<T, D> extends RenderCustomPaint
+class ChartContainerRenderObject<D> extends RenderCustomPaint
     implements common.ChartContext {
-  common.BaseChart<T, D> _chart;
-  List<common.Series<T, D>> _seriesList;
+  common.BaseChart<D> _chart;
+  List<common.Series<dynamic, D>> _seriesList;
   ChartState _chartState;
   bool _rtl;
   common.RTLSpec _rtlSpec;
@@ -157,6 +157,12 @@ class ChartContainerRenderObject<T, D> extends RenderCustomPaint
   void requestAnimation(Duration transition) {
     void startAnimationController(_) {
       _chartState.setAnimation(transition);
+    }
+
+    // Sometimes chart behaviors try to draw the chart outside of a Flutter draw
+    // cycle. Schedule a frame manually to handle these cases.
+    if (!SchedulerBinding.instance.hasScheduledFrame) {
+      SchedulerBinding.instance.scheduleFrame();
     }
 
     SchedulerBinding.instance.addPostFrameCallback(startAnimationController);

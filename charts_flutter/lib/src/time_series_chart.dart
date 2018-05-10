@@ -22,7 +22,7 @@ import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
+class TimeSeriesChart extends CartesianChart<DateTime> {
   final common.DateTimeFactory dateTimeFactory;
 
   /// Create a [TimeSeriesChart].
@@ -30,15 +30,15 @@ class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
   /// [dateTimeFactory] allows specifying a factory that creates [DateTime] to
   /// be used for the time axis. If none specified, local date time is used.
   TimeSeriesChart(
-    List<common.Series<T, DateTime>> seriesList, {
+    List<common.Series<dynamic, DateTime>> seriesList, {
     bool animate,
     Duration animationDuration,
     common.AxisSpec domainAxis,
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
-    common.LineRendererConfig<T, DateTime> defaultRenderer,
+    common.LineRendererConfig<DateTime> defaultRenderer,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig<T, DateTime>> selectionModels,
+    List<SelectionModelConfig<DateTime>> selectionModels,
     LayoutConfig layoutConfig,
     this.dateTimeFactory,
     bool defaultInteractions: true,
@@ -57,8 +57,8 @@ class TimeSeriesChart<T> extends CartesianChart<T, DateTime> {
         );
 
   @override
-  common.TimeSeriesChart<T> createCommonChart(BaseChartState chartState) =>
-      new common.TimeSeriesChart<T>(
+  common.TimeSeriesChart createCommonChart(BaseChartState chartState) =>
+      new common.TimeSeriesChart(
           layoutConfig: layoutConfig?.commonLayoutConfig);
 
   @override

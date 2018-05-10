@@ -53,25 +53,25 @@ void main() {
   MockChart _chart;
   MockSelectionModel _selectionModel;
 
-  MutableSeries<MyRow, String> _series1;
+  MutableSeries<String> _series1;
   final _s1D1 = new MyRow('s1d1', 11);
   final _s1D2 = new MyRow('s1d2', 12);
   final _s1D3 = new MyRow('s1d3', 13);
 
-  MutableSeries<MyRow, String> _series2;
+  MutableSeries<String> _series2;
   final _s2D1 = new MyRow('s2d1', 21);
   final _s2D2 = new MyRow('s2d2', 22);
   final _s2D3 = new MyRow('s2d3', 23);
 
   _setupSelection(List<MyRow> selected) {
-    _series1.data.forEach((MyRow row) {
-      when(_selectionModel.isDatumSelected(_series1, row))
-          .thenReturn(selected.contains(row));
-    });
-    _series2.data.forEach((MyRow row) {
-      when(_selectionModel.isDatumSelected(_series2, row))
-          .thenReturn(selected.contains(row));
-    });
+    for (var i = 0; i < _series1.data.length; i++) {
+      when(_selectionModel.isDatumSelected(_series1, i))
+          .thenReturn(selected.contains(_series1.data[i]));
+    }
+    for (var i = 0; i < _series2.data.length; i++) {
+      when(_selectionModel.isDatumSelected(_series2, i))
+          .thenReturn(selected.contains(_series2.data[i]));
+    }
   }
 
   setUp(() {
@@ -87,7 +87,7 @@ void main() {
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
         colorFn: (_, __) => MaterialPalette.blue.shadeDefault))
-      ..measureFn = (_, __) => 0.0;
+      ..measureFn = (_) => 0.0;
 
     _series2 = new MutableSeries(new Series<MyRow, String>(
         id: 's2',
@@ -95,7 +95,7 @@ void main() {
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
         colorFn: (_, __) => MaterialPalette.red.shadeDefault))
-      ..measureFn = (_, __) => 0.0;
+      ..measureFn = (_) => 0.0;
   });
 
   group('DomainHighligher', () {
@@ -113,20 +113,14 @@ void main() {
 
       // Verify
       final s1ColorFn = _series1.colorFn;
-      expect(s1ColorFn(_series1.data[0], 0),
-          equals(MaterialPalette.blue.shadeDefault));
-      expect(s1ColorFn(_series1.data[1], 1),
-          equals(MaterialPalette.blue.shadeDefault.darker));
-      expect(s1ColorFn(_series1.data[2], 2),
-          equals(MaterialPalette.blue.shadeDefault));
+      expect(s1ColorFn(0), equals(MaterialPalette.blue.shadeDefault));
+      expect(s1ColorFn(1), equals(MaterialPalette.blue.shadeDefault.darker));
+      expect(s1ColorFn(2), equals(MaterialPalette.blue.shadeDefault));
 
       final s2ColorFn = _series2.colorFn;
-      expect(s2ColorFn(_series2.data[0], 0),
-          equals(MaterialPalette.red.shadeDefault));
-      expect(s2ColorFn(_series2.data[1], 1),
-          equals(MaterialPalette.red.shadeDefault.darker));
-      expect(s2ColorFn(_series2.data[2], 2),
-          equals(MaterialPalette.red.shadeDefault));
+      expect(s2ColorFn(0), equals(MaterialPalette.red.shadeDefault));
+      expect(s2ColorFn(1), equals(MaterialPalette.red.shadeDefault.darker));
+      expect(s2ColorFn(2), equals(MaterialPalette.red.shadeDefault));
     });
 
     test('listens to other selection models', () {
@@ -157,20 +151,14 @@ void main() {
 
       // Verify
       final s1ColorFn = _series1.colorFn;
-      expect(s1ColorFn(_series1.data[0], 0),
-          equals(MaterialPalette.blue.shadeDefault));
-      expect(s1ColorFn(_series1.data[1], 1),
-          equals(MaterialPalette.blue.shadeDefault));
-      expect(s1ColorFn(_series1.data[2], 2),
-          equals(MaterialPalette.blue.shadeDefault));
+      expect(s1ColorFn(0), equals(MaterialPalette.blue.shadeDefault));
+      expect(s1ColorFn(1), equals(MaterialPalette.blue.shadeDefault));
+      expect(s1ColorFn(2), equals(MaterialPalette.blue.shadeDefault));
 
       final s2ColorFn = _series2.colorFn;
-      expect(s2ColorFn(_series2.data[0], 0),
-          equals(MaterialPalette.red.shadeDefault));
-      expect(s2ColorFn(_series2.data[1], 1),
-          equals(MaterialPalette.red.shadeDefault));
-      expect(s2ColorFn(_series2.data[2], 2),
-          equals(MaterialPalette.red.shadeDefault));
+      expect(s2ColorFn(0), equals(MaterialPalette.red.shadeDefault));
+      expect(s2ColorFn(1), equals(MaterialPalette.red.shadeDefault));
+      expect(s2ColorFn(2), equals(MaterialPalette.red.shadeDefault));
     });
 
     test('cleans up', () {

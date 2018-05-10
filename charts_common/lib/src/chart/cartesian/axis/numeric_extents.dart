@@ -16,7 +16,7 @@
 import 'scale.dart' show Extents;
 
 /// Represents the starting and ending extent of a dataset.
-class NumericExtents implements Extents {
+class NumericExtents implements Extents<num> {
   final num min;
   final num max;
 

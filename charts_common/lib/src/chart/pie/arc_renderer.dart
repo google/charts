@@ -35,16 +35,16 @@ const arcElementsKey =
 const arcSeriesTotalKey =
     const AttributeKey<List<_ArcRendererElement>>('ArcRenderer.seriesTotal');
 
-class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
-  final ArcRendererConfig<T, D> config;
+class ArcRenderer<D> extends BaseSeriesRenderer<D> {
+  final ArcRendererConfig<D> config;
 
-  BaseChart<T, D> _chart;
+  BaseChart<D> _chart;
 
   /// Store a map of series drawn on the chart, mapped by series name.
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
-  final _seriesArcMap = new LinkedHashMap<String, _AnimatedArcList<T, D>>();
+  final _seriesArcMap = new LinkedHashMap<String, _AnimatedArcList<D>>();
 
   // Store a list of arcs that exist in the series data.
   //
@@ -53,7 +53,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
   // data.
   final _currentKeys = <String>[];
 
-  ArcRenderer({String rendererId, ArcRendererConfig<T, D> config})
+  ArcRenderer({String rendererId, ArcRendererConfig<D> config})
       : config = config ?? new ArcRendererConfig(),
         super(
             rendererId: rendererId ?? 'arc',
@@ -61,24 +61,27 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
             symbolRenderer: config?.symbolRenderer);
 
   @override
-  void onAttach(BaseChart<T, D> chart) {
+  void onAttach(BaseChart<D> chart) {
     super.onAttach(chart);
     _chart = chart;
   }
 
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
+  @override
+  void configureSeries(List<MutableSeries<D>> seriesList) {
     assignMissingColors(seriesList, emptyCategoryUsesSinglePalette: false);
+  }
 
-    seriesList.forEach((MutableSeries<T, D> series) {
-      var elements = <_ArcRendererElement<T, D>>[];
+  @override
+  void preprocessSeries(List<MutableSeries<D>> seriesList) {
+    seriesList.forEach((MutableSeries<D> series) {
+      var elements = <_ArcRendererElement<D>>[];
 
       var measureFn = series.measureFn;
 
       var seriesTotal = 0.0;
 
       for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
-        T datum = series.data[arcIndex];
-        var measure = measureFn(datum, arcIndex);
+        var measure = measureFn(arcIndex);
         if (measure != null) {
           seriesTotal = seriesTotal += measure;
         }
@@ -101,7 +104,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
         var angle = 2 * PI * .999999;
         var endAngle = startAngle + angle;
 
-        var details = new _ArcRendererElement<T, D>();
+        var details = new _ArcRendererElement<D>();
         details.startAngle = startAngle;
         details.endAngle = endAngle;
         details.key = 0;
@@ -111,9 +114,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
       } else {
         // Otherwise, generate an arc element per datum.
         for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
-          T datum = series.data[arcIndex];
-
-          var measure = measureFn(datum, arcIndex);
+          var measure = measureFn(arcIndex);
           measures.add(measure);
           if (measure == null) {
             continue;
@@ -122,7 +123,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
           var angle = (measure / seriesTotal) * 2 * PI;
           var endAngle = startAngle + angle;
 
-          var details = new _ArcRendererElement<T, D>();
+          var details = new _ArcRendererElement<D>();
           details.startAngle = startAngle;
           details.endAngle = endAngle;
           details.key = arcIndex;
@@ -141,8 +142,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
     });
   }
 
-  void update(
-      List<ImmutableSeries<T, D>> seriesList, bool isAnimatingThisDraw) {
+  void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
     final bounds = _chart.drawAreaBounds;
@@ -162,7 +162,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
     final innerRadius = _calculateInnerRadius(radius);
 
-    seriesList.forEach((ImmutableSeries<T, D> series) {
+    seriesList.forEach((ImmutableSeries<D> series) {
       var domainFn = series.domainFn;
       var colorFn = series.colorFn;
       var arcListKey = series.id;
@@ -194,7 +194,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
         // If we don't have any existing arc element, create a new arc. Unlike
         // real arcs, we should not animate the no data state in from 0.
         if (animatingArc == null) {
-          animatingArc = new _AnimatedArc<T, D>(arcKey, null);
+          animatingArc = new _AnimatedArc<D>(arcKey, null);
           arcList.arcs.add(animatingArc);
         } else {
           animatingArc.datum = null;
@@ -205,7 +205,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
         // Get the arcElement we are going to setup.
         // Optimization to prevent allocation in non-animating case.
-        final arcElement = new _ArcRendererElement<T, D>()
+        final arcElement = new _ArcRendererElement<D>()
           ..color = config.noDataColor
           ..startAngle = details.startAngle
           ..endAngle = details.endAngle;
@@ -215,9 +215,9 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
         var previousEndAngle = config.startAngle;
 
         for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
-          T datum = series.data[arcIndex];
+          final datum = series.data[arcIndex];
           final details = elementsList[arcIndex];
-          D domainValue = domainFn(datum, arcIndex);
+          D domainValue = domainFn(arcIndex);
 
           var arcKey = domainValue.toString();
 
@@ -237,9 +237,9 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
           // angle. If there were no previous arcs, then animate everything in
           // from 0.
           if (animatingArc == null) {
-            animatingArc = new _AnimatedArc<T, D>(arcKey, datum)
-              ..setNewTarget(new _ArcRendererElement<T, D>()
-                ..color = colorFn(datum, arcIndex)
+            animatingArc = new _AnimatedArc<D>(arcKey, datum)
+              ..setNewTarget(new _ArcRendererElement<D>()
+                ..color = colorFn(arcIndex)
                 ..startAngle = previousEndAngle
                 ..endAngle = previousEndAngle);
 
@@ -255,8 +255,8 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
           // Get the arcElement we are going to setup.
           // Optimization to prevent allocation in non-animating case.
-          final arcElement = new _ArcRendererElement<T, D>()
-            ..color = colorFn(datum, arcIndex)
+          final arcElement = new _ArcRendererElement<D>()
+            ..color = colorFn(arcIndex)
             ..startAngle = details.startAngle
             ..endAngle = details.endAngle;
 
@@ -266,7 +266,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
     });
 
     // Animate out arcs that don't exist anymore.
-    _seriesArcMap.forEach((String key, _AnimatedArcList<T, D> arcList) {
+    _seriesArcMap.forEach((String key, _AnimatedArcList<D> arcList) {
       for (var arcIndex = 0; arcIndex < arcList.arcs.length; arcIndex++) {
         final arc = arcList.arcs[arcIndex];
         final arcStartAngle = arc.previousArcStartAngle;
@@ -299,8 +299,8 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
     if (animationPercent == 1.0) {
       final keysToRemove = <String>[];
 
-      _seriesArcMap.forEach((String key, _AnimatedArcList<T, D> arcList) {
-        arcList.arcs.removeWhere((_AnimatedArc<T, D> arc) => arc.animatingOut);
+      _seriesArcMap.forEach((String key, _AnimatedArcList<D> arcList) {
+        arcList.arcs.removeWhere((_AnimatedArc<D> arc) => arc.animatingOut);
 
         if (arcList.arcs.isEmpty) {
           keysToRemove.add(key);
@@ -310,11 +310,11 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
       keysToRemove.forEach((String key) => _seriesArcMap.remove(key));
     }
 
-    _seriesArcMap.forEach((String key, _AnimatedArcList<T, D> arcList) {
+    _seriesArcMap.forEach((String key, _AnimatedArcList<D> arcList) {
       final circleSectors = <CanvasPieSlice>[];
 
       arcList.arcs
-          .map<_ArcRendererElement<T, D>>((_AnimatedArc<T, D> animatingArc) =>
+          .map<_ArcRendererElement<D>>((_AnimatedArc<D> animatingArc) =>
               animatingArc.getCurrentArc(animationPercent))
           .forEach((_ArcRendererElement arc) {
         circleSectors.add(
@@ -328,9 +328,9 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
   }
 
   @override
-  List<DatumDetails<T, D>> getNearestDatumDetailPerSeries(
+  List<DatumDetails<D>> getNearestDatumDetailPerSeries(
       Point<double> chartPoint) {
-    final nearest = <DatumDetails<T, D>>[];
+    final nearest = <DatumDetails<D>>[];
 
     // Was it even in the drawArea?
     if (!componentBounds.containsPoint(chartPoint)) {
@@ -360,7 +360,7 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
 
       seriesList.forEach((MutableSeries series) {
         if (series.colorFn == null) {
-          series.colorFn = (_, index) => colorPalette[index];
+          series.colorFn = (index) => colorPalette[index];
         }
       });
     }
@@ -379,15 +379,15 @@ class ArcRenderer<T, D> extends BaseSeriesRenderer<T, D> {
   }
 }
 
-class _ArcRendererElement<T, D> {
+class _ArcRendererElement<D> {
   double startAngle;
   double endAngle;
   Color color;
   num key;
   num measure;
 
-  _ArcRendererElement<T, D> clone() {
-    return new _ArcRendererElement<T, D>()
+  _ArcRendererElement<D> clone() {
+    return new _ArcRendererElement<D>()
       ..startAngle = startAngle
       ..endAngle = endAngle
       ..color = new Color.fromOther(color: color);
@@ -406,8 +406,8 @@ class _ArcRendererElement<T, D> {
   }
 }
 
-class _AnimatedArcList<T, D> {
-  final arcs = <_AnimatedArc<T, D>>[];
+class _AnimatedArcList<D> {
+  final arcs = <_AnimatedArc<D>>[];
   Point center;
   double radius;
   double innerRadius;
@@ -415,13 +415,13 @@ class _AnimatedArcList<T, D> {
   double strokeWidthPx;
 }
 
-class _AnimatedArc<T, D> {
+class _AnimatedArc<D> {
   final String key;
-  T datum;
+  dynamic datum;
 
-  _ArcRendererElement<T, D> _previousArc;
-  _ArcRendererElement<T, D> _targetArc;
-  _ArcRendererElement<T, D> _currentArc;
+  _ArcRendererElement<D> _previousArc;
+  _ArcRendererElement<D> _targetArc;
+  _ArcRendererElement<D> _currentArc;
 
   // Flag indicating whether this arc is being animated out of the chart.
   bool animatingOut = false;
@@ -445,14 +445,14 @@ class _AnimatedArc<T, D> {
     animatingOut = true;
   }
 
-  void setNewTarget(_ArcRendererElement<T, D> newTarget) {
+  void setNewTarget(_ArcRendererElement<D> newTarget) {
     animatingOut = false;
     _currentArc ??= newTarget.clone();
     _previousArc = _currentArc.clone();
     _targetArc = newTarget;
   }
 
-  _ArcRendererElement<T, D> getCurrentArc(double animationPercent) {
+  _ArcRendererElement<D> getCurrentArc(double animationPercent) {
     if (animationPercent == 1.0 || _previousArc == null) {
       _currentArc = _targetArc;
       _previousArc = _targetArc;

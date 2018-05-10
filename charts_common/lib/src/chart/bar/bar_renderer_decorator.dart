@@ -20,10 +20,10 @@ import '../../common/graphics_factory.dart' show GraphicsFactory;
 import 'bar_renderer.dart' show ImmutableBarRendererElement;
 
 /// Decorates bars after the bars have already been painted.
-abstract class BarRendererDecorator<T, D> {
+abstract class BarRendererDecorator<D> {
   const BarRendererDecorator();
 
-  void decorate(Iterable<ImmutableBarRendererElement<T, D>> barElements,
+  void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
       ChartCanvas canvas, GraphicsFactory graphicsFactory,
       {@required Rectangle drawBounds,
       @required double animationPercent,

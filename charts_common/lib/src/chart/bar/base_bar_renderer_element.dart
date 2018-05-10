@@ -21,6 +21,8 @@ abstract class BaseBarRendererElement {
   int barStackIndex;
   Color color;
   num cumulativeTotal;
+  List<int> dashPattern;
+  Color fillColor;
   FillPatternType fillPattern;
   double measureAxisPosition;
   num measureOffset;
@@ -34,6 +36,10 @@ abstract class BaseBarRendererElement {
     color =
         other.color != null ? new Color.fromOther(color: other.color) : null;
     cumulativeTotal = other.cumulativeTotal;
+    dashPattern = other.dashPattern;
+    fillColor = other.fillColor != null
+        ? new Color.fromOther(color: other.fillColor)
+        : null;
     fillPattern = other.fillPattern;
     measureAxisPosition = other.measureAxisPosition;
     measureOffset = other.measureOffset;
@@ -44,13 +50,15 @@ abstract class BaseBarRendererElement {
   void updateAnimationPercent(BaseBarRendererElement previous,
       BaseBarRendererElement target, double animationPercent) {
     color = getAnimatedColor(previous.color, target.color, animationPercent);
+    fillColor = getAnimatedColor(
+        previous.fillColor, target.fillColor, animationPercent);
   }
 }
 
-abstract class BaseAnimatedBar<T, D, R extends BaseBarRendererElement> {
+abstract class BaseAnimatedBar<D, R extends BaseBarRendererElement> {
   final String key;
-  T datum;
-  ImmutableSeries<T, D> series;
+  dynamic datum;
+  ImmutableSeries<D> series;
   D domainValue;
 
   R _previousBar;

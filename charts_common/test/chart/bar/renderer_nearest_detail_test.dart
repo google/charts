@@ -45,7 +45,9 @@ class MockContext extends Mock implements ChartContext {}
 
 class MockChart extends Mock implements CartesianChart {}
 
-class MockAxis extends Mock implements Axis {}
+class MockOrdinalAxis extends Mock implements Axis<String> {}
+
+class MockNumericAxis extends Mock implements Axis<num> {}
 
 class MockCanvas extends Mock implements ChartCanvas {}
 
@@ -90,19 +92,19 @@ void main() {
       new MyRow('camp1', 10),
     ];
 
-    final series = new MutableSeries<MyRow, String>(new Series(
+    final series = new MutableSeries<String>(new Series(
       id: id,
       data: data,
-      domainFn: (MyRow row, _) => row.campaign,
-      measureFn: (MyRow row, _) => row.clickCount,
+      domainFn: (dynamic row, _) => row.campaign,
+      measureFn: (dynamic row, _) => row.clickCount,
       seriesCategory: seriesCategory,
     ));
 
-    series.measureOffsetFn = (_, __) => 0.0;
-    series.colorFn = (_, __) => new Color.fromHex(code: '#000000');
+    series.measureOffsetFn = (_) => 0.0;
+    series.colorFn = (_) => new Color.fromHex(code: '#000000');
 
     // Mock the Domain axis results.
-    final domainAxis = new MockAxis();
+    final domainAxis = new MockOrdinalAxis();
     when(domainAxis.rangeBand).thenReturn(100.0);
     final domainOffset = vertical ? 70.0 : 20.0;
     when(domainAxis.getLocation('camp0'))
@@ -124,7 +126,7 @@ void main() {
     series.setAttr(domainAxisKey, domainAxis);
 
     // Mock the Measure axis results.
-    final measureAxis = new MockAxis();
+    final measureAxis = new MockNumericAxis();
     if (vertical) {
       when(measureAxis.getLocation(0.0)).thenReturn(20.0 + 100.0);
       when(measureAxis.getLocation(10.0)).thenReturn(20.0 + 100.0 - 10.0);
@@ -151,6 +153,7 @@ void main() {
         _makeSeries(id: 'foo')..data.clear(),
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -178,6 +181,7 @@ void main() {
         _makeSeries(id: 'foo')..data.clear(),
         _makeSeries(id: 'bar')..data.clear(),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -198,6 +202,7 @@ void main() {
         _makeSeries(id: 'foo')..overlaySeries = true,
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -225,6 +230,7 @@ void main() {
         _makeSeries(id: 'foo')..overlaySeries = true,
         _makeSeries(id: 'bar')..overlaySeries = true,
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -247,6 +253,7 @@ void main() {
       final renderer =
           _makeBarRenderer(vertical: true, groupType: BarGroupingType.stacked);
       final seriesList = <MutableSeries>[_makeSeries(id: 'foo')];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -273,6 +280,7 @@ void main() {
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -307,6 +315,7 @@ void main() {
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -344,6 +353,7 @@ void main() {
         _makeSeries(id: 'foo1', seriesCategory: 'c1'),
         _makeSeries(id: 'bar1', seriesCategory: 'c1'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -390,6 +400,7 @@ void main() {
       final renderer =
           _makeBarRenderer(vertical: true, groupType: BarGroupingType.stacked);
       final seriesList = <MutableSeries>[_makeSeries(id: 'foo')];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -416,6 +427,7 @@ void main() {
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -449,6 +461,7 @@ void main() {
       final seriesList = <MutableSeries>[
         _makeSeries(id: 'foo')..data.add(new MyRow('outsideViewport', 20))
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -474,6 +487,7 @@ void main() {
       final seriesList = <MutableSeries>[
         _makeSeries(id: 'foo', vertical: false)
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -500,6 +514,7 @@ void main() {
         _makeSeries(id: 'foo', vertical: false),
         _makeSeries(id: 'bar', vertical: false),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -534,6 +549,7 @@ void main() {
         _makeSeries(id: 'foo', vertical: false),
         _makeSeries(id: 'bar', vertical: false),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -570,6 +586,7 @@ void main() {
         _makeSeries(id: 'foo1', seriesCategory: 'c1', vertical: false),
         _makeSeries(id: 'bar1', seriesCategory: 'c1', vertical: false),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -617,6 +634,7 @@ void main() {
       final seriesList = <MutableSeries>[
         _makeSeries(id: 'foo', vertical: false)
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -643,6 +661,7 @@ void main() {
         _makeSeries(id: 'foo', vertical: false),
         _makeSeries(id: 'bar', vertical: false),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -679,6 +698,7 @@ void main() {
       final renderer = _makeBarTargetRenderer(
           vertical: true, groupType: BarGroupingType.stacked);
       final seriesList = <MutableSeries>[_makeSeries(id: 'foo')];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -705,6 +725,7 @@ void main() {
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -739,6 +760,7 @@ void main() {
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -776,6 +798,7 @@ void main() {
         _makeSeries(id: 'foo1', seriesCategory: 'c1'),
         _makeSeries(id: 'bar1', seriesCategory: 'c1'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -825,6 +848,7 @@ void main() {
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -858,6 +882,7 @@ void main() {
       final seriesList = <MutableSeries>[
         _makeSeries(id: 'foo')..data.add(new MyRow('outsideViewport', 20))
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -883,6 +908,7 @@ void main() {
       final seriesList = <MutableSeries>[
         _makeSeries(id: 'foo', vertical: false)
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -909,6 +935,7 @@ void main() {
         _makeSeries(id: 'foo', vertical: false),
         _makeSeries(id: 'bar', vertical: false),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -943,6 +970,7 @@ void main() {
         _makeSeries(id: 'foo', vertical: false),
         _makeSeries(id: 'bar', vertical: false),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -979,6 +1007,7 @@ void main() {
         _makeSeries(id: 'foo1', seriesCategory: 'c1', vertical: false),
         _makeSeries(id: 'bar1', seriesCategory: 'c1', vertical: false),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -1027,6 +1056,7 @@ void main() {
         _makeSeries(id: 'foo', vertical: false),
         _makeSeries(id: 'bar', vertical: false),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);

@@ -25,23 +25,24 @@ import 'a11y_explore_behavior.dart'
 import 'a11y_node.dart' show A11yNode, OnFocus;
 
 /// Returns a string for a11y vocalization from a list of series datum.
-typedef String VocalizationCallback<T, D>(List<SeriesDatum<T, D>> seriesDatums);
+typedef String VocalizationCallback<D>(List<SeriesDatum<D>> seriesDatums);
 
 /// A simple vocalization that returns the domain value to string.
-String domainVocalization<T, D>(List<SeriesDatum<T, D>> seriesDatums) {
-  final T datum = seriesDatums.first.datum;
+String domainVocalization<D>(List<SeriesDatum<D>> seriesDatums) {
+  final datum = seriesDatums.first.datum;
+  final datumIndex = seriesDatums.first.index;
   final domainFn = seriesDatums.first.series.domainFn;
-  final domain = domainFn(datum, null);
+  final domain = domainFn(datumIndex);
 
   return domain.toString();
 }
 
 /// Behavior that generates semantic nodes for each domain.
-class DomainA11yExploreBehavior<T, D> extends A11yExploreBehavior<T, D> {
+class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
   final VocalizationCallback _vocalizationCallback;
-  LifecycleListener<T, D> _lifecycleListener;
+  LifecycleListener<D> _lifecycleListener;
   CartesianChart _chart;
-  List<MutableSeries<T, D>> _seriesList;
+  List<MutableSeries<D>> _seriesList;
 
   DomainA11yExploreBehavior(
       {VocalizationCallback vocalizationCallback,
@@ -56,7 +57,7 @@ class DomainA11yExploreBehavior<T, D> extends A11yExploreBehavior<T, D> {
             exploreModeEnabledAnnouncement: exploreModeEnabledAnnouncement,
             exploreModeDisabledAnnouncement: exploreModeDisabledAnnouncement) {
     _lifecycleListener =
-        new LifecycleListener<T, D>(onPostprocess: _updateSeriesList);
+        new LifecycleListener<D>(onPostprocess: _updateSeriesList);
   }
 
   @override
@@ -66,19 +67,19 @@ class DomainA11yExploreBehavior<T, D> extends A11yExploreBehavior<T, D> {
     // Update the selection model when the a11y node has focus.
     final selectionModel = _chart.getSelectionModel(SelectionModelType.info);
 
-    final domainSeriesDatum = <D, List<SeriesDatum<T, D>>>{};
+    final domainSeriesDatum = <D, List<SeriesDatum<D>>>{};
 
-    for (MutableSeries<T, D> series in _seriesList) {
+    for (MutableSeries<D> series in _seriesList) {
       for (var index = 0; index < series.data.length; index++) {
-        T datum = series.data[index];
-        D domain = series.domainFn(datum, index);
+        final datum = series.data[index];
+        D domain = series.domainFn(index);
 
-        domainSeriesDatum[domain] ??= new List<SeriesDatum<T, D>>();
+        domainSeriesDatum[domain] ??= new List<SeriesDatum<D>>();
         domainSeriesDatum[domain].add(new SeriesDatum(series, datum));
       }
     }
 
-    domainSeriesDatum.forEach((D domain, List<SeriesDatum<T, D>> seriesDatums) {
+    domainSeriesDatum.forEach((D domain, List<SeriesDatum<D>> seriesDatums) {
       final a11yDescription = _vocalizationCallback(seriesDatums);
 
       final firstSeries = seriesDatums.first.series;
@@ -110,12 +111,12 @@ class DomainA11yExploreBehavior<T, D> extends A11yExploreBehavior<T, D> {
     return nodes;
   }
 
-  void _updateSeriesList(List<MutableSeries<T, D>> seriesList) {
+  void _updateSeriesList(List<MutableSeries<D>> seriesList) {
     _seriesList = seriesList;
   }
 
   @override
-  void attachTo(BaseChart<T, D> chart) {
+  void attachTo(BaseChart<D> chart) {
     // Domain selection behavior only works for cartesian charts.
     assert(chart is CartesianChart);
     _chart = chart as CartesianChart;

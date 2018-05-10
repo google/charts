@@ -19,7 +19,7 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart' show AnimationController;
 
 import 'package:charts_common/common.dart' as common
-    show BaseChart, CartesianChart, ChartBehavior, PanBehavior;
+    show BaseChart, ChartBehavior, PanBehavior;
 import 'package:meta/meta.dart' show immutable;
 
 import '../../base_chart_state.dart' show BaseChartState;
@@ -35,8 +35,8 @@ class PanBehavior extends ChartBehavior<common.PanBehavior> {
   Set<GestureType> get desiredGestures => _desiredGestures;
 
   @override
-  common.PanBehavior<T, D> createCommonBehavior<T, D>() {
-    return new FlutterPanBehavior<T, D>();
+  common.PanBehavior<D> createCommonBehavior<D>() {
+    return new FlutterPanBehavior<D>();
   }
 
   @override
@@ -53,7 +53,7 @@ class PanBehavior extends ChartBehavior<common.PanBehavior> {
 }
 
 /// Adds fling gesture support to [common.PanBehavior].
-class FlutterPanBehavior<T, D> extends common.PanBehavior<T, D>
+class FlutterPanBehavior<D> extends common.PanBehavior<D>
     implements ChartStateBehavior {
   BaseChartState _chartState;
 
@@ -110,12 +110,13 @@ class FlutterPanBehavior<T, D> extends common.PanBehavior<T, D>
 
       _startFling(pixelsPerSec);
     }
-    return true;
+
+    return super.onDragEnd(localPosition, scale, pixelsPerSec);
   }
 
   /// Starts a 'fling' in the direction and speed given by [pixelsPerSec].
   void _startFling(double pixelsPerSec) {
-    final domainAxis = (chart as common.CartesianChart).domainAxis;
+    final domainAxis = chart.domainAxis;
 
     _flingAnimationInitialTranslatePx = domainAxis.viewportTranslatePx;
     _flingAnimationTargetTranslatePx = _flingAnimationInitialTranslatePx +
@@ -147,7 +148,7 @@ class FlutterPanBehavior<T, D> extends common.PanBehavior<T, D>
     final translation = lerpDouble(_flingAnimationInitialTranslatePx,
         _flingAnimationTargetTranslatePx, deceleratedPercent);
 
-    final domainAxis = (chart as common.CartesianChart).domainAxis;
+    final domainAxis = chart.domainAxis;
 
     domainAxis.setViewportSettings(
         domainAxis.viewportScalingFactor, translation,

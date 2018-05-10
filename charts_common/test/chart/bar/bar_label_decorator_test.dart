@@ -80,21 +80,25 @@ class FakeTextElement implements TextElement {
 
 class MockLinePaint extends Mock implements LineStyle {}
 
-class FakeBarRendererElement
-    implements ImmutableBarRendererElement<dynamic, String> {
-  final _series = new MockImmutableSeries<dynamic, String>();
-  final AccessorFn<dynamic, String> labelAccessor;
+class FakeBarRendererElement implements ImmutableBarRendererElement<String> {
+  final _series = new MockImmutableSeries<String>();
+  final AccessorFn<String> labelAccessor;
   final String datum;
   final Rectangle<int> bounds;
+  final List<String> data;
+  int index;
 
-  FakeBarRendererElement(this.datum, this.bounds, this.labelAccessor) {
+  FakeBarRendererElement(
+      this.datum, this.bounds, this.labelAccessor, this.data) {
+    index = data.indexOf(datum);
     when(_series.labelAccessorFn).thenReturn(labelAccessor);
+    when(_series.data).thenReturn(data);
   }
 
-  ImmutableSeries<dynamic, String> get series => _series;
+  ImmutableSeries<String> get series => _series;
 }
 
-class MockImmutableSeries<T, D> extends Mock implements ImmutableSeries<T, D> {}
+class MockImmutableSeries<D> extends Mock implements ImmutableSeries<D> {}
 
 void main() {
   ChartCanvas canvas;
@@ -109,14 +113,15 @@ void main() {
 
   group('horizontal bar chart', () {
     test('Paint labels with default settings', () {
+      final data = ['A', 'B'];
       final barElements = [
         // 'LabelA' and 'LabelB' both have lengths of 6.
         // 'LabelB' would not fit inside the bar in auto setting because it has
         // width of 5.
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 20, 50, 20), (_, __) => 'LabelA'),
+            'A', new Rectangle(0, 20, 50, 20), (_) => 'LabelA', data),
         new FakeBarRendererElement(
-            'B', new Rectangle(0, 70, 5, 20), (_, __) => 'LabelB')
+            'B', new Rectangle(0, 70, 5, 20), (_) => 'LabelB', data)
       ];
       final decorator = new BarLabelDecorator();
 
@@ -125,8 +130,9 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       // Draw text is called twice (once for each bar) and all 3 parameters were
       // captured. Total parameters captured expected to be 6.
       expect(captured, hasLength(6));
@@ -151,7 +157,7 @@ void main() {
         // 'LabelABC' would not fit inside the bar in auto setting because it
         // has a width of 8.
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 6, 20), (_, __) => 'LabelABC'),
+            'A', new Rectangle(0, 0, 6, 20), (_) => 'LabelABC', ['A']),
       ];
       // Draw bounds with width of 10 means that space inside the bar is larger.
       final smallDrawBounds = new Rectangle(0, 0, 10, 20);
@@ -164,8 +170,9 @@ void main() {
               animationPercent: 1.0,
               renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(6));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -178,7 +185,7 @@ void main() {
         // 'LabelABC' would not fit inside the bar in auto setting because it
         // has a width of 8.
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 6, 20), (_, __) => 'LabelABC'),
+            'A', new Rectangle(0, 0, 6, 20), (_) => 'LabelABC', ['A']),
       ];
 
       new BarLabelDecorator(
@@ -190,8 +197,9 @@ void main() {
               animationPercent: 1.0,
               renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(6));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -202,7 +210,7 @@ void main() {
     test('LabelPosition.outside always paints outside the bar', () {
       final barElements = [
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 10, 20), (_, __) => 'Label'),
+            'A', new Rectangle(0, 0, 10, 20), (_) => 'Label', ['A']),
       ];
 
       new BarLabelDecorator(
@@ -214,8 +222,9 @@ void main() {
               animationPercent: 1.0,
               renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(190));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -224,14 +233,15 @@ void main() {
     });
 
     test('Inside and outside label styles are applied', () {
+      final data = ['A', 'B'];
       final barElements = [
         // 'LabelA' and 'LabelB' both have lengths of 6.
         // 'LabelB' would not fit inside the bar in auto setting because it has
         // width of 5.
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 20, 50, 20), (_, __) => 'LabelA'),
+            'A', new Rectangle(0, 20, 50, 20), (_) => 'LabelA', data),
         new FakeBarRendererElement(
-            'B', new Rectangle(0, 70, 5, 20), (_, __) => 'LabelB')
+            'B', new Rectangle(0, 70, 5, 20), (_) => 'LabelB', data)
       ];
       final insideColor = new Color(r: 0, g: 0, b: 0);
       final outsideColor = new Color(r: 255, g: 255, b: 255);
@@ -247,8 +257,9 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       // Draw text is called twice (once for each bar) and all 3 parameters were
       // captured. Total parameters captured expected to be 6.
       expect(captured, hasLength(6));
@@ -271,7 +282,7 @@ void main() {
     test('TextAnchor.end starts on the right most of bar', () {
       final barElements = [
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 10, 20), (_, __) => 'LabelA')
+            'A', new Rectangle(0, 0, 10, 20), (_) => 'LabelA', ['A'])
       ];
 
       new BarLabelDecorator(
@@ -284,8 +295,9 @@ void main() {
               animationPercent: 1.0,
               renderingVertically: false);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(10));
       expect(captured[0].textDirection, equals(TextDirection.rtl));
@@ -296,7 +308,7 @@ void main() {
     test('RTL TextAnchor.start starts on the right', () {
       final barElements = [
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 10, 20), (_, __) => 'LabelA')
+            'A', new Rectangle(0, 0, 10, 20), (_) => 'LabelA', ['A'])
       ];
 
       new BarLabelDecorator(
@@ -310,8 +322,9 @@ void main() {
               renderingVertically: false,
               rtl: true);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(10));
       expect(captured[0].textDirection, equals(TextDirection.rtl));
@@ -322,7 +335,7 @@ void main() {
     test('RTL TextAnchor.end starts on the left', () {
       final barElements = [
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 10, 20), (_, __) => 'LabelA')
+            'A', new Rectangle(0, 0, 10, 20), (_) => 'LabelA', ['A'])
       ];
 
       new BarLabelDecorator(
@@ -336,8 +349,9 @@ void main() {
               renderingVertically: false,
               rtl: true);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(10));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -349,7 +363,8 @@ void main() {
   group('Null and empty label scenarios', () {
     test('Skip label if label accessor does not exist', () {
       final barElements = [
-        new FakeBarRendererElement('A', new Rectangle(0, 0, 10, 20), null)
+        new FakeBarRendererElement(
+            'A', new Rectangle(0, 0, 10, 20), null, ['A'])
       ];
 
       new BarLabelDecorator().decorate(barElements, canvas, graphicsFactory,
@@ -357,14 +372,16 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      verifyNever(canvas.drawText(any, any, any));
+      verifyNever(canvas.drawText(typed(any), typed(any), typed(any)));
     });
 
     test('Skip label if label is null or empty', () {
+      final data = ['A', 'B'];
       final barElements = [
-        new FakeBarRendererElement('A', new Rectangle(0, 0, 10, 20), null),
         new FakeBarRendererElement(
-            'B', new Rectangle(0, 50, 10, 20), (_, __) => ''),
+            'A', new Rectangle(0, 0, 10, 20), null, data),
+        new FakeBarRendererElement(
+            'B', new Rectangle(0, 50, 10, 20), (_) => '', data),
       ];
 
       new BarLabelDecorator().decorate(barElements, canvas, graphicsFactory,
@@ -372,13 +389,13 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      verifyNever(canvas.drawText(any, any, any));
+      verifyNever(canvas.drawText(typed(any), typed(any), typed(any)));
     });
 
     test('Skip label if no width available', () {
       final barElements = [
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 200, 20), (_, __) => 'a')
+            'A', new Rectangle(0, 0, 200, 20), (_) => 'a', ['A'])
       ];
 
       new BarLabelDecorator(
@@ -389,7 +406,7 @@ void main() {
           animationPercent: 1.0,
           renderingVertically: false);
 
-      verifyNever(canvas.drawText(any, any, any));
+      verifyNever(canvas.drawText(typed(any), typed(any), typed(any)));
     });
   });
 }

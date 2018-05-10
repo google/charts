@@ -34,16 +34,12 @@ class TimeSeriesRangeAnnotationChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart<TimeSeriesSales>(seriesList,
-        animate: animate,
-        behaviors: [
-          new charts.RangeAnnotation([
-            new charts.RangeAnnotationSegment(
-                new DateTime(2017, 10, 4),
-                new DateTime(2017, 10, 15),
-                charts.RangeAnnotationAxisType.domain),
-          ]),
-        ]);
+    return new charts.TimeSeriesChart(seriesList, animate: animate, behaviors: [
+      new charts.RangeAnnotation([
+        new charts.RangeAnnotationSegment(new DateTime(2017, 10, 4),
+            new DateTime(2017, 10, 15), charts.RangeAnnotationAxisType.domain),
+      ]),
+    ]);
   }
 
   /// Create one series with sample hard coded data.

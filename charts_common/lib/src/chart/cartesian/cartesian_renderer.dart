@@ -23,13 +23,13 @@ import '../common/processed_series.dart' show MutableSeries;
 import '../../data/series.dart' show AccessorFn;
 import '../../common/symbol_renderer.dart' show SymbolRenderer;
 
-abstract class CartesianRenderer<T, D> extends SeriesRenderer<T, D> {
-  void configureDomainAxes(List<MutableSeries<T, D>> seriesList);
-  void configureMeasureAxes(List<MutableSeries<T, D>> seriesList);
+abstract class CartesianRenderer<D> extends SeriesRenderer<D> {
+  void configureDomainAxes(List<MutableSeries<D>> seriesList);
+  void configureMeasureAxes(List<MutableSeries<D>> seriesList);
 }
 
-abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
-    implements CartesianRenderer<T, D> {
+abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
+    implements CartesianRenderer<D> {
   bool _renderingVertically = true;
 
   BaseCartesianRenderer(
@@ -42,7 +42,7 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
             symbolRenderer: symbolRenderer);
 
   @override
-  void onAttach(BaseChart<T, D> chart) {
+  void onAttach(BaseChart<D> chart) {
     super.onAttach(chart);
     _renderingVertically = (chart as CartesianChart).vertical;
   }
@@ -50,10 +50,12 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
   bool get renderingVertically => _renderingVertically;
 
   @override
-  void configureDomainAxes(List<MutableSeries<T, D>> seriesList) {
-    seriesList.forEach((MutableSeries<T, D> series) {
-      var domainAxis = series.getAttr(domainAxisKey);
-      var domainFn = series.domainFn;
+  void configureDomainAxes(List<MutableSeries<D>> seriesList) {
+    seriesList.forEach((MutableSeries<D> series) {
+      final domainAxis = series.getAttr(domainAxisKey);
+      final domainFn = series.domainFn;
+      final domainLowerBoundFn = series.domainLowerBoundFn;
+      final domainUpperBoundFn = series.domainUpperBoundFn;
 
       if (domainAxis == null) {
         return;
@@ -61,29 +63,39 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
 
       if (renderingVertically) {
         for (int i = 0; i < series.data.length; i++) {
-          domainAxis.addDomainValue(domainFn(series.data[i], i));
+          domainAxis.addDomainValue(domainFn(i));
+
+          if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
+            domainAxis.addDomainValue(domainLowerBoundFn(i));
+            domainAxis.addDomainValue(domainUpperBoundFn(i));
+          }
         }
       } else {
         // When rendering horizontally, domains are displayed from top to bottom
         // in order to match visual display in legend.
         for (int i = series.data.length - 1; i >= 0; i--) {
-          domainAxis.addDomainValue(domainFn(series.data[i], i));
+          domainAxis.addDomainValue(domainFn(i));
+
+          if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
+            domainAxis.addDomainValue(domainLowerBoundFn(i));
+            domainAxis.addDomainValue(domainUpperBoundFn(i));
+          }
         }
       }
     });
   }
 
   @override
-  void configureMeasureAxes(List<MutableSeries<T, D>> seriesList) {
-    seriesList.forEach((MutableSeries<T, D> series) {
-      var domainAxis = series.getAttr(domainAxisKey);
-      var domainFn = series.domainFn;
+  void configureMeasureAxes(List<MutableSeries<D>> seriesList) {
+    seriesList.forEach((MutableSeries<D> series) {
+      final domainAxis = series.getAttr(domainAxisKey);
+      final domainFn = series.domainFn;
 
       if (domainAxis == null) {
         return;
       }
 
-      var measureAxis = series.getAttr(measureAxisKey);
+      final measureAxis = series.getAttr(measureAxisKey);
       if (measureAxis == null) {
         return;
       }
@@ -98,23 +110,33 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
     });
   }
 
-  void addMeasureValuesFor(MutableSeries<T, D> series, Axis measureAxis,
-      int startIndex, int endIndex) {
+  void addMeasureValuesFor(
+      MutableSeries<D> series, Axis measureAxis, int startIndex, int endIndex) {
+    final measureFn = series.measureFn;
+    final measureOffsetFn = series.measureOffsetFn;
+    final measureLowerBoundFn = series.measureLowerBoundFn;
+    final measureUpperBoundFn = series.measureUpperBoundFn;
+
     for (int i = startIndex; i <= endIndex; i++) {
-      final measure = series.measureFn(series.data[i], i);
+      final measure = measureFn(i);
 
       if (measure != null) {
-        measureAxis.addDomainValue(series.measureFn(series.data[i], i) +
-            series.measureOffsetFn(series.data[i], i));
+        final measureOffset = measureOffsetFn(i);
+        measureAxis.addDomainValue(measure + measureOffset);
+
+        if (measureLowerBoundFn != null && measureUpperBoundFn != null) {
+          measureAxis.addDomainValue(measureLowerBoundFn(i) + measureOffset);
+          measureAxis.addDomainValue(measureUpperBoundFn(i) + measureOffset);
+        }
       }
     }
   }
 
   @visibleForTesting
   int findNearestViewportStart(
-      Axis domainAxis, AccessorFn<T, D> domainFn, List<T> data) {
+      Axis domainAxis, AccessorFn<D> domainFn, List data) {
     // Quick optimization for full viewport (likely).
-    if (domainAxis.compareDomainValueToViewport(domainFn(data[0], 0)) == 0) {
+    if (domainAxis.compareDomainValueToViewport(domainFn(0)) == 0) {
       return 0;
     }
 
@@ -126,10 +148,10 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
       int searchIndex = ((end - start) / 2).floor() + start;
       int prevIndex = searchIndex - 1;
 
-      var comparisonValue = domainAxis.compareDomainValueToViewport(
-          domainFn(data[searchIndex], searchIndex));
-      var prevComparisonValue = domainAxis
-          .compareDomainValueToViewport(domainFn(data[prevIndex], prevIndex));
+      var comparisonValue =
+          domainAxis.compareDomainValueToViewport(domainFn(searchIndex));
+      var prevComparisonValue =
+          domainAxis.compareDomainValueToViewport(domainFn(prevIndex));
 
       // Found start?
       if (prevComparisonValue == -1 && comparisonValue == 0) {
@@ -157,20 +179,19 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
     // nearest viewport start.
     // If domain is after the domain viewport, return the last index as the
     // nearest viewport start.
-    var lastComparison = domainAxis.compareDomainValueToViewport(
-        domainFn(data[data.length - 1], data.length - 1));
+    var lastComparison =
+        domainAxis.compareDomainValueToViewport(domainFn(data.length - 1));
     return lastComparison == -1 ? (data.length - 1) : 0;
   }
 
   @visibleForTesting
   int findNearestViewportEnd(
-      Axis domainAxis, AccessorFn<T, D> domainFn, List<T> data) {
+      Axis domainAxis, AccessorFn<D> domainFn, List data) {
     var start = 1;
     var end = data.length - 1;
 
     // Quick optimization for full viewport (likely).
-    if (domainAxis.compareDomainValueToViewport(domainFn(data[end], end)) ==
-        0) {
+    if (domainAxis.compareDomainValueToViewport(domainFn(end)) == 0) {
       return end;
     }
     end = end - 1; // Last index was already checked for above.
@@ -180,10 +201,10 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
       int searchIndex = ((end - start) / 2).floor() + start;
       int prevIndex = searchIndex - 1;
 
-      int comparisonValue = domainAxis.compareDomainValueToViewport(
-          domainFn(data[searchIndex], searchIndex));
-      int prevComparisonValue = domainAxis
-          .compareDomainValueToViewport(domainFn(data[prevIndex], prevIndex));
+      int comparisonValue =
+          domainAxis.compareDomainValueToViewport(domainFn(searchIndex));
+      int prevComparisonValue =
+          domainAxis.compareDomainValueToViewport(domainFn(prevIndex));
 
       // Found end?
       if (prevComparisonValue == 0 && comparisonValue == 1) {
@@ -211,8 +232,8 @@ abstract class BaseCartesianRenderer<T, D> extends BaseSeriesRenderer<T, D>
     // nearest viewport end.
     // If domain is after the domain viewport, return the last index as the
     // nearest viewport end.
-    var lastComparison = domainAxis.compareDomainValueToViewport(
-        domainFn(data[data.length - 1], data.length - 1));
+    var lastComparison =
+        domainAxis.compareDomainValueToViewport(domainFn(data.length - 1));
     return lastComparison == -1 ? (data.length - 1) : 0;
   }
 }

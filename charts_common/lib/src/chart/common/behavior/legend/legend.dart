@@ -15,6 +15,8 @@
 
 import 'dart:math' show Rectangle;
 
+import 'package:meta/meta.dart' show protected;
+
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../layout/layout_view.dart'
     show LayoutPosition, LayoutView, LayoutViewConfig, ViewMeasuredSizes;
@@ -34,21 +36,89 @@ import 'legend_entry.dart';
 import 'legend_entry_generator.dart';
 import 'per_series_legend_entry_generator.dart';
 
-// TODO: Allow tapping on a series to remove series from draw area.
 // TODO: Allows for hovering over a series in legend to highlight
 // corresponding series in draw area.
 
 /// Series legend behavior for charts.
 ///
 /// By default this behavior creates a legend entry per series.
-class SeriesLegend<T, D> extends Legend<T, D> {
+class SeriesLegend<D> extends Legend<D> {
+  /// List of currently hidden series, by ID.
+  final _hiddenSeriesList = new Set<String>();
+
+  /// List of series IDs that should be hidden by default.
+  List<String> _defaultHiddenSeries;
+
   SeriesLegend(
       {SelectionModelType selectionModelType,
-      LegendEntryGenerator<T, D> legendEntryGenerator})
+      LegendEntryGenerator<D> legendEntryGenerator})
       : super(
             selectionModelType: selectionModelType ?? SelectionModelType.info,
             legendEntryGenerator:
                 legendEntryGenerator ?? new PerSeriesLegendEntryGenerator());
+
+  /// Sets a list of series IDs that should be hidden by default on first chart
+  /// draw.
+  ///
+  /// This will also reset the current list of hidden series, filling it in with
+  /// the new default list.
+  set defaultHiddenSeries(List<String> defaultHiddenSeries) {
+    _defaultHiddenSeries = defaultHiddenSeries;
+
+    _hiddenSeriesList.clear();
+
+    if (_defaultHiddenSeries != null) {
+      _defaultHiddenSeries.forEach((String seriesId) {
+        hideSeries(seriesId);
+      });
+    }
+  }
+
+  /// Gets a list of series IDs that should be hidden by default on first chart
+  /// draw.
+  List<String> get defaultHiddenSeries => _defaultHiddenSeries;
+
+  /// Remove series IDs from the currently hidden list if those series have been
+  /// removed from the chart data. The goal is to allow any metric that is
+  /// removed from a chart, and later re-added to it, to be visible to the user.
+  @override
+  void onData(List<MutableSeries<D>> seriesList) {
+    // If a series was removed from the chart, remove it from our current list
+    // of hidden series.
+    final seriesIds = seriesList.map((MutableSeries<D> series) => series.id);
+
+    _hiddenSeriesList.removeWhere((String id) => !seriesIds.contains(id));
+  }
+
+  @override
+  void preProcessSeriesList(List<MutableSeries<D>> seriesList) {
+    seriesList.removeWhere((MutableSeries<D> series) {
+      return _hiddenSeriesList.contains(series.id);
+    });
+  }
+
+  /// Hides the data for a series on the chart by [seriesId].
+  ///
+  /// The entry in the legend for this series will be grayed out to indicate
+  /// that it is hidden.
+  @protected
+  void hideSeries(String seriesId) {
+    _hiddenSeriesList.add(seriesId);
+  }
+
+  /// Shows the data for a series on the chart by [seriesId].
+  ///
+  /// The entry in the legend for this series will be returned to its normal
+  /// color if it was previously hidden.
+  @protected
+  void showSeries(String seriesId) {
+    _hiddenSeriesList.removeWhere((String id) => id == seriesId);
+  }
+
+  /// Returns whether or not a given series [seriesId] is currently hidden.
+  bool isSeriesHidden(String seriesId) {
+    return _hiddenSeriesList.contains(seriesId);
+  }
 }
 
 /// Legend behavior for charts.
@@ -57,15 +127,15 @@ class SeriesLegend<T, D> extends Legend<T, D> {
 /// visual content of legends is done on the native platforms. This allows users
 /// to specify customized content for legends using the native platform (ex. for
 /// Flutter, using widgets).
-abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
+abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   final SelectionModelType selectionModelType;
-  final legendState = new LegendState();
-  final LegendEntryGenerator<T, D> legendEntryGenerator;
+  final legendState = new LegendState<D>();
+  final LegendEntryGenerator<D> legendEntryGenerator;
 
   String _title;
 
   BaseChart _chart;
-  LifecycleListener<T, D> _lifecycleListener;
+  LifecycleListener<D> _lifecycleListener;
 
   Rectangle<int> _componentBounds;
   Rectangle<int> _drawAreaBounds;
@@ -78,8 +148,13 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
   LegendCellPadding _cellPadding;
   LegendCellPadding _legendPadding;
 
+  LegendTapHandling _legendTapHandling = LegendTapHandling.hide;
+
+  List<MutableSeries<D>> _currentSeriesList;
+
   Legend({this.selectionModelType, this.legendEntryGenerator}) {
-    _lifecycleListener = new LifecycleListener(onPostprocess: _postProcess);
+    _lifecycleListener = new LifecycleListener(
+        onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
   }
 
   String get title => _title;
@@ -119,10 +194,38 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
     _legendPadding = legendPadding;
   }
 
+  LegendTapHandling get legendTapHandling => _legendTapHandling;
+
+  /// Configures the behavior of the legend when the user taps/clicks on an
+  /// entry. Defaults to no behavior.
+  ///
+  /// Tapping on a legend entry will update the data visible on the chart. For
+  /// example, when [LegendTapHandling.hide] is configured, the series or datum
+  /// associated with that entry will be removed from the chart. Tapping on that
+  /// entry a second time will make the data visible again.
+  set legendTapHandling(LegendTapHandling legendTapHandling) {
+    _legendTapHandling = legendTapHandling;
+  }
+
+  /// Resets any hidden series data when new data is drawn on the chart.
+  @protected
+  void onData(List<MutableSeries<D>> seriesList) {}
+
+  /// Store off a copy of the series list for use when we render the legend.
+  void _preProcess(List<MutableSeries<D>> seriesList) {
+    _currentSeriesList = new List.from(seriesList);
+    preProcessSeriesList(seriesList);
+  }
+
+  /// Overridable method that may be used by concrete [Legend] instances to
+  /// manipulate the series list.
+  @protected
+  void preProcessSeriesList(List<MutableSeries<D>> seriesList) {}
+
   /// Build LegendEntries from list of series.
-  void _postProcess(List<MutableSeries<T, D>> seriesList) {
+  void _postProcess(List<MutableSeries<D>> seriesList) {
     legendState._legendEntries =
-        legendEntryGenerator.getLegendEntries(seriesList);
+        legendEntryGenerator.getLegendEntries(_currentSeriesList);
     updateLegend();
   }
 
@@ -140,7 +243,7 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
   void updateLegend() {}
 
   @override
-  void attachTo(BaseChart<T, D> chart) {
+  void attachTo(BaseChart<D> chart) {
     _chart = chart;
     chart.addLifecycleListener(_lifecycleListener);
     chart
@@ -159,6 +262,9 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
 
     chart.removeView(this);
   }
+
+  @protected
+  BaseChart get chart => _chart;
 
   @override
   String get role => 'legend-${selectionModelType.toString()}';
@@ -228,11 +334,11 @@ abstract class Legend<T, D> implements ChartBehavior<T, D>, LayoutView {
 }
 
 /// Stores legend data used by native legend content builder.
-class LegendState<T, D> {
-  List<LegendEntry<T, D>> _legendEntries;
+class LegendState<D> {
+  List<LegendEntry<D>> _legendEntries;
   SelectionModel _selectionModel;
 
-  List<LegendEntry<T, D>> get legendEntries => _legendEntries;
+  List<LegendEntry<D>> get legendEntries => _legendEntries;
   SelectionModel get selectionModel => _selectionModel;
 }
 
@@ -327,4 +433,13 @@ class LegendCellPadding {
   double right(num width) => rightPct != null ? rightPct * width : rightPx;
 
   double top(num height) => topPct != null ? topPct * height : topPx;
+}
+
+/// Options for behavior of tapping/clicking on entries in the legend.
+enum LegendTapHandling {
+  /// No associated behavior.
+  none,
+
+  /// Hide elements on the chart associated with this legend entry.
+  hide,
 }

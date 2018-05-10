@@ -23,14 +23,19 @@ import 'package:charts_flutter/flutter.dart' as charts;
 /// Example custom renderer that renders [IconData].
 ///
 /// This is used to show that legend symbols can be assigned a custom symbol.
-class IconRenderer extends charts.SymbolRenderer {
+class IconRenderer extends charts.CustomSymbolRenderer {
   final IconData iconData;
 
   IconRenderer(this.iconData);
 
   @override
-  Widget build(BuildContext context,
-      {Size size, Color color, bool isSelected}) {
+  Widget build(BuildContext context, {Size size, Color color, bool enabled}) {
+    // Lighten the color if the symbol is not enabled
+    // Example: If user has tapped on a Series deselecting it.
+    if (!enabled) {
+      color = color.withOpacity(0.26);
+    }
+
     return new SizedBox.fromSize(
         size: size, child: new Icon(iconData, color: color, size: 12.0));
   }
@@ -121,7 +126,7 @@ class LegendWithCustomSymbol extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.BarChart<OrdinalSales>(
+    return new charts.BarChart(
       seriesList,
       animate: animate,
       barGroupingType: charts.BarGroupingType.grouped,

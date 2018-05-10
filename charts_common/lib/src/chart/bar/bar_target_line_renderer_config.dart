@@ -16,10 +16,11 @@
 import 'base_bar_renderer_config.dart'
     show BarGroupingType, BaseBarRendererConfig;
 import 'bar_target_line_renderer.dart' show BarTargetLineRenderer;
-import '../common/chart_canvas.dart' show FillPatternType;
+import '../../common/symbol_renderer.dart'
+    show SymbolRenderer, LineSymbolRenderer;
 
 /// Configuration for a bar target line renderer.
-class BarTargetLineRendererConfig<T> extends BaseBarRendererConfig<T, String> {
+class BarTargetLineRendererConfig extends BaseBarRendererConfig<String> {
   /// The number of pixels that the line will extend beyond the bandwidth at the
   /// edges of the bar group.
   ///
@@ -39,26 +40,26 @@ class BarTargetLineRendererConfig<T> extends BaseBarRendererConfig<T, String> {
   BarTargetLineRendererConfig(
       {String customRendererId,
       List<int> barWeights,
+      List<int> dashPattern,
       groupingType = BarGroupingType.grouped,
       int minBarLengthPx = 0,
       this.overDrawOuterPx,
       this.overDrawPx = 0,
-      FillPatternType fillPattern,
       this.roundEndCaps = true,
-      double stackHorizontalSeparator,
-      double strokeWidthPx = 3.0})
+      double strokeWidthPx = 3.0,
+      SymbolRenderer symbolRenderer})
       : super(
             customRendererId: customRendererId,
             barWeights: barWeights,
+            dashPattern: dashPattern,
             groupingType: groupingType,
             minBarLengthPx: minBarLengthPx,
-            fillPattern: fillPattern,
-            stackHorizontalSeparator: stackHorizontalSeparator,
-            strokeWidthPx: strokeWidthPx);
+            strokeWidthPx: strokeWidthPx,
+            symbolRenderer: symbolRenderer ?? new LineSymbolRenderer());
 
   @override
-  BarTargetLineRenderer<T, String> build() {
-    return new BarTargetLineRenderer<T, String>(
+  BarTargetLineRenderer<String> build() {
+    return new BarTargetLineRenderer<String>(
         config: this, rendererId: customRendererId);
   }
 

@@ -31,17 +31,15 @@ class LineRangeAnnotationChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart<LinearSales>(seriesList,
-        animate: animate,
-        behaviors: [
-          new charts.RangeAnnotation([
-            new charts.RangeAnnotationSegment(
-                0.5, 1.0, charts.RangeAnnotationAxisType.domain),
-            new charts.RangeAnnotationSegment(
-                2, 4, charts.RangeAnnotationAxisType.domain,
-                color: charts.MaterialPalette.gray.shade200),
-          ]),
-        ]);
+    return new charts.LineChart(seriesList, animate: animate, behaviors: [
+      new charts.RangeAnnotation([
+        new charts.RangeAnnotationSegment(
+            0.5, 1.0, charts.RangeAnnotationAxisType.domain),
+        new charts.RangeAnnotationSegment(
+            2, 4, charts.RangeAnnotationAxisType.domain,
+            color: charts.MaterialPalette.gray.shade200),
+      ]),
+    ]);
   }
 
   /// Create one series with sample hard coded data.

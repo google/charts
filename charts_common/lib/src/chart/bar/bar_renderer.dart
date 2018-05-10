@@ -16,7 +16,7 @@
 import 'dart:math' show max, min, Rectangle;
 import 'package:meta/meta.dart' show required;
 
-import 'bar_renderer_config.dart' show BarRendererConfig;
+import 'bar_renderer_config.dart' show BarRendererConfig, CornerStrategy;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import 'base_bar_renderer.dart' show BaseBarRenderer;
 import 'base_bar_renderer_element.dart'
@@ -29,20 +29,17 @@ import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../../common/color.dart' show Color;
 
 /// Renders series data as a series of bars.
-class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
-    _AnimatedBar<T, D>> {
+class BarRenderer<D>
+    extends BaseBarRenderer<D, _BarRendererElement<D>, _AnimatedBar<D>> {
   /// If we are grouped, use this spacing between the bars in a group.
   final _barGroupInnerPadding = 2;
-
-  /// The radius to use for corner rounding.
-  final _roundingRadiusPx = 2;
 
   /// The padding between bar stacks.
   ///
   /// The padding comes out of the bottom of the bar.
   final _stackedBarPadding = 1;
 
-  BaseChart<T, D> _chart;
+  BaseChart<D> _chart;
 
   final BarRendererDecorator barRendererDecorator;
 
@@ -57,29 +54,32 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
         super(config: config, rendererId: rendererId, layoutPositionOrder: 10);
 
   @override
-  void preprocessSeries(List<MutableSeries<T, D>> seriesList) {
+  void configureSeries(List<MutableSeries<D>> seriesList) {
     assignMissingColors(getOrderedSeriesList(seriesList),
         emptyCategoryUsesSinglePalette: true);
-
-    super.preprocessSeries(seriesList);
   }
 
   @override
-  _BarRendererElement<T, D> getBaseDetails(T datum, int index) {
-    return new _BarRendererElement<T, D>()..roundPx = _roundingRadiusPx;
+  _BarRendererElement<D> getBaseDetails(dynamic datum, int index) {
+    return new _BarRendererElement<D>();
   }
 
   bool get rtl => _chart.context.rtl;
 
+  CornerStrategy get cornerStrategy {
+    return (config as BarRendererConfig).cornerStrategy;
+  }
+
   /// Generates an [_AnimatedBar] to represent the previous and current state
   /// of one bar on the chart.
   @override
-  _AnimatedBar<T, D> makeAnimatedBar(
+  _AnimatedBar<D> makeAnimatedBar(
       {String key,
-      ImmutableSeries<T, D> series,
-      T datum,
+      ImmutableSeries<D> series,
+      List<int> dashPattern,
+      dynamic datum,
       Color color,
-      _BarRendererElement<T, D> details,
+      _BarRendererElement<D> details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
       int domainWidth,
@@ -87,14 +87,16 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
+      Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
       int numBarGroups}) {
-    return new _AnimatedBar<T, D>(
+    return new _AnimatedBar<D>(
         key: key, datum: datum, series: series, domainValue: domainValue)
       ..setNewTarget(makeBarRendererElement(
           color: color,
+          dashPattern: dashPattern,
           details: details,
           domainValue: domainValue,
           domainAxis: domainAxis,
@@ -103,6 +105,7 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
           measureOffsetValue: measureOffsetValue,
           measureAxisPosition: measureAxisPosition,
           measureAxis: measureAxis,
+          fillColor: fillColor,
           fillPattern: fillPattern,
           strokeWidthPx: strokeWidthPx,
           barGroupIndex: barGroupIndex,
@@ -112,9 +115,10 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
   /// Generates a [_BarRendererElement] to represent the rendering data for one
   /// bar on the chart.
   @override
-  _BarRendererElement<T, D> makeBarRendererElement(
+  _BarRendererElement<D> makeBarRendererElement(
       {Color color,
-      _BarRendererElement<T, D> details,
+      List<int> dashPattern,
+      _BarRendererElement<D> details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
       int domainWidth,
@@ -122,15 +126,18 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
+      Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
       int numBarGroups}) {
-    return new _BarRendererElement<T, D>()
+    return new _BarRendererElement<D>()
       ..color = color
-      ..roundPx = details.roundPx
-      ..measureAxisPosition = measureAxisPosition
+      ..dashPattern = dashPattern
+      ..fillColor = fillColor
       ..fillPattern = fillPattern
+      ..measureAxisPosition = measureAxisPosition
+      ..roundPx = details.roundPx
       ..strokeWidthPx = strokeWidthPx
       ..bounds = _getBarBounds(
           domainValue,
@@ -144,7 +151,7 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
   }
 
   @override
-  void onAttach(BaseChart<T, D> chart) {
+  void onAttach(BaseChart<D> chart) {
     super.onAttach(chart);
     // We only need the chart.context.rtl setting, but context is not yet
     // available when the default renderer is attached to the chart on chart
@@ -154,7 +161,7 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
 
   @override
   void paintBar(ChartCanvas canvas, double animationPercent,
-      Iterable<_BarRendererElement<T, D>> barElements) {
+      Iterable<_BarRendererElement<D>> barElements) {
     final bars = <CanvasRect>[];
 
     // When adjusting bars for stacked bar padding, do not modify the first bar
@@ -162,6 +169,9 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
     // horizontally.
     final unmodifiedBar =
         renderingVertically ? barElements.first : barElements.last;
+
+    // Find the max bar width from each segement to calculate corner radius.
+    int maxBarWidth = 0;
 
     for (var bar in barElements) {
       var bounds = bar.bounds;
@@ -183,20 +193,57 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
       }
 
       bars.add(new CanvasRect(bounds,
-          fill: bar.color, pattern: bar.fillPattern, stroke: bar.color));
+          dashPattern: bar.dashPattern,
+          fill: bar.fillColor,
+          pattern: bar.fillPattern,
+          stroke: bar.color,
+          strokeWidthPx: bar.strokeWidthPx));
+
+      maxBarWidth = max(
+          maxBarWidth, (renderingVertically ? bounds.width : bounds.height));
     }
 
-    // TODO: Change _roundingRadiusPx to use CornerRadiusCalculator
-    // in BarRendererConfig. Also need to have a way to configure the calculator
-    canvas.drawBarStack(new CanvasBarStack(
+    final barStack = new CanvasBarStack(
       bars,
-      radius: _roundingRadiusPx,
+      radius: cornerStrategy.getRadius(maxBarWidth),
       stackedBarPadding: _stackedBarPadding,
       roundTopLeft: renderingVertically || rtl ? true : false,
       roundTopRight: rtl ? false : true,
       roundBottomLeft: rtl ? true : false,
       roundBottomRight: renderingVertically || rtl ? false : true,
-    ));
+    );
+
+    // If bar stack's range width is:
+    // * Within the component bounds, then draw the bar stack.
+    // * Partially out of component bounds, then clip the stack where it is out
+    // of bounds.
+    // * Fully out of component bounds, do not draw.
+
+    final barOutsideBounds = renderingVertically
+        ? barStack.fullStackRect.left < componentBounds.left ||
+            barStack.fullStackRect.right > componentBounds.right
+        : barStack.fullStackRect.top < componentBounds.top ||
+            barStack.fullStackRect.bottom > componentBounds.bottom;
+
+    // TODO: When we have initial viewport, add image test for
+    // clipping.
+    if (barOutsideBounds) {
+      final clipBounds = _getBarStackBounds(barStack.fullStackRect);
+
+      // Do not draw the bar stack if it is completely outside of the component
+      // bounds.
+      if (clipBounds.width <= 0 || clipBounds.height <= 0) {
+        return;
+      }
+
+      canvas.setClipBounds(clipBounds);
+    }
+
+    canvas.drawBarStack(barStack);
+
+    if (barOutsideBounds) {
+      canvas.resetClipBounds();
+    }
 
     // Decorate the bar segments if there is a decorator.
     barRendererDecorator?.decorate(barElements, canvas, graphicsFactory,
@@ -204,6 +251,37 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
         animationPercent: animationPercent,
         renderingVertically: renderingVertically,
         rtl: rtl);
+  }
+
+  /// Calculate the clipping region for a rectangle that represents the full bar
+  /// stack.
+  Rectangle<int> _getBarStackBounds(Rectangle<int> barStackRect) {
+    int left;
+    int right;
+    int top;
+    int bottom;
+
+    if (renderingVertically) {
+      // Only clip at the start and end so that the bar's width stays within
+      // the viewport, but any bar decorations above the bar can still show.
+      left = max(componentBounds.left, barStackRect.left);
+      right = min(componentBounds.right, barStackRect.right);
+      top = componentBounds.top;
+      bottom = componentBounds.bottom;
+    } else {
+      // Only clip at the top and bottom so that the bar's height stays within
+      // the viewport, but any bar decorations to the right of the bar can still
+      // show.
+      left = componentBounds.left;
+      right = componentBounds.right;
+      top = max(componentBounds.top, barStackRect.top);
+      bottom = min(componentBounds.bottom, barStackRect.bottom);
+    }
+
+    final width = right - left;
+    final height = bottom - top;
+
+    return new Rectangle(left, top, width, height);
   }
 
   /// Generates a set of bounds that describe a bar.
@@ -258,26 +336,36 @@ class BarRenderer<T, D> extends BaseBarRenderer<T, D, _BarRendererElement<T, D>,
   Rectangle<int> getBoundsForBar(_BarRendererElement bar) => bar.bounds;
 }
 
-abstract class ImmutableBarRendererElement<T, D> {
-  ImmutableSeries<T, D> get series;
-  T get datum;
+abstract class ImmutableBarRendererElement<D> {
+  ImmutableSeries<D> get series;
+  dynamic get datum;
+  int get index;
   Rectangle<int> get bounds;
 }
 
-class _BarRendererElement<T, D> extends BaseBarRendererElement
-    implements ImmutableBarRendererElement<T, D> {
-  ImmutableSeries<T, D> series;
-  T datum;
+class _BarRendererElement<D> extends BaseBarRendererElement
+    implements ImmutableBarRendererElement<D> {
+  ImmutableSeries<D> series;
   Rectangle<int> bounds;
   int roundPx;
+  int index;
+  dynamic _datum;
+
+  dynamic get datum => _datum;
+
+  set datum(dynamic datum) {
+    _datum = datum;
+    index = series.data.indexOf(datum);
+  }
 
   _BarRendererElement();
 
   _BarRendererElement.clone(_BarRendererElement other) : super.clone(other) {
     series = other.series;
-    datum = other.datum;
     bounds = other.bounds;
     roundPx = other.roundPx;
+    index = other.index;
+    _datum = other._datum;
   }
 
   @override
@@ -309,12 +397,11 @@ class _BarRendererElement<T, D> extends BaseBarRendererElement
   }
 }
 
-class _AnimatedBar<T, D>
-    extends BaseAnimatedBar<T, D, _BarRendererElement<T, D>> {
+class _AnimatedBar<D> extends BaseAnimatedBar<D, _BarRendererElement<D>> {
   _AnimatedBar(
       {@required String key,
-      @required T datum,
-      @required ImmutableSeries<T, D> series,
+      @required dynamic datum,
+      @required ImmutableSeries<D> series,
       @required D domainValue})
       : super(key: key, datum: datum, series: series, domainValue: domainValue);
 
@@ -330,8 +417,8 @@ class _AnimatedBar<T, D>
         0);
   }
 
-  _BarRendererElement<T, D> getCurrentBar(double animationPercent) {
-    final _BarRendererElement<T, D> bar = super.getCurrentBar(animationPercent);
+  _BarRendererElement<D> getCurrentBar(double animationPercent) {
+    final _BarRendererElement<D> bar = super.getCurrentBar(animationPercent);
 
     // Update with series and datum information to pass to bar decorator.
     bar.series = series;
@@ -341,6 +428,6 @@ class _AnimatedBar<T, D>
   }
 
   @override
-  _BarRendererElement<T, D> clone(_BarRendererElement other) =>
-      new _BarRendererElement<T, D>.clone(other);
+  _BarRendererElement<D> clone(_BarRendererElement other) =>
+      new _BarRendererElement<D>.clone(other);
 }

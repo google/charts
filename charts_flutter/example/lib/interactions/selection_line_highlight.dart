@@ -75,22 +75,20 @@ class SelectionLineHighlight extends StatelessWidget {
     //
     // As an alternative, [defaultInteractions] can be set to true to include
     // the default chart interactions, including a LinePointHighlighter.
-    return new charts.LineChart<LinearSales>(seriesList,
-        animate: animate,
-        behaviors: [
-          // Optional - Configures a [LinePointHighlighter] behavior with a
-          // vertical follow line. A vertical follow line is included by
-          // default, but is shown here as an example configuration.
-          new charts.LinePointHighlighter(
-              showHorizontalFollowLine: false, showVerticalFollowLine: true),
-          // Optional - By default, select nearest is configured to trigger
-          // with tap so that a user can have pan/zoom behavior and line point
-          // highlighter. Changing the trigger to tap and drag allows the
-          // highlighter to follow the dragging gesture but it is not
-          // recommended to be used when pan/zoom behavior is enabled.
-          new charts.SelectNearest(
-              eventTrigger: charts.SelectNearestTrigger.tapAndDrag)
-        ]);
+    return new charts.LineChart(seriesList, animate: animate, behaviors: [
+      // Optional - Configures a [LinePointHighlighter] behavior with a
+      // vertical follow line. A vertical follow line is included by
+      // default, but is shown here as an example configuration.
+      new charts.LinePointHighlighter(
+          showHorizontalFollowLine: false, showVerticalFollowLine: true),
+      // Optional - By default, select nearest is configured to trigger
+      // with tap so that a user can have pan/zoom behavior and line point
+      // highlighter. Changing the trigger to tap and drag allows the
+      // highlighter to follow the dragging gesture but it is not
+      // recommended to be used when pan/zoom behavior is enabled.
+      new charts.SelectNearest(
+          eventTrigger: charts.SelectNearestTrigger.tapAndDrag)
+    ]);
   }
 
   /// Create one series with sample hard coded data.

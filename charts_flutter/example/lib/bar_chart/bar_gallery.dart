@@ -15,7 +15,9 @@
 
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
+import 'custom_rounded_bars.dart';
 import 'grouped.dart';
+import 'grouped_fill_color.dart';
 import 'grouped_single_target_line.dart';
 import 'grouped_stacked.dart';
 import 'grouped_target_line.dart';
@@ -26,6 +28,7 @@ import 'horizontal_pattern_forward_hatch.dart';
 import 'pattern_forward_hatch.dart';
 import 'simple.dart';
 import 'stacked.dart';
+import 'stacked_fill_color.dart';
 import 'stacked_horizontal.dart';
 import 'stacked_target_line.dart';
 import 'spark_bar.dart';
@@ -111,6 +114,18 @@ List<GalleryScaffold> buildGallery() {
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Grouped Fill Color Bar Chart',
+      subtitle: 'Grouped bar chart with fill colors',
+      childBuilder: () => new GroupedFillColorBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Stacked Fill Color Bar Chart',
+      subtitle: 'Stacked bar chart with fill colors',
+      childBuilder: () => new StackedFillColorBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
       title: 'Pattern Forward Hatch Bar Chart',
       subtitle: 'Pattern Forward Hatch Bar Chart',
       childBuilder: () => new PatternForwardHatchBarChart.withRandomData(),
@@ -122,6 +137,12 @@ List<GalleryScaffold> buildGallery() {
       subtitle: 'Horizontal Pattern Forward Hatch Bar Chart',
       childBuilder: () =>
           new HorizontalPatternForwardHatchBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Bar Chart with custom bar radius',
+      subtitle: 'Custom rounded bar corners',
+      childBuilder: () => new CustomRoundedBars.withRandomData(),
     ),
   ];
 }

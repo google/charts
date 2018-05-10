@@ -23,7 +23,7 @@ import 'date_time_extents.dart' show DateTimeExtents;
 import 'date_time_scale.dart' show DateTimeScale;
 import 'date_time_tick_formatter.dart' show DateTimeTickFormatter;
 
-class DateTimeAxis extends Axis<DateTime, DateTimeExtents, DateTimeScale> {
+class DateTimeAxis extends Axis<DateTime> {
   DateTimeAxis(DateTimeFactory dateTimeFactory,
       {TickProvider tickProvider, TickFormatter tickFormatter})
       : super(
@@ -34,4 +34,8 @@ class DateTimeAxis extends Axis<DateTime, DateTimeExtents, DateTimeScale> {
               tickFormatter ?? new DateTimeTickFormatter(dateTimeFactory),
           scale: new DateTimeScale(dateTimeFactory),
         );
+
+  void setScaleViewport(DateTimeExtents viewport) {
+    (mutableScale as DateTimeScale).viewportDomain = viewport;
+  }
 }

@@ -20,13 +20,21 @@ import '../common/series_renderer_config.dart'
 import 'line_renderer.dart' show LineRenderer;
 
 /// Configuration for a line renderer.
-class LineRendererConfig<T, D> extends LayoutViewConfig
-    implements SeriesRendererConfig<T, D> {
+class LineRendererConfig<D> extends LayoutViewConfig
+    implements SeriesRendererConfig<D> {
   final String customRendererId;
 
   final SymbolRenderer symbolRenderer;
 
   final rendererAttributes = new RendererAttributes();
+
+  /// Radius of points on the line, if [includePoints] is enabled.
+  final double radiusPx;
+
+  /// Whether or not series should be rendered in a stack.
+  ///
+  /// This is typically enabled when including area skirts.
+  final bool stacked;
 
   /// Stroke width of the line.
   final double strokeWidthPx;
@@ -34,14 +42,44 @@ class LineRendererConfig<T, D> extends LayoutViewConfig
   /// Dash pattern for the line.
   final List<int> dashPattern;
 
+  /// Configures whether a line representing the data will be drawn.
+  final bool includeLine;
+
+  /// Configures whether points representing the data will be drawn.
+  final bool includePoints;
+
+  /// Configures whether an area skirt representing the data will be drawn.
+  ///
+  /// An area skirt will be drawn from the line for each series, down to the
+  /// domain axis. It will be layered underneath the primary line on the chart.
+  ///
+  /// The area skirt color will be a semi-transparent version of the series
+  /// color, using [areaOpacity] as the opacity.
+  ///
+  /// When stacking is enabled, the bottom of each area skirt will instead be
+  /// the previous line in the stack. The bottom area will be drawn down to the
+  /// domain axis.
+  final bool includeArea;
+
+  /// Configures the opacity of the area skirt on the chart.
+  final double areaOpacity;
+
   LineRendererConfig(
       {this.customRendererId,
-      this.strokeWidthPx = 2.0,
+      this.radiusPx = 3.5,
+      this.stacked = false,
+      double strokeWidthPx = 2.0,
       this.dashPattern,
-      this.symbolRenderer});
+      this.includeLine = true,
+      this.includePoints = false,
+      this.includeArea = false,
+      this.areaOpacity = 0.1,
+      SymbolRenderer symbolRenderer})
+      : this.strokeWidthPx = strokeWidthPx,
+        this.symbolRenderer = symbolRenderer ?? new LineSymbolRenderer();
 
   @override
-  LineRenderer<T, D> build() {
-    return new LineRenderer<T, D>(config: this, rendererId: customRendererId);
+  LineRenderer<D> build() {
+    return new LineRenderer<D>(config: this, rendererId: customRendererId);
   }
 }

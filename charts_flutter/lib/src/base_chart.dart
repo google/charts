@@ -33,9 +33,9 @@ import 'package:flutter/material.dart' show StatefulWidget;
 import 'base_chart_state.dart' show BaseChartState;
 
 @immutable
-abstract class BaseChart<T, D> extends StatefulWidget {
+abstract class BaseChart<D> extends StatefulWidget {
   /// Series list to draw.
-  final List<common.Series<T, D>> seriesList;
+  final List<common.Series<dynamic, D>> seriesList;
 
   /// Animation transitions.
   final bool animate;
@@ -46,21 +46,21 @@ abstract class BaseChart<T, D> extends StatefulWidget {
   final LayoutConfig layoutConfig;
 
   // Default renderer used to draw series data on the chart.
-  final common.SeriesRendererConfig<T, D> defaultRenderer;
+  final common.SeriesRendererConfig<D> defaultRenderer;
 
   /// Include the default interactions or not.
   final bool defaultInteractions;
 
   final List<ChartBehavior> behaviors;
 
-  final List<SelectionModelConfig<T, D>> selectionModels;
+  final List<SelectionModelConfig<D>> selectionModels;
 
   // List of custom series renderers used to draw series data on the chart.
   //
   // Series assigned a rendererIdKey will be drawn with the matching renderer in
   // this list. Series without a rendererIdKey will be drawn by the default
   // renderer.
-  final List<common.SeriesRendererConfig<T, D>> customSeriesRenderers;
+  final List<common.SeriesRendererConfig<D>> customSeriesRenderers;
 
   /// The spec to use if RTL is enabled.
   final common.RTLSpec rtlSpec;
@@ -80,14 +80,14 @@ abstract class BaseChart<T, D> extends StatefulWidget {
             animationDuration ?? const Duration(milliseconds: 300);
 
   @override
-  BaseChartState<T, D> createState() => new BaseChartState<T, D>();
+  BaseChartState<D> createState() => new BaseChartState<D>();
 
   /// Creates and returns a [common.BaseChart].
-  common.BaseChart<T, D> createCommonChart(BaseChartState<T, D> chartState);
+  common.BaseChart<D> createCommonChart(BaseChartState<D> chartState);
 
   /// Updates the [common.BaseChart].
-  void updateCommonChart(common.BaseChart chart, BaseChart<T, D> oldWidget,
-      BaseChartState<T, D> chartState) {
+  void updateCommonChart(common.BaseChart chart, BaseChart<D> oldWidget,
+      BaseChartState<D> chartState) {
     common.Performance.time('chartsUpdateRenderers');
     // Set default renderer if one was provided.
     if (defaultRenderer != null &&
@@ -154,8 +154,8 @@ abstract class BaseChart<T, D> extends StatefulWidget {
 
     // Add any remaining/new behaviors.
     behaviorList.forEach((ChartBehavior behaviorWidget) {
-      final commonBehavior = chart.createBehavior(
-          <T, D>() => behaviorWidget.createCommonBehavior<T, D>());
+      final commonBehavior = chart
+          .createBehavior(<D>() => behaviorWidget.createCommonBehavior<D>());
 
       // Assign the chart state to any behavior that needs it.
       if (commonBehavior is ChartStateBehavior) {
@@ -186,12 +186,12 @@ abstract class BaseChart<T, D> extends StatefulWidget {
   }
 
   void _updateSelectionModel(
-      common.BaseChart chart, BaseChartState chartState) {
+      common.BaseChart<D> chart, BaseChartState<D> chartState) {
     final prevTypes = new List<common.SelectionModelType>.from(
         chartState.addedSelectionListenersByType.keys);
 
     // Update any listeners for each type.
-    selectionModels?.forEach((SelectionModelConfig model) {
+    selectionModels?.forEach((SelectionModelConfig<D> model) {
       final prevListener = chartState.addedSelectionListenersByType[model.type];
 
       if (!identical(model.listener, prevListener)) {

@@ -35,10 +35,10 @@ class RTLSeriesLegend extends StatelessWidget {
     // chart. It is show here as an example only.
     //
     // When the legend behavior detects RTL:
-    // [BuildablePosition.start] is to the right of the chart.
-    // [BuildablePosition.end] is to the left of the chart.
+    // [BehaviorPosition.start] is to the right of the chart.
+    // [BehaviorPosition.end] is to the left of the chart.
     //
-    // If the [BuildablePosition] is top or bottom, the start justification
+    // If the [BehaviorPosition] is top or bottom, the start justification
     // is to the right, and the end justification is to the left.
     //
     // The legend's tabular layout will also layout rows and columns from right
@@ -49,12 +49,12 @@ class RTLSeriesLegend extends StatelessWidget {
     // work with the correct directionality.
     return new Directionality(
         textDirection: TextDirection.rtl,
-        child: new charts.BarChart<OrdinalSales>(
+        child: new charts.BarChart(
           seriesList,
           animate: animate,
           behaviors: [
             new charts.SeriesLegend(
-                position: charts.BuildablePosition.end, desiredMaxRows: 2)
+                position: charts.BehaviorPosition.end, desiredMaxRows: 2)
           ],
         ));
   }

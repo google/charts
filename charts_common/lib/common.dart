@@ -39,9 +39,18 @@ export 'src/chart/common/behavior/chart_behavior.dart'
         OutsideJustification;
 export 'src/chart/common/behavior/domain_highlighter.dart'
     show DomainHighlighter;
+export 'src/chart/common/behavior/initial_selection.dart'
+    show InitialSelection, SeriesDatumConfig;
 export 'src/chart/common/behavior/legend/legend.dart'
-    show LegendCellPadding, LegendState, SeriesLegend;
+    show
+        Legend,
+        LegendCellPadding,
+        LegendState,
+        LegendTapHandling,
+        SeriesLegend;
 export 'src/chart/common/behavior/legend/legend_entry.dart' show LegendEntry;
+export 'src/chart/common/behavior/legend/legend_entry_generator.dart'
+    show LegendEntryGenerator;
 export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter;
 export 'src/chart/common/behavior/range_annotation.dart'
@@ -51,6 +60,8 @@ export 'src/chart/common/behavior/select_nearest.dart'
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
     show PanAndZoomBehavior;
 export 'src/chart/common/behavior/zoom/pan_behavior.dart' show PanBehavior;
+export 'src/chart/common/behavior/zoom/panning_tick_provider.dart'
+    show PanningTickProviderMode;
 export 'src/chart/common/canvas_shapes.dart'
     show CanvasBarStack, CanvasPie, CanvasPieSlice, CanvasRect;
 export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
@@ -72,6 +83,10 @@ export 'src/chart/line/line_renderer_config.dart' show LineRendererConfig;
 export 'src/chart/pie/arc_renderer.dart' show ArcRenderer;
 export 'src/chart/pie/arc_renderer_config.dart' show ArcRendererConfig;
 export 'src/chart/pie/pie_chart.dart' show PieChart;
+export 'src/chart/scatter_plot/point_renderer.dart' show PointRenderer;
+export 'src/chart/scatter_plot/point_renderer_config.dart'
+    show PointRendererConfig;
+export 'src/chart/scatter_plot/scatter_plot_chart.dart' show ScatterPlotChart;
 export 'src/chart/time_series/time_series_chart.dart' show TimeSeriesChart;
 export 'src/common/color.dart' show Color;
 export 'src/common/date_time_factory.dart'
@@ -90,7 +105,7 @@ export 'src/common/symbol_renderer.dart'
         SymbolRenderer,
         RoundedRectSymbolRenderer,
         LineSymbolRenderer,
-        PointSymbolRenderer;
+        CircleSymbolRenderer;
 export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;

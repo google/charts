@@ -36,8 +36,8 @@ class DomainHighlighter extends ChartBehavior<common.DomainHighlighter> {
   DomainHighlighter([this.selectionModelType = common.SelectionModelType.info]);
 
   @override
-  common.DomainHighlighter<T, D> createCommonBehavior<T, D>() =>
-      new common.DomainHighlighter<T, D>(selectionModelType);
+  common.DomainHighlighter<D> createCommonBehavior<D>() =>
+      new common.DomainHighlighter<D>(selectionModelType);
 
   @override
   void updateCommonBehavior(common.DomainHighlighter commonBehavior) {}
