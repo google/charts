@@ -1,5 +1,5 @@
 name: charts_common
-version: 0.2.0
+version: 0.3.0
 description: A common library for charting packages.
 author: Charts Team <charts_flutter@google.com>
 homepage: https://github.com/google/charts
