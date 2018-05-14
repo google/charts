@@ -37,6 +37,11 @@ import 'legend_layout.dart' show TabularLegendLayout;
 /// Series legend behavior for charts.
 @immutable
 class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
+  static const defaultBehaviorPosition = common.BehaviorPosition.top;
+  static const defaultOutsideJustification =
+      common.OutsideJustification.startDrawArea;
+  static const defaultInsideJustification = common.InsideJustification.topStart;
+
   final desiredGestures = new Set<GestureType>();
 
   final common.SelectionModelType selectionModelType;
@@ -96,9 +101,9 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     List<String> defaultHiddenSeries,
   }) {
     // Set defaults if empty.
-    position ??= common.BehaviorPosition.top;
-    outsideJustification ??= common.OutsideJustification.startDrawArea;
-    insideJustification ??= common.InsideJustification.topStart;
+    position ??= defaultBehaviorPosition;
+    outsideJustification ??= defaultOutsideJustification;
+    insideJustification ??= defaultInsideJustification;
     cellPadding ??= defaultCellPadding;
 
     // Set the tabular layout settings to match the position if it is not
@@ -115,6 +120,47 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     return new SeriesLegend._internal(
         contentBuilder:
             new TabularLegendContentBuilder(legendLayout: layoutBuilder),
+        selectionModelType: common.SelectionModelType.info,
+        position: position,
+        outsideJustification: outsideJustification,
+        insideJustification: insideJustification,
+        defaultHiddenSeries: defaultHiddenSeries);
+  }
+
+  /// Create a legend with custom layout.
+  ///
+  /// By default, the legend is place above the chart and horizontally aligned
+  /// to the start of the draw area.
+  ///
+  /// [contentBuilder] builder for the custom layout.
+  ///
+  /// [position] the legend will be positioned relative to the chart. Default
+  /// position is top.
+  ///
+  /// [outsideJustification] justification of the legend relative to the chart
+  /// if the position is top, bottom, left, right. Default to start of the draw
+  /// area.
+  ///
+  /// [insideJustification] justification of the legend relative to the chart if
+  /// the position is inside. Default to top of the chart, start of draw area.
+  /// Start of draw area means left for LTR directionality, and right for RTL.
+  ///
+  /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
+  /// first chart draw.
+  factory SeriesLegend.customLayout(
+    LegendContentBuilder contentBuilder, {
+    common.BehaviorPosition position,
+    common.OutsideJustification outsideJustification,
+    common.InsideJustification insideJustification,
+    List<String> defaultHiddenSeries,
+  }) {
+    // Set defaults if empty.
+    position ??= defaultBehaviorPosition;
+    outsideJustification ??= defaultOutsideJustification;
+    insideJustification ??= defaultInsideJustification;
+
+    return new SeriesLegend._internal(
+        contentBuilder: contentBuilder,
         selectionModelType: common.SelectionModelType.info,
         position: position,
         outsideJustification: outsideJustification,

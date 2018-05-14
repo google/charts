@@ -30,7 +30,9 @@ export 'package:charts_common/src/chart/cartesian/axis/axis.dart'
 export 'package:charts_common/src/chart/cartesian/axis/numeric_extents.dart'
     show NumericExtents;
 export 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart'
-    show SimpleTickFormatterBase;
+    show TickFormatter, SimpleTickFormatterBase;
+export 'package:charts_common/src/chart/cartesian/axis/time/date_time_tick_formatter.dart'
+    show DateTimeTickFormatter;
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'package:charts_common/src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
@@ -55,6 +57,7 @@ export 'package:charts_common/src/chart/cartesian/axis/spec/date_time_axis_spec.
 export 'package:charts_common/src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
     show
         NumericAxisSpec,
+        NumericTickFormatterSpec,
         BasicNumericTickFormatterSpec,
         BasicNumericTickProviderSpec,
         StaticNumericTickProviderSpec;
@@ -97,6 +100,8 @@ export 'package:charts_common/src/chart/common/selection_model/selection_model.d
     show SelectionModelType, SelectionModel, SelectionModelListener;
 export 'package:charts_common/src/chart/common/series_renderer.dart'
     show rendererIdKey;
+export 'package:charts_common/src/chart/common/series_renderer_config.dart'
+    show SeriesRendererConfig;
 export 'package:charts_common/src/chart/layout/layout_config.dart'
     show MarginSpec;
 export 'package:charts_common/src/chart/layout/layout_view.dart'
@@ -135,6 +140,11 @@ export 'src/behaviors/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior;
 export 'src/behaviors/domain_highlighter.dart' show DomainHighlighter;
 export 'src/behaviors/initial_selection.dart' show InitialSelection;
+export 'src/behaviors/legend/legend_layout.dart' show TabularLegendLayout;
+export 'src/behaviors/legend/legend_content_builder.dart'
+    show LegendContentBuilder, TabularLegendContentBuilder;
+export 'src/behaviors/legend/legend_layout.dart'
+    show LegendLayout, TabularLegendLayout;
 export 'src/behaviors/legend/series_legend.dart' show SeriesLegend;
 export 'src/behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 export 'src/behaviors/range_annotation.dart' show RangeAnnotation;
