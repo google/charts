@@ -69,7 +69,7 @@ export 'package:charts_common/src/chart/cartesian/axis/spec/tick_spec.dart'
 export 'package:charts_common/src/chart/cartesian/axis/time/date_time_extents.dart'
     show DateTimeExtents;
 export 'package:charts_common/src/chart/cartesian/cartesian_chart.dart'
-    show CartesianChart;
+    show CartesianChart, OrdinalCartesianChart, NumericCartesianChart;
 export 'package:charts_common/src/chart/common/base_chart.dart' show BaseChart;
 export 'package:charts_common/src/chart/common/behavior/a11y/a11y_explore_behavior.dart'
     show ExploreModeTrigger;
@@ -141,6 +141,7 @@ export 'src/behaviors/range_annotation.dart' show RangeAnnotation;
 export 'src/behaviors/select_nearest.dart' show SelectNearest;
 export 'src/behaviors/zoom/pan_and_zoom_behavior.dart' show PanAndZoomBehavior;
 export 'src/behaviors/zoom/pan_behavior.dart' show PanBehavior;
+export 'src/combo_chart/combo_chart.dart';
 export 'src/line_chart.dart';
 export 'src/pie_chart.dart';
 export 'src/scatter_plot_chart.dart';

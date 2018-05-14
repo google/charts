@@ -14,7 +14,13 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show AxisSpec, DateTimeFactory, LineRendererConfig, Series, TimeSeriesChart;
+    show
+        AxisSpec,
+        DateTimeFactory,
+        LineRendererConfig,
+        Series,
+        SeriesRendererConfig,
+        TimeSeriesChart;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'cartesian_chart.dart' show CartesianChart;
@@ -37,6 +43,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
     common.LineRendererConfig<DateTime> defaultRenderer,
+    List<common.SeriesRendererConfig<DateTime>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig<DateTime>> selectionModels,
     LayoutConfig layoutConfig,
@@ -50,6 +57,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
           primaryMeasureAxis: primaryMeasureAxis,
           secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer,
+          customSeriesRenderers: customSeriesRenderers,
           behaviors: behaviors,
           selectionModels: selectionModels,
           layoutConfig: layoutConfig,

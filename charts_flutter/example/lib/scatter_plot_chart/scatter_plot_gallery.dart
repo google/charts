@@ -22,19 +22,19 @@ import 'simple.dart';
 List<GalleryScaffold> buildGallery() {
   return [
     new GalleryScaffold(
-      listTileIcon: new Icon(Icons.show_chart),
+      listTileIcon: new Icon(Icons.scatter_plot),
       title: 'Simple Scatter Plot Chart',
       subtitle: 'With a single series',
       childBuilder: () => new SimpleScatterPlotChart.withRandomData(),
     ),
     new GalleryScaffold(
-      listTileIcon: new Icon(Icons.show_chart),
+      listTileIcon: new Icon(Icons.scatter_plot),
       title: 'Comparison Points Scatter Plot Chart',
       subtitle: 'Scatter plot chart with comparison points',
       childBuilder: () => new ComparisonPointsScatterPlotChart.withRandomData(),
     ),
     new GalleryScaffold(
-      listTileIcon: new Icon(Icons.show_chart),
+      listTileIcon: new Icon(Icons.scatter_plot),
       title: 'Pan and Zoom Scatter Plot Chart',
       subtitle: 'Simple scatter plot chart pan and zoom behaviors enabled',
       childBuilder: () => new ScatterPlotAnimationZoomChart.withRandomData(),

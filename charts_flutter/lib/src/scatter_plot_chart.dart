@@ -14,18 +14,29 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show PointRendererConfig, RTLSpec, ScatterPlotChart, Series;
+    show
+        AxisSpec,
+        PointRendererConfig,
+        RTLSpec,
+        ScatterPlotChart,
+        SeriesRendererConfig,
+        Series;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
-import 'base_chart.dart' show BaseChart, LayoutConfig;
+import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
+import 'cartesian_chart.dart' show CartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class ScatterPlotChart extends BaseChart<num> {
+class ScatterPlotChart extends CartesianChart<num> {
   ScatterPlotChart(
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
+    common.AxisSpec domainAxis,
+    common.AxisSpec primaryMeasureAxis,
+    common.AxisSpec secondaryMeasureAxis,
     common.PointRendererConfig<num> defaultRenderer,
+    List<common.SeriesRendererConfig<num>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig<num>> selectionModels,
     common.RTLSpec rtlSpec,
@@ -35,7 +46,11 @@ class ScatterPlotChart extends BaseChart<num> {
           seriesList,
           animate: animate,
           animationDuration: animationDuration,
+          domainAxis: domainAxis,
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer,
+          customSeriesRenderers: customSeriesRenderers,
           behaviors: behaviors,
           selectionModels: selectionModels,
           rtlSpec: rtlSpec,

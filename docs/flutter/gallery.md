@@ -35,6 +35,13 @@
 | Simple<br>[![](example/scatter_plot_charts/simple_thumb.png)](example/scatter_plot_charts/simple) | Comparison Points<br>[![](example/scatter_plot_charts/comparison_points_thumb.png)](example/scatter_plot_charts/comparison_points) | | |
 
 
+### Combo Charts
+
+| | | | |
+| --- | --- | --- | --- |
+| Ordinal Bar Line<br>[![](example/combo_charts/ordinal_bar_line_thumb.png)](example/combo_charts/ordinal_bar_line) | Numeric Line Point<br>[![](example/combo_charts/numeric_line_point_thumb.png)](example/combo_charts/numeric_line_point) | Date Time Line Point<br>[![](example/combo_charts/date_time_line_point_thumb.png)](example/combo_charts/date_time_line_point) | Scatter Plot Line<br>[![](example/combo_charts/scatter_plot_line_thumb.png)](example/combo_charts/scatter_plot_line) |
+
+
 ### Pie Charts
 
 | | | | |
