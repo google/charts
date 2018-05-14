@@ -220,6 +220,9 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
       ImmutableAxis<num> measureAxis) {
     final domainPosition = domainAxis.getLocation(domainValue);
 
+    // (TODO: Support null measure values for line point highlighter
+    measureValue ??= 0;
+
     final measurePosition =
         measureAxis.getLocation(measureValue + measureOffsetValue);
 

@@ -439,6 +439,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       ImmutableAxis<num> measureAxis) {
     final domainPosition = domainAxis.getLocation(domainValue);
 
+    // TODO: Support null measure values.
+    measureValue ??= 0;
+
     final measurePosition =
         measureAxis.getLocation(measureValue + measureOffsetValue);
 
