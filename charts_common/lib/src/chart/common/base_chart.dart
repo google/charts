@@ -244,6 +244,9 @@ abstract class BaseChart<D> {
     return wasAttached;
   }
 
+  /// Returns a list of behaviors that have been added.
+  List<ChartBehavior<D>> get behaviors => new List.unmodifiable(_behaviorStack);
+
   //
   // Layout methods
   //
