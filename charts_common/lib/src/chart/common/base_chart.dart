@@ -345,6 +345,8 @@ abstract class BaseChart<D> {
     fireOnPostprocess(seriesList);
   }
 
+  List<MutableSeries<D>> get currentSeriesList => _currentSeriesList;
+
   MutableSeries<D> makeSeries(Series<dynamic, D> series) {
     final s = new MutableSeries<D>(series);
 

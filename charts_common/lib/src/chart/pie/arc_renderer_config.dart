@@ -44,6 +44,10 @@ class ArcRendererConfig<D> extends LayoutViewConfig
   /// If arcRatio is set, this value will be ignored.
   final int arcWidth;
 
+  /// Minimum radius in pixels of the hole in a donut chart for center content
+  /// to appear.
+  final int minHoleWidthForCenterContent;
+
   /// Start angle for pie slices, in radians.
   ///
   /// Angles are defined from the positive x axis in Cartesian space. The
@@ -65,6 +69,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
       this.arcRendererDecorators = const [],
       this.arcRatio,
       this.arcWidth,
+      this.minHoleWidthForCenterContent = 30,
       this.startAngle = -PI / 2,
       this.strokeWidthPx = 2.0,
       this.symbolRenderer})

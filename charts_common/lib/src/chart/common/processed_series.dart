@@ -27,6 +27,9 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   bool overlaySeries;
   int seriesIndex;
 
+  /// Sum of the measure values for the series.
+  num seriesMeasureTotal;
+
   List data;
 
   AccessorFn<D> domainFn;
@@ -67,6 +70,15 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     measureUpperBoundFn = series.measureUpperBoundFn;
     measureOffsetFn = series.measureOffsetFn;
 
+    // Pre-compute the sum of the measure values to make it available on demand.
+    seriesMeasureTotal = 0;
+    for (int i = 0; i < data.length; i++) {
+      final measure = measureFn(i);
+      if (measure != null) {
+        seriesMeasureTotal += measure;
+      }
+    }
+
     colorFn = series.colorFn;
     fillColorFn = series.fillColorFn;
     fillPatternFn = series.fillPatternFn;
@@ -97,6 +109,8 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     measureLowerBoundFn = other.measureLowerBoundFn;
     measureUpperBoundFn = other.measureUpperBoundFn;
     measureOffsetFn = other.measureOffsetFn;
+
+    seriesMeasureTotal = other.seriesMeasureTotal;
 
     colorFn = other.colorFn;
     fillColorFn = other.fillColorFn;
@@ -135,6 +149,9 @@ abstract class ImmutableSeries<D> {
   String get seriesCategory;
   bool get overlaySeries;
   int get seriesIndex;
+
+  /// Sum of the measure values for the series.
+  num get seriesMeasureTotal;
 
   List get data;
 
