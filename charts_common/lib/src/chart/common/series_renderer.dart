@@ -20,7 +20,12 @@ import 'chart_canvas.dart' show ChartCanvas;
 import 'datum_details.dart' show DatumDetails;
 import 'processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../layout/layout_view.dart'
-    show LayoutView, LayoutPosition, LayoutViewConfig, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
+        LayoutViewPositionOrder,
+        ViewMeasuredSizes;
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/symbol_renderer.dart' show SymbolRenderer;
@@ -87,11 +92,12 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
 
   BaseSeriesRenderer({
     @required this.rendererId,
-    @required int layoutPositionOrder,
+    @required int layoutPaintOrder,
     this.symbolRenderer,
   }) : this.layoutConfig = new LayoutViewConfig(
+            paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
-            positionOrder: layoutPositionOrder);
+            positionOrder: LayoutViewPositionOrder.drawArea);
 
   @override
   GraphicsFactory get graphicsFactory => _graphicsFactory;

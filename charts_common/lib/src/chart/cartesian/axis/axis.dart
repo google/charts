@@ -21,7 +21,13 @@ import '../../../data/series.dart' show AttributeKey;
 import '../../common/chart_canvas.dart' show ChartCanvas;
 import '../../common/chart_context.dart' show ChartContext;
 import '../../layout/layout_view.dart'
-    show LayoutView, LayoutPosition, LayoutViewConfig, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
+        LayoutViewPaintOrder,
+        LayoutViewPositionOrder,
+        ViewMeasuredSizes;
 import 'axis_tick.dart' show AxisTicks;
 import 'linear/linear_scale.dart' show LinearScale;
 import 'ordinal_tick_provider.dart' show OrdinalTickProvider;
@@ -115,6 +121,12 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   Rectangle<int> _drawAreaBounds;
   GraphicsFactory _graphicsFactory;
 
+  /// Order for chart layout painting.
+  ///
+  /// In general, domain axes should be drawn on top of measure axes to ensure
+  /// that the domain axis line appears on top of any measure axis grid lines.
+  int layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
+
   Axis({this.tickProvider, this.tickFormatter, MutableScale<D> scale})
       : this._scale = scale;
 
@@ -165,7 +177,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
-  double getLocation(D domain) => _scale[domain];
+  double getLocation(D domain) => domain != null ? _scale[domain] : null;
 
   @override
   D getDomain(double location) => _scale.reverse(location);
@@ -311,8 +323,10 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
-  LayoutViewConfig get layoutConfig =>
-      new LayoutViewConfig(position: _layoutPosition, positionOrder: 0);
+  LayoutViewConfig get layoutConfig => new LayoutViewConfig(
+      paintOrder: layoutPaintOrder,
+      position: _layoutPosition,
+      positionOrder: LayoutViewPositionOrder.axis);
 
   /// Get layout position from axis orientation.
   LayoutPosition get _layoutPosition {

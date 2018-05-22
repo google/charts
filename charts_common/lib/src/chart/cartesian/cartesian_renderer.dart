@@ -34,11 +34,11 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
   BaseCartesianRenderer(
       {@required String rendererId,
-      @required int layoutPositionOrder,
+      @required int layoutPaintOrder,
       SymbolRenderer symbolRenderer})
       : super(
             rendererId: rendererId,
-            layoutPositionOrder: layoutPositionOrder,
+            layoutPaintOrder: layoutPaintOrder,
             symbolRenderer: symbolRenderer);
 
   @override

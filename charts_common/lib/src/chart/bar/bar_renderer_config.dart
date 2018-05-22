@@ -18,6 +18,7 @@ import 'base_bar_renderer_config.dart'
 import 'bar_renderer.dart' show BarRenderer;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import '../common/chart_canvas.dart' show FillPatternType;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/symbol_renderer.dart';
 
 /// Configuration for a bar renderer.
@@ -34,6 +35,7 @@ class BarRendererConfig extends BaseBarRendererConfig<String> {
     CornerStrategy cornerStrategy,
     FillPatternType fillPattern,
     BarGroupingType groupingType,
+    int layoutPaintOrder = LayoutViewPaintOrder.bar,
     int minBarLengthPx = 0,
     double stackHorizontalSeparator,
     double strokeWidthPx = 0.0,
@@ -44,6 +46,7 @@ class BarRendererConfig extends BaseBarRendererConfig<String> {
             customRendererId: customRendererId,
             barWeights: barWeights,
             groupingType: groupingType ?? BarGroupingType.grouped,
+            layoutPaintOrder: layoutPaintOrder,
             minBarLengthPx: minBarLengthPx,
             fillPattern: fillPattern,
             stackHorizontalSeparator: stackHorizontalSeparator,

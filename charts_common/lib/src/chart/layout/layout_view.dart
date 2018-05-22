@@ -36,6 +36,43 @@ enum LayoutPosition {
   DrawArea,
 }
 
+/// Standard layout paint orders for all internal components.
+///
+/// Custom component layers should define their paintOrder by taking the nearest
+/// layer from this list, and adding or subtracting 1. This will help reduce the
+/// chance of custom behaviors, renderers, etc. from breaking if we need to
+/// re-order these components internally.
+class LayoutViewPaintOrder {
+  // Draw range annotations beneath axis grid lines.
+  static const rangeAnnotation = -10;
+  // Axis elements form the "base layer" of all components on the chart. Domain
+  // axes are drawn on top of measure axes to ensure that the domain axis line
+  // appears on top of any measure axis grid lines.
+  static const measureAxis = 0;
+  static const domainAxis = 5;
+  // Draw series data on top of axis elements.
+  static const arc = 10;
+  static const bar = 10;
+  static const barTargetLine = 15;
+  static const line = 20;
+  static const point = 25;
+  // Draw most behaviors on top of series data.
+  static const legend = 100;
+  static const linePointHighlighter = 110;
+}
+
+/// Standard layout position orders for all internal components.
+///
+/// Custom component layers should define their positionOrder by taking the
+/// nearest component from this list, and adding or subtracting 1. This will
+/// help reduce the chance of custom behaviors, renderers, etc. from breaking if
+/// we need to re-order these components internally.
+class LayoutViewPositionOrder {
+  static const drawArea = 0;
+  static const axis = 10;
+  static const legend = 20;
+}
+
 /// A configuration for margin (empty space) around a layout child view.
 class ViewMargin {
   /// A [ViewMargin] with all zero px.
@@ -60,16 +97,27 @@ class ViewMargin {
   int get height => topPx + bottomPx;
 }
 
-/// Configuration of an [LayoutView].
+/// Configuration of a [LayoutView].
 class LayoutViewConfig {
+  /// Unique identifier for the [LayoutView].
   String id;
+
+  /// The order to paint a [LayoutView] on the canvas.
+  ///
+  /// The smaller number is drawn first.
+  int paintOrder;
 
   /// The position of a [LayoutView] defining where to place the view.
   LayoutPosition position;
 
-  /// The order to place and draw the [LayoutView].
+  /// The order to place the [LayoutView] within a chart margin.
   ///
-  /// The smaller number is closer to the draw area.
+  /// The smaller number is closer to the draw area. Elements positioned closer
+  /// to the draw area will be given extra layout space first, before those
+  /// further away.
+  ///
+  /// Note that all views positioned in the draw area are given the entire draw
+  /// area bounds as their component bounds.
   int positionOrder;
 
   /// Defines the space around a layout component.
@@ -77,10 +125,12 @@ class LayoutViewConfig {
 
   /// Creates new [LayoutParams].
   ///
+  /// [paintOrder] the order that this component will be drawn.
   /// [position] the [ComponentPosition] of this component.
-  /// [positionOrder] the smaller the p
+  /// [positionOrder] the order of this component in a chart margin.
   LayoutViewConfig(
-      {@required this.position,
+      {@required this.paintOrder,
+      @required this.position,
       @required this.positionOrder,
       ViewMargin viewMargin})
       : viewMargin = viewMargin ?? ViewMargin.empty;

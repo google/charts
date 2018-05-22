@@ -48,7 +48,10 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
 
   BarTargetLineRenderer._internal(
       {BarTargetLineRendererConfig config, String rendererId})
-      : super(config: config, rendererId: rendererId, layoutPositionOrder: 11);
+      : super(
+            config: config,
+            rendererId: rendererId,
+            layoutPaintOrder: config.layoutPaintOrder);
 
   @override
   void configureSeries(List<MutableSeries<D>> seriesList) {

@@ -53,6 +53,9 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   /// Defines the way multiple series of bars are rendered per domain.
   final BarGroupingType groupingType;
 
+  /// The order to paint this renderer on the canvas.
+  final int layoutPaintOrder;
+
   final int minBarLengthPx;
 
   final FillPatternType fillPattern;
@@ -69,6 +72,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       this.barWeights,
       this.dashPattern,
       this.groupingType = BarGroupingType.grouped,
+      this.layoutPaintOrder,
       this.minBarLengthPx = 0,
       this.fillPattern,
       this.stackHorizontalSeparator,

@@ -105,7 +105,11 @@ export 'package:charts_common/src/chart/common/series_renderer_config.dart'
 export 'package:charts_common/src/chart/layout/layout_config.dart'
     show MarginSpec;
 export 'package:charts_common/src/chart/layout/layout_view.dart'
-    show LayoutPosition, ViewMargin;
+    show
+        LayoutPosition,
+        LayoutViewPaintOrder,
+        LayoutViewPositionOrder,
+        ViewMargin;
 export 'package:charts_common/src/chart/line/line_renderer_config.dart'
     show LineRendererConfig;
 export 'package:charts_common/src/chart/scatter_plot/comparison_points_decorator.dart'

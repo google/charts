@@ -37,6 +37,7 @@ import '../common/processed_series.dart' show MutableSeries;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../common/selection_model/selection_model.dart' show SelectionModelType;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/rtl_spec.dart' show AxisPosition;
 import '../../data/series.dart' show Series;
@@ -45,7 +46,8 @@ class NumericCartesianChart extends CartesianChart<num> {
   final NumericAxis _domainAxis;
 
   NumericCartesianChart({bool vertical, LayoutConfig layoutConfig})
-      : _domainAxis = new NumericAxis(),
+      : _domainAxis = new NumericAxis()
+          ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
         super(vertical: vertical, layoutConfig: layoutConfig);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
@@ -69,7 +71,8 @@ class OrdinalCartesianChart extends CartesianChart<String> {
   final OrdinalAxis _domainAxis;
 
   OrdinalCartesianChart({bool vertical, LayoutConfig layoutConfig})
-      : _domainAxis = new OrdinalAxis(),
+      : _domainAxis = new OrdinalAxis()
+          ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
         super(vertical: vertical, layoutConfig: layoutConfig);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
@@ -93,8 +96,10 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   );
 
   bool vertical;
-  final _primaryMeasureAxis = new NumericAxis();
-  final _secondaryMeasureAxis = new NumericAxis();
+  final _primaryMeasureAxis = new NumericAxis()
+    ..layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
+  final _secondaryMeasureAxis = new NumericAxis()
+    ..layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
 
   bool _usePrimaryMeasureAxis = false;
   bool _useSecondaryMeasureAxis = false;

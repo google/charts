@@ -19,7 +19,13 @@ import 'package:meta/meta.dart' show protected;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../layout/layout_view.dart'
-    show LayoutPosition, LayoutView, LayoutViewConfig, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
+        LayoutViewPositionOrder,
+        LayoutViewPaintOrder,
+        ViewMeasuredSizes;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../chart_canvas.dart' show ChartCanvas;
 import '../../chart_context.dart' show ChartContext;
@@ -281,7 +287,10 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   @override
   LayoutViewConfig get layoutConfig {
-    return new LayoutViewConfig(position: _layoutPosition, positionOrder: 1);
+    return new LayoutViewConfig(
+        position: _layoutPosition,
+        positionOrder: LayoutViewPositionOrder.legend,
+        paintOrder: LayoutViewPaintOrder.legend);
   }
 
   /// Get layout position from legend position.

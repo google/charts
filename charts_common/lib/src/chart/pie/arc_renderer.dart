@@ -58,13 +58,18 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   // data.
   final _currentKeys = <String>[];
 
-  ArcRenderer({String rendererId, ArcRendererConfig<D> config})
-      : config = config ?? new ArcRendererConfig(),
-        arcRendererDecorators = config?.arcRendererDecorators ?? [],
+  factory ArcRenderer({String rendererId, ArcRendererConfig config}) {
+    return new ArcRenderer._internal(
+        rendererId: rendererId ?? 'line',
+        config: config ?? new ArcRendererConfig());
+  }
+
+  ArcRenderer._internal({String rendererId, this.config})
+      : arcRendererDecorators = config?.arcRendererDecorators ?? [],
         super(
-            rendererId: rendererId ?? 'arc',
-            layoutPositionOrder: 10,
-            symbolRenderer: config?.symbolRenderer);
+            rendererId: rendererId,
+            layoutPaintOrder: config.layoutPaintOrder,
+            symbolRenderer: config.symbolRenderer);
 
   @override
   void onAttach(BaseChart<D> chart) {

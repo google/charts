@@ -25,6 +25,7 @@ import '../common/base_chart.dart' show BaseChart;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/color.dart' show Color;
 import '../../common/symbol_renderer.dart' show CircleSymbolRenderer;
 import '../../data/series.dart' show AccessorFn, AttributeKey;
@@ -67,7 +68,8 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         pointRendererDecorators = config?.pointRendererDecorators ?? [],
         super(
             rendererId: rendererId ?? 'point',
-            layoutPositionOrder: 10,
+            layoutPaintOrder:
+                config?.layoutPaintOrder ?? LayoutViewPaintOrder.point,
             symbolRenderer:
                 config?.symbolRenderer ?? new CircleSymbolRenderer());
 

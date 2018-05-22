@@ -45,6 +45,10 @@ abstract class LayoutManager {
   /// Walk through the child views and apply the function passed in.
   void applyToViews(void apply(LayoutView view));
 
-  /// Return the child views in the order that they should be painted.
+  /// Return the child views in the order that they should be drawn.
   List<LayoutView> get paintOrderedViews;
+
+  /// Return the child views in the order that they should be positioned within
+  /// chart margins.
+  List<LayoutView> get positionOrderedViews;
 }

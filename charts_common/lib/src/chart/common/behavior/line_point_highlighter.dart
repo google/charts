@@ -27,7 +27,12 @@ import '../selection_model/selection_model.dart'
 import 'chart_behavior.dart' show ChartBehavior;
 import '../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../layout/layout_view.dart'
-    show LayoutPosition, LayoutView, LayoutViewConfig, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
+        LayoutViewPaintOrder,
+        ViewMeasuredSizes;
 import '../../../common/color.dart' show Color;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/style/style_factory.dart' show StyleFactory;
@@ -94,7 +99,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     _chart = chart;
 
     _view = new _LinePointLayoutView<D>(
-        layoutPositionOrder: 20,
+        layoutPaintOrder: LayoutViewPaintOrder.linePointHighlighter,
         showHorizontalFollowLine: showHorizontalFollowLine,
         showVerticalFollowLine: showVerticalFollowLine);
 
@@ -257,12 +262,13 @@ class _LinePointLayoutView<D> extends LayoutView {
   LinkedHashMap<String, _AnimatedPoint<D>> _seriesPointMap;
 
   _LinePointLayoutView({
-    @required int layoutPositionOrder,
+    @required int layoutPaintOrder,
     @required this.showHorizontalFollowLine,
     @required this.showVerticalFollowLine,
   }) : this.layoutConfig = new LayoutViewConfig(
+            paintOrder: LayoutViewPaintOrder.linePointHighlighter,
             position: LayoutPosition.DrawArea,
-            positionOrder: layoutPositionOrder);
+            positionOrder: layoutPaintOrder);
 
   set seriesPointMap(LinkedHashMap<String, _AnimatedPoint<D>> value) {
     _seriesPointMap = value;

@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import '../../common/symbol_renderer.dart';
-import '../layout/layout_view.dart' show LayoutViewConfig;
+import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import 'point_renderer.dart' show PointRenderer, pointSymbolRendererIdKey;
@@ -24,6 +24,9 @@ import 'point_renderer_decorator.dart' show PointRendererDecorator;
 class PointRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
   final String customRendererId;
+
+  /// The order to paint this renderer on the canvas.
+  final int layoutPaintOrder;
 
   /// List of decorators applied to rendered points.
   final List<PointRendererDecorator> pointRendererDecorators;
@@ -46,6 +49,7 @@ class PointRendererConfig<D> extends LayoutViewConfig
 
   PointRendererConfig(
       {this.customRendererId,
+      this.layoutPaintOrder = LayoutViewPaintOrder.point,
       this.pointRendererDecorators = const [],
       this.radiusPx = 3.5,
       this.symbolRenderer,

@@ -61,7 +61,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   LineRenderer._internal({String rendererId, this.config})
       : super(
             rendererId: rendererId,
-            layoutPositionOrder: 10,
+            layoutPaintOrder: config.layoutPaintOrder,
             symbolRenderer: config.symbolRenderer) {
     _pointRenderer = new PointRenderer<D>(
         config: new PointRendererConfig<D>(radiusPx: this.config.radiusPx));

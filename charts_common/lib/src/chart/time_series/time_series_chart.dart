@@ -20,6 +20,7 @@ import '../cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
 import '../common/chart_context.dart' show ChartContext;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../line/line_renderer.dart' show LineRenderer;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/date_time_factory.dart'
@@ -33,7 +34,8 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
       {bool vertical,
       LayoutConfig layoutConfig,
       this.dateTimeFactory = const LocalDateTimeFactory()})
-      : domainAxis = new DateTimeAxis(dateTimeFactory),
+      : domainAxis = new DateTimeAxis(dateTimeFactory)
+          ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
         super(vertical: vertical, layoutConfig: layoutConfig);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {

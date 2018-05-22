@@ -24,7 +24,13 @@ import '../processed_series.dart' show MutableSeries;
 import 'chart_behavior.dart' show ChartBehavior;
 import '../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../layout/layout_view.dart'
-    show LayoutPosition, LayoutView, LayoutViewConfig, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
+        LayoutViewPaintOrder,
+        LayoutViewPositionOrder,
+        ViewMeasuredSizes;
 import '../../../common/color.dart' show Color;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/style/style_factory.dart' show StyleFactory;
@@ -83,8 +89,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
     _chart = chart;
 
-    _view = new _RangeAnnotationLayoutView<D>(
-        layoutPositionOrder: -1, defaultColor: defaultColor);
+    _view = new _RangeAnnotationLayoutView<D>(defaultColor: defaultColor);
 
     chart.addView(_view);
 
@@ -215,11 +220,11 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
   LinkedHashMap<String, _AnimatedAnnotation<D>> _annotationMap;
 
   _RangeAnnotationLayoutView({
-    @required int layoutPositionOrder,
     @required this.defaultColor,
   }) : this.layoutConfig = new LayoutViewConfig(
+            paintOrder: LayoutViewPaintOrder.rangeAnnotation,
             position: LayoutPosition.DrawArea,
-            positionOrder: layoutPositionOrder);
+            positionOrder: LayoutViewPositionOrder.drawArea);
 
   set annotationMap(LinkedHashMap<String, _AnimatedAnnotation<D>> value) {
     _annotationMap = value;

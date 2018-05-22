@@ -121,7 +121,12 @@ class ScatterPlotComboLineChart extends StatelessWidget {
         customSeriesRenderers: [
           new charts.LineRendererConfig(
               // ID used to link series to this renderer.
-              customRendererId: 'customLine')
+              customRendererId: 'customLine',
+              // Configure the regression line to be painted above the points.
+              //
+              // By default, series drawn by the point renderer are painted on
+              // top of those drawn by a line renderer.
+              layoutPaintOrder: charts.LayoutViewPaintOrder.point + 1)
         ]);
   }
 

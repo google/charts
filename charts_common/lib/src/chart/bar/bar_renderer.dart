@@ -51,7 +51,10 @@ class BarRenderer<D>
 
   BarRenderer._internal({BarRendererConfig config, String rendererId})
       : barRendererDecorator = config.barRendererDecorator,
-        super(config: config, rendererId: rendererId, layoutPositionOrder: 10);
+        super(
+            config: config,
+            rendererId: rendererId,
+            layoutPaintOrder: config.layoutPaintOrder);
 
   @override
   void configureSeries(List<MutableSeries<D>> seriesList) {

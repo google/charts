@@ -90,11 +90,11 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   BaseBarRenderer(
       {@required BaseBarRendererConfig config,
       String rendererId,
-      int layoutPositionOrder})
+      int layoutPaintOrder})
       : this.config = config,
         super(
           rendererId: rendererId,
-          layoutPositionOrder: layoutPositionOrder,
+          layoutPaintOrder: layoutPaintOrder,
           symbolRenderer:
               config?.symbolRenderer ?? new RoundedRectSymbolRenderer(),
         );
