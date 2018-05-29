@@ -51,7 +51,8 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
 
     final color = pointElement.color.lighter;
 
-    symbolRenderer.paint(canvas, points[0], pointElement.radiusPx, color,
+    symbolRenderer.paint(
+        canvas, points[0], pointElement.boundsLineRadiusPx, color,
         p2: points[1]);
   }
 

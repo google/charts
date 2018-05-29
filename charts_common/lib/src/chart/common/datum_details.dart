@@ -13,20 +13,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show Point;
+
 import '../../common/color.dart' show Color;
 import 'processed_series.dart' show ImmutableSeries;
 
 typedef DomainFormatter<D>(D domain);
 typedef MeasureFormatter(num measure);
 
+/// Represents processed rendering details for a data point from a series.
 class DatumDetails<D> {
   final dynamic datum;
+
+  /// The index of the datum in the series.
+  final int index;
 
   /// Domain value of [datum].
   final D domain;
 
+  /// Domain lower bound value of [datum]. This may represent an error bound, or
+  /// a previous domain value.
+  final D domainLowerBound;
+
+  /// Domain upper bound value of [datum]. This may represent an error bound, or
+  /// a target domain value.
+  final D domainUpperBound;
+
   /// Measure value of [datum].
   final num measure;
+
+  /// Measure lower bound value of [datum]. This may represent an error bound,
+  /// or a previous value.
+  final num measureLowerBound;
+
+  /// Measure upper bound value of [datum]. This may represent an error bound,
+  /// or a target measure value.
+  final num measureUpperBound;
+
+  /// Measure offset value of [datum].
+  final num measureOffset;
 
   /// The series the [datum] is from.
   final ImmutableSeries<D> series;
@@ -34,17 +59,30 @@ class DatumDetails<D> {
   /// The color of this [datum].
   final Color color;
 
-  /// The chart X coordinate for the [datum] from a renderer.
-  final double chartX;
+  /// The chart position of the (domain, measure) for the [datum] from a
+  /// renderer.
+  final Point<double> chartPosition;
 
-  /// The chart Y coordinate for the [datum] from a renderer.
-  final double chartY;
+  /// The chart position of the (domainLowerBound, measureLowerBound) for the
+  /// [datum] from a renderer.
+  final Point<double> chartPositionLower;
 
-  /// Distance of [domain] from a given x, y coordinates.
+  /// The chart position of the (domainUpperBound, measureUpperBound) for the
+  /// [datum] from a renderer.
+  final Point<double> chartPositionUpper;
+
+  /// Distance of [domain] from a given (x, y) coordinate.
   final double domainDistance;
 
-  /// Distance of [measure] from a given x, y coordinates.
+  /// Distance of [measure] from a given (x, y) coordinate.
   final double measureDistance;
+
+  /// Relative Cartesian distance of ([domain], [measure]) from a given (x, y)
+  /// coordinate.
+  final double relativeDistance;
+
+  /// The radius of this [datum].
+  final double radiusPx;
 
   /// Optional formatter for [domain].
   DomainFormatter<D> domainFormatter;
@@ -54,14 +92,61 @@ class DatumDetails<D> {
 
   DatumDetails(
       {this.datum,
+      this.index,
       this.domain,
+      this.domainLowerBound,
+      this.domainUpperBound,
       this.measure,
+      this.measureLowerBound,
+      this.measureUpperBound,
+      this.measureOffset,
       this.series,
       this.color,
-      this.chartX,
-      this.chartY,
+      this.chartPosition,
+      this.chartPositionLower,
+      this.chartPositionUpper,
       this.domainDistance,
-      this.measureDistance});
+      this.measureDistance,
+      this.relativeDistance,
+      this.radiusPx});
+
+  factory DatumDetails.from(DatumDetails<D> other,
+      {D datum,
+      int index,
+      D domain,
+      D domainLowerBound,
+      D domainUpperBound,
+      num measure,
+      num measureLowerBound,
+      num measureUpperBound,
+      num measureOffset,
+      ImmutableSeries<D> series,
+      Color color,
+      Point<double> chartPosition,
+      Point<double> chartPositionLower,
+      Point<double> chartPositionUpper,
+      double domainDistance,
+      double measureDistance,
+      double radiusPx}) {
+    return new DatumDetails<D>(
+        datum: datum ?? other.datum,
+        index: index ?? other.index,
+        domain: domain ?? other.domain,
+        domainLowerBound: domainLowerBound ?? other.domainLowerBound,
+        domainUpperBound: domainUpperBound ?? other.domainUpperBound,
+        measure: measure ?? other.measure,
+        measureLowerBound: measureLowerBound ?? other.measureLowerBound,
+        measureUpperBound: measureUpperBound ?? other.measureUpperBound,
+        measureOffset: measureOffset ?? other.measureOffset,
+        series: series ?? other.series,
+        color: color ?? other.color,
+        chartPosition: chartPosition ?? other.chartPosition,
+        chartPositionLower: chartPositionLower ?? other.chartPositionLower,
+        chartPositionUpper: chartPositionUpper ?? other.chartPositionUpper,
+        domainDistance: domainDistance ?? other.domainDistance,
+        measureDistance: measureDistance ?? other.measureDistance,
+        radiusPx: radiusPx ?? other.radiusPx);
+  }
 
   String get formattedDomain =>
       (domainFormatter != null) ? domainFormatter(domain) : domain.toString();

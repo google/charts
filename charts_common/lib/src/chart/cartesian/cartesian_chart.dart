@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show Point;
 import 'package:meta/meta.dart' show protected;
 
 import 'axis/axis.dart'
@@ -256,8 +257,9 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       final measure = series.measureFn(datumIndex);
       final color = series.colorFn(datumIndex);
 
-      final x = series.getAttr(domainAxisKey).getLocation(domain);
-      final y = series.getAttr(measureAxisKey).getLocation(measure);
+      final chartPosition = new Point<double>(
+          series.getAttr(domainAxisKey).getLocation(domain),
+          series.getAttr(measureAxisKey).getLocation(measure));
 
       entries.add(new DatumDetails(
           datum: datum,
@@ -265,8 +267,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
           measure: measure,
           series: series,
           color: color,
-          chartX: x,
-          chartY: y));
+          chartPosition: chartPosition));
     });
 
     return entries;

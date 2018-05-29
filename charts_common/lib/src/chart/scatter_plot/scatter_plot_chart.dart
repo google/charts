@@ -22,7 +22,23 @@ import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 
+/// A scatter plot draws series data as a collection of points in a two
+/// dimensional Cartesian space, plotting two variables from each datum at a
+/// point represented by (domain, measure).
+///
+/// A third and fourth metric can be represented by configuring the color and
+/// radius of each datum.
+///
+/// Scatter plots render grid lines along both the domain and measure axes by
+/// default.
 class ScatterPlotChart extends NumericCartesianChart {
+  /// Select data by relative Cartesian distance. Scatter plots draw potentially
+  /// overlapping data in an arbitrary (x, y) space, and do not consider the
+  /// domain axis to be more or  less important for data selection than the
+  /// measure axis.
+  @override
+  bool get selectNearestByDomain => false;
+
   ScatterPlotChart({bool vertical, LayoutConfig layoutConfig})
       : super(vertical: vertical, layoutConfig: layoutConfig);
 

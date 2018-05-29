@@ -27,6 +27,7 @@ import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../../common/color.dart' show Color;
+import '../../common/math.dart' show clamp;
 import '../../common/symbol_renderer.dart' show RoundedRectSymbolRenderer;
 import '../../data/series.dart' show AttributeKey;
 
@@ -465,7 +466,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint) {
+      Point<double> chartPoint, bool byDomain) {
     // Was it even in the drawArea?
     if (!componentBounds.containsPoint(chartPoint)) {
       return <DatumDetails<D>>[];
@@ -526,12 +527,19 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       final segmentMeasureDistance =
           _getDistance(chartPoint.y.round(), barBounds.top, barBounds.bottom);
 
+      final nearestPoint = new Point<double>(
+          clamp(chartPoint.x, barBounds.left, barBounds.right).toDouble(),
+          clamp(chartPoint.y, barBounds.top, barBounds.bottom).toDouble());
+
+      final relativeDistance = chartPoint.distanceTo(nearestPoint);
+
       return new DatumDetails<D>(
         series: bar.series,
         datum: bar.datum,
         domain: bar.domainValue,
         domainDistance: segmentDomainDistance,
         measureDistance: segmentMeasureDistance,
+        relativeDistance: relativeDistance,
       );
     }));
   }

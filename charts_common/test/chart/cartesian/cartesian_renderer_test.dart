@@ -28,7 +28,8 @@ import 'package:test/test.dart';
 /// For testing viewport start / end.
 class FakeCartesianRenderer extends BaseCartesianRenderer {
   @override
-  List<DatumDetails> getNearestDatumDetailPerSeries(Point<double> chartPoint) =>
+  List<DatumDetails> getNearestDatumDetailPerSeries(
+          Point<double> chartPoint, bool byDomain) =>
       null;
 
   @override
@@ -39,6 +40,11 @@ class FakeCartesianRenderer extends BaseCartesianRenderer {
 
   @override
   SymbolRenderer get symbolRenderer => null;
+
+  DatumDetails addPositionToDetailsForSeriesDatum(
+      DatumDetails details, SeriesDatum seriesDatum) {
+    return details;
+  }
 }
 
 class MockAxis extends Mock implements Axis {}

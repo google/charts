@@ -13,19 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show max, min, Rectangle;
+import 'dart:math' show max, min, Point, Rectangle;
 import 'package:meta/meta.dart' show required;
 
 import 'bar_renderer_config.dart' show BarRendererConfig, CornerStrategy;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
-import 'base_bar_renderer.dart' show BaseBarRenderer;
+import 'base_bar_renderer.dart'
+    show BaseBarRenderer, barGroupCountKey, barGroupIndexKey;
 import 'base_bar_renderer_element.dart'
     show BaseAnimatedBar, BaseBarRendererElement;
-import '../cartesian/axis/axis.dart' show ImmutableAxis;
+import '../cartesian/axis/axis.dart'
+    show ImmutableAxis, domainAxisKey, measureAxisKey;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
-import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../common/datum_details.dart' show DatumDetails;
+import '../common/processed_series.dart'
+    show ImmutableSeries, MutableSeries, SeriesDatum;
 import '../../common/color.dart' show Color;
 
 /// Renders series data as a series of bars.
@@ -60,6 +64,40 @@ class BarRenderer<D>
   void configureSeries(List<MutableSeries<D>> seriesList) {
     assignMissingColors(getOrderedSeriesList(seriesList),
         emptyCategoryUsesSinglePalette: true);
+  }
+
+  DatumDetails<D> addPositionToDetailsForSeriesDatum(
+      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
+    final series = details.series;
+
+    final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
+    final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+
+    final barGroupIndex = series.getAttr(barGroupIndexKey);
+    final numBarGroups = series.getAttr(barGroupCountKey);
+
+    final bounds = _getBarBounds(
+        details.domain,
+        domainAxis,
+        domainAxis.rangeBand.round(),
+        details.measure,
+        details.measureOffset,
+        measureAxis,
+        barGroupIndex,
+        numBarGroups);
+
+    var chartPosition;
+
+    if (renderingVertically) {
+      chartPosition = new Point<double>(
+          (bounds.left + (bounds.width / 2)).toDouble(), bounds.top.toDouble());
+    } else {
+      chartPosition = new Point<double>(
+          rtl ? bounds.left.toDouble() : bounds.right.toDouble(),
+          (bounds.top + (bounds.height / 2)).toDouble());
+    }
+
+    return new DatumDetails.from(details, chartPosition: chartPosition);
   }
 
   @override

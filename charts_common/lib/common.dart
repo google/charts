@@ -88,6 +88,10 @@ export 'src/chart/scatter_plot/point_renderer.dart' show PointRenderer;
 export 'src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
 export 'src/chart/scatter_plot/scatter_plot_chart.dart' show ScatterPlotChart;
+export 'src/chart/scatter_plot/symbol_annotation_renderer.dart'
+    show SymbolAnnotationRenderer;
+export 'src/chart/scatter_plot/symbol_annotation_renderer_config.dart'
+    show SymbolAnnotationRendererConfig;
 export 'src/chart/time_series/time_series_chart.dart' show TimeSeriesChart;
 export 'src/common/color.dart' show Color;
 export 'src/common/date_time_factory.dart'

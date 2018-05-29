@@ -418,17 +418,34 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     final measure = series.measureFn(datumIndex);
     final color = series.colorFn(datumIndex);
 
-    final arcList = _seriesArcMap[series.id];
+    final chartPosition = _getChartPosition(series.id, domain.toString());
+
+    return new DatumDetails(
+        datum: datum,
+        domain: domain,
+        measure: measure,
+        series: series,
+        color: color,
+        chartPosition: chartPosition);
+  }
+
+  /// Returns the chart position for a given datum by series ID and domain
+  /// value.
+  ///
+  /// [seriesId] the series ID.
+  ///
+  /// [key] the key in the current animated arc list.
+  Point<double> _getChartPosition(String seriesId, String key) {
+    var chartPosition;
+
+    final arcList = _seriesArcMap[seriesId];
 
     if (arcList == null) {
-      return null;
+      return chartPosition;
     }
 
-    var x = 0.0;
-    var y = 0.0;
-
     for (_AnimatedArc<D> arc in arcList.arcs) {
-      if (arc.key == domain.toString()) {
+      if (arc.key == key) {
         // Now that we have found the matching arc, calculate the center point
         // halfway between the inner and outer radius, and the start and end
         // angles.
@@ -438,26 +455,20 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         final centerPointRadius =
             arcList.innerRadius + (arcList.radius - arcList.innerRadius) / 2;
 
-        x = centerPointRadius * cos(centerAngle) + arcList.center.x;
-        y = centerPointRadius * sin(centerAngle) + arcList.center.y;
+        chartPosition = new Point<double>(
+            centerPointRadius * cos(centerAngle) + arcList.center.x,
+            centerPointRadius * sin(centerAngle) + arcList.center.y);
 
         break;
       }
     }
 
-    return new DatumDetails(
-        datum: datum,
-        domain: domain,
-        measure: measure,
-        series: series,
-        color: color,
-        chartX: x,
-        chartY: y);
+    return chartPosition;
   }
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint) {
+      Point<double> chartPoint, bool byDomain) {
     final nearest = <DatumDetails<D>>[];
 
     // Was it even in the drawArea?
@@ -510,6 +521,15 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     });
 
     return nearest;
+  }
+
+  @override
+  DatumDetails<D> addPositionToDetailsForSeriesDatum(
+      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
+    final chartPosition =
+        _getChartPosition(details.series.id, details.domain.toString());
+
+    return new DatumDetails.from(details, chartPosition: chartPosition);
   }
 
   /// Assigns colors to series that are missing their colorFn.

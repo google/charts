@@ -69,8 +69,9 @@ class LayoutViewPaintOrder {
 /// we need to re-order these components internally.
 class LayoutViewPositionOrder {
   static const drawArea = 0;
-  static const axis = 10;
-  static const legend = 20;
+  static const symbolAnnotation = 10;
+  static const axis = 20;
+  static const legend = 30;
 }
 
 /// A configuration for margin (empty space) around a layout child view.

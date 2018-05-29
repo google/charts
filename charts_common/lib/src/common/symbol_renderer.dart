@@ -144,7 +144,7 @@ class RectSymbolRenderer extends SymbolRenderer {
   }
 }
 
-/// Cylinder symbol renderer.
+/// Draws a cylindrical shape connecting two points.
 class CylinderSymbolRenderer extends PointSymbolRenderer {
   CylinderSymbolRenderer();
 
@@ -158,8 +158,8 @@ class CylinderSymbolRenderer extends PointSymbolRenderer {
       throw new ArgumentError('Invalid point p2 "${p2}"');
     }
 
-    var adjustedP1 = new Point<double>(p1.x, p1.y);
-    var adjustedP2 = new Point<double>(p2.x, p2.y);
+    final adjustedP1 = new Point<double>(p1.x, p1.y);
+    final adjustedP2 = new Point<double>(p2.x, p2.y);
 
     canvas.drawLine(
         points: [adjustedP1, adjustedP2],
@@ -169,6 +169,35 @@ class CylinderSymbolRenderer extends PointSymbolRenderer {
   }
 
   bool shouldRepaint(CylinderSymbolRenderer oldRenderer) {
+    return this != oldRenderer;
+  }
+}
+
+/// Draws a rectangular shape connecting two points.
+class RectangleRangeSymbolRenderer extends PointSymbolRenderer {
+  RectangleRangeSymbolRenderer();
+
+  void paint(ChartCanvas canvas, Point<double> p1, double radius, Color color,
+      {Point<double> p2}) {
+    if (p1 == null) {
+      throw new ArgumentError('Invalid point p1 "${p1}"');
+    }
+
+    if (p2 == null) {
+      throw new ArgumentError('Invalid point p2 "${p2}"');
+    }
+
+    final adjustedP1 = new Point<double>(p1.x, p1.y);
+    final adjustedP2 = new Point<double>(p2.x, p2.y);
+
+    canvas.drawLine(
+        points: [adjustedP1, adjustedP2],
+        stroke: color,
+        roundEndCaps: false,
+        strokeWidthPx: radius * 2);
+  }
+
+  bool shouldRepaint(RectangleRangeSymbolRenderer oldRenderer) {
     return this != oldRenderer;
   }
 }

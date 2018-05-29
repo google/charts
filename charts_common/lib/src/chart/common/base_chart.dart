@@ -22,7 +22,7 @@ import 'chart_canvas.dart' show ChartCanvas;
 import 'chart_context.dart' show ChartContext;
 import 'datum_details.dart' show DatumDetails;
 import 'series_renderer.dart' show SeriesRenderer, rendererIdKey, rendererKey;
-import 'processed_series.dart' show MutableSeries;
+import 'processed_series.dart' show MutableSeries, SeriesDatum;
 import '../layout/layout_view.dart' show LayoutView;
 import '../layout/layout_config.dart' show LayoutConfig;
 import '../layout/layout_manager.dart' show LayoutManager;
@@ -65,6 +65,15 @@ abstract class BaseChart<D> {
   final _gestureProxy = new ProxyGestureListener();
 
   final _selectionModels = <SelectionModelType, SelectionModel<D>>{};
+
+  /// Whether data should be selected by nearest domain distance, or by relative
+  /// distance.
+  ///
+  /// This should generally be true for chart types that are intended to be
+  /// aggregated by domain, and false for charts that plot arbitrary x,y data.
+  /// Scatter plots, for example, may have many overlapping data with the same
+  /// domain value.
+  bool get selectNearestByDomain => true;
 
   final _lifecycleListeners = <LifecycleListener<D>>[];
 
@@ -172,23 +181,56 @@ abstract class BaseChart<D> {
             .containsPoint(chartPosition));
   }
 
+  /// Retrieves the datum details that are nearest to the given [drawAreaPoint].
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
       Point<double> drawAreaPoint) {
     final details = <DatumDetails<D>>[];
     _usingRenderers.forEach((String rendererId) {
       details.addAll(getSeriesRenderer(rendererId)
-          .getNearestDatumDetailPerSeries(drawAreaPoint));
+          .getNearestDatumDetailPerSeries(
+              drawAreaPoint, selectNearestByDomain));
     });
 
-    // Sort so that the nearest one is first.
-    // Special sort, sort by domain distance first, then by measure distance.
     details.sort((DatumDetails<D> a, DatumDetails<D> b) {
-      int domainDiff = a.domainDistance.compareTo(b.domainDistance);
-      if (domainDiff == 0) {
-        return a.measureDistance.compareTo(b.measureDistance);
+      // Sort so that the nearest one is first.
+      // Special sort, sort by domain distance first, then by measure distance.
+      if (selectNearestByDomain) {
+        int domainDiff = a.domainDistance.compareTo(b.domainDistance);
+        if (domainDiff == 0) {
+          return a.measureDistance.compareTo(b.measureDistance);
+        }
+        return domainDiff;
+      } else {
+        return a.relativeDistance.compareTo(b.relativeDistance);
       }
-      return domainDiff;
     });
+
+    return details;
+  }
+
+  /// Retrieves the datum details for the current chart selection.
+  ///
+  /// [selectionModelType] specifies the type of the selection model to use.
+  List<DatumDetails<D>> getSelectedDatumDetails(
+      SelectionModelType selectionModelType) {
+    final details = <DatumDetails<D>>[];
+
+    if (_currentSeriesList == null) {
+      return details;
+    }
+
+    SelectionModel selectionModel = getSelectionModel(selectionModelType);
+    if (selectionModel == null || !selectionModel.hasDatumSelection) {
+      return details;
+    }
+
+    // Pass each selected datum to the appropriate series renderer to get full
+    // details appropriate to its series type.
+    for (SeriesDatum<D> seriesDatum in selectionModel.selectedDatum) {
+      final rendererId = seriesDatum.series.getAttr(rendererIdKey);
+      details.add(
+          getSeriesRenderer(rendererId).getDetailsForSeriesDatum(seriesDatum));
+    }
 
     return details;
   }

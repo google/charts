@@ -17,7 +17,7 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/time_series_charts/simple_thumb.png)](example/time_series_charts/simple) | Range Annotation<br>[![](example/time_series_charts/range_annotation_thumb.png)](example/time_series_charts/range_annotation) | | |
+| Simple<br>[![](example/time_series_charts/simple_thumb.png)](example/time_series_charts/simple) | Range Annotation<br>[![](example/time_series_charts/range_annotation_thumb.png)](example/time_series_charts/range_annotation) | Symbol Annotation<br>[![](example/time_series_charts/symbol_annotation_thumb.png)](example/time_series_charts/symbol_annotation) | |
 
 
 ### Line Charts

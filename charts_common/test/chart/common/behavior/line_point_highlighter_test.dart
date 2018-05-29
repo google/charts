@@ -13,11 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show Point;
+
 import 'package:charts_common/src/chart/cartesian/cartesian_chart.dart';
 import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
 import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/behavior/line_point_highlighter.dart';
+import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
+import 'package:charts_common/src/chart/common/series_renderer.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
 import 'package:charts_common/src/common/material_palette.dart';
 import 'package:charts_common/src/data/series.dart';
@@ -61,9 +65,29 @@ class MockNumericAxis extends Mock implements NumericAxis {
   }
 }
 
+class MockSeriesRenderer extends BaseSeriesRenderer {
+  @override
+  void update(_, __) {}
+
+  @override
+  void paint(_, __) {}
+
+  List<DatumDetails> getNearestDatumDetailPerSeries(
+      Point<double> chartPoint, bool byDomain) {
+    return null;
+  }
+
+  DatumDetails addPositionToDetailsForSeriesDatum(
+      DatumDetails details, SeriesDatum seriesDatum) {
+    return new DatumDetails.from(details,
+        chartPosition: new Point<double>(0.0, 0.0));
+  }
+}
+
 void main() {
   MockChart _chart;
   MockSelectionModel _selectionModel;
+  MockSeriesRenderer _seriesRenderer;
 
   MutableSeries<int> _series1;
   final _s1D1 = new MyRow(1, 11);
@@ -75,7 +99,23 @@ void main() {
   final _s2D2 = new MyRow(5, 22);
   final _s2D3 = new MyRow(6, 23);
 
-  _setupSelection(List<MyRow> selected) {
+  List<DatumDetails> _mockGetSelectedDatumDetails(List<SeriesDatum> selection) {
+    final details = <DatumDetails>[];
+
+    for (SeriesDatum seriesDatum in selection) {
+      details.add(_seriesRenderer.getDetailsForSeriesDatum(seriesDatum));
+    }
+
+    return details;
+  }
+
+  _setupSelection(List<SeriesDatum> selection) {
+    final selected = <MyRow>[];
+
+    for (var i = 0; i < selection.length; i++) {
+      selected.add(selection[0].datum);
+    }
+
     for (int i = 0; i < _series1.data.length; i++) {
       when(_selectionModel.isDatumSelected(_series1, i))
           .thenReturn(selected.contains(_series1.data[i]));
@@ -84,10 +124,19 @@ void main() {
       when(_selectionModel.isDatumSelected(_series2, i))
           .thenReturn(selected.contains(_series2.data[i]));
     }
+
+    when(_selectionModel.selectedDatum).thenReturn(selection);
+
+    final selectedDetails = _mockGetSelectedDatumDetails(selection);
+
+    when(_chart.getSelectedDatumDetails(SelectionModelType.info))
+        .thenReturn(selectedDetails);
   }
 
   setUp(() {
     _chart = new MockChart();
+
+    _seriesRenderer = new MockSeriesRenderer();
 
     _selectionModel = new MockSelectionModel();
     when(_chart.getSelectionModel(SelectionModelType.info))
@@ -117,7 +166,10 @@ void main() {
           new LinePointHighlighter(selectionModelType: SelectionModelType.info);
       final tester = new LinePointHighlighterTester(behavior);
       behavior.attachTo(_chart);
-      _setupSelection([_s1D2, _s2D2]);
+      _setupSelection([
+        new SeriesDatum(_series1, _s1D2),
+        new SeriesDatum(_series2, _s2D2),
+      ]);
 
       // Mock axes for returning fake domain locations.
       Axis domainAxis = new MockNumericAxis();
@@ -137,6 +189,7 @@ void main() {
       _selectionModel.lastListener(_selectionModel);
       verify(_chart.redraw(skipAnimation: true, skipLayout: true));
       _chart.lastListener.onPostprocess(seriesList);
+
       _chart.lastListener.onAxisConfigured();
 
       // Verify
@@ -198,7 +251,10 @@ void main() {
       final behavior =
           new LinePointHighlighter(selectionModelType: SelectionModelType.info);
       behavior.attachTo(_chart);
-      _setupSelection([_s1D2, _s2D2]);
+      _setupSelection([
+        new SeriesDatum(_series1, _s1D2),
+        new SeriesDatum(_series2, _s2D2),
+      ]);
 
       // Act
       behavior.removeFrom(_chart);

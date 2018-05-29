@@ -114,8 +114,12 @@ export 'package:charts_common/src/chart/line/line_renderer_config.dart'
     show LineRendererConfig;
 export 'package:charts_common/src/chart/scatter_plot/comparison_points_decorator.dart'
     show ComparisonPointsDecorator;
+export 'package:charts_common/src/chart/scatter_plot/point_renderer.dart'
+    show boundsLineRadiusPxKey, boundsLineRadiusPxFnKey;
 export 'package:charts_common/src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
+export 'package:charts_common/src/chart/scatter_plot/symbol_annotation_renderer_config.dart'
+    show SymbolAnnotationRendererConfig;
 export 'package:charts_common/src/chart/pie/arc_label_decorator.dart'
     show ArcLabelDecorator, ArcLabelLeaderLineStyleSpec, ArcLabelPosition;
 export 'package:charts_common/src/chart/pie/arc_renderer_config.dart'

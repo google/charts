@@ -44,14 +44,28 @@ class PointRendererConfig<D> extends LayoutViewConfig
 
   final rendererAttributes = new RendererAttributes();
 
-  /// Default radius of the points.
+  /// Default radius of the points, used if a series does not define a radiusPx
+  /// accessor function.
   final double radiusPx;
+
+  /// Optional default radius of data bounds lines, used if a series does not
+  /// define a boundsLineRadiusPx accessor function.
+  ///
+  /// If the series does not define a boundsLineRadiusPx accessor function, then
+  /// each datum's boundsLineRadiusPx value will be filled in by using the
+  /// following values, in order of what is defined:
+  ///
+  /// 1) boundsLineRadiusPx property defined on the series.
+  /// 2) boundsLineRadiusPx property defined on this renderer config.
+  /// 3) Final fallback is to use the point radiusPx for the datum.
+  final double boundsLineRadiusPx;
 
   PointRendererConfig(
       {this.customRendererId,
       this.layoutPaintOrder = LayoutViewPaintOrder.point,
       this.pointRendererDecorators = const [],
       this.radiusPx = 3.5,
+      this.boundsLineRadiusPx,
       this.symbolRenderer,
       this.customSymbolRenderers});
 

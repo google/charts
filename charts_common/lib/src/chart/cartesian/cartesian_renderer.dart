@@ -66,8 +66,12 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
           domainAxis.addDomainValue(domainFn(i));
 
           if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
-            domainAxis.addDomainValue(domainLowerBoundFn(i));
-            domainAxis.addDomainValue(domainUpperBoundFn(i));
+            final domainLowerBound = domainLowerBoundFn(i);
+            final domainUpperBound = domainUpperBoundFn(i);
+            if (domainLowerBound != null && domainUpperBound != null) {
+              domainAxis.addDomainValue(domainLowerBound);
+              domainAxis.addDomainValue(domainUpperBound);
+            }
           }
         }
       } else {
@@ -77,8 +81,12 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
           domainAxis.addDomainValue(domainFn(i));
 
           if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
-            domainAxis.addDomainValue(domainLowerBoundFn(i));
-            domainAxis.addDomainValue(domainUpperBoundFn(i));
+            final domainLowerBound = domainLowerBoundFn(i);
+            final domainUpperBound = domainUpperBoundFn(i);
+            if (domainLowerBound != null && domainUpperBound != null) {
+              domainAxis.addDomainValue(domainLowerBound);
+              domainAxis.addDomainValue(domainUpperBound);
+            }
           }
         }
       }

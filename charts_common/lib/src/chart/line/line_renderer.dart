@@ -23,7 +23,8 @@ import '../cartesian/axis/axis.dart'
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
-import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../common/processed_series.dart'
+    show ImmutableSeries, MutableSeries, SeriesDatum;
 import '../scatter_plot/point_renderer.dart' show PointRenderer;
 import '../scatter_plot/point_renderer_config.dart' show PointRendererConfig;
 import '../../common/color.dart' show Color;
@@ -455,7 +456,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint) {
+      Point<double> chartPoint, bool byDomain) {
     final nearest = <DatumDetails<D>>[];
 
     // Was it even in the drawArea?
@@ -467,6 +468,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       _DatumPoint<D> nearestPoint;
       double nearestDomainDistance = 10000.0;
       double nearestMeasureDistance = 10000.0;
+      double nearestRelativeDistance = 10000.0;
 
       seriesSegments.forEach((_AnimatedElements<D> segment) {
         if (segment.overlaySeries) {
@@ -481,12 +483,24 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
           final domainDistance = (p.x - chartPoint.x).abs();
           final measureDistance = (p.y - chartPoint.y).abs();
-          if ((domainDistance < nearestDomainDistance) ||
-              ((domainDistance == nearestDomainDistance &&
-                  measureDistance < nearestMeasureDistance))) {
-            nearestPoint = p;
-            nearestDomainDistance = domainDistance;
-            nearestMeasureDistance = measureDistance;
+          final relativeDistance = chartPoint.distanceTo(p);
+
+          if (byDomain) {
+            if ((domainDistance < nearestDomainDistance) ||
+                ((domainDistance == nearestDomainDistance &&
+                    measureDistance < nearestMeasureDistance))) {
+              nearestPoint = p;
+              nearestDomainDistance = domainDistance;
+              nearestMeasureDistance = measureDistance;
+              nearestRelativeDistance = relativeDistance;
+            }
+          } else {
+            if (relativeDistance < nearestRelativeDistance) {
+              nearestPoint = p;
+              nearestDomainDistance = domainDistance;
+              nearestMeasureDistance = measureDistance;
+              nearestRelativeDistance = relativeDistance;
+            }
           }
         });
       });
@@ -498,7 +512,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             domain: nearestPoint.domain,
             series: nearestPoint.series,
             domainDistance: nearestDomainDistance,
-            measureDistance: nearestMeasureDistance));
+            measureDistance: nearestMeasureDistance,
+            relativeDistance: nearestRelativeDistance));
       }
     });
 
@@ -506,6 +521,20 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     // base chart.
 
     return nearest;
+  }
+
+  DatumDetails<D> addPositionToDetailsForSeriesDatum(
+      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
+    final series = details.series;
+
+    final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
+    final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+
+    final point = _getPoint(seriesDatum.datum, details.domain, series,
+        domainAxis, details.measure, details.measureOffset, measureAxis);
+    final chartPosition = new Point<double>(point.x, point.y);
+
+    return new DatumDetails.from(details, chartPosition: chartPosition);
   }
 }
 

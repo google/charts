@@ -141,6 +141,12 @@ void main() {
     return series;
   }
 
+  bool selectNearestByDomain;
+
+  setUp(() {
+    selectNearestByDomain = true;
+  });
+
   /////////////////////////////////////////
   // Additional edge test cases
   /////////////////////////////////////////
@@ -160,7 +166,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(1));
@@ -188,7 +195,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(0));
@@ -209,7 +217,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(1));
@@ -237,7 +246,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(0));
@@ -260,7 +270,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 13.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 13.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(1));
@@ -287,7 +298,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -322,7 +334,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 13.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 13.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -360,7 +373,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(4));
@@ -407,7 +421,7 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 13.0, 20.0));
+          new Point<double>(70.0 + 10.0 + 13.0, 20.0), selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(1));
@@ -434,7 +448,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 50.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 50.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -469,7 +484,7 @@ void main() {
       // Act
       // Note: point is in the axis, over a bar outside of the viewport.
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(65.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(65.0, 20.0 + 100.0 - 5.0), selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(0));
@@ -494,7 +509,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 13.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 13.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(1));
@@ -521,7 +537,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -556,7 +573,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -593,7 +611,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(4));
@@ -641,7 +660,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 100.0, 20.0 + 10.0 + 20.0));
+          new Point<double>(70.0 + 100.0, 20.0 + 10.0 + 20.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(1));
@@ -668,7 +688,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 50.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 50.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -705,7 +726,7 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 13.0, 20.0));
+          new Point<double>(70.0 + 10.0 + 13.0, 20.0), selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(1));
@@ -732,7 +753,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -767,7 +789,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 13.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 13.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -805,7 +828,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 20.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(4));
@@ -855,7 +879,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 10.0 + 50.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(70.0 + 10.0 + 50.0, 20.0 + 100.0 - 5.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -890,7 +915,7 @@ void main() {
       // Act
       // Note: point is in the axis, over a bar outside of the viewport.
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(65.0, 20.0 + 100.0 - 5.0));
+          new Point<double>(65.0, 20.0 + 100.0 - 5.0), selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(0));
@@ -915,7 +940,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 100.0, 20.0 + 10.0 + 20.0));
+          new Point<double>(70.0 + 100.0, 20.0 + 10.0 + 20.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(1));
@@ -942,7 +968,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -977,7 +1004,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));
@@ -1014,7 +1042,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 20.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(4));
@@ -1063,7 +1092,8 @@ void main() {
 
       // Act
       final details = renderer.getNearestDatumDetailPerSeries(
-          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 50.0));
+          new Point<double>(70.0 + 5.0, 20.0 + 10.0 + 50.0),
+          selectNearestByDomain);
 
       // Verify
       expect(details.length, equals(2));

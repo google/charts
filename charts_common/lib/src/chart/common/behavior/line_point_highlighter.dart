@@ -21,6 +21,7 @@ import '../../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
 import '../base_chart.dart' show BaseChart, LifecycleListener;
 import '../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
+import '../datum_details.dart' show DatumDetails;
 import '../processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
@@ -136,74 +137,68 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   void _updateViewData() {
     _currentKeys.clear();
 
-    SelectionModel selectionModel =
-        _chart.getSelectionModel(selectionModelType);
+    final selectedDatumDetails =
+        _chart.getSelectedDatumDetails(selectionModelType);
 
-    _seriesList?.forEach((MutableSeries<D> series) {
-      var domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
-      var domainFn = series.domainFn;
-      var measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
-      var measureFn = series.measureFn;
-      var measureOffsetFn = series.measureOffsetFn;
-      var colorFn = series.colorFn;
-      var lineKey = series.id;
-      var radiusPxFn = series.radiusPxFn;
-
-      for (var index = 0; index < series.data.length; index++) {
-        final datum = series.data[index];
-
-        if (selectionModel.isDatumSelected(series, index)) {
-          final domainValue = domainFn(index);
-
-          Color color = colorFn(index);
-
-          double radiusPx;
-          if (radiusPxFn != null) {
-            radiusPx = radiusPxFn(index).toDouble() + radiusPaddingPx;
-          } else {
-            radiusPx = defaultRadiusPx;
-          }
-
-          var pointKey = '${lineKey}::${domainValue}';
-
-          // If we already have a AnimatingPoint for that index, use it.
-          _AnimatedPoint<D> animatingPoint;
-          if (_seriesPointMap.containsKey(pointKey)) {
-            animatingPoint = _seriesPointMap[pointKey];
-          } else {
-            // Create a new line and have it animate in from axis.
-            var point = _getPoint(
-                datum, domainValue, series, domainAxis, 0.0, 0.0, measureAxis);
-
-            animatingPoint = new _AnimatedPoint<D>(
-                key: pointKey, overlaySeries: series.overlaySeries)
-              ..setNewTarget(new _PointRendererElement<D>()
-                ..color = color
-                ..point = point
-                ..radiusPx = radiusPx
-                ..measureAxisPosition = measureAxis.getLocation(0.0));
-
-            _seriesPointMap[pointKey] = animatingPoint;
-          }
-
-          // Create a new line using the final point locations.
-          var point = _getPoint(datum, domainValue, series, domainAxis,
-              measureFn(index), measureOffsetFn(index), measureAxis);
-
-          // Update the set of lines that still exist in the series data.
-          _currentKeys.add(pointKey);
-
-          // Get the point element we are going to setup.
-          final pointElement = new _PointRendererElement<D>()
-            ..point = point
-            ..color = color
-            ..radiusPx = radiusPx
-            ..measureAxisPosition = measureAxis.getLocation(0.0);
-
-          animatingPoint.setNewTarget(pointElement);
-        }
+    for (DatumDetails<D> detail in selectedDatumDetails) {
+      if (detail == null) {
+        continue;
       }
-    });
+
+      final series = detail.series;
+      final datum = detail.datum;
+
+      final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
+      final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+
+      final lineKey = series.id;
+
+      double radiusPx = (detail.radiusPx != null)
+          ? detail.radiusPx.toDouble() + radiusPaddingPx
+          : defaultRadiusPx;
+
+      var pointKey = '${lineKey}::${detail.domain}';
+
+      // If we already have a AnimatingPoint for that index, use it.
+      _AnimatedPoint<D> animatingPoint;
+      if (_seriesPointMap.containsKey(pointKey)) {
+        animatingPoint = _seriesPointMap[pointKey];
+      } else {
+        // Create a new line and have it animate in from axis.
+        var point = _getPoint(
+            datum, detail.domain, series, domainAxis, 0.0, 0.0, measureAxis);
+
+        animatingPoint = new _AnimatedPoint<D>(
+            key: pointKey, overlaySeries: series.overlaySeries)
+          ..setNewTarget(new _PointRendererElement<D>()
+            ..color = detail.color
+            ..point = point
+            ..radiusPx = radiusPx
+            ..measureAxisPosition = measureAxis.getLocation(0.0));
+
+        _seriesPointMap[pointKey] = animatingPoint;
+      }
+
+      // Create a new line using the final point locations.
+      var point = new _DatumPoint<D>(
+          datum: datum,
+          domain: detail.domain,
+          series: series,
+          x: detail.chartPosition.x,
+          y: detail.chartPosition.y);
+
+      // Update the set of lines that still exist in the series data.
+      _currentKeys.add(pointKey);
+
+      // Get the point element we are going to setup.
+      final pointElement = new _PointRendererElement<D>()
+        ..point = point
+        ..color = detail.color
+        ..radiusPx = radiusPx
+        ..measureAxisPosition = measureAxis.getLocation(0.0);
+
+      animatingPoint.setNewTarget(pointElement);
+    }
 
     // Animate out points that don't exist anymore.
     _seriesPointMap.forEach((String key, _AnimatedPoint<D> point) {
