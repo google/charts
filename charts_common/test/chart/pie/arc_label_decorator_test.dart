@@ -131,8 +131,9 @@ void main() {
       decorator.decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       // Draw text is called twice (once for each arc) and all 3 parameters were
       // captured. Total parameters captured expected to be 6.
       expect(captured, hasLength(6));
@@ -175,8 +176,9 @@ void main() {
       decorator.decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(10 - decorator.labelPadding));
       expect(captured[0].textDirection, equals(TextDirection.center));
@@ -206,8 +208,9 @@ void main() {
       decorator.decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(40));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -251,8 +254,9 @@ void main() {
       decorator.decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
-      final captured =
-          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      final captured = verify(canvas.drawText(
+              typed(captureAny), typed(captureAny), typed(captureAny)))
+          .captured;
       // Draw text is called twice (once for each arc) and all 3 parameters were
       // captured. Total parameters captured expected to be 6.
       expect(captured, hasLength(6));
@@ -295,7 +299,7 @@ void main() {
       new ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
-      verifyNever(canvas.drawText(any, any, any));
+      verifyNever(canvas.drawText(typed(any), typed(any), typed(any)));
     });
 
     test('Skip label if label is null or empty', () {
@@ -317,7 +321,7 @@ void main() {
       new ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
-      verifyNever(canvas.drawText(any, any, any));
+      verifyNever(canvas.drawText(typed(any), typed(any), typed(any)));
     });
   });
 }

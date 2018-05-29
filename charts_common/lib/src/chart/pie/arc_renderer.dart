@@ -157,7 +157,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
     final bounds = _chart.drawAreaBounds;
 
-    final center = new Point((bounds.left + bounds.width / 2).toDouble(),
+    final center = new Point<double>(
+        (bounds.left + bounds.width / 2).toDouble(),
         (bounds.top + bounds.height / 2).toDouble());
 
     final radius = bounds.height < bounds.width
@@ -571,7 +572,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
 class ArcRendererElementList<D> {
   List<ArcRendererElement<D>> arcs;
-  Point center;
+  Point<double> center;
   double innerRadius;
   double radius;
   double startAngle;
@@ -617,7 +618,7 @@ class ArcRendererElement<D> {
 
 class _AnimatedArcList<D> {
   final arcs = <_AnimatedArc<D>>[];
-  Point center;
+  Point<double> center;
   double innerRadius;
   double radius;
   ImmutableSeries<D> series;
