@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Point;
+import 'dart:math' show Point, Rectangle;
 
 import 'package:charts_common/src/chart/cartesian/cartesian_chart.dart';
 import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
@@ -73,7 +73,7 @@ class MockSeriesRenderer extends BaseSeriesRenderer {
   void paint(_, __) {}
 
   List<DatumDetails> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain) {
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
     return null;
   }
 
@@ -183,12 +183,9 @@ void main() {
       _series2.setAttr(measureAxisKey, primaryMeasureAxis);
       _series2.measureOffsetFn = (_) => 0.0;
 
-      final seriesList = [_series1, _series2];
-
       // Act
       _selectionModel.lastListener(_selectionModel);
       verify(_chart.redraw(skipAnimation: true, skipLayout: true));
-      _chart.lastListener.onPostprocess(seriesList);
 
       _chart.lastListener.onAxisConfigured();
 
@@ -226,12 +223,10 @@ void main() {
       final tester = new LinePointHighlighterTester(behavior);
       behavior.attachTo(_chart);
       _setupSelection([]);
-      final seriesList = [_series1, _series2];
 
       // Act
       _selectionModel.lastListener(_selectionModel);
       verify(_chart.redraw(skipAnimation: true, skipLayout: true));
-      _chart.lastListener.onPostprocess(seriesList);
       _chart.lastListener.onAxisConfigured();
 
       // Verify

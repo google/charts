@@ -299,6 +299,9 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   @override
   Rectangle<int> get componentBounds => this._drawAreaBounds;
+
+  @override
+  bool get isSeriesRenderer => false;
 }
 
 class _DatumAnnotation<D> {

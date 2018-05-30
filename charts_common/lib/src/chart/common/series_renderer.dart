@@ -100,8 +100,14 @@ abstract class SeriesRenderer<D> extends LayoutView {
   ///
   /// [byDomain] specifies whether the nearest data should be defined by domain
   /// distance, or relative Cartesian distance.
+  ///
+  /// [boundsOverride] optionally specifies a bounding box for the selection
+  /// event. If specified, then no data should be returned if [chartPoint] lies
+  /// outside the box. If not specified, then each series renderer on the chart
+  /// will use its own component bounds for filtering out selection events
+  /// (usually the chart draw area).
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain);
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride);
 
   /// Get an expanded set of processed [DatumDetails] for a given [SeriesDatum].
   ///
@@ -261,6 +267,9 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   Rectangle<int> get componentBounds => this._drawAreaBounds;
 
   @override
+  bool get isSeriesRenderer => true;
+
+  @override
   void configureSeries(List<MutableSeries<D>> seriesList) {}
 
   @override
@@ -323,5 +332,26 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     // chartPosition depends on the shape of the rendered elements, and must be
     // added by concrete [SeriesRenderer] classes.
     return addPositionToDetailsForSeriesDatum(details, seriesDatum);
+  }
+
+  /// Returns true of [chartPoint] is within the component bounds for this
+  /// renderer.
+  ///
+  /// [chartPoint] a point to test.
+  ///
+  /// [bounds] optional override for component bounds. If this is passed, then
+  /// we will check whether the point is within these bounds instead of the
+  /// component bounds.
+  bool isPointWithinBounds(Point<double> chartPoint, Rectangle<int> bounds) {
+    // Was it even in the drawArea?
+    if (bounds != null) {
+      if (!bounds.containsPoint(chartPoint)) {
+        return false;
+      }
+    } else if (!componentBounds.containsPoint(chartPoint)) {
+      return false;
+    }
+
+    return true;
   }
 }

@@ -192,7 +192,16 @@ abstract class LayoutView {
   /// Layout this component.
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds);
 
+  /// Draw this component on the canvas.
   void paint(ChartCanvas canvas, double animationPercent);
 
+  /// Bounding box for drawing this component.
   Rectangle<int> get componentBounds;
+
+  /// Whether or not this component is a series renderer that draws series
+  /// data.
+  ///
+  /// This component may either render into the chart's draw area, or into a
+  /// separate area bounded by the component bounds.
+  bool get isSeriesRenderer;
 }

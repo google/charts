@@ -80,7 +80,10 @@ class SelectionLineHighlight extends StatelessWidget {
       // vertical follow line. A vertical follow line is included by
       // default, but is shown here as an example configuration.
       new charts.LinePointHighlighter(
-          showHorizontalFollowLine: false, showVerticalFollowLine: true),
+          showHorizontalFollowLine:
+              charts.LinePointHighlighterFollowLineType.none,
+          showVerticalFollowLine:
+              charts.LinePointHighlighterFollowLineType.nearest),
       // Optional - By default, select nearest is configured to trigger
       // with tap so that a user can have pan/zoom behavior and line point
       // highlighter. Changing the trigger to tap and drag allows the

@@ -466,16 +466,16 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain) {
-    // Was it even in the drawArea?
-    if (!componentBounds.containsPoint(chartPoint)) {
-      return <DatumDetails<D>>[];
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
+    var nearest = <DatumDetails<D>>[];
+
+    // Was it even in the component bounds?
+    if (!isPointWithinBounds(chartPoint, boundsOverride)) {
+      return nearest;
     }
 
     final domainValue = _prevDomainAxis
         .getDomain(renderingVertically ? chartPoint.x : chartPoint.y);
-
-    List<DatumDetails<D>> nearest;
 
     // If we have a domainValue for the event point, then find all segments
     // that match it.

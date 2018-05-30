@@ -52,7 +52,19 @@ abstract class BaseChart<D> {
 
   bool _animationsTemporarilyDisabled = false;
 
+  /// List of series that were passed into the previous draw call.
+  ///
+  /// This list will be used when redraw is called, to reset the state of all
+  /// behaviors to the original list.
+  List<MutableSeries<D>> _originalSeriesList;
+
+  /// List of series that are currently drawn on the chart.
+  ///
+  /// This list should be used by interactive behaviors between chart draw
+  /// cycles. It may be filtered or modified by some behaviors during the
+  /// initial draw cycle (e.g. a [Legend] may hide some series).
   List<MutableSeries<D>> _currentSeriesList;
+
   Set<String> _usingRenderers = new Set<String>();
   Map<String, List<MutableSeries<D>>> _rendererToSeriesList;
 
@@ -182,13 +194,26 @@ abstract class BaseChart<D> {
   }
 
   /// Retrieves the datum details that are nearest to the given [drawAreaPoint].
+  ///
+  /// [drawAreaPoint] represents a point in the chart, such as a point that was
+  /// clicked/tapped on by a user.
+  ///
+  /// [selectAcrossAllDrawAreaComponents] specifies whether nearest data
+  /// selection should be done across the combined draw area of all components
+  /// with series draw areas, or just the chart's primary draw area bounds.
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> drawAreaPoint) {
+      Point<double> drawAreaPoint, bool selectAcrossAllDrawAreaComponents) {
+    // Optionally grab the combined draw area bounds of all components. If this
+    // is disabled, then we expect each series renderer to filter out the event
+    // if [chartPoint] is located outside of its own component bounds.
+    final boundsOverride =
+        selectAcrossAllDrawAreaComponents ? drawableLayoutAreaBounds : null;
+
     final details = <DatumDetails<D>>[];
     _usingRenderers.forEach((String rendererId) {
       details.addAll(getSeriesRenderer(rendererId)
           .getNearestDatumDetailPerSeries(
-              drawAreaPoint, selectNearestByDomain));
+              drawAreaPoint, selectNearestByDomain, boundsOverride));
     });
 
     details.sort((DatumDetails<D> a, DatumDetails<D> b) {
@@ -331,6 +356,11 @@ abstract class BaseChart<D> {
   /// Returns the bounds of the chart draw area.
   Rectangle<int> get drawAreaBounds => _layoutManager.drawAreaBounds;
 
+  /// Returns the combined bounds of the chart draw area and all layout
+  /// components that draw series data.
+  Rectangle<int> get drawableLayoutAreaBounds =>
+      _layoutManager.drawableLayoutAreaBounds;
+
   //
   // Draw methods
   //
@@ -347,7 +377,15 @@ abstract class BaseChart<D> {
     int seriesIndex = 0;
     processedSeriesList.forEach((series) => series.seriesIndex = seriesIndex++);
 
+    // Initially save a reference to processedSeriesList. After drawInternal
+    // finishes, we expect _currentSeriesList to contain a new, possibly
+    // modified list.
     _currentSeriesList = processedSeriesList;
+
+    // Store off processedSeriesList for use later during redraw calls. This
+    // list will not reflect any modifications that were made to
+    // _currentSeriesList by behaviors during the draw cycle.
+    _originalSeriesList = processedSeriesList;
 
     drawInternal(processedSeriesList, skipAnimation: false, skipLayout: false);
   }
@@ -355,7 +393,7 @@ abstract class BaseChart<D> {
   /// Redraws and re-lays-out the chart using the previously rendered layout
   /// dimensions.
   void redraw({bool skipAnimation = false, bool skipLayout = false}) {
-    drawInternal(_currentSeriesList,
+    drawInternal(_originalSeriesList,
         skipAnimation: skipAnimation, skipLayout: skipLayout);
 
     // Trigger layout and actually redraw the chart.
@@ -385,6 +423,8 @@ abstract class BaseChart<D> {
 
     // Allow listeners to manipulate the processed seriesList.
     fireOnPostprocess(seriesList);
+
+    _currentSeriesList = seriesList;
   }
 
   List<MutableSeries<D>> get currentSeriesList => _currentSeriesList;

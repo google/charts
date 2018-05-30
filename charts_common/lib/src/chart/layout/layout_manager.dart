@@ -39,6 +39,10 @@ abstract class LayoutManager {
   /// Returns the bounds of the drawArea. Must be called after layout().
   Rectangle<int> get drawAreaBounds;
 
+  /// Returns the combined bounds of the drawArea, and all components that
+  /// function as series draw areas. Must be called after layout().
+  Rectangle<int> get drawableLayoutAreaBounds;
+
   /// Returns whether or not [point] is within the draw area bounds.
   bool withinDrawArea(Point<num> point);
 

@@ -408,6 +408,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
+  bool get isSeriesRenderer => false;
+
+  @override
   Rectangle<int> get componentBounds => this._componentBounds;
 
   bool get drawAxisLine {

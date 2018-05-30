@@ -14,7 +14,10 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show LinePointHighlighter, SelectionModelType;
+    show
+        LinePointHighlighter,
+        LinePointHighlighterFollowLineType,
+        SelectionModelType;
 import 'package:flutter/widgets.dart' show hashValues;
 import 'package:meta/meta.dart' show immutable;
 
@@ -45,16 +48,18 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
   /// defined.
   final double radiusPaddingPx;
 
-  final bool showHorizontalFollowLine;
+  final common.LinePointHighlighterFollowLineType showHorizontalFollowLine;
 
-  final bool showVerticalFollowLine;
+  final common.LinePointHighlighterFollowLineType showVerticalFollowLine;
 
   LinePointHighlighter(
       {this.selectionModelType = common.SelectionModelType.info,
       this.defaultRadiusPx = 4.0,
       this.radiusPaddingPx = 0.5,
-      this.showHorizontalFollowLine = false,
-      this.showVerticalFollowLine = true});
+      this.showHorizontalFollowLine =
+          common.LinePointHighlighterFollowLineType.none,
+      this.showVerticalFollowLine =
+          common.LinePointHighlighterFollowLineType.nearest});
 
   @override
   common.LinePointHighlighter<D> createCommonBehavior<D>() =>

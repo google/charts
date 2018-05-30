@@ -159,9 +159,6 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
         yUpper: measureUpperBoundPosition);
   }
 
-  //
-  // Layout methods
-  //
   @override
   void onAttach(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
@@ -212,6 +209,10 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
     _graphicsFactory = value;
   }
 
+  //
+  // Layout methods
+  //
+
   @override
   LayoutViewConfig get layoutConfig {
     return new LayoutViewConfig(
@@ -239,10 +240,6 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
   @override
   Rectangle<int> get componentBounds => _componentBounds;
-
-  // Gets the draw area bounds for native legend content to position itself
-  // accordingly.
-  Rectangle<int> get drawAreaBounds => _drawAreaBounds;
 }
 
 class _SeriesInfo<D> {

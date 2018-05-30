@@ -52,7 +52,7 @@ const boundsLineRadiusPxKey =
 
 /// Defines an [AccessorFn] for the radius for data bounds lines (typically
 /// drawn by attaching a [ComparisonPointsDecorator] to the renderer.
-const boundsLineRadiusPxFnKey = const AttributeKey<AccessorFn>(
+const boundsLineRadiusPxFnKey = const AttributeKey<AccessorFn<double>>(
     'SymbolAnnotationRenderer.boundsLineRadiusPxFn');
 
 const defaultSymbolRendererId = '__default__';
@@ -114,8 +114,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       if (boundsLineRadiusPxFn == null) {
         var boundsLineRadiusPx = series.getAttr(boundsLineRadiusPxKey);
         boundsLineRadiusPx ??= config.boundsLineRadiusPx;
-        boundsLineRadiusPxFn = (_) => boundsLineRadiusPx;
-        series.setAttr(boundsLineRadiusPxKey, (_) => boundsLineRadiusPxFn);
+        if (boundsLineRadiusPx != null) {
+          boundsLineRadiusPxFn = (_) => boundsLineRadiusPx.toDouble();
+          series.setAttr(boundsLineRadiusPxFnKey, boundsLineRadiusPxFn);
+        }
       }
 
       final symbolRendererFn = series.getAttr(pointSymbolRendererFnKey);
@@ -126,10 +128,13 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         var radiusPx = series.radiusPxFn(index);
         radiusPx ??= config.radiusPx;
 
-        var boundsLineRadiusPx = (boundsLineRadiusPxFn is TypedAccessorFn)
-            ? (boundsLineRadiusPxFn as TypedAccessorFn)(
-                series.data[index], index)
-            : boundsLineRadiusPxFn(index);
+        var boundsLineRadiusPx;
+        if (boundsLineRadiusPxFn != null) {
+          boundsLineRadiusPx = (boundsLineRadiusPxFn is TypedAccessorFn)
+              ? (boundsLineRadiusPxFn as TypedAccessorFn)(
+                  series.data[index], index)
+              : boundsLineRadiusPxFn(index);
+        }
         boundsLineRadiusPx ??= config.boundsLineRadiusPx;
         boundsLineRadiusPx ??= radiusPx;
 
@@ -400,11 +405,11 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain) {
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
     final nearest = <DatumDetails<D>>[];
 
-    // Was it even in the drawArea?
-    if (!componentBounds.containsPoint(chartPoint)) {
+    // Was it even in the component bounds?
+    if (!isPointWithinBounds(chartPoint, boundsOverride)) {
       return nearest;
     }
 

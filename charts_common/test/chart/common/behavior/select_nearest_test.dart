@@ -48,6 +48,8 @@ void main() {
   MockChart _chart;
   MockSelectionModel _hoverSelectionModel;
   MockSelectionModel _clickSelectionModel;
+  List<String> _series1Data;
+  List<String> _series2Data;
   ImmutableSeries _series1;
   ImmutableSeries _series2;
   DatumDetails _details1;
@@ -72,13 +74,17 @@ void main() {
   _setupChart(
       {Point<double> forPoint,
       bool isWithinRenderer,
-      List<DatumDetails> respondWithDetails}) {
+      List<DatumDetails> respondWithDetails,
+      List<ImmutableSeries> seriesList}) {
     if (isWithinRenderer != null) {
       when(_chart.pointWithinRenderer(forPoint)).thenReturn(isWithinRenderer);
     }
     if (respondWithDetails != null) {
-      when(_chart.getNearestDatumDetailPerSeries(forPoint))
+      when(_chart.getNearestDatumDetailPerSeries(forPoint, true))
           .thenReturn(respondWithDetails);
+    }
+    if (seriesList != null) {
+      when(_chart.currentSeriesList).thenReturn(seriesList);
     }
   }
 
@@ -92,10 +98,12 @@ void main() {
     when(_chart.getSelectionModel(SelectionModelType.action))
         .thenReturn(_clickSelectionModel);
 
+    _series1Data = ['myDomain1', 'myDomain2', 'myDomain3'];
+
     _series1 = new MutableSeries(new Series(
         id: 'mySeries1',
-        data: [],
-        domainFn: (dynamic, __) {},
+        data: ['myDatum1', 'myDatum2', 'myDatum3'],
+        domainFn: (dynamic, int i) => _series1Data[i],
         measureFn: (_, __) {}));
 
     _details1 = new DatumDetails(
@@ -117,10 +125,12 @@ void main() {
         domainDistance: 10.0,
         measureDistance: 20.0);
 
+    _series2Data = ['myDomain1'];
+
     _series2 = new MutableSeries(new Series(
         id: 'mySeries2',
-        data: [],
-        domainFn: (dynamic, __) {},
+        data: ['myDatum1s2'],
+        domainFn: (dynamic, int i) => _series2Data[i],
         measureFn: (_, __) {}));
 
     _details1Series2 = new DatumDetails(
@@ -140,7 +150,8 @@ void main() {
       _setupChart(
           forPoint: point,
           isWithinRenderer: true,
-          respondWithDetails: [_details1]);
+          respondWithDetails: [_details1],
+          seriesList: [_series1]);
 
       // Act
       _chart.lastListener.onHover(point);
@@ -163,7 +174,8 @@ void main() {
       _setupChart(
           forPoint: point,
           isWithinRenderer: true,
-          respondWithDetails: [_details1]);
+          respondWithDetails: [_details1],
+          seriesList: [_series1]);
 
       // Act
       _chart.lastListener.onTapTest(point);
@@ -185,25 +197,29 @@ void main() {
       _setupChart(
           forPoint: startPoint,
           isWithinRenderer: true,
-          respondWithDetails: [_details1]);
+          respondWithDetails: [_details1],
+          seriesList: [_series1]);
 
       Point<double> updatePoint1 = new Point(200.0, 100.0);
       _setupChart(
           forPoint: updatePoint1,
           isWithinRenderer: true,
-          respondWithDetails: [_details1]);
+          respondWithDetails: [_details1],
+          seriesList: [_series1]);
 
       Point<double> updatePoint2 = new Point(300.0, 100.0);
       _setupChart(
           forPoint: updatePoint2,
           isWithinRenderer: true,
-          respondWithDetails: [_details2]);
+          respondWithDetails: [_details2],
+          seriesList: [_series1]);
 
       Point<double> endPoint = new Point(400.0, 100.0);
       _setupChart(
           forPoint: endPoint,
           isWithinRenderer: true,
-          respondWithDetails: [_details3]);
+          respondWithDetails: [_details3],
+          seriesList: [_series1]);
 
       // Act
       _chart.lastListener.onTapTest(startPoint);
@@ -234,19 +250,22 @@ void main() {
       _setupChart(
           forPoint: startPoint,
           isWithinRenderer: true,
-          respondWithDetails: [_details1]);
+          respondWithDetails: [_details1],
+          seriesList: [_series1]);
 
       Point<double> updatePoint1 = new Point(200.0, 100.0);
       _setupChart(
           forPoint: updatePoint1,
           isWithinRenderer: true,
-          respondWithDetails: [_details2]);
+          respondWithDetails: [_details2],
+          seriesList: [_series1]);
 
       Point<double> endPoint = new Point(400.0, 100.0);
       _setupChart(
           forPoint: endPoint,
           isWithinRenderer: true,
-          respondWithDetails: [_details3]);
+          respondWithDetails: [_details3],
+          seriesList: [_series1]);
 
       // Act 1
       _chart.lastListener.onTapTest(startPoint);
@@ -281,19 +300,22 @@ void main() {
       _setupChart(
           forPoint: startPoint,
           isWithinRenderer: true,
-          respondWithDetails: [_details1]);
+          respondWithDetails: [_details1],
+          seriesList: [_series1]);
 
       Point<double> updatePoint1 = new Point(200.0, 100.0);
       _setupChart(
           forPoint: updatePoint1,
           isWithinRenderer: true,
-          respondWithDetails: [_details2]);
+          respondWithDetails: [_details2],
+          seriesList: [_series1]);
 
       Point<double> endPoint = new Point(400.0, 100.0);
       _setupChart(
           forPoint: endPoint,
           isWithinRenderer: true,
-          respondWithDetails: [_details3]);
+          respondWithDetails: [_details3],
+          seriesList: [_series1]);
 
       // Act
       _chart.lastListener.onTapTest(startPoint);
@@ -317,6 +339,9 @@ void main() {
       _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
         _details1,
         _details1Series2,
+      ], seriesList: [
+        _series1,
+        _series2
       ]);
 
       // Act
@@ -341,6 +366,9 @@ void main() {
       _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
         _details1,
         _details1Series2,
+      ], seriesList: [
+        _series1,
+        _series2
       ]);
 
       // Act
@@ -361,6 +389,9 @@ void main() {
       _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
         _details1,
         _details1Series2,
+      ], seriesList: [
+        _series1,
+        _series2
       ]);
 
       // Act
@@ -386,7 +417,8 @@ void main() {
       _setupChart(
           forPoint: point,
           isWithinRenderer: true,
-          respondWithDetails: [_details1]);
+          respondWithDetails: [_details1],
+          seriesList: [_series1]);
       expect(_chart.lastListener, isNotNull);
 
       // Act

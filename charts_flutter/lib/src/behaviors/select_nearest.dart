@@ -50,11 +50,13 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   final common.SelectionModelType selectionModelType;
   final common.SelectNearestTrigger eventTrigger;
   final bool expandToDomain;
+  final bool selectAcrossAllDrawAreaComponents;
   final bool selectClosestSeries;
 
   SelectNearest._internal(
       {this.selectionModelType,
       this.expandToDomain = true,
+      this.selectAcrossAllDrawAreaComponents = false,
       this.selectClosestSeries = true,
       this.eventTrigger,
       this.desiredGestures});
@@ -63,12 +65,14 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
       {common.SelectionModelType selectionModelType =
           common.SelectionModelType.info,
       bool expandToDomain = true,
+      bool selectAcrossAllDrawAreaComponents = false,
       bool selectClosestSeries = true,
       common.SelectNearestTrigger eventTrigger =
           common.SelectNearestTrigger.tap}) {
     return new SelectNearest._internal(
         selectionModelType: selectionModelType,
         expandToDomain: expandToDomain,
+        selectAcrossAllDrawAreaComponents: selectAcrossAllDrawAreaComponents,
         selectClosestSeries: selectClosestSeries,
         eventTrigger: eventTrigger,
         desiredGestures: SelectNearest._getDesiredGestures(eventTrigger));

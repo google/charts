@@ -53,7 +53,7 @@ export 'src/chart/common/behavior/legend/legend_entry.dart' show LegendEntry;
 export 'src/chart/common/behavior/legend/legend_entry_generator.dart'
     show LegendEntryGenerator;
 export 'src/chart/common/behavior/line_point_highlighter.dart'
-    show LinePointHighlighter;
+    show LinePointHighlighter, LinePointHighlighterFollowLineType;
 export 'src/chart/common/behavior/range_annotation.dart'
     show RangeAnnotation, RangeAnnotationAxisType, RangeAnnotationSegment;
 export 'src/chart/common/behavior/select_nearest.dart'

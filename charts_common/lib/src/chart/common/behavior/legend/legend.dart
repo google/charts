@@ -337,6 +337,9 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   @override
   Rectangle<int> get componentBounds => _componentBounds;
 
+  @override
+  bool get isSeriesRenderer => false;
+
   // Gets the draw area bounds for native legend content to position itself
   // accordingly.
   Rectangle<int> get drawAreaBounds => _drawAreaBounds;

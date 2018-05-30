@@ -86,6 +86,8 @@ export 'package:charts_common/src/chart/common/behavior/chart_behavior.dart'
         OutsideJustification;
 export 'package:charts_common/src/chart/common/behavior/initial_selection.dart'
     show SeriesDatumConfig;
+export 'package:charts_common/src/chart/common/behavior/line_point_highlighter.dart'
+    show LinePointHighlighterFollowLineType;
 export 'package:charts_common/src/chart/common/behavior/range_annotation.dart'
     show RangeAnnotationAxisType, RangeAnnotationSegment;
 export 'package:charts_common/src/chart/common/behavior/select_nearest.dart'

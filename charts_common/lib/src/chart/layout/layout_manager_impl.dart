@@ -109,6 +109,22 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   @override
+  Rectangle<int> get drawableLayoutAreaBounds {
+    assert(_drawAreaBoundsOutdated == false);
+
+    final drawableViews =
+        _views.where((LayoutView view) => view.isSeriesRenderer);
+
+    var componentBounds = drawableViews.first.componentBounds;
+
+    for (LayoutView view in drawableViews.skip(1)) {
+      componentBounds = componentBounds.boundingBox(view.componentBounds);
+    }
+
+    return componentBounds;
+  }
+
+  @override
   withinDrawArea(Point<num> point) {
     return _drawAreaBounds.containsPoint(point);
   }

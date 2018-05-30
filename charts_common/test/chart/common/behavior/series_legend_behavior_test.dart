@@ -53,6 +53,9 @@ class ConcreteSeriesLegend<D> extends SeriesLegend<D> {
             legendEntryGenerator: legendEntryGenerator);
 
   @override
+  bool isSeriesRenderer = false;
+
+  @override
   void hideSeries(String seriesId) {
     super.hideSeries(seriesId);
   }

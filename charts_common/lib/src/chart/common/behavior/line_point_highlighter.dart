@@ -22,7 +22,7 @@ import '../../cartesian/axis/axis.dart'
 import '../base_chart.dart' show BaseChart, LifecycleListener;
 import '../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../datum_details.dart' show DatumDetails;
-import '../processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../processed_series.dart' show ImmutableSeries;
 import '../selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
 import 'chart_behavior.dart' show ChartBehavior;
@@ -40,6 +40,11 @@ import '../../../common/style/style_factory.dart' show StyleFactory;
 
 /// Chart behavior that monitors the specified [SelectionModel] and renders a
 /// dot for selected data.
+///
+/// Vertical or horizontal follow lines can optionally be drawn underneath the
+/// rendered dots. Follow lines will be drawn in the combined area of the chart
+/// draw area, and the draw area for any layout components that provide a
+/// series draw area (e.g. [SymbolAnnotationRenderer]).
 ///
 /// This is typically used for line charts to highlight segments.
 ///
@@ -60,9 +65,16 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   /// defined.
   final double radiusPaddingPx;
 
-  final bool showHorizontalFollowLine;
+  /// Whether or not to draw horizontal follow lines through the selected
+  /// points.
+  ///
+  /// Defaults to drawing no horizontal follow lines.
+  final LinePointHighlighterFollowLineType showHorizontalFollowLine;
 
-  final bool showVerticalFollowLine;
+  /// Whether or not to draw vertical follow lines through the selected points.
+  ///
+  /// Defaults to drawing a vertical follow line only for the nearest datum.
+  final LinePointHighlighterFollowLineType showVerticalFollowLine;
 
   BaseChart<D> _chart;
 
@@ -70,13 +82,11 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 
   LifecycleListener<D> _lifecycleListener;
 
-  List<MutableSeries<D>> _seriesList;
-
   /// Store a map of data drawn on the chart, mapped by series name.
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
-  /// order as the data was given to the chart.
-  final _seriesPointMap = new LinkedHashMap<String, _AnimatedPoint<D>>();
+  /// order as the data was provided by the selection model.
+  var _seriesPointMap = new LinkedHashMap<String, _AnimatedPoint<D>>();
 
   // Store a list of points that exist in the series data.
   //
@@ -89,10 +99,11 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
       {this.selectionModelType = SelectionModelType.info,
       this.defaultRadiusPx = 4.0,
       this.radiusPaddingPx = 0.5,
-      this.showHorizontalFollowLine = false,
-      this.showVerticalFollowLine = true}) {
-    _lifecycleListener = new LifecycleListener<D>(
-        onPostprocess: _updateSeriesList, onAxisConfigured: _updateViewData);
+      this.showHorizontalFollowLine = LinePointHighlighterFollowLineType.none,
+      this.showVerticalFollowLine =
+          LinePointHighlighterFollowLineType.nearest}) {
+    _lifecycleListener =
+        new LifecycleListener<D>(onAxisConfigured: _updateViewData);
   }
 
   @override
@@ -100,6 +111,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     _chart = chart;
 
     _view = new _LinePointLayoutView<D>(
+        chart: chart,
         layoutPaintOrder: LayoutViewPaintOrder.linePointHighlighter,
         showHorizontalFollowLine: showHorizontalFollowLine,
         showVerticalFollowLine: showVerticalFollowLine);
@@ -130,15 +142,16 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     _chart.redraw(skipLayout: true, skipAnimation: true);
   }
 
-  void _updateSeriesList(List<MutableSeries<D>> seriesList) {
-    _seriesList = seriesList;
-  }
-
   void _updateViewData() {
     _currentKeys.clear();
 
     final selectedDatumDetails =
         _chart.getSelectedDatumDetails(selectionModelType);
+
+    // Create a new map each time to ensure that we have it sorted in the
+    // selection model order. This preserves the "nearestDetail" ordering, so
+    // that we render follow lines in the proper place.
+    final newSeriesMap = new LinkedHashMap<String, _AnimatedPoint<D>>();
 
     for (DatumDetails<D> detail in selectedDatumDetails) {
       if (detail == null) {
@@ -159,12 +172,12 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 
       var pointKey = '${lineKey}::${detail.domain}';
 
-      // If we already have a AnimatingPoint for that index, use it.
+      // If we already have a point for that key, use it.
       _AnimatedPoint<D> animatingPoint;
       if (_seriesPointMap.containsKey(pointKey)) {
         animatingPoint = _seriesPointMap[pointKey];
       } else {
-        // Create a new line and have it animate in from axis.
+        // Create a new point and have it animate in from axis.
         var point = _getPoint(
             datum, detail.domain, series, domainAxis, 0.0, 0.0, measureAxis);
 
@@ -175,9 +188,9 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
             ..point = point
             ..radiusPx = radiusPx
             ..measureAxisPosition = measureAxis.getLocation(0.0));
-
-        _seriesPointMap[pointKey] = animatingPoint;
       }
+
+      newSeriesMap[pointKey] = animatingPoint;
 
       // Create a new line using the final point locations.
       var point = new _DatumPoint<D>(
@@ -187,7 +200,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
           x: detail.chartPosition.x,
           y: detail.chartPosition.y);
 
-      // Update the set of lines that still exist in the series data.
+      // Update the set of points that still exist in the series data.
       _currentKeys.add(pointKey);
 
       // Get the point element we are going to setup.
@@ -204,9 +217,11 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     _seriesPointMap.forEach((String key, _AnimatedPoint<D> point) {
       if (_currentKeys.contains(point.key) != true) {
         point.animateOut();
+        newSeriesMap[point.key] = point;
       }
     });
 
+    _seriesPointMap = newSeriesMap;
     _view.seriesPointMap = _seriesPointMap;
   }
 
@@ -241,9 +256,11 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 class _LinePointLayoutView<D> extends LayoutView {
   final LayoutViewConfig layoutConfig;
 
-  final bool showHorizontalFollowLine;
+  final LinePointHighlighterFollowLineType showHorizontalFollowLine;
 
-  final bool showVerticalFollowLine;
+  final LinePointHighlighterFollowLineType showVerticalFollowLine;
+
+  final BaseChart<D> chart;
 
   Rectangle<int> _drawAreaBounds;
   Rectangle<int> get drawBounds => _drawAreaBounds;
@@ -257,6 +274,7 @@ class _LinePointLayoutView<D> extends LayoutView {
   LinkedHashMap<String, _AnimatedPoint<D>> _seriesPointMap;
 
   _LinePointLayoutView({
+    @required this.chart,
     @required int layoutPaintOrder,
     @required this.showHorizontalFollowLine,
     @required this.showVerticalFollowLine,
@@ -306,45 +324,93 @@ class _LinePointLayoutView<D> extends LayoutView {
       keysToRemove.forEach((String key) => _seriesPointMap.remove(key));
     }
 
+    final points = <_PointRendererElement<D>>[];
     _seriesPointMap.forEach((String key, _AnimatedPoint<D> point) {
-      final pointElement = point.getCurrentPoint(animationPercent);
+      points.add(point.getCurrentPoint(animationPercent));
+    });
+
+    var shouldShowHorizontalFollowLine = showHorizontalFollowLine ==
+            LinePointHighlighterFollowLineType.all ||
+        showHorizontalFollowLine == LinePointHighlighterFollowLineType.nearest;
+
+    var shouldShowVerticalFollowLine = showVerticalFollowLine ==
+            LinePointHighlighterFollowLineType.all ||
+        showVerticalFollowLine == LinePointHighlighterFollowLineType.nearest;
+
+    // Keep track of points for which we've already drawn lines.
+    final paintedHorizontalLinePositions = <num>[];
+    final paintedVerticalLinePositions = <num>[];
+
+    final drawBounds = chart.drawableLayoutAreaBounds;
+
+    // Draw the follow lines first, below all of the highlight shapes.
+    for (_PointRendererElement<D> pointElement in points) {
+      final roundedX = pointElement.point.x.round();
+      final roundedY = pointElement.point.y.round();
 
       // Draw the horizontal follow line.
-      if (showHorizontalFollowLine) {
+      if (shouldShowHorizontalFollowLine &&
+          !paintedHorizontalLinePositions.contains(roundedY)) {
         canvas.drawLine(
             points: [
-              new Point<num>(_drawAreaBounds.left, pointElement.point.y),
-              new Point<num>(_drawAreaBounds.left + _drawAreaBounds.width,
-                  pointElement.point.y),
+              new Point<num>(drawBounds.left, pointElement.point.y),
+              new Point<num>(
+                  drawBounds.left + drawBounds.width, pointElement.point.y),
             ],
             stroke: StyleFactory.style.linePointHighlighterColor,
             strokeWidthPx: 1.0,
             dashPattern: [1, 3]);
+
+        if (showHorizontalFollowLine ==
+            LinePointHighlighterFollowLineType.nearest) {
+          shouldShowHorizontalFollowLine = false;
+        }
+
+        paintedHorizontalLinePositions.add(roundedY);
       }
 
       // Draw the vertical follow line.
-      if (showVerticalFollowLine) {
+      if (shouldShowVerticalFollowLine &&
+          !paintedVerticalLinePositions.contains(roundedX)) {
         canvas.drawLine(
             points: [
-              new Point<num>(pointElement.point.x, _drawAreaBounds.top),
-              new Point<num>(pointElement.point.x,
-                  _drawAreaBounds.top + _drawAreaBounds.height),
+              new Point<num>(pointElement.point.x, drawBounds.top),
+              new Point<num>(
+                  pointElement.point.x, drawBounds.top + drawBounds.height),
             ],
             stroke: StyleFactory.style.linePointHighlighterColor,
             strokeWidthPx: 1.0,
             dashPattern: [1, 3]);
+
+        if (showVerticalFollowLine ==
+            LinePointHighlighterFollowLineType.nearest) {
+          shouldShowVerticalFollowLine = false;
+        }
+
+        paintedVerticalLinePositions.add(roundedX);
       }
 
+      if (!shouldShowHorizontalFollowLine && !shouldShowVerticalFollowLine) {
+        break;
+      }
+    }
+
+    // Draw the highlight shapes on top of all follow lines.
+    for (_PointRendererElement<D> pointElement in points) {
       // Draw the highlight dot.
+      // TODO: Draw the shape of the PointRenderer
       canvas.drawPoint(
           point: pointElement.point,
           fill: pointElement.color,
           radius: pointElement.radiusPx);
-    });
+    }
   }
 
   @override
   Rectangle<int> get componentBounds => this._drawAreaBounds;
+
+  @override
+  bool get isSeriesRenderer => false;
 }
 
 class _DatumPoint<D> extends Point<double> {
@@ -457,6 +523,18 @@ class _AnimatedPoint<D> {
 
     return _currentPoint;
   }
+}
+
+/// Type of follow line(s) to draw.
+enum LinePointHighlighterFollowLineType {
+  /// Draw a follow line for only the nearest point in the selection.
+  nearest,
+
+  /// Draw no follow lines.
+  none,
+
+  /// Draw a follow line for every point in the selection.
+  all,
 }
 
 /// Helper class that exposes fewer private internal properties for unit tests.

@@ -456,11 +456,11 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain) {
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
     final nearest = <DatumDetails<D>>[];
 
-    // Was it even in the drawArea?
-    if (!componentBounds.containsPoint(chartPoint)) {
+    // Was it even in the component bounds?
+    if (!isPointWithinBounds(chartPoint, boundsOverride)) {
       return nearest;
     }
 
