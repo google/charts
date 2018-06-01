@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show ChartBehavior, SelectNearest, SelectionModelType, SelectNearestTrigger;
+    show ChartBehavior, SelectNearest, SelectionModelType, SelectionTrigger;
 
 import 'package:meta/meta.dart' show immutable;
 
@@ -48,7 +48,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   final Set<GestureType> desiredGestures;
 
   final common.SelectionModelType selectionModelType;
-  final common.SelectNearestTrigger eventTrigger;
+  final common.SelectionTrigger eventTrigger;
   final bool expandToDomain;
   final bool selectAcrossAllDrawAreaComponents;
   final bool selectClosestSeries;
@@ -67,8 +67,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
       bool expandToDomain = true,
       bool selectAcrossAllDrawAreaComponents = false,
       bool selectClosestSeries = true,
-      common.SelectNearestTrigger eventTrigger =
-          common.SelectNearestTrigger.tap}) {
+      common.SelectionTrigger eventTrigger = common.SelectionTrigger.tap}) {
     return new SelectNearest._internal(
         selectionModelType: selectionModelType,
         expandToDomain: expandToDomain,
@@ -79,23 +78,23 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   }
 
   static Set<GestureType> _getDesiredGestures(
-      common.SelectNearestTrigger eventTrigger) {
+      common.SelectionTrigger eventTrigger) {
     final desiredGestures = new Set<GestureType>();
     switch (eventTrigger) {
-      case common.SelectNearestTrigger.tap:
+      case common.SelectionTrigger.tap:
         desiredGestures..add(GestureType.onTap);
         break;
-      case common.SelectNearestTrigger.tapAndDrag:
+      case common.SelectionTrigger.tapAndDrag:
         desiredGestures..add(GestureType.onTap)..add(GestureType.onDrag);
         break;
-      case common.SelectNearestTrigger.pressHold:
-      case common.SelectNearestTrigger.longPressHold:
+      case common.SelectionTrigger.pressHold:
+      case common.SelectionTrigger.longPressHold:
         desiredGestures
           ..add(GestureType.onTap)
           ..add(GestureType.onLongPress)
           ..add(GestureType.onDrag);
         break;
-      case common.SelectNearestTrigger.hover:
+      case common.SelectionTrigger.hover:
       default:
         desiredGestures..add(GestureType.onHover);
         break;

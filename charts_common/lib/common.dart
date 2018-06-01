@@ -56,8 +56,12 @@ export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter, LinePointHighlighterFollowLineType;
 export 'src/chart/common/behavior/range_annotation.dart'
     show RangeAnnotation, RangeAnnotationAxisType, RangeAnnotationSegment;
-export 'src/chart/common/behavior/select_nearest.dart'
-    show SelectNearest, SelectNearestTrigger;
+export 'src/chart/common/behavior/selection/lock_selection.dart'
+    show LockSelection;
+export 'src/chart/common/behavior/selection/select_nearest.dart'
+    show SelectNearest;
+export 'src/chart/common/behavior/selection/selection_trigger.dart'
+    show SelectionTrigger;
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
     show PanAndZoomBehavior;
 export 'src/chart/common/behavior/zoom/pan_behavior.dart' show PanBehavior;

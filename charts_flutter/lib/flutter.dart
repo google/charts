@@ -90,8 +90,10 @@ export 'package:charts_common/src/chart/common/behavior/line_point_highlighter.d
     show LinePointHighlighterFollowLineType;
 export 'package:charts_common/src/chart/common/behavior/range_annotation.dart'
     show RangeAnnotationAxisType, RangeAnnotationSegment;
-export 'package:charts_common/src/chart/common/behavior/select_nearest.dart'
-    show SelectNearestTrigger;
+export 'package:charts_common/src/chart/common/behavior/selection/lock_selection.dart'
+    show LockSelection;
+export 'package:charts_common/src/chart/common/behavior/selection/selection_trigger.dart'
+    show SelectionTrigger;
 export 'package:charts_common/src/chart/common/chart_canvas.dart'
     show ChartCanvas, FillPatternType;
 export 'package:charts_common/src/chart/common/chart_context.dart'

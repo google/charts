@@ -50,7 +50,7 @@ class SelectionLineHighlight extends StatelessWidget {
       // highlighter to follow the dragging gesture but it is not
       // recommended to be used when pan/zoom behavior is enabled.
       new charts.SelectNearest(
-          eventTrigger: charts.SelectNearestTrigger.tapAndDrag)
+          eventTrigger: charts.SelectionTrigger.tapAndDrag)
     ]);
   }
 

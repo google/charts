@@ -16,7 +16,8 @@
 import 'dart:math';
 
 import 'package:charts_common/src/chart/common/base_chart.dart';
-import 'package:charts_common/src/chart/common/behavior/select_nearest.dart';
+import 'package:charts_common/src/chart/common/behavior/selection/select_nearest.dart';
+import 'package:charts_common/src/chart/common/behavior/selection/selection_trigger.dart';
 import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
@@ -58,7 +59,7 @@ void main() {
   DatumDetails _details3;
 
   SelectNearest _makeBehavior(
-      SelectionModelType selectionModelType, SelectNearestTrigger eventTrigger,
+      SelectionModelType selectionModelType, SelectionTrigger eventTrigger,
       {bool expandToDomain, bool selectClosestSeries}) {
     SelectNearest behavior = new SelectNearest(
         selectionModelType: selectionModelType,
@@ -144,7 +145,7 @@ void main() {
   group('SelectNearest trigger handling', () {
     test('single series selects detail', () {
       // Setup chart matches point with single domain single series.
-      _makeBehavior(SelectionModelType.info, SelectNearestTrigger.hover,
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.hover,
           expandToDomain: true, selectClosestSeries: true);
       Point<double> point = new Point(100.0, 100.0);
       _setupChart(
@@ -168,7 +169,7 @@ void main() {
 
     test('can listen to tap', () {
       // Setup chart matches point with single domain single series.
-      _makeBehavior(SelectionModelType.action, SelectNearestTrigger.tap,
+      _makeBehavior(SelectionModelType.action, SelectionTrigger.tap,
           expandToDomain: true, selectClosestSeries: true);
       Point<double> point = new Point(100.0, 100.0);
       _setupChart(
@@ -190,7 +191,7 @@ void main() {
 
     test('can listen to drag', () {
       // Setup chart matches point with single domain single series.
-      _makeBehavior(SelectionModelType.info, SelectNearestTrigger.pressHold,
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.pressHold,
           expandToDomain: true, selectClosestSeries: true);
 
       Point<double> startPoint = new Point(100.0, 100.0);
@@ -243,7 +244,7 @@ void main() {
 
     test('can listen to drag after long press', () {
       // Setup chart matches point with single domain single series.
-      _makeBehavior(SelectionModelType.info, SelectNearestTrigger.longPressHold,
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.longPressHold,
           expandToDomain: true, selectClosestSeries: true);
 
       Point<double> startPoint = new Point(100.0, 100.0);
@@ -293,7 +294,7 @@ void main() {
 
     test('no trigger before long press', () {
       // Setup chart matches point with single domain single series.
-      _makeBehavior(SelectionModelType.info, SelectNearestTrigger.longPressHold,
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.longPressHold,
           expandToDomain: true, selectClosestSeries: true);
 
       Point<double> startPoint = new Point(100.0, 100.0);
@@ -333,7 +334,7 @@ void main() {
   group('Details', () {
     test('expands to domain and includes closest series', () {
       // Setup chart matches point with single domain single series.
-      _makeBehavior(SelectionModelType.info, SelectNearestTrigger.hover,
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.hover,
           expandToDomain: true, selectClosestSeries: true);
       Point<double> point = new Point(100.0, 100.0);
       _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
@@ -360,7 +361,7 @@ void main() {
 
     test('does not expand to domain', () {
       // Setup chart matches point with single domain single series.
-      _makeBehavior(SelectionModelType.info, SelectNearestTrigger.hover,
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.hover,
           expandToDomain: false, selectClosestSeries: true);
       Point<double> point = new Point(100.0, 100.0);
       _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
@@ -383,7 +384,7 @@ void main() {
 
     test('does not include closest series', () {
       // Setup chart matches point with single domain single series.
-      _makeBehavior(SelectionModelType.info, SelectNearestTrigger.hover,
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.hover,
           expandToDomain: true, selectClosestSeries: false);
       Point<double> point = new Point(100.0, 100.0);
       _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
@@ -411,7 +412,7 @@ void main() {
     test('detach removes listener', () {
       // Setup
       SelectNearest behavior = _makeBehavior(
-          SelectionModelType.info, SelectNearestTrigger.hover,
+          SelectionModelType.info, SelectionTrigger.hover,
           expandToDomain: true, selectClosestSeries: true);
       Point<double> point = new Point(100.0, 100.0);
       _setupChart(

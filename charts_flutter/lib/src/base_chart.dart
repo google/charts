@@ -23,7 +23,7 @@ import 'package:charts_common/common.dart' as common
         Series,
         SeriesRendererConfig,
         SelectionModelType,
-        SelectNearestTrigger;
+        SelectionTrigger;
 import 'behaviors/select_nearest.dart' show SelectNearest;
 import 'package:meta/meta.dart' show immutable, required;
 import 'behaviors/chart_behavior.dart'
@@ -173,7 +173,7 @@ abstract class BaseChart<D> extends StatefulWidget {
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
     // Update selection model
     behaviors.add(new SelectNearest(
-        eventTrigger: common.SelectNearestTrigger.tap,
+        eventTrigger: common.SelectionTrigger.tap,
         selectionModelType: common.SelectionModelType.info,
         expandToDomain: true,
         selectClosestSeries: true));
