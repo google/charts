@@ -508,6 +508,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       // Found a point, add it to the list.
       if (nearestPoint != null) {
         nearest.add(new DatumDetails<D>(
+            chartPosition: new Point<double>(nearestPoint.x, nearestPoint.y),
             datum: nearestPoint.datum,
             domain: nearestPoint.domain,
             series: nearestPoint.series,

@@ -59,6 +59,7 @@ class LayoutViewPaintOrder {
   // Draw most behaviors on top of series data.
   static const legend = 100;
   static const linePointHighlighter = 110;
+  static const slider = 150;
 }
 
 /// Standard layout position orders for all internal components.

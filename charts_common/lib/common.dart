@@ -62,6 +62,8 @@ export 'src/chart/common/behavior/selection/select_nearest.dart'
     show SelectNearest;
 export 'src/chart/common/behavior/selection/selection_trigger.dart'
     show SelectionTrigger;
+export 'src/chart/common/behavior/slider/slider.dart'
+    show Slider, SliderListenerCallback, SliderListenerDragState, SliderStyle;
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
     show PanAndZoomBehavior;
 export 'src/chart/common/behavior/zoom/pan_behavior.dart' show PanBehavior;
@@ -111,10 +113,11 @@ export 'src/common/style/material_style.dart' show MaterialStyle;
 export 'src/common/style/style_factory.dart' show StyleFactory;
 export 'src/common/symbol_renderer.dart'
     show
-        SymbolRenderer,
-        RoundedRectSymbolRenderer,
+        CircleSymbolRenderer,
         LineSymbolRenderer,
-        CircleSymbolRenderer;
+        RectSymbolRenderer,
+        RoundedRectSymbolRenderer,
+        SymbolRenderer;
 export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;

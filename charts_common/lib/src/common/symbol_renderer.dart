@@ -24,15 +24,16 @@ abstract class BaseSymbolRenderer {
 
 /// Strategy for rendering a symbol bounded within a box.
 abstract class SymbolRenderer extends BaseSymbolRenderer {
-  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color);
+  void paint(ChartCanvas canvas, Rectangle<num> bounds,
+      {Color fillColor, Color strokeColor, double strokeWidthPx});
 }
 
 /// Strategy for rendering a symbol centered around a point.
 ///
 /// An optional second point can describe an extended symbol.
 abstract class PointSymbolRenderer extends BaseSymbolRenderer {
-  void paint(ChartCanvas canvas, Point<double> p1, double radius, Color color,
-      {Point<double> p2});
+  void paint(ChartCanvas canvas, Point<double> p1, double radius,
+      {Point<double> p2, Color fillColor, strokeColor});
 }
 
 /// Rounded rectangular symbol with corners having [radius].
@@ -41,10 +42,11 @@ class RoundedRectSymbolRenderer extends SymbolRenderer {
 
   RoundedRectSymbolRenderer({double radius}) : radius = radius ?? 1.0;
 
-  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
+  void paint(ChartCanvas canvas, Rectangle<num> bounds,
+      {Color fillColor, Color strokeColor, double strokeWidthPx}) {
     canvas.drawRRect(bounds,
-        fill: color,
-        stroke: color,
+        fill: fillColor,
+        stroke: strokeColor,
         radius: radius,
         roundTopLeft: true,
         roundTopRight: true,
@@ -75,7 +77,8 @@ class LineSymbolRenderer extends SymbolRenderer {
 
   LineSymbolRenderer({double strokeWidth}) : strokeWidth = strokeWidth ?? 4.0;
 
-  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
+  void paint(ChartCanvas canvas, Rectangle<num> bounds,
+      {Color fillColor, Color strokeColor, double strokeWidthPx}) {
     final centerHeight = (bounds.bottom - bounds.top) / 2;
 
     // Adjust the length so the total width includes the rounded pixels.
@@ -93,8 +96,8 @@ class LineSymbolRenderer extends SymbolRenderer {
     // line renderer config.
     canvas.drawLine(
       points: [new Point(left, centerHeight), new Point(right, centerHeight)],
-      fill: color,
-      stroke: color,
+      fill: fillColor,
+      stroke: strokeColor,
       roundEndCaps: true,
       strokeWidthPx: strokeWidth,
     );
@@ -117,39 +120,54 @@ class LineSymbolRenderer extends SymbolRenderer {
 class CircleSymbolRenderer extends SymbolRenderer {
   CircleSymbolRenderer();
 
-  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
+  void paint(ChartCanvas canvas, Rectangle<num> bounds,
+      {Color fillColor, Color strokeColor, double strokeWidthPx}) {
     final center = new Point(
       bounds.left + (bounds.width / 2),
       bounds.top + (bounds.height / 2),
     );
     final radius = min(bounds.width, bounds.height) / 2;
-    canvas.drawPoint(point: center, fill: color, radius: radius);
+    canvas.drawPoint(point: center, fill: fillColor, radius: radius);
   }
 
   bool shouldRepaint(CircleSymbolRenderer oldRenderer) {
     return this != oldRenderer;
   }
+
+  @override
+  bool operator ==(Object other) => other is CircleSymbolRenderer;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 /// Rectangle symbol renderer.
 class RectSymbolRenderer extends SymbolRenderer {
   RectSymbolRenderer();
 
-  void paint(ChartCanvas canvas, Rectangle<num> bounds, Color color) {
-    canvas.drawRect(bounds, fill: color);
+  void paint(ChartCanvas canvas, Rectangle<num> bounds,
+      {Color fillColor, Color strokeColor, double strokeWidthPx}) {
+    canvas.drawRect(bounds,
+        fill: fillColor, stroke: strokeColor, strokeWidthPx: strokeWidthPx);
   }
 
   bool shouldRepaint(RectSymbolRenderer oldRenderer) {
     return this != oldRenderer;
   }
+
+  @override
+  bool operator ==(Object other) => other is RectSymbolRenderer;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 /// Draws a cylindrical shape connecting two points.
 class CylinderSymbolRenderer extends PointSymbolRenderer {
   CylinderSymbolRenderer();
 
-  void paint(ChartCanvas canvas, Point<double> p1, double radius, Color color,
-      {Point<double> p2}) {
+  void paint(ChartCanvas canvas, Point<double> p1, double radius,
+      {Point<double> p2, Color fillColor, strokeColor, double strokeWidthPx}) {
     if (p1 == null) {
       throw new ArgumentError('Invalid point p1 "${p1}"');
     }
@@ -163,7 +181,7 @@ class CylinderSymbolRenderer extends PointSymbolRenderer {
 
     canvas.drawLine(
         points: [adjustedP1, adjustedP2],
-        stroke: color,
+        stroke: strokeColor,
         roundEndCaps: true,
         strokeWidthPx: radius * 2);
   }
@@ -171,14 +189,20 @@ class CylinderSymbolRenderer extends PointSymbolRenderer {
   bool shouldRepaint(CylinderSymbolRenderer oldRenderer) {
     return this != oldRenderer;
   }
+
+  @override
+  bool operator ==(Object other) => other is CylinderSymbolRenderer;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }
 
 /// Draws a rectangular shape connecting two points.
 class RectangleRangeSymbolRenderer extends PointSymbolRenderer {
   RectangleRangeSymbolRenderer();
 
-  void paint(ChartCanvas canvas, Point<double> p1, double radius, Color color,
-      {Point<double> p2}) {
+  void paint(ChartCanvas canvas, Point<double> p1, double radius,
+      {Point<double> p2, Color fillColor, strokeColor, double strokeWidthPx}) {
     if (p1 == null) {
       throw new ArgumentError('Invalid point p1 "${p1}"');
     }
@@ -192,7 +216,7 @@ class RectangleRangeSymbolRenderer extends PointSymbolRenderer {
 
     canvas.drawLine(
         points: [adjustedP1, adjustedP2],
-        stroke: color,
+        stroke: strokeColor,
         roundEndCaps: false,
         strokeWidthPx: radius * 2);
   }
@@ -200,4 +224,10 @@ class RectangleRangeSymbolRenderer extends PointSymbolRenderer {
   bool shouldRepaint(RectangleRangeSymbolRenderer oldRenderer) {
     return this != oldRenderer;
   }
+
+  @override
+  bool operator ==(Object other) => other is RectangleRangeSymbolRenderer;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }

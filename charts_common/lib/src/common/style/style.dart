@@ -70,4 +70,10 @@ abstract class Style {
 
   /// Default color for [RangeAnnotation].
   Color get rangeAnnotationColor;
+
+  /// Default fill color for [Slider].
+  Color get sliderFillColor;
+
+  /// Default stroke color for [Slider].
+  Color get sliderStrokeColor;
 }

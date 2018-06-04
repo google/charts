@@ -19,6 +19,7 @@ import 'initial_selection.dart';
 import 'selection_bar_highlight.dart';
 import 'selection_line_highlight.dart';
 import 'selection_callback_example.dart';
+import 'slider.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -45,6 +46,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Bar Chart with initial selection',
       subtitle: 'Single series with initial selection',
       childBuilder: () => new InitialSelection.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.flag),
+      title: 'Line Chart with Slider',
+      subtitle: 'Line chart with a slider behavior',
+      childBuilder: () => new SliderLine.withRandomData(),
     ),
   ];
 }

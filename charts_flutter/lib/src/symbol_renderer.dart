@@ -55,8 +55,10 @@ abstract class CustomSymbolRenderer extends common.SymbolRenderer
   Widget build(BuildContext context, {Color color, Size size, bool enabled});
 
   @override
-  void paint(
-      common.ChartCanvas canvas, Rectangle<num> bounds, common.Color color) {
+  void paint(common.ChartCanvas canvas, Rectangle<num> bounds,
+      {common.Color fillColor,
+      common.Color strokeColor,
+      double strokeWidthPx}) {
     // Intentionally ignored (never called).
   }
 
@@ -86,7 +88,8 @@ class _SymbolCustomPaint extends CustomPainter {
         new Rectangle<num>(0, 0, size.width.toInt(), size.height.toInt());
     final commonColor = new common.Color(
         r: color.red, g: color.green, b: color.blue, a: color.alpha);
-    symbolRenderer.paint(new ChartCanvas(canvas), bounds, commonColor);
+    symbolRenderer.paint(new ChartCanvas(canvas), bounds,
+        fillColor: commonColor, strokeColor: commonColor);
   }
 
   @override

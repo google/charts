@@ -94,6 +94,8 @@ export 'package:charts_common/src/chart/common/behavior/selection/lock_selection
     show LockSelection;
 export 'package:charts_common/src/chart/common/behavior/selection/selection_trigger.dart'
     show SelectionTrigger;
+export 'package:charts_common/src/chart/common/behavior/slider/slider.dart'
+    show SliderListenerCallback, SliderListenerDragState, SliderStyle;
 export 'package:charts_common/src/chart/common/chart_canvas.dart'
     show ChartCanvas, FillPatternType;
 export 'package:charts_common/src/chart/common/chart_context.dart'
@@ -161,6 +163,7 @@ export 'src/behaviors/legend/series_legend.dart' show SeriesLegend;
 export 'src/behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 export 'src/behaviors/range_annotation.dart' show RangeAnnotation;
 export 'src/behaviors/select_nearest.dart' show SelectNearest;
+export 'src/behaviors/slider/slider.dart' show Slider;
 export 'src/behaviors/zoom/pan_and_zoom_behavior.dart' show PanAndZoomBehavior;
 export 'src/behaviors/zoom/pan_behavior.dart' show PanBehavior;
 export 'src/combo_chart/combo_chart.dart';

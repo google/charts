@@ -78,4 +78,10 @@ class MaterialStyle implements Style {
 
   @override
   Color get rangeAnnotationColor => MaterialPalette.gray.shade100;
+
+  @override
+  Color get sliderFillColor => MaterialPalette.white;
+
+  @override
+  Color get sliderStrokeColor => MaterialPalette.gray.shade600;
 }

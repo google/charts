@@ -328,7 +328,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         // prevents harshly clipping off half of the shape.
         if (componentBounds.containsPoint(point.point)) {
           if (point.symbolRendererId == defaultSymbolRendererId) {
-            symbolRenderer.paint(canvas, bounds, point.color);
+            symbolRenderer.paint(canvas, bounds, fillColor: point.color);
           } else {
             final id = point.symbolRendererId;
             if (!config.customSymbolRenderers.containsKey(id)) {
@@ -337,7 +337,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
             }
 
             final customRenderer = config.customSymbolRenderers[id];
-            customRenderer.paint(canvas, bounds, point.color);
+            customRenderer.paint(canvas, bounds, fillColor: point.color);
           }
         }
 
