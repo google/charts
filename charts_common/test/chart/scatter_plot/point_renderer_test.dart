@@ -72,14 +72,14 @@ void main() {
           radiusPxFn: (MyRow row, _) => row.radius,
           data: myFakeDesktopData)
         // Define a bounds line radius function.
-        ..setAttribute(
-            boundsLineRadiusPxFnKey, (MyRow row, _) => row.boundsRadius))
+        ..setAttribute(boundsLineRadiusPxFnKey,
+            (int index) => myFakeDesktopData[index].boundsRadius))
     ];
   });
 
   group('preprocess', () {
     test('with numeric data and simple points', () {
-      renderer = new PointRenderer<num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<int>(config: new PointRendererConfig());
 
       renderer.preprocessSeries(numericSeriesList);
 
@@ -108,7 +108,7 @@ void main() {
     });
 
     test('with numeric data and missing radiusPxFn', () {
-      renderer = new PointRenderer<num>(
+      renderer = new PointRenderer<int>(
           config:
               new PointRendererConfig(radiusPx: 2.0, boundsLineRadiusPx: 1.5));
 
@@ -138,7 +138,7 @@ void main() {
     });
 
     test('with custom symbol renderer ID in data', () {
-      renderer = new PointRenderer<num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<int>(config: new PointRendererConfig());
 
       numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
           (int index) => numericSeriesList[0].data[index].shape as String);
@@ -160,7 +160,7 @@ void main() {
     });
 
     test('with custom symbol renderer ID in series and data', () {
-      renderer = new PointRenderer<num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<int>(config: new PointRendererConfig());
 
       numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
           (int index) => numericSeriesList[0].data[index].shape as String);

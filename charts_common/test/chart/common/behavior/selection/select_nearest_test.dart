@@ -27,7 +27,7 @@ import 'package:charts_common/src/data/series.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-class MockChart extends Mock implements BaseChart {
+class MockChart extends Mock implements BaseChart<String> {
   GestureListener lastListener;
 
   @override
@@ -43,7 +43,7 @@ class MockChart extends Mock implements BaseChart {
   }
 }
 
-class MockSelectionModel extends Mock implements SelectionModel {}
+class MockSelectionModel extends Mock implements SelectionModel<String> {}
 
 void main() {
   MockChart _chart;
@@ -51,17 +51,17 @@ void main() {
   MockSelectionModel _clickSelectionModel;
   List<String> _series1Data;
   List<String> _series2Data;
-  ImmutableSeries _series1;
-  ImmutableSeries _series2;
-  DatumDetails _details1;
-  DatumDetails _details1Series2;
-  DatumDetails _details2;
-  DatumDetails _details3;
+  MutableSeries<String> _series1;
+  MutableSeries<String> _series2;
+  DatumDetails<String> _details1;
+  DatumDetails<String> _details1Series2;
+  DatumDetails<String> _details2;
+  DatumDetails<String> _details3;
 
-  SelectNearest _makeBehavior(
+  SelectNearest<String> _makeBehavior(
       SelectionModelType selectionModelType, SelectionTrigger eventTrigger,
       {bool expandToDomain, bool selectClosestSeries}) {
-    SelectNearest behavior = new SelectNearest(
+    SelectNearest<String> behavior = new SelectNearest<String>(
         selectionModelType: selectionModelType,
         expandToDomain: expandToDomain,
         selectClosestSeries: selectClosestSeries,
@@ -75,8 +75,8 @@ void main() {
   _setupChart(
       {Point<double> forPoint,
       bool isWithinRenderer,
-      List<DatumDetails> respondWithDetails,
-      List<ImmutableSeries> seriesList}) {
+      List<DatumDetails<String>> respondWithDetails,
+      List<MutableSeries<String>> seriesList}) {
     if (isWithinRenderer != null) {
       when(_chart.pointWithinRenderer(forPoint)).thenReturn(isWithinRenderer);
     }
@@ -101,7 +101,7 @@ void main() {
 
     _series1Data = ['myDomain1', 'myDomain2', 'myDomain3'];
 
-    _series1 = new MutableSeries(new Series(
+    _series1 = new MutableSeries<String>(new Series(
         id: 'mySeries1',
         data: ['myDatum1', 'myDatum2', 'myDatum3'],
         domainFn: (dynamic, int i) => _series1Data[i],
@@ -128,7 +128,7 @@ void main() {
 
     _series2Data = ['myDomain1'];
 
-    _series2 = new MutableSeries(new Series(
+    _series2 = new MutableSeries<String>(new Series(
         id: 'mySeries2',
         data: ['myDatum1s2'],
         domainFn: (dynamic, int i) => _series2Data[i],
@@ -140,6 +140,10 @@ void main() {
         series: _series2,
         domainDistance: 10.0,
         measureDistance: 20.0);
+  });
+
+  tearDown(() {
+    resetMockitoState();
   });
 
   group('SelectNearest trigger handling', () {
