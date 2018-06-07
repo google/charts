@@ -45,8 +45,6 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
 
   final SymbolRenderer symbolRenderer;
 
-  final List<int> barWeights;
-
   /// Dash pattern for the stroke line around the edges of the bar.
   final List<int> dashPattern;
 
@@ -65,11 +63,28 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   /// Stroke width of the target line.
   final double strokeWidthPx;
 
+  /// Sets the series weight pattern. This is a pattern of weights used to
+  /// calculate the width of bars within a bar group. If not specified, each bar
+  /// in the group will have an equal width.
+  ///
+  /// The pattern will not repeat. If more series are assigned to the renderer
+  /// than there are segments in the weight pattern, an error will be thrown.
+  ///
+  /// e.g. For the pattern [2, 1], the first bar in a group should be rendered
+  /// twice as wide as the second bar.
+  ///
+  /// If the expected bar width of the chart is 12px, then the first bar will
+  /// render at 16px and the second will render at 8px. The default weight
+  /// pattern of null means that all bars should be the same width, or 12px in
+  /// this case.
+  ///
+  /// Not used for stacked bars.
+  final List<int> weightPattern;
+
   final rendererAttributes = new RendererAttributes();
 
   BaseBarRendererConfig(
       {this.customRendererId,
-      this.barWeights,
       this.dashPattern,
       this.groupingType = BarGroupingType.grouped,
       this.layoutPaintOrder,
@@ -77,7 +92,8 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       this.fillPattern,
       this.stackHorizontalSeparator,
       this.strokeWidthPx = 0.0,
-      SymbolRenderer symbolRenderer})
+      SymbolRenderer symbolRenderer,
+      this.weightPattern})
       : this.symbolRenderer = symbolRenderer ?? new RoundedRectSymbolRenderer();
 
   /// Whether or not the bars should be organized into groups.
@@ -99,20 +115,19 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       return false;
     }
     return o.customRendererId == customRendererId &&
-        new ListEquality().equals(o.barWeights, barWeights) &&
         o.dashPattern == dashPattern &&
         o.fillPattern == fillPattern &&
         o.groupingType == groupingType &&
         o.minBarLengthPx == minBarLengthPx &&
         o.stackHorizontalSeparator == stackHorizontalSeparator &&
         o.strokeWidthPx == strokeWidthPx &&
-        o.symbolRenderer == symbolRenderer;
+        o.symbolRenderer == symbolRenderer &&
+        new ListEquality().equals(o.weightPattern, weightPattern);
   }
 
   int get hashcode {
     var hash = 1;
     hash = hash * 31 + (customRendererId?.hashCode ?? 0);
-    hash = hash * 31 + (barWeights?.hashCode ?? 0);
     hash = hash * 31 + (dashPattern?.hashCode ?? 0);
     hash = hash * 31 + (fillPattern?.hashCode ?? 0);
     hash = hash * 31 + (groupingType?.hashCode ?? 0);
@@ -120,6 +135,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     hash = hash * 31 + (stackHorizontalSeparator?.hashCode ?? 0);
     hash = hash * 31 + (strokeWidthPx?.hashCode ?? 0);
     hash = hash * 31 + (symbolRenderer?.hashCode ?? 0);
+    hash = hash * 31 + (weightPattern?.hashCode ?? 0);
     return hash;
   }
 }

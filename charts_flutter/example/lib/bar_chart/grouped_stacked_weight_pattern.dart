@@ -13,21 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Example of a bar chart with grouped, stacked series oriented vertically.
+/// Example of a bar chart with grouped, stacked series oriented vertically with
+/// a custom weight pattern.
+///
+/// This is a pattern of weights used to calculate the width of bars within a
+/// bar group. If not specified, each bar in the group will have an equal width.
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-class GroupedStackedBarChart extends StatelessWidget {
+class GroupedStackedWeightPatternBarChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  GroupedStackedBarChart(this.seriesList, {this.animate});
+  GroupedStackedWeightPatternBarChart(this.seriesList, {this.animate});
 
-  factory GroupedStackedBarChart.withSampleData() {
-    return new GroupedStackedBarChart(
+  factory GroupedStackedWeightPatternBarChart.withSampleData() {
+    return new GroupedStackedWeightPatternBarChart(
       createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -38,8 +42,8 @@ class GroupedStackedBarChart extends StatelessWidget {
   // This section is excluded from being copied to the gallery.
   // It is used for creating random series data to demonstrate animation in
   // the example app only.
-  factory GroupedStackedBarChart.withRandomData() {
-    return new GroupedStackedBarChart(_createRandomData());
+  factory GroupedStackedWeightPatternBarChart.withRandomData() {
+    return new GroupedStackedWeightPatternBarChart(_createRandomData());
   }
 
   /// Create random data.
@@ -140,7 +144,15 @@ class GroupedStackedBarChart extends StatelessWidget {
     return new charts.BarChart(
       seriesList,
       animate: animate,
-      barGroupingType: charts.BarGroupingType.groupedStacked,
+      // Configure the bar renderer in grouped stacked rendering mode with a
+      // custom weight pattern.
+      //
+      // The first stack of bars in each group is configured to be twice as wide
+      // as the second stack of bars in each group.
+      defaultRenderer: new charts.BarRendererConfig(
+        groupingType: charts.BarGroupingType.groupedStacked,
+        weightPattern: [2, 1],
+      ),
     );
   }
 

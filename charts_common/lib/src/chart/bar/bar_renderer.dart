@@ -19,12 +19,16 @@ import 'package:meta/meta.dart' show required;
 import 'bar_renderer_config.dart' show BarRendererConfig, CornerStrategy;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import 'base_bar_renderer.dart'
-    show BaseBarRenderer, barGroupCountKey, barGroupIndexKey;
+    show
+        BaseBarRenderer,
+        barGroupCountKey,
+        barGroupIndexKey,
+        previousBarGroupWeightKey,
+        barGroupWeightKey;
 import 'base_bar_renderer_element.dart'
     show BaseAnimatedBar, BaseBarRendererElement;
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
-import '../common/base_chart.dart' show BaseChart;
 import '../common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
@@ -42,8 +46,6 @@ class BarRenderer<D>
   ///
   /// The padding comes out of the bottom of the bar.
   final _stackedBarPadding = 1;
-
-  BaseChart<D> _chart;
 
   final BarRendererDecorator barRendererDecorator;
 
@@ -74,6 +76,8 @@ class BarRenderer<D>
     final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
 
     final barGroupIndex = series.getAttr(barGroupIndexKey);
+    final previousBarGroupWeight = series.getAttr(previousBarGroupWeightKey);
+    final barGroupWeight = series.getAttr(barGroupWeightKey);
     final numBarGroups = series.getAttr(barGroupCountKey);
 
     final bounds = _getBarBounds(
@@ -84,6 +88,8 @@ class BarRenderer<D>
         details.measureOffset,
         measureAxis,
         barGroupIndex,
+        previousBarGroupWeight,
+        barGroupWeight,
         numBarGroups);
 
     var chartPosition;
@@ -104,8 +110,6 @@ class BarRenderer<D>
   _BarRendererElement<D> getBaseDetails(dynamic datum, int index) {
     return new _BarRendererElement<D>();
   }
-
-  bool get rtl => _chart.context.rtl;
 
   CornerStrategy get cornerStrategy {
     return (config as BarRendererConfig).cornerStrategy;
@@ -132,6 +136,8 @@ class BarRenderer<D>
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
+      double previousBarGroupWeight,
+      double barGroupWeight,
       int numBarGroups}) {
     return new _AnimatedBar<D>(
         key: key, datum: datum, series: series, domainValue: domainValue)
@@ -150,6 +156,8 @@ class BarRenderer<D>
           fillPattern: fillPattern,
           strokeWidthPx: strokeWidthPx,
           barGroupIndex: barGroupIndex,
+          previousBarGroupWeight: previousBarGroupWeight,
+          barGroupWeight: barGroupWeight,
           numBarGroups: numBarGroups));
   }
 
@@ -171,6 +179,8 @@ class BarRenderer<D>
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
+      double previousBarGroupWeight,
+      double barGroupWeight,
       int numBarGroups}) {
     return new _BarRendererElement<D>()
       ..color = color
@@ -188,16 +198,9 @@ class BarRenderer<D>
           measureOffsetValue,
           measureAxis,
           barGroupIndex,
+          previousBarGroupWeight,
+          barGroupWeight,
           numBarGroups);
-  }
-
-  @override
-  void onAttach(BaseChart<D> chart) {
-    super.onAttach(chart);
-    // We only need the chart.context.rtl setting, but context is not yet
-    // available when the default renderer is attached to the chart on chart
-    // creation time, since chart onInit is called after the chart is created.
-    _chart = chart;
   }
 
   @override
@@ -334,12 +337,20 @@ class BarRenderer<D>
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       int barGroupIndex,
+      double previousBarGroupWeight,
+      double barGroupWeight,
       int numBarGroups) {
+    // If no weights were passed in, default to equal weight per bar.
+    if (barGroupWeight == null) {
+      barGroupWeight = 1 / numBarGroups;
+      previousBarGroupWeight = barGroupIndex * barGroupWeight;
+    }
+
     // Calculate how wide each bar should be within the group of bars. If we
     // only have one series, or are stacked, then barWidth should equal
     // domainWidth.
     int spacingLoss = (_barGroupInnerPadding * (numBarGroups - 1));
-    int barWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
+    int barWidth = ((domainWidth - spacingLoss) * barGroupWeight).round();
 
     // Flip bar group index for calculating location on the domain axis if RTL.
     final adjustedBarGroupIndex =
@@ -347,9 +358,16 @@ class BarRenderer<D>
 
     // Calculate the start and end of the bar, taking into account accumulated
     // padding for grouped bars.
+    int previousAverageWidth = adjustedBarGroupIndex > 0
+        ? ((domainWidth - spacingLoss) *
+                (previousBarGroupWeight / adjustedBarGroupIndex))
+            .round()
+        : 0;
+
     int domainStart = (domainAxis.getLocation(domainValue) -
             (domainWidth / 2) +
-            (barWidth + _barGroupInnerPadding) * adjustedBarGroupIndex)
+            (previousAverageWidth + _barGroupInnerPadding) *
+                adjustedBarGroupIndex)
         .round();
 
     int domainEnd = domainStart + barWidth;

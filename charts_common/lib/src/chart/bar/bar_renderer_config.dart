@@ -31,7 +31,6 @@ class BarRendererConfig extends BaseBarRendererConfig<String> {
 
   BarRendererConfig({
     String customRendererId,
-    List<int> barWeights,
     CornerStrategy cornerStrategy,
     FillPatternType fillPattern,
     BarGroupingType groupingType,
@@ -41,17 +40,19 @@ class BarRendererConfig extends BaseBarRendererConfig<String> {
     double strokeWidthPx = 0.0,
     this.barRendererDecorator,
     SymbolRenderer symbolRenderer,
+    List<int> weightPattern,
   })  : cornerStrategy = cornerStrategy ?? const ConstCornerStrategy(2),
         super(
-            customRendererId: customRendererId,
-            barWeights: barWeights,
-            groupingType: groupingType ?? BarGroupingType.grouped,
-            layoutPaintOrder: layoutPaintOrder,
-            minBarLengthPx: minBarLengthPx,
-            fillPattern: fillPattern,
-            stackHorizontalSeparator: stackHorizontalSeparator,
-            strokeWidthPx: strokeWidthPx,
-            symbolRenderer: symbolRenderer);
+          customRendererId: customRendererId,
+          groupingType: groupingType ?? BarGroupingType.grouped,
+          layoutPaintOrder: layoutPaintOrder,
+          minBarLengthPx: minBarLengthPx,
+          fillPattern: fillPattern,
+          stackHorizontalSeparator: stackHorizontalSeparator,
+          strokeWidthPx: strokeWidthPx,
+          symbolRenderer: symbolRenderer,
+          weightPattern: weightPattern,
+        );
 
   @override
   BarRenderer<String> build() {

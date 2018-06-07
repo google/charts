@@ -21,11 +21,14 @@ import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dar
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
 import 'package:charts_common/src/chart/cartesian/axis/linear/linear_scale.dart';
 import 'package:charts_common/src/chart/common/base_chart.dart';
+import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/behavior/range_annotation.dart';
 import 'package:charts_common/src/common/material_palette.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+
+class MockContext extends Mock implements ChartContext {}
 
 class ConcreteChart extends CartesianChart {
   LifecycleListener lastListener;
@@ -77,8 +80,18 @@ void main() {
 
   List<RangeAnnotationSegment<num>> _annotations2;
 
+  ConcreteChart _makeChart() {
+    final chart = new ConcreteChart();
+
+    final context = new MockContext();
+    when(context.rtl).thenReturn(false);
+    chart.context = context;
+
+    return chart;
+  }
+
   setUp(() {
-    _chart = new ConcreteChart();
+    _chart = _makeChart();
 
     _series1 = new Series<MyRow, int>(
         id: 's1',

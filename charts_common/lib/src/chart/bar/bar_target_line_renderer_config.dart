@@ -40,7 +40,6 @@ class BarTargetLineRendererConfig extends BaseBarRendererConfig<String> {
 
   BarTargetLineRendererConfig(
       {String customRendererId,
-      List<int> barWeights,
       List<int> dashPattern,
       groupingType = BarGroupingType.grouped,
       int layoutPaintOrder = LayoutViewPaintOrder.barTargetLine,
@@ -49,16 +48,18 @@ class BarTargetLineRendererConfig extends BaseBarRendererConfig<String> {
       this.overDrawPx = 0,
       this.roundEndCaps = true,
       double strokeWidthPx = 3.0,
-      SymbolRenderer symbolRenderer})
+      SymbolRenderer symbolRenderer,
+      List<int> weightPattern})
       : super(
-            customRendererId: customRendererId,
-            barWeights: barWeights,
-            dashPattern: dashPattern,
-            groupingType: groupingType,
-            layoutPaintOrder: layoutPaintOrder,
-            minBarLengthPx: minBarLengthPx,
-            strokeWidthPx: strokeWidthPx,
-            symbolRenderer: symbolRenderer ?? new LineSymbolRenderer());
+          customRendererId: customRendererId,
+          dashPattern: dashPattern,
+          groupingType: groupingType,
+          layoutPaintOrder: layoutPaintOrder,
+          minBarLengthPx: minBarLengthPx,
+          strokeWidthPx: strokeWidthPx,
+          symbolRenderer: symbolRenderer ?? new LineSymbolRenderer(),
+          weightPattern: weightPattern,
+        );
 
   @override
   BarTargetLineRenderer<String> build() {
