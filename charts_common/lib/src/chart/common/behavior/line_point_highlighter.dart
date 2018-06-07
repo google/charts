@@ -76,6 +76,12 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   /// Defaults to drawing a vertical follow line only for the nearest datum.
   final LinePointHighlighterFollowLineType showVerticalFollowLine;
 
+  /// The dash pattern to be used for drawing the line.
+  ///
+  /// To disable dash pattern (to draw a solid line), pass in an empty list.
+  /// This is because if dashPattern is null or not set, it defaults to [1,3].
+  final List<int> dashPattern;
+
   BaseChart<D> _chart;
 
   _LinePointLayoutView _view;
@@ -96,12 +102,20 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   final _currentKeys = <String>[];
 
   LinePointHighlighter(
-      {this.selectionModelType = SelectionModelType.info,
-      this.defaultRadiusPx = 4.0,
-      this.radiusPaddingPx = 0.5,
-      this.showHorizontalFollowLine = LinePointHighlighterFollowLineType.none,
-      this.showVerticalFollowLine =
-          LinePointHighlighterFollowLineType.nearest}) {
+      {SelectionModelType selectionModelType,
+      double defaultRadiusPx,
+      double radiusPaddingPx,
+      LinePointHighlighterFollowLineType showHorizontalFollowLine,
+      LinePointHighlighterFollowLineType showVerticalFollowLine,
+      List<int> dashPattern})
+      : selectionModelType = selectionModelType ?? SelectionModelType.info,
+        defaultRadiusPx = defaultRadiusPx ?? 4.0,
+        radiusPaddingPx = radiusPaddingPx ?? 0.5,
+        showHorizontalFollowLine =
+            showHorizontalFollowLine ?? LinePointHighlighterFollowLineType.none,
+        showVerticalFollowLine = showVerticalFollowLine ??
+            LinePointHighlighterFollowLineType.nearest,
+        dashPattern = dashPattern ?? [1, 3] {
     _lifecycleListener =
         new LifecycleListener<D>(onAxisConfigured: _updateViewData);
   }
@@ -114,7 +128,8 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
         chart: chart,
         layoutPaintOrder: LayoutViewPaintOrder.linePointHighlighter,
         showHorizontalFollowLine: showHorizontalFollowLine,
-        showVerticalFollowLine: showVerticalFollowLine);
+        showVerticalFollowLine: showVerticalFollowLine,
+        dashPattern: dashPattern);
 
     if (chart is CartesianChart) {
       // Only vertical rendering is supported by this behavior.
@@ -262,6 +277,8 @@ class _LinePointLayoutView<D> extends LayoutView {
 
   final BaseChart<D> chart;
 
+  final List<int> dashPattern;
+
   Rectangle<int> _drawAreaBounds;
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
@@ -278,6 +295,7 @@ class _LinePointLayoutView<D> extends LayoutView {
     @required int layoutPaintOrder,
     @required this.showHorizontalFollowLine,
     @required this.showVerticalFollowLine,
+    this.dashPattern,
   }) : this.layoutConfig = new LayoutViewConfig(
             paintOrder: LayoutViewPaintOrder.linePointHighlighter,
             position: LayoutPosition.DrawArea,
@@ -380,7 +398,7 @@ class _LinePointLayoutView<D> extends LayoutView {
             ],
             stroke: StyleFactory.style.linePointHighlighterColor,
             strokeWidthPx: 1.0,
-            dashPattern: [1, 3]);
+            dashPattern: dashPattern);
 
         if (showVerticalFollowLine ==
             LinePointHighlighterFollowLineType.nearest) {

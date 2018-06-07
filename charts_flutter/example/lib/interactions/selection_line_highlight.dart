@@ -79,6 +79,11 @@ class SelectionLineHighlight extends StatelessWidget {
       // Optional - Configures a [LinePointHighlighter] behavior with a
       // vertical follow line. A vertical follow line is included by
       // default, but is shown here as an example configuration.
+      //
+      // By default, the line has default dash pattern of [1,3]. This can be
+      // set by providing a [dashPattern] or it can be turned off by passing in
+      // an empty list. An empty list is necessary because passing in a null
+      // value will be treated the same as not passing in a value at all.
       new charts.LinePointHighlighter(
           showHorizontalFollowLine:
               charts.LinePointHighlighterFollowLineType.none,
