@@ -35,6 +35,10 @@ const lineElementsKey =
     const AttributeKey<List<_LineRendererElement>>('LineRenderer.lineElements');
 
 class LineRenderer<D> extends BaseCartesianRenderer<D> {
+  // Configuration used to extend the clipping area to extend the draw bounds.
+  static const drawBoundTopExtensionPx = 5;
+  static const drawBoundBottomExtensionPx = 5;
+
   final LineRendererConfig config;
 
   PointRenderer _pointRenderer;
@@ -331,23 +335,12 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       final datumPoint = _getPoint(datum, domainFn(index), series, domainAxis,
           measure, measureOffset, measureAxis);
 
-      // Only add the point if it is within the draw area bounds.
-      if (datumPoint.x != null &&
-          datumPoint.x >= drawBounds.left &&
-          datumPoint.x <= drawBounds.right) {
-        pointList.add(datumPoint);
+      pointList.add(datumPoint);
 
-        // Create points for the area element.
-        if (config.includeArea) {
-          areaPointList.add(_getPoint(
-              datum,
-              domainFn(index),
-              series,
-              domainAxis,
-              measureFn(index),
-              measureOffsetFn(index),
-              measureAxis));
-        }
+      // Create points for the area element.
+      if (config.includeArea) {
+        areaPointList.add(_getPoint(datum, domainFn(index), series, domainAxis,
+            measureFn(index), measureOffsetFn(index), measureAxis));
       }
     }
 
@@ -399,6 +392,24 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       keysToRemove.forEach((String key) => _seriesLineMap.remove(key));
     }
 
+    // Clip the canvas so that line and area drawn will not be outside of the
+    // drawBounds. We can't just exclude points that are outside of the
+    // drawBounds, because this leads to lines not extending to the edge of the
+    // draw area if a point doesn't exist exactly on the edge of the draw area.
+    //
+    // The clip bounds is the draw bounds, plus:
+    // 5 pixels on top to prevent a line that connects at the very edge of the
+    // top of the draw area from being cut off.
+    // 5 pixels on the bottom to prevent a line at the very bottom of the draw
+    // area from being cut off.
+    canvas.setClipBounds(new Rectangle<int>(
+        drawBounds.left,
+        drawBounds.top - drawBoundTopExtensionPx,
+        drawBounds.width,
+        drawBounds.height +
+            drawBoundTopExtensionPx +
+            drawBoundBottomExtensionPx));
+
     _seriesLineMap.forEach((String key, List<_AnimatedElements<D>> elements) {
       elements
           .map<_AreaRendererElement<D>>(
@@ -424,6 +435,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         }
       });
     });
+
+    // Reset canvas clip after line and area drawing is completed.
+    canvas.resetClipBounds();
 
     if (config.includePoints) {
       _pointRenderer.paint(canvas, animationPercent);
