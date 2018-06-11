@@ -71,16 +71,19 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
     if (domainAxis != null && domainAxis != prev?.domainAxis) {
       chart.domainAxisSpec = domainAxis;
+      chartState.markChartDirty();
     }
 
     if (primaryMeasureAxis != null &&
         primaryMeasureAxis != prev?.primaryMeasureAxis) {
       chart.primaryMeasureAxisSpec = primaryMeasureAxis;
+      chartState.markChartDirty();
     }
 
     if (secondaryMeasureAxis != null &&
         secondaryMeasureAxis != prev?.secondaryMeasureAxis) {
       chart.secondaryMeasureAxisSpec = secondaryMeasureAxis;
+      chartState.markChartDirty();
     }
   }
 }

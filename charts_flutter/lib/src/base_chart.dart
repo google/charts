@@ -93,6 +93,7 @@ abstract class BaseChart<D> extends StatefulWidget {
     if (defaultRenderer != null &&
         defaultRenderer != oldWidget?.defaultRenderer) {
       chart.defaultRenderer = defaultRenderer.build();
+      chartState.markChartDirty();
     }
 
     // Add custom series renderers if any were provided.
@@ -105,6 +106,7 @@ abstract class BaseChart<D> extends StatefulWidget {
                 i > oldWidget.customSeriesRenderers.length) ||
             customSeriesRenderers[i] != oldWidget.customSeriesRenderers[i]) {
           chart.addSeriesRenderer(customSeriesRenderers[i].build());
+          chartState.markChartDirty();
         }
       }
     }
@@ -149,6 +151,7 @@ abstract class BaseChart<D> extends StatefulWidget {
         chartState.addedBehaviorWidgets.remove(addedBehavior);
         chartState.addedCommonBehaviorsByRole.remove(role);
         chart.removeBehavior(chartState.addedCommonBehaviorsByRole[role]);
+        chartState.markChartDirty();
       }
     }
 
@@ -166,6 +169,7 @@ abstract class BaseChart<D> extends StatefulWidget {
       chartState.addedBehaviorWidgets.add(behaviorWidget);
       chartState.addedCommonBehaviorsByRole[behaviorWidget.role] =
           commonBehavior;
+      chartState.markChartDirty();
     });
   }
 
