@@ -255,6 +255,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
       final domain = series.domainFn(datumIndex);
       final measure = series.measureFn(datumIndex);
+      final rawMeasure = series.rawMeasureFn(datumIndex);
       final color = series.colorFn(datumIndex);
 
       final chartPosition = new Point<double>(
@@ -265,6 +266,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
           datum: datum,
           domain: domain,
           measure: measure,
+          rawMeasure: rawMeasure,
           series: series,
           color: color,
           chartPosition: chartPosition));

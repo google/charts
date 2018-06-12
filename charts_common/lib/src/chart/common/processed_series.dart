@@ -39,6 +39,10 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<num> measureLowerBoundFn;
   AccessorFn<num> measureUpperBoundFn;
   AccessorFn<num> measureOffsetFn;
+  AccessorFn<num> rawMeasureFn;
+  AccessorFn<num> rawMeasureLowerBoundFn;
+  AccessorFn<num> rawMeasureUpperBoundFn;
+
   AccessorFn<Color> colorFn;
   AccessorFn<Color> fillColorFn;
   AccessorFn<FillPatternType> fillPatternFn;
@@ -69,6 +73,11 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     measureLowerBoundFn = series.measureLowerBoundFn;
     measureUpperBoundFn = series.measureUpperBoundFn;
     measureOffsetFn = series.measureOffsetFn;
+
+    // Save the original measure functions in case they get replaced later.
+    rawMeasureFn = series.measureFn;
+    rawMeasureLowerBoundFn = series.measureLowerBoundFn;
+    rawMeasureUpperBoundFn = series.measureUpperBoundFn;
 
     // Pre-compute the sum of the measure values to make it available on demand.
     seriesMeasureTotal = 0;
@@ -109,6 +118,10 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     measureLowerBoundFn = other.measureLowerBoundFn;
     measureUpperBoundFn = other.measureUpperBoundFn;
     measureOffsetFn = other.measureOffsetFn;
+
+    rawMeasureFn = other.rawMeasureFn;
+    rawMeasureLowerBoundFn = other.rawMeasureLowerBoundFn;
+    rawMeasureUpperBoundFn = other.rawMeasureUpperBoundFn;
 
     seriesMeasureTotal = other.seriesMeasureTotal;
 
@@ -162,6 +175,10 @@ abstract class ImmutableSeries<D> {
   AccessorFn<num> get measureLowerBoundFn;
   AccessorFn<num> get measureUpperBoundFn;
   AccessorFn<num> get measureOffsetFn;
+  AccessorFn<num> get rawMeasureFn;
+  AccessorFn<num> get rawMeasureLowerBoundFn;
+  AccessorFn<num> get rawMeasureUpperBoundFn;
+
   AccessorFn<Color> get colorFn;
   AccessorFn<Color> get fillColorFn;
   AccessorFn<FillPatternType> get fillPatternFn;

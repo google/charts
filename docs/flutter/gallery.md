@@ -60,12 +60,25 @@
 | Statically Provided Ticks<br>[![](example/axes/statically_provided_ticks_thumb.png)](example/axes/statically_provided_ticks) | Ordinal Initial Viewport<br>[![](example/axes/ordinal_initial_viewport_thumb.png)](example/axes/ordinal_initial_viewport) | Numeric Initial Viewport<br>[![](example/axes/numeric_initial_viewport_thumb.png)](example/axes/numeric_initial_viewport) | |
 
 
-### Interactions
+### Legends
 
 | | | | |
 | --- | --- | --- | --- |
-| Initial Selection<br>[![](example/interactions/initial_selection_thumb.png)](example/interactions/initial_selection) | Selection Bar Highlight<br>[![](example/interactions/selection_bar_highlight_thumb.png)](example/interactions/selection_bar_highlight) | Selection Line Highlight<br>[![](example/interactions/selection_line_highlight_thumb.png)](example/interactions/selection_line_highlight) | Selection Callback Example<br>[![](example/interactions/selection_callback_example_thumb.png)](example/interactions/selection_callback_example) |
-| Slider<br>[![](example/interactions/slider_thumb.png)](example/interactions/slider) | | | |
+| Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Legend Options<br>[![](example/legends/legend_options_thumb.png)](example/legends/legend_options) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) | Default Hidden Series Legend<br>[![](example/legends/default_hidden_series_legend_thumb.png)](example/legends/default_hidden_series_legend) |
+
+
+### Hovercards
+
+| | | | |
+| --- | --- | --- | --- |
+
+
+### Behaviors
+
+| | | | |
+| --- | --- | --- | --- |
+| Initial Selection<br>[![](example/behaviors/initial_selection_thumb.png)](example/behaviors/initial_selection) | Selection Bar Highlight<br>[![](example/behaviors/selection_bar_highlight_thumb.png)](example/behaviors/selection_bar_highlight) | Selection Line Highlight<br>[![](example/behaviors/selection_line_highlight_thumb.png)](example/behaviors/selection_line_highlight) | Selection Callback Example<br>[![](example/behaviors/selection_callback_example_thumb.png)](example/behaviors/selection_callback_example) |
+| Slider<br>[![](example/behaviors/slider_thumb.png)](example/behaviors/slider) | Percent Of Domain<br>[![](example/behaviors/percent_of_domain_thumb.png)](example/behaviors/percent_of_domain) | Percent Of Domain By Category<br>[![](example/behaviors/percent_of_domain_by_category_thumb.png)](example/behaviors/percent_of_domain_by_category) | Percent Of Series<br>[![](example/behaviors/percent_of_series_thumb.png)](example/behaviors/percent_of_series) |
 
 
 ### a11y
@@ -80,19 +93,6 @@
 | | | | |
 | --- | --- | --- | --- |
 | Rtl Bar Chart<br>[![](example/i18ns/rtl_bar_chart_thumb.png)](example/i18ns/rtl_bar_chart) | Rtl Line Chart<br>[![](example/i18ns/rtl_line_chart_thumb.png)](example/i18ns/rtl_line_chart) | Rtl Series Legend<br>[![](example/i18ns/rtl_series_legend_thumb.png)](example/i18ns/rtl_series_legend) | |
-
-
-### Legends
-
-| | | | |
-| --- | --- | --- | --- |
-| Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Legend Options<br>[![](example/legends/legend_options_thumb.png)](example/legends/legend_options) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) | Default Hidden Series Legend<br>[![](example/legends/default_hidden_series_legend_thumb.png)](example/legends/default_hidden_series_legend) |
-
-
-### Hovercards
-
-| | | | |
-| --- | --- | --- | --- |
 
 [//]: (END_EXAMPLES)
 

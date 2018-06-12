@@ -67,6 +67,8 @@ export 'package:charts_common/src/chart/cartesian/axis/spec/ordinal_axis_spec.da
         OrdinalTickFormatterSpec,
         OrdinalTickProviderSpec,
         StaticOrdinalTickProviderSpec;
+export 'package:charts_common/src/chart/cartesian/axis/spec/percent_axis_spec.dart'
+    show PercentAxisSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/tick_spec.dart'
     show TickSpec;
 export 'package:charts_common/src/chart/cartesian/axis/time/date_time_extents.dart'
@@ -90,6 +92,8 @@ export 'package:charts_common/src/chart/common/behavior/line_point_highlighter.d
     show LinePointHighlighterFollowLineType;
 export 'package:charts_common/src/chart/common/behavior/range_annotation.dart'
     show RangeAnnotationAxisType, RangeAnnotationSegment;
+export 'package:charts_common/src/chart/common/behavior/calculation/percent_injector.dart'
+    show PercentInjectorTotalType;
 export 'package:charts_common/src/chart/common/behavior/selection/lock_selection.dart'
     show LockSelection;
 export 'package:charts_common/src/chart/common/behavior/selection/selection_trigger.dart'
@@ -154,6 +158,7 @@ export 'src/behaviors/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior;
 export 'src/behaviors/domain_highlighter.dart' show DomainHighlighter;
 export 'src/behaviors/initial_selection.dart' show InitialSelection;
+export 'src/behaviors/calculation/percent_injector.dart' show PercentInjector;
 export 'src/behaviors/legend/legend_layout.dart' show TabularLegendLayout;
 export 'src/behaviors/legend/legend_content_builder.dart'
     show LegendContentBuilder, TabularLegendContentBuilder;

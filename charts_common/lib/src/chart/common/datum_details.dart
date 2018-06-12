@@ -53,6 +53,20 @@ class DatumDetails<D> {
   /// Measure offset value of [datum].
   final num measureOffset;
 
+  /// Original measure value of [datum]. This may differ from [measure] if a
+  /// behavior attached to a chart automatically adjusts measure values.
+  final num rawMeasure;
+
+  /// Original measure lower bound value of [datum]. This may differ from
+  /// [measureLowerBound] if a behavior attached to a chart automatically
+  /// adjusts measure values.
+  final num rawMeasureLowerBound;
+
+  /// Original measure upper bound value of [datum]. This may differ from
+  /// [measureUpperBound] if a behavior attached to a chart automatically
+  /// adjusts measure values.
+  final num rawMeasureUpperBound;
+
   /// The series the [datum] is from.
   final ImmutableSeries<D> series;
 
@@ -100,6 +114,9 @@ class DatumDetails<D> {
       this.measureLowerBound,
       this.measureUpperBound,
       this.measureOffset,
+      this.rawMeasure,
+      this.rawMeasureLowerBound,
+      this.rawMeasureUpperBound,
       this.series,
       this.color,
       this.chartPosition,
@@ -120,6 +137,9 @@ class DatumDetails<D> {
       num measureLowerBound,
       num measureUpperBound,
       num measureOffset,
+      num rawMeasure,
+      num rawMeasureLowerBound,
+      num rawMeasureUpperBound,
       ImmutableSeries<D> series,
       Color color,
       Point<double> chartPosition,
@@ -138,6 +158,11 @@ class DatumDetails<D> {
         measureLowerBound: measureLowerBound ?? other.measureLowerBound,
         measureUpperBound: measureUpperBound ?? other.measureUpperBound,
         measureOffset: measureOffset ?? other.measureOffset,
+        rawMeasure: rawMeasure ?? other.rawMeasure,
+        rawMeasureLowerBound:
+            rawMeasureLowerBound ?? other.rawMeasureLowerBound,
+        rawMeasureUpperBound:
+            rawMeasureUpperBound ?? other.rawMeasureUpperBound,
         series: series ?? other.series,
         color: color ?? other.color,
         chartPosition: chartPosition ?? other.chartPosition,

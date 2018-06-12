@@ -16,6 +16,9 @@
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'initial_selection.dart';
+import 'percent_of_domain.dart';
+import 'percent_of_domain_by_category.dart';
+import 'percent_of_series.dart';
 import 'selection_bar_highlight.dart';
 import 'selection_line_highlight.dart';
 import 'selection_callback_example.dart';
@@ -52,6 +55,28 @@ List<GalleryScaffold> buildGallery() {
       title: 'Line Chart with Slider',
       subtitle: 'Line chart with a slider behavior',
       childBuilder: () => new SliderLine.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Percent of Domain',
+      subtitle: 'Stacked bar chart with measures calculated as percent of ' +
+          'domain',
+      childBuilder: () => new PercentOfDomainBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Percent of Domain by Category',
+      subtitle: 'Grouped stacked bar chart with measures calculated as '
+          'percent of domain and series category',
+      childBuilder: () =>
+          new PercentOfDomainByCategoryBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Percent of Series',
+      subtitle: 'Grouped bar chart with measures calculated as percent of ' +
+          'series',
+      childBuilder: () => new PercentOfSeriesBarChart.withRandomData(),
     ),
   ];
 }

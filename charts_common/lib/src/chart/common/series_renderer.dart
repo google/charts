@@ -295,6 +295,9 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     final measureLowerBoundFn = series.measureLowerBoundFn;
     final measureUpperBoundFn = series.measureUpperBoundFn;
     final measureOffsetFn = series.measureOffsetFn;
+    final rawMeasureFn = series.rawMeasureFn;
+    final rawMeasureLowerBoundFn = series.rawMeasureLowerBoundFn;
+    final rawMeasureUpperBoundFn = series.rawMeasureUpperBoundFn;
     final colorFn = series.colorFn;
     final radiusPxFn = series.radiusPxFn;
 
@@ -312,6 +315,12 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     final measureOffsetValue =
         measureOffsetFn != null ? measureOffsetFn(index) : null;
 
+    final rawMeasureValue = rawMeasureFn(index);
+    final rawMeasureLowerBoundValue =
+        rawMeasureLowerBoundFn != null ? rawMeasureLowerBoundFn(index) : null;
+    final rawMeasureUpperBoundValue =
+        rawMeasureUpperBoundFn != null ? rawMeasureUpperBoundFn(index) : null;
+
     final color = colorFn(index);
     final radiusPx = radiusPxFn != null ? radiusPxFn(index).toDouble() : null;
 
@@ -325,6 +334,9 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         measureLowerBound: measureLowerBoundValue,
         measureUpperBound: measureUpperBoundValue,
         measureOffset: measureOffsetValue,
+        rawMeasure: rawMeasureValue,
+        rawMeasureLowerBound: rawMeasureLowerBoundValue,
+        rawMeasureUpperBound: rawMeasureUpperBoundValue,
         series: series,
         color: color,
         radiusPx: radiusPx);
