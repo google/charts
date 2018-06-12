@@ -365,6 +365,11 @@ abstract class BaseChart<D> {
   // Draw methods
   //
   void draw(List<Series<dynamic, D>> seriesList) {
+    // Clear the selection model when [seriesList] changes.
+    for (final selectionModel in _selectionModels.values) {
+      selectionModel.clearSelection(notifyListeners: false);
+    }
+
     var processedSeriesList = new List<MutableSeries<D>>.from(
         seriesList.map((Series<dynamic, D> series) => makeSeries(series)));
 
