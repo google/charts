@@ -25,7 +25,8 @@ abstract class LegendContentBuilder {
   const LegendContentBuilder();
 
   Widget build(BuildContext context, common.LegendState legendState,
-      common.Legend legend);
+      common.Legend legend,
+      {bool showMeasures});
 }
 
 /// Base strategy for building a legend content widget.
@@ -44,7 +45,11 @@ abstract class BaseLegendContentBuilder implements LegendContentBuilder {
 
   @override
   Widget build(BuildContext context, common.LegendState legendState,
-      common.Legend legend) {
+      common.Legend legend,
+      {bool showMeasures}) {
+    final hasSelection =
+        legendState.legendEntries.any((entry) => entry.isSelected);
+
     final entryWidgets = legendState.legendEntries.map((entry) {
       var isHidden = false;
       if (legend is common.SeriesLegend) {
@@ -52,7 +57,8 @@ abstract class BaseLegendContentBuilder implements LegendContentBuilder {
       }
 
       return legendEntryLayout.build(
-          context, entry, legend as TappableLegend, isHidden);
+          context, entry, legend as TappableLegend, isHidden,
+          showMeasures: showMeasures && hasSelection);
     }).toList();
 
     return legendLayout.build(context, entryWidgets);

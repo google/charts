@@ -18,8 +18,8 @@ import 'dart:math' show Point;
 import '../../common/color.dart' show Color;
 import 'processed_series.dart' show ImmutableSeries;
 
-typedef DomainFormatter<D>(D domain);
-typedef MeasureFormatter(num measure);
+typedef String DomainFormatter<D>(D domain);
+typedef String MeasureFormatter(num measure);
 
 /// Represents processed rendering details for a data point from a series.
 class DatumDetails<D> {

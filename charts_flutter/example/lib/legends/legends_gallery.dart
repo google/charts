@@ -18,6 +18,7 @@ import '../gallery_scaffold.dart';
 import 'simple_series_legend.dart';
 import 'legend_options.dart';
 import 'legend_custom_symbol.dart';
+import 'legend_with_measures.dart';
 import 'default_hidden_series_legend.dart';
 
 List<GalleryScaffold> buildGallery() {
@@ -46,6 +47,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Default Hidden Series Legend',
       subtitle: 'A series legend showing a series hidden by default',
       childBuilder: () => new DefaultHiddenSeriesLegend.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Series legend with measures',
+      subtitle: 'Series legend with measures and measure formatting',
+      childBuilder: () => new LegendWithMeasures.withRandomData(),
     ),
   ];
 }

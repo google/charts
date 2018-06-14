@@ -19,6 +19,7 @@ import 'package:charts_common/common.dart' as common
         InsideJustification,
         LegendEntry,
         LegendTapHandling,
+        MeasureFormatter,
         OutsideJustification,
         SeriesLegend,
         SelectionModelType;
@@ -56,6 +57,22 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   final common.OutsideJustification outsideJustification;
   final common.InsideJustification insideJustification;
 
+  /// Optionally set to true to show measure values in series legend when a
+  /// datum is selected.
+  ///
+  /// Defaults to false, where measure values are not shown.
+  ///
+  /// This flag is used by the [contentBuilder], so a custom content builder
+  /// has to choose if it wants to use this flag.
+  final bool showMeasures;
+
+  /// Formatter for measure value(s) if the measures are shown on the legend.
+  final common.MeasureFormatter measureFormatter;
+
+  /// Formatter for secondary measure value(s) if the measures are shown on the
+  /// legend and the series uses the secondary axis.
+  final common.MeasureFormatter secondaryMeasureFormatter;
+
   static const defaultCellPadding = const EdgeInsets.all(8.0);
 
   final List<String> defaultHiddenSeries;
@@ -90,6 +107,13 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   ///
   /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
   /// first chart draw.
+  ///
+  /// [showMeasures] show measure values for each series when datum is selected.
+  ///
+  /// [measureFormatter] formats measure value if measures are shown.
+  ///
+  /// [secondaryMeasureFormatter] formats measures if measures are shown for the
+  /// series that uses secondary measure axis.
   factory SeriesLegend({
     common.BehaviorPosition position,
     common.OutsideJustification outsideJustification,
@@ -99,6 +123,9 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     int desiredMaxColumns,
     EdgeInsets cellPadding,
     List<String> defaultHiddenSeries,
+    bool showMeasures,
+    common.MeasureFormatter measureFormatter,
+    common.MeasureFormatter secondaryMeasureFormatter,
   }) {
     // Set defaults if empty.
     position ??= defaultBehaviorPosition;
@@ -124,7 +151,10 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         position: position,
         outsideJustification: outsideJustification,
         insideJustification: insideJustification,
-        defaultHiddenSeries: defaultHiddenSeries);
+        defaultHiddenSeries: defaultHiddenSeries,
+        showMeasures: showMeasures ?? false,
+        measureFormatter: measureFormatter,
+        secondaryMeasureFormatter: secondaryMeasureFormatter);
   }
 
   /// Create a legend with custom layout.
@@ -147,12 +177,22 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   ///
   /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
   /// first chart draw.
+  ///
+  /// [showMeasures] show measure values for each series when datum is selected.
+  ///
+  /// [measureFormatter] formats measure value if measures are shown.
+  ///
+  /// [secondaryMeasureFormatter] formats measures if measures are shown for the
+  /// series that uses secondary measure axis.
   factory SeriesLegend.customLayout(
     LegendContentBuilder contentBuilder, {
     common.BehaviorPosition position,
     common.OutsideJustification outsideJustification,
     common.InsideJustification insideJustification,
     List<String> defaultHiddenSeries,
+    bool showMeasures,
+    common.MeasureFormatter measureFormatter,
+    common.MeasureFormatter secondaryMeasureFormatter,
   }) {
     // Set defaults if empty.
     position ??= defaultBehaviorPosition;
@@ -160,21 +200,29 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     insideJustification ??= defaultInsideJustification;
 
     return new SeriesLegend._internal(
-        contentBuilder: contentBuilder,
-        selectionModelType: common.SelectionModelType.info,
-        position: position,
-        outsideJustification: outsideJustification,
-        insideJustification: insideJustification,
-        defaultHiddenSeries: defaultHiddenSeries);
+      contentBuilder: contentBuilder,
+      selectionModelType: common.SelectionModelType.info,
+      position: position,
+      outsideJustification: outsideJustification,
+      insideJustification: insideJustification,
+      defaultHiddenSeries: defaultHiddenSeries,
+      showMeasures: showMeasures ?? false,
+      measureFormatter: measureFormatter,
+      secondaryMeasureFormatter: secondaryMeasureFormatter,
+    );
   }
 
-  SeriesLegend._internal(
-      {this.contentBuilder,
-      this.selectionModelType,
-      this.position,
-      this.outsideJustification,
-      this.insideJustification,
-      this.defaultHiddenSeries});
+  SeriesLegend._internal({
+    this.contentBuilder,
+    this.selectionModelType,
+    this.position,
+    this.outsideJustification,
+    this.insideJustification,
+    this.defaultHiddenSeries,
+    this.showMeasures,
+    this.measureFormatter,
+    this.secondaryMeasureFormatter,
+  });
 
   @override
   common.SeriesLegend<D> createCommonBehavior<D>() =>
@@ -212,7 +260,10 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
   SeriesLegend config;
 
   _FlutterSeriesLegend(this.config)
-      : super(selectionModelType: config.selectionModelType) {
+      : super(
+            selectionModelType: config.selectionModelType,
+            measureFormatter: config.measureFormatter,
+            secondaryMeasureFormatter: config.secondaryMeasureFormatter) {
     super.defaultHiddenSeries = config.defaultHiddenSeries;
   }
 
@@ -233,8 +284,8 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
       config.insideJustification;
 
   @override
-  Widget build(BuildContext context) =>
-      config.contentBuilder.build(context, legendState, this);
+  Widget build(BuildContext context) => config.contentBuilder
+      .build(context, legendState, this, showMeasures: config.showMeasures);
 
   @override
   onLegendEntryTapUp(common.LegendEntry detail) {

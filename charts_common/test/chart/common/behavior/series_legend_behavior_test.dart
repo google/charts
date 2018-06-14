@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
 import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
 import 'package:charts_common/src/chart/common/series_renderer.dart';
@@ -95,16 +96,14 @@ void main() {
         data: [s1D1, s1D2, s1D3],
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
-        colorFn: (_, __) => blue))
-      ..measureFn = (_) => 0.0;
+        colorFn: (_, __) => blue));
 
     series2 = new MutableSeries(new Series<MyRow, String>(
         id: 's2',
         data: [s2D1, s2D2, s2D3],
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
-        colorFn: (_, __) => red))
-      ..measureFn = (_) => 0.0;
+        colorFn: (_, __) => red));
   });
 
   test('Legend entries created on chart post process', () {
@@ -213,9 +212,6 @@ void main() {
     chart.callOnPostProcess(seriesList);
     chart.getSelectionModel(selectionType).updateSelection([], [series1]);
 
-    final selectedSeries =
-        legend.legendState.selectionModel.selectedSeries.first.id;
-    print('selected series $selectedSeries');
     final legendEntries = legend.legendState.legendEntries;
     expect(legendEntries, hasLength(2));
     expect(legendEntries[0].series, equals(series1));
@@ -285,6 +281,42 @@ void main() {
     expect(seriesList4, hasLength(2));
     expect(seriesList4[0].id, equals('s1'));
     expect(seriesList4[1].id, equals('s2'));
+  });
+
+  test('generated legend entries use provided formatters', () {
+    final seriesList = [series1, series2];
+    final selectionType = SelectionModelType.info;
+    final measureFormatter =
+        (num value) => 'measure ${value?.toStringAsFixed(0)}';
+    final secondaryMeasureFormatter =
+        (num value) => 'secondary ${value?.toStringAsFixed(0)}';
+    final legend = new SeriesLegend<String>(
+        selectionModelType: selectionType,
+        measureFormatter: measureFormatter,
+        secondaryMeasureFormatter: secondaryMeasureFormatter);
+
+    series2.setAttr(measureAxisIdKey, 'secondaryMeasureAxisId');
+    legend.attachTo(chart);
+    chart.callOnDraw(seriesList);
+    chart.callOnPreProcess(seriesList);
+    chart.callOnPostProcess(seriesList);
+    chart.getSelectionModel(selectionType).updateSelection(
+        [new SeriesDatum(series1, s1D1), new SeriesDatum(series2, s2D1)],
+        [series1, series2]);
+
+    final legendEntries = legend.legendState.legendEntries;
+    expect(legendEntries, hasLength(2));
+    expect(legendEntries[0].series, equals(series1));
+    expect(legendEntries[0].label, equals('s1'));
+    expect(legendEntries[0].isSelected, isTrue);
+    expect(legendEntries[0].value, equals(11.0));
+    expect(legendEntries[0].formattedValue, equals('measure 11'));
+
+    expect(legendEntries[1].series, equals(series2));
+    expect(legendEntries[1].label, equals('s2'));
+    expect(legendEntries[1].isSelected, isTrue);
+    expect(legendEntries[1].value, equals(21.0));
+    expect(legendEntries[1].formattedValue, equals('secondary 21'));
   });
 }
 

@@ -28,8 +28,9 @@ class LegendEntry<D> {
   final dynamic datum;
   final int datumIndex;
   final D domain;
-  final double value;
   final Color color;
+  double value;
+  String formattedValue;
   bool isSelected;
 
   /// Indicates whether this is in the first row of a tabular layout.
