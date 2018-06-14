@@ -30,7 +30,7 @@ void main() {
     test('notified for simple case', () {
       // Setup
       final tapListener = new MockListener(consumeEvent: true);
-      _proxy.listeners.add(new GestureListener(onTap: tapListener.callback));
+      _proxy.add(new GestureListener(onTap: tapListener.callback));
 
       // Act
       _proxy.onTapTest(_point);
@@ -43,7 +43,7 @@ void main() {
     test('notifies new listener for second event', () {
       // Setup
       final tapListener1 = new MockListener();
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTap: tapListener1.callback,
       ));
 
@@ -56,7 +56,7 @@ void main() {
 
       // Setup Another
       final tapListener2 = new MockListener();
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTap: tapListener2.callback,
       ));
 
@@ -74,7 +74,7 @@ void main() {
       final claimingTapDownListener = new MockListener(consumeEvent: true);
       final claimingTapListener = new MockListener(consumeEvent: true);
 
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTapTest: claimingTapDownListener.callback,
         onTap: claimingTapListener.callback,
       ));
@@ -82,7 +82,7 @@ void main() {
       final nonclaimingTapDownListener = new MockListener(consumeEvent: false);
       final nonclaimingTapListener = new MockListener(consumeEvent: false);
 
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTapTest: nonclaimingTapDownListener.callback,
         onTap: nonclaimingTapListener.callback,
       ));
@@ -103,7 +103,7 @@ void main() {
       final nonclaimingTapDownListener = new MockListener(consumeEvent: false);
       final nonclaimingTapListener = new MockListener(consumeEvent: false);
 
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTapTest: nonclaimingTapDownListener.callback,
         onTap: nonclaimingTapListener.callback,
       ));
@@ -111,7 +111,7 @@ void main() {
       final claimingTapDownListener = new MockListener(consumeEvent: true);
       final claimingTapListener = new MockListener(consumeEvent: true);
 
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTapTest: claimingTapDownListener.callback,
         onTap: claimingTapListener.callback,
       ));
@@ -135,7 +135,7 @@ void main() {
       final tap = new MockListener(consumeEvent: true);
       final tapCancel = new MockListener(consumeEvent: true);
 
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTapTest: tapDown.callback,
         onTap: tap.callback,
         onTapCancel: tapCancel.callback,
@@ -145,7 +145,7 @@ void main() {
       final longPress = new MockListener(consumeEvent: true);
       final pressCancel = new MockListener(consumeEvent: true);
 
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTapTest: pressTapDown.callback,
         onLongPress: longPress.callback,
         onTapCancel: pressCancel.callback,
@@ -174,7 +174,7 @@ void main() {
       final tap = new MockListener(consumeEvent: true);
       final tapCancel = new MockListener(consumeEvent: true);
 
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTapTest: tapDown.callback,
         onTap: tap.callback,
         onTapCancel: tapCancel.callback,
@@ -186,7 +186,7 @@ void main() {
       final dragEnd = new MockListener(consumeEvent: true);
       final dragCancel = new MockListener(consumeEvent: true);
 
-      _proxy.listeners.add(new GestureListener(
+      _proxy.add(new GestureListener(
         onTapTest: dragTapDown.callback,
         onDragStart: dragStart.callback,
         onDragUpdate: dragUpdate.callback,

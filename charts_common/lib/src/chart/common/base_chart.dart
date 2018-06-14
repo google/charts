@@ -116,13 +116,13 @@ abstract class BaseChart<D> {
 
   /// Add a [GestureListener] to this chart.
   GestureListener addGestureListener(GestureListener listener) {
-    _gestureProxy.listeners.add(listener);
+    _gestureProxy.add(listener);
     return listener;
   }
 
   /// Remove a [GestureListener] from this chart.
   void removeGestureListener(GestureListener listener) {
-    _gestureProxy.listeners.remove(listener);
+    _gestureProxy.remove(listener);
   }
 
   LifecycleListener addLifecycleListener(LifecycleListener<D> listener) {
