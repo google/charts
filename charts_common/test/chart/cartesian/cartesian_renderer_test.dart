@@ -152,7 +152,7 @@ void main() {
       final data = [0, 1, 2, 3];
       final domainFn = (int index) => data[index];
       final axis = new MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
+      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -166,7 +166,7 @@ void main() {
       final data = [0, 1, 2, 3];
       final domainFn = (int index) => data[index];
       final axis = new MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
+      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -270,7 +270,7 @@ void main() {
       final data = [0, 1, 2, 3];
       final domainFn = (int index) => data[index];
       final axis = new MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
+      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -284,7 +284,7 @@ void main() {
       final data = [0, 1, 2, 3];
       final domainFn = (int index) => data[index];
       final axis = new MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
+      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 

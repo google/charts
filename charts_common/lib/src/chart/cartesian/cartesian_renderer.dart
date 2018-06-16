@@ -187,9 +187,9 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     // nearest viewport start.
     // If domain is after the domain viewport, return the last index as the
     // nearest viewport start.
-    var lastComparison =
+    final lastComparison =
         domainAxis.compareDomainValueToViewport(domainFn(data.length - 1));
-    return lastComparison == -1 ? (data.length - 1) : 0;
+    return lastComparison == 1 ? (data.length - 1) : 0;
   }
 
   @visibleForTesting
@@ -240,8 +240,8 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     // nearest viewport end.
     // If domain is after the domain viewport, return the last index as the
     // nearest viewport end.
-    var lastComparison =
+    final lastComparison =
         domainAxis.compareDomainValueToViewport(domainFn(data.length - 1));
-    return lastComparison == -1 ? (data.length - 1) : 0;
+    return lastComparison == 1 ? (data.length - 1) : 0;
   }
 }
