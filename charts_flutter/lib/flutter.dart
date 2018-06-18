@@ -81,11 +81,7 @@ export 'package:charts_common/src/chart/common/behavior/a11y/a11y_explore_behavi
 export 'package:charts_common/src/chart/common/behavior/a11y/domain_a11y_explore_behavior.dart'
     show VocalizationCallback;
 export 'package:charts_common/src/chart/common/behavior/chart_behavior.dart'
-    show
-        BehaviorPosition,
-        ChartBehavior,
-        InsideJustification,
-        OutsideJustification;
+    show BehaviorPosition, InsideJustification, OutsideJustification;
 export 'package:charts_common/src/chart/common/behavior/initial_selection.dart'
     show SeriesDatumConfig;
 export 'package:charts_common/src/chart/common/behavior/line_point_highlighter.dart'
@@ -156,6 +152,7 @@ export 'src/bar_chart.dart';
 export 'src/base_chart.dart' show LayoutConfig;
 export 'src/behaviors/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior;
+export 'src/behaviors/chart_behavior.dart' show ChartBehavior;
 export 'src/behaviors/domain_highlighter.dart' show DomainHighlighter;
 export 'src/behaviors/initial_selection.dart' show InitialSelection;
 export 'src/behaviors/calculation/percent_injector.dart' show PercentInjector;
