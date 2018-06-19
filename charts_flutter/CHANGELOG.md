@@ -1,5 +1,9 @@
 # 0.4.0-dev
-* Fixed export file to export ChartsBehavior in the Flutter library instead of the one that resides in charts_common. The charts_common behavior should not be used except internally in the charts_flutter library. This is a breaking change if you are using charts_common behavior.
+* Fixed export file to export ChartsBehavior in the Flutter library instead of the one that resides
+in charts_common. The charts_common behavior should not be used except internally in the
+charts_flutter library. This is a breaking change if you are using charts_common behavior.
+* BasicNumericTickFormatterSpec now takes in a callback instead of NumberFormat as the default
+constructor. Use named constructor withNumberFormat instead. This is a breaking change.
 
 # 0.3.0
 * Simplified API by removing the requirement for specifying the datum type when creating a chart.

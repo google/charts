@@ -13,11 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
 import 'package:meta/meta.dart' show immutable;
 import 'package:intl/intl.dart';
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
+import '../../../common/datum_details.dart' show MeasureFormatter;
 import '../axis.dart' show Axis, NumericAxis;
 import '../numeric_extents.dart' show NumericExtents;
 import '../numeric_tick_provider.dart' show NumericTickProvider;
@@ -168,22 +170,36 @@ class StaticNumericTickProviderSpec implements NumericTickProviderSpec {
 
 @immutable
 class BasicNumericTickFormatterSpec implements NumericTickFormatterSpec {
+  final MeasureFormatter formatter;
   final NumberFormat numberFormat;
 
   /// Simple [TickFormatterSpec] that delegates formatting to the given
   /// [NumberFormat].
-  BasicNumericTickFormatterSpec(this.numberFormat);
+  BasicNumericTickFormatterSpec(this.formatter) : numberFormat = null;
 
+  BasicNumericTickFormatterSpec.fromNumberFormat(this.numberFormat)
+      : formatter = null;
+
+  /// A formatter will be created with the number format if it is not null.
+  /// Otherwise, it will create one with the [MeasureFormatter] callback.
   @override
-  NumericTickFormatter createTickFormatter(ChartContext context) =>
-      new NumericTickFormatter(numberFormat: numberFormat);
+  NumericTickFormatter createTickFormatter(ChartContext context) {
+    return numberFormat != null
+        ? new NumericTickFormatter.fromNumberFormat(numberFormat)
+        : new NumericTickFormatter(formatter: formatter);
+  }
 
   @override
   bool operator ==(Object other) {
     return other is BasicNumericTickFormatterSpec &&
+        formatter == formatter &&
         numberFormat == other.numberFormat;
   }
 
   @override
-  int get hashCode => numberFormat.hashCode;
+  int get hashCode {
+    int hashcode = formatter.hashCode;
+    hashcode = (hashcode * 37) * numberFormat.hashCode;
+    return hashcode;
+  }
 }
