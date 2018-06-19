@@ -15,6 +15,8 @@
 
 export 'package:charts_common/src/chart/bar/bar_label_decorator.dart'
     show BarLabelDecorator, BarLabelAnchor, BarLabelPosition;
+export 'package:charts_common/src/chart/bar/bar_lane_renderer_config.dart'
+    show BarLaneRendererConfig;
 export 'package:charts_common/src/chart/bar/bar_renderer_config.dart'
     show
         BarRendererConfig,

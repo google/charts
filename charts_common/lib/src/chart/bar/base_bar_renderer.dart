@@ -70,7 +70,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     B extends BaseAnimatedBar<D, R>> extends BaseCartesianRenderer<D> {
   final BaseBarRendererConfig config;
 
-  BaseChart<D> _chart;
+  @protected
+  BaseChart<D> chart;
 
   /// Store a map of domain+barGroupIndex+category index to bars in a stack.
   ///
@@ -371,7 +372,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
         var barStackList = _barStackMap.putIfAbsent(barStackMapKey, () => []);
 
-        // If we already have a AnimatingBar for that index, use it.
+        // If we already have an AnimatingBarfor that index, use it.
         var animatingBar = barStackList.firstWhere((B bar) => bar.key == barKey,
             orElse: () => null);
 
@@ -511,7 +512,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     // We only need the chart.context.rtl setting, but context is not yet
     // available when the default renderer is attached to the chart on chart
     // creation time, since chart onInit is called after the chart is created.
-    _chart = chart;
+    this.chart = chart;
   }
 
   /// Paints the current bar data on the canvas.
@@ -675,7 +676,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         : seriesList;
   }
 
-  bool get rtl => _chart.context.rtl;
+  bool get rtl => chart.context.rtl;
 }
 
 /// Iterable wrapping the seriesList that returns the ReversedSeriesItertor.
