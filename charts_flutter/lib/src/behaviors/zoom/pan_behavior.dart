@@ -158,6 +158,8 @@ class FlutterPanBehavior<D> extends common.PanBehavior<D>
       stopFlingAnimation();
       onPanEnd();
       chart.redraw();
+    } else {
+      chart.redraw(skipAnimation: true, skipLayout: true);
     }
   }
 
