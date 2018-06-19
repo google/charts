@@ -88,8 +88,8 @@ class CustomAxisTickFormatters extends StatelessWidget {
     /// cannot provide.
     ///
     /// To see this formatter, change [NumericAxisSpec] to use this formatter.
-    final customTickFormatter =
-        charts.BasicNumericTickFormatterSpec((num value) => 'MyValue: $value');
+    // final customTickFormatter =
+    //   charts.BasicNumericTickFormatterSpec((num value) => 'MyValue: $value');
 
     return new charts.TimeSeriesChart(seriesList,
         animate: animate,
