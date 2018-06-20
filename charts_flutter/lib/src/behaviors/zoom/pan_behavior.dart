@@ -19,7 +19,7 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart' show AnimationController;
 
 import 'package:charts_common/common.dart' as common
-    show BaseChart, ChartBehavior, PanBehavior;
+    show BaseChart, ChartBehavior, PanBehavior, PanningCompletedCallback;
 import 'package:meta/meta.dart' show immutable;
 
 import '../../base_chart_state.dart' show BaseChartState;
@@ -32,11 +32,20 @@ class PanBehavior extends ChartBehavior<common.PanBehavior> {
     GestureType.onDrag,
   ]);
 
+  /// Optional callback that is called when panning is completed.
+  ///
+  /// When flinging this callback is called after the fling is completed.
+  /// This is because panning is only completed when the flinging stops.
+  final common.PanningCompletedCallback panningCompletedCallback;
+
+  PanBehavior({this.panningCompletedCallback});
+
   Set<GestureType> get desiredGestures => _desiredGestures;
 
   @override
   common.PanBehavior<D> createCommonBehavior<D>() {
-    return new FlutterPanBehavior<D>();
+    return new FlutterPanBehavior<D>()
+      ..panningCompletedCallback = panningCompletedCallback;
   }
 
   @override
@@ -45,10 +54,13 @@ class PanBehavior extends ChartBehavior<common.PanBehavior> {
   @override
   String get role => 'Pan';
 
-  bool operator ==(Object other) => other is PanBehavior;
+  bool operator ==(Object other) {
+    return other is PanBehavior &&
+        other.panningCompletedCallback == panningCompletedCallback;
+  }
 
   int get hashCode {
-    return this.runtimeType.hashCode;
+    return panningCompletedCallback.hashCode;
   }
 }
 

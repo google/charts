@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show ChartBehavior, PanAndZoomBehavior;
+    show ChartBehavior, PanAndZoomBehavior, PanningCompletedCallback;
 import 'package:meta/meta.dart' show immutable;
 
 import '../chart_behavior.dart' show ChartBehavior, GestureType;
@@ -28,9 +28,18 @@ class PanAndZoomBehavior extends ChartBehavior<common.PanAndZoomBehavior> {
 
   Set<GestureType> get desiredGestures => _desiredGestures;
 
+  /// Optional callback that is called when pan / zoom is completed.
+  ///
+  /// When flinging this callback is called after the fling is completed.
+  /// This is because panning is only completed when the flinging stops.
+  final common.PanningCompletedCallback panningCompletedCallback;
+
+  PanAndZoomBehavior({this.panningCompletedCallback});
+
   @override
   common.PanAndZoomBehavior<D> createCommonBehavior<D>() {
-    return new FlutterPanAndZoomBehavior<D>();
+    return new FlutterPanAndZoomBehavior<D>()
+      ..panningCompletedCallback = panningCompletedCallback;
   }
 
   @override
@@ -39,10 +48,13 @@ class PanAndZoomBehavior extends ChartBehavior<common.PanAndZoomBehavior> {
   @override
   String get role => 'PanAndZoom';
 
-  bool operator ==(Object other) => other is PanAndZoomBehavior;
+  bool operator ==(Object other) {
+    return other is PanAndZoomBehavior &&
+        other.panningCompletedCallback == panningCompletedCallback;
+  }
 
   int get hashCode {
-    return this.runtimeType.hashCode;
+    return panningCompletedCallback.hashCode;
   }
 }
 

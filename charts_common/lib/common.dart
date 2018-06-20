@@ -68,7 +68,8 @@ export 'src/chart/common/behavior/slider/slider.dart'
     show Slider, SliderListenerCallback, SliderListenerDragState, SliderStyle;
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
     show PanAndZoomBehavior;
-export 'src/chart/common/behavior/zoom/pan_behavior.dart' show PanBehavior;
+export 'src/chart/common/behavior/zoom/pan_behavior.dart'
+    show PanBehavior, PanningCompletedCallback;
 export 'src/chart/common/behavior/zoom/panning_tick_provider.dart'
     show PanningTickProviderMode;
 export 'src/chart/common/canvas_shapes.dart'

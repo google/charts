@@ -98,6 +98,8 @@ export 'package:charts_common/src/chart/common/behavior/selection/selection_trig
     show SelectionTrigger;
 export 'package:charts_common/src/chart/common/behavior/slider/slider.dart'
     show SliderListenerCallback, SliderListenerDragState, SliderStyle;
+export 'package:charts_common/src/chart/common/behavior/zoom/pan_behavior.dart'
+    show PanningCompletedCallback;
 export 'package:charts_common/src/chart/common/chart_canvas.dart'
     show ChartCanvas, FillPatternType;
 export 'package:charts_common/src/chart/common/chart_context.dart'
