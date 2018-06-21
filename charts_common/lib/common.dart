@@ -58,6 +58,7 @@ export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter, LinePointHighlighterFollowLineType;
 export 'src/chart/common/behavior/range_annotation.dart'
     show RangeAnnotation, RangeAnnotationAxisType, RangeAnnotationSegment;
+export 'src/chart/common/behavior/sliding_viewport.dart' show SlidingViewport;
 export 'src/chart/common/behavior/selection/lock_selection.dart'
     show LockSelection;
 export 'src/chart/common/behavior/selection/select_nearest.dart'

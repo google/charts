@@ -23,6 +23,7 @@ import 'selection_bar_highlight.dart';
 import 'selection_line_highlight.dart';
 import 'selection_callback_example.dart';
 import 'slider.dart';
+import 'sliding_viewport_on_selection.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -77,6 +78,12 @@ List<GalleryScaffold> buildGallery() {
       subtitle: 'Grouped bar chart with measures calculated as percent of ' +
           'series',
       childBuilder: () => new PercentOfSeriesBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Sliding viewport on domain selection',
+      subtitle: 'Center viewport on selected domain',
+      childBuilder: () => new SlidingViewportOnSelection.withRandomData(),
     ),
   ];
 }

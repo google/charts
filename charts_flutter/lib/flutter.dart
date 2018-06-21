@@ -169,6 +169,7 @@ export 'src/behaviors/legend/series_legend.dart' show SeriesLegend;
 export 'src/behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 export 'src/behaviors/range_annotation.dart' show RangeAnnotation;
 export 'src/behaviors/select_nearest.dart' show SelectNearest;
+export 'src/behaviors/sliding_viewport.dart' show SlidingViewport;
 export 'src/behaviors/slider/slider.dart' show Slider;
 export 'src/behaviors/zoom/pan_and_zoom_behavior.dart' show PanAndZoomBehavior;
 export 'src/behaviors/zoom/pan_behavior.dart' show PanBehavior;

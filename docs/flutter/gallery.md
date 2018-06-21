@@ -79,7 +79,8 @@
 | | | | |
 | --- | --- | --- | --- |
 | Initial Selection<br>[![](example/behaviors/initial_selection_thumb.png)](example/behaviors/initial_selection) | Selection Bar Highlight<br>[![](example/behaviors/selection_bar_highlight_thumb.png)](example/behaviors/selection_bar_highlight) | Selection Line Highlight<br>[![](example/behaviors/selection_line_highlight_thumb.png)](example/behaviors/selection_line_highlight) | Selection Callback Example<br>[![](example/behaviors/selection_callback_example_thumb.png)](example/behaviors/selection_callback_example) |
-| Slider<br>[![](example/behaviors/slider_thumb.png)](example/behaviors/slider) | Percent Of Domain<br>[![](example/behaviors/percent_of_domain_thumb.png)](example/behaviors/percent_of_domain) | Percent Of Domain By Category<br>[![](example/behaviors/percent_of_domain_by_category_thumb.png)](example/behaviors/percent_of_domain_by_category) | Percent Of Series<br>[![](example/behaviors/percent_of_series_thumb.png)](example/behaviors/percent_of_series) |
+| Slider<br>[![](example/behaviors/slider_thumb.png)](example/behaviors/slider) | Sliding Viewport On Selection<br>[![](example/behaviors/sliding_viewport_on_selection_thumb.png)](example/behaviors/sliding_viewport_on_selection) | Percent Of Domain<br>[![](example/behaviors/percent_of_domain_thumb.png)](example/behaviors/percent_of_domain) | Percent Of Domain By Category<br>[![](example/behaviors/percent_of_domain_by_category_thumb.png)](example/behaviors/percent_of_domain_by_category) |
+| Percent Of Series<br>[![](example/behaviors/percent_of_series_thumb.png)](example/behaviors/percent_of_series) | | | |
 
 
 ### a11y

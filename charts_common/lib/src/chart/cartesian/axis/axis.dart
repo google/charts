@@ -68,6 +68,9 @@ abstract class ImmutableAxis<D> {
 
   /// Step size for this axis.
   double get stepSize;
+
+  /// Output range for this axis.
+  ScaleOutputExtent get range;
 }
 
 abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
@@ -139,6 +142,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
   @override
   double get stepSize => _scale.stepSize;
+
+  @override
+  ScaleOutputExtent get range => _scale.range;
 
   /// Configures whether the viewport should be reset back to default values
   /// when the domain is reset.
