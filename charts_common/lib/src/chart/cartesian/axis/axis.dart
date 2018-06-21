@@ -498,4 +498,18 @@ class OrdinalViewport {
   final int dataSize;
 
   OrdinalViewport(this.startingDomain, this.dataSize);
+
+  @override
+  bool operator ==(Object other) {
+    return other is OrdinalViewport &&
+        startingDomain == other.startingDomain &&
+        dataSize == other.dataSize;
+  }
+
+  @override
+  int get hashCode {
+    int hashcode = startingDomain.hashCode;
+    hashcode = (hashcode * 37) + dataSize;
+    return hashcode;
+  }
 }

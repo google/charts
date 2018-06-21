@@ -81,6 +81,13 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
       other is DateTimeAxisSpec &&
       viewport == other.viewport &&
       super == (other);
+
+  @override
+  int get hashCode {
+    int hashcode = super.hashCode;
+    hashcode = (hashcode * 37) + viewport.hashCode;
+    return hashcode;
+  }
 }
 
 abstract class DateTimeTickProviderSpec extends TickProviderSpec<DateTime> {}

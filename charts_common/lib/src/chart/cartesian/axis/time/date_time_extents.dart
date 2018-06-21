@@ -22,4 +22,12 @@ class DateTimeExtents extends Extents<DateTime> {
   final DateTime end;
 
   DateTimeExtents({@required this.start, @required this.end});
+
+  @override
+  bool operator ==(other) {
+    return other is DateTimeExtents && start == other.start && end == other.end;
+  }
+
+  @override
+  int get hashCode => (start.hashCode + (end.hashCode * 37));
 }

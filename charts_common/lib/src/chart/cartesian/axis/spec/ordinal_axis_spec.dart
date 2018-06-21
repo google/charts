@@ -71,6 +71,13 @@ class OrdinalAxisSpec extends AxisSpec<String> {
         viewport == other.viewport &&
         super == (other);
   }
+
+  @override
+  int get hashCode {
+    int hashcode = super.hashCode;
+    hashcode = (hashcode * 37) + viewport.hashCode;
+    return hashcode;
+  }
 }
 
 abstract class OrdinalTickProviderSpec extends TickProviderSpec<String> {}

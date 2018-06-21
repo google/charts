@@ -74,6 +74,13 @@ class NumericAxisSpec extends AxisSpec<num> {
       other is NumericAxisSpec &&
       viewport == other.viewport &&
       super == (other);
+
+  @override
+  int get hashCode {
+    int hashcode = super.hashCode;
+    hashcode = (hashcode * 37) + viewport.hashCode;
+    return hashcode;
+  }
 }
 
 abstract class NumericTickProviderSpec extends TickProviderSpec<num> {}
