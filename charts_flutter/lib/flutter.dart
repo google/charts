@@ -77,7 +77,6 @@ export 'package:charts_common/src/chart/cartesian/axis/time/date_time_extents.da
     show DateTimeExtents;
 export 'package:charts_common/src/chart/cartesian/cartesian_chart.dart'
     show CartesianChart, OrdinalCartesianChart, NumericCartesianChart;
-export 'package:charts_common/src/chart/common/base_chart.dart' show BaseChart;
 export 'package:charts_common/src/chart/common/behavior/a11y/a11y_explore_behavior.dart'
     show ExploreModeTrigger;
 export 'package:charts_common/src/chart/common/behavior/a11y/domain_a11y_explore_behavior.dart'
@@ -150,10 +149,11 @@ export 'package:charts_common/src/common/style/material_style.dart'
     show MaterialStyle;
 export 'package:charts_common/src/common/style/style_factory.dart'
     show StyleFactory;
-export 'package:charts_common/src/data/series.dart' show Series;
+export 'package:charts_common/src/data/series.dart'
+    show Series, TypedAccessorFn;
 
 export 'src/bar_chart.dart';
-export 'src/base_chart.dart' show LayoutConfig;
+export 'src/base_chart.dart' show BaseChart, LayoutConfig;
 export 'src/behaviors/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior;
 export 'src/behaviors/chart_behavior.dart' show ChartBehavior;
