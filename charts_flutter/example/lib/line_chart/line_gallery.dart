@@ -20,6 +20,7 @@ import 'area_and_line.dart';
 import 'dash_pattern.dart';
 import 'points.dart';
 import 'range_annotation.dart';
+import 'segments.dart';
 import 'simple.dart';
 import 'stacked_area.dart';
 
@@ -52,8 +53,14 @@ List<GalleryScaffold> buildGallery() {
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
       title: 'Dash Pattern Line Chart',
-      subtitle: 'With three series and default line point highlighter',
+      subtitle: 'Line chart with dash patterns',
       childBuilder: () => new DashPatternLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Segments Line Chart',
+      subtitle: 'Line chart with changes of style for each line',
+      childBuilder: () => new SegmentsLineChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),

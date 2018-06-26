@@ -26,7 +26,7 @@
 | | | | |
 | --- | --- | --- | --- |
 | Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Points<br>[![](example/line_charts/points_thumb.png)](example/line_charts/points) | Stacked Area<br>[![](example/line_charts/stacked_area_thumb.png)](example/line_charts/stacked_area) | Area And Line<br>[![](example/line_charts/area_and_line_thumb.png)](example/line_charts/area_and_line) |
-| Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | | |
+| Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) | Segments<br>[![](example/line_charts/segments_thumb.png)](example/line_charts/segments) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | |
 
 
 ### Scatter Plot Charts
@@ -94,7 +94,7 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Rtl Bar Chart<br>[![](example/i18ns/rtl_bar_chart_thumb.png)](example/i18ns/rtl_bar_chart) | Rtl Line Chart<br>[![](example/i18ns/rtl_line_chart_thumb.png)](example/i18ns/rtl_line_chart) | Rtl Series Legend<br>[![](example/i18ns/rtl_series_legend_thumb.png)](example/i18ns/rtl_series_legend) | |
+| Rtl Bar Chart<br>[![](example/i18ns/rtl_bar_chart_thumb.png)](example/i18ns/rtl_bar_chart) | Rtl Line Chart<br>[![](example/i18ns/rtl_line_chart_thumb.png)](example/i18ns/rtl_line_chart) | Rtl Line Segments<br>[![](example/i18ns/rtl_line_segments_thumb.png)](example/i18ns/rtl_line_segments) | Rtl Series Legend<br>[![](example/i18ns/rtl_series_legend_thumb.png)](example/i18ns/rtl_series_legend) |
 
 [//]: (END_EXAMPLES)
 

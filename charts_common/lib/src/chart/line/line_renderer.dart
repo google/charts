@@ -19,8 +19,9 @@ import 'dart:math' show Rectangle, Point;
 import 'package:meta/meta.dart' show required;
 
 import '../cartesian/axis/axis.dart'
-    show ImmutableAxis, domainAxisKey, measureAxisKey;
+    show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
+import '../common/base_chart.dart' show BaseChart;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart'
@@ -28,11 +29,15 @@ import '../common/processed_series.dart'
 import '../scatter_plot/point_renderer.dart' show PointRenderer;
 import '../scatter_plot/point_renderer_config.dart' show PointRendererConfig;
 import '../../common/color.dart' show Color;
+import '../../common/math.dart' show clamp;
 import '../../data/series.dart' show AttributeKey;
 import 'line_renderer_config.dart' show LineRendererConfig;
 
-const lineElementsKey =
-    const AttributeKey<List<_LineRendererElement>>('LineRenderer.lineElements');
+const styleSegmentsKey = const AttributeKey<List<_LineRendererElement>>(
+    'LineRenderer.styleSegments');
+
+const lineStackIndexKey =
+    const AttributeKey<int>('LineRenderer.lineStackIndex');
 
 class LineRenderer<D> extends BaseCartesianRenderer<D> {
   // Configuration used to extend the clipping area to extend the draw bounds.
@@ -42,6 +47,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   final LineRendererConfig config;
 
   PointRenderer _pointRenderer;
+
+  BaseChart<D> _chart;
 
   /// Store a map of series drawn on the chart, mapped by series name.
   ///
@@ -92,30 +99,92 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
+    var stackIndex = 0;
+
     seriesList.forEach((MutableSeries<D> series) {
-      var elements = <_LineRendererElement<D>>[];
+      final colorFn = series.colorFn;
+      final domainFn = series.domainFn;
+      final measureFn = series.measureFn;
+      final strokeWidthPxFn = series.strokeWidthPxFn;
 
-      var strokeWidthPxFn = series.strokeWidthPxFn;
+      series.dashPatternFn ??= (_) => config.dashPattern;
+      final dashPatternFn = series.dashPatternFn;
 
-      if (series.dashPattern == null) {
-        series.dashPattern = config.dashPattern;
+      final styleSegments = <_LineRendererElement<D>>[];
+      var styleSegmentsIndex = 0;
+
+      final usedKeys = new Set<String>();
+
+      // Configure style segments for each series.
+      String previousSegmentKey;
+      _LineRendererElement<D> currentDetails;
+
+      for (var index = 0; index < series.data.length; index++) {
+        final domain = domainFn(index);
+        final measure = measureFn(index);
+
+        if (domain == null || measure == null) {
+          continue;
+        }
+
+        final color = colorFn(index);
+        final dashPattern = dashPatternFn(index);
+        final strokeWidthPx = strokeWidthPxFn != null
+            ? strokeWidthPxFn(index).toDouble()
+            : config.strokeWidthPx;
+
+        // Create a style key for this datum, and then compare it to the
+        // previous datum.
+        //
+        // Compare strokeWidthPx to 2 decimals of precision. Any less and you
+        // can't see any difference in the canvas anyways.
+        final strokeWidthPxRounded = (strokeWidthPx * 100).round() / 100;
+        var styleKey = '${series.id}__${styleSegmentsIndex}__${color}' +
+            '__${dashPattern}__${strokeWidthPxRounded}';
+
+        if (styleKey != previousSegmentKey) {
+          // If we have a repeated style segment, update the repeat index and
+          // create a new key.
+          // TODO: Paint repeated styles with multiple clip regions.
+          if (!usedKeys.isEmpty && usedKeys.contains(styleKey)) {
+            styleSegmentsIndex++;
+
+            styleKey = '${series.id}__${styleSegmentsIndex}__${color}' +
+                '__${dashPattern}__${strokeWidthPxRounded}';
+          }
+
+          // Make sure that the previous style segment extends to the current
+          // domain value. This will ensure that the style of the line changes
+          // right at the point of the datum that changes the style.
+          if (currentDetails != null) {
+            currentDetails.domainExtent.includePoint(domain);
+          }
+
+          // Create a new style segment.
+          currentDetails = new _LineRendererElement<D>()
+            ..color = color
+            ..dashPattern = dashPattern
+            ..domainExtent = new _Range<D>(domain, domain)
+            ..strokeWidthPx = strokeWidthPx
+            ..styleKey = styleKey;
+
+          styleSegments.add(currentDetails);
+          usedKeys.add(styleKey);
+
+          previousSegmentKey = styleKey;
+        } else {
+          // Extend the range of the current segment to include the current
+          // domain value.
+          currentDetails.domainExtent.includePoint(domain);
+        }
       }
 
-      var details = new _LineRendererElement<D>();
+      series.setAttr(styleSegmentsKey, styleSegments);
+      series.setAttr(lineStackIndexKey, stackIndex);
 
-      // Since we do not currently support segments for lines, just grab the
-      // stroke width from the first datum for each series.
-      //
-      // TODO: Support stroke width per datum with line segments.
-      if (series.data.length > 0 && strokeWidthPxFn != null) {
-        details.strokeWidthPx = strokeWidthPxFn(0).toDouble();
-      } else {
-        details.strokeWidthPx = this.config.strokeWidthPx;
+      if (config.stacked) {
+        stackIndex++;
       }
-
-      elements.add(details);
-
-      series.setAttr(lineElementsKey, elements);
     });
 
     if (config.includePoints) {
@@ -190,69 +259,103 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     _currentKeys.clear();
 
     // List of final points for the previous line in a stack.
-    List<_DatumPoint<D>> previousPointList;
+    List<List<_DatumPoint<D>>> previousPointList = [];
 
     // List of initial points for the previous line in a stack, animated in from
     // the measure axis.
-    List<_DatumPoint<D>> previousInitialPointList;
+    List<List<_DatumPoint<D>>> previousInitialPointList = [];
 
     seriesList.forEach((ImmutableSeries<D> series) {
-      var lineKey = series.id;
+      final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
+      final lineKey = series.id;
+      final stackIndex = series.getAttr(lineStackIndexKey);
 
-      // TODO: Handle changes in data color, pattern, or other
-      // attributes by configuring a list of line segments for the series,
-      // instead of just one big line that contains all the points.
-      var elementsList = _seriesLineMap.putIfAbsent(lineKey, () => []);
+      previousPointList.add([]);
+      previousInitialPointList.add([]);
 
-      var detailsList = series.getAttr(lineElementsKey);
-      _LineRendererElement details = detailsList[0];
+      final elementsList = _seriesLineMap.putIfAbsent(lineKey, () => []);
 
-      // If we already have an AnimatingLine for that index, use it.
-      _AnimatedElements<D> animatingElements;
-      if (elementsList.length > 0) {
-        animatingElements = elementsList[0];
+      final styleSegments = series.getAttr(styleSegmentsKey);
 
-        previousInitialPointList = animatingElements.line.currentPoints;
-      } else {
-        // Create a new line and have it animate in from axis.
-        final lineAndArea = _getLineAndAreaElements(
-            series, details, previousInitialPointList, true);
+      // Include the end points of the domain axis range in the first and last
+      // style segments to avoid clipping everything when the domain range of
+      // the data is very small. Doing this after [preProcess] handles invalid
+      // data (e.g. null measure) at the ends of the series data.
+      //
+      // TODO: Handle ordinal axes by looking at the next domains.
+      if (styleSegments.length > 0 && !(domainAxis is OrdinalAxis)) {
+        final startPx = (rtl ? drawBounds.right : drawBounds.left).toDouble();
+        final endPx = (rtl ? drawBounds.left : drawBounds.right).toDouble();
 
-        // Create the line element.
-        final animatingLine = new _AnimatedLine<D>(
-            key: lineKey, overlaySeries: series.overlaySeries)
-          ..setNewTarget(lineAndArea[0]);
+        final startDomain = domainAxis.getDomain(startPx);
+        final endDomain = domainAxis.getDomain(endPx);
 
-        // Create the area element.
-        var animatingArea;
-        if (config.includeArea) {
-          animatingArea = new _AnimatedArea<D>(
-              key: lineKey, overlaySeries: series.overlaySeries)
-            ..setNewTarget(lineAndArea[1]);
+        styleSegments.first.domainExtent.includePoint(startDomain);
+        styleSegments.last.domainExtent.includePoint(endDomain);
+      }
+
+      // Create one pair of animated line and area elements per style segment.
+      // Every line will be rendered across the entire chart, with a clip region
+      // added in the [paint] process later to display only the relevant parts
+      // of data. This ensures that changes in style segments do not shorten or
+      // lengthen segments of any dash pattern (assuming it is not what changes
+      // between segments).
+      styleSegments.forEach((_LineRendererElement styleSegment) {
+        final styleKey = styleSegment.styleKey;
+
+        // If we already have an AnimatingPoint for that index, use it.
+        var animatingElements = elementsList.firstWhere(
+            (_AnimatedElements elements) => elements.styleKey == styleKey,
+            orElse: () => null);
+
+        if (animatingElements != null) {
+          previousInitialPointList[stackIndex] =
+              animatingElements.line.currentPoints;
+        } else {
+          // Create a new line and have it animate in from axis.
+          final lineAndArea = _getLineAndAreaElements(
+              series,
+              styleSegment,
+              stackIndex > 0 ? previousInitialPointList[stackIndex - 1] : null,
+              true);
+
+          // Create the line element.
+          final animatingLine = new _AnimatedLine<D>(
+              key: styleKey, overlaySeries: series.overlaySeries)
+            ..setNewTarget(lineAndArea[0]);
+
+          // Create the area element.
+          var animatingArea;
+          if (config.includeArea) {
+            animatingArea = new _AnimatedArea<D>(
+                key: styleKey, overlaySeries: series.overlaySeries)
+              ..setNewTarget(lineAndArea[1]);
+          }
+
+          animatingElements = new _AnimatedElements<D>()
+            ..styleKey = styleSegment.styleKey
+            ..line = animatingLine
+            ..area = animatingArea;
+
+          elementsList.add(animatingElements);
+
+          previousInitialPointList[stackIndex] = lineAndArea[0].points;
         }
 
-        animatingElements = new _AnimatedElements<D>()
-          ..line = animatingLine
-          ..area = animatingArea;
+        // Create a new line using the final point locations.
+        final lineAndArea = _getLineAndAreaElements(series, styleSegment,
+            stackIndex > 0 ? previousPointList[stackIndex - 1] : null, false);
 
-        elementsList.add(animatingElements);
+        animatingElements.line.setNewTarget(lineAndArea[0]);
 
-        previousInitialPointList = lineAndArea[0].points;
-      }
+        if (config.includeArea) {
+          animatingElements.area.setNewTarget(lineAndArea[1]);
+        }
 
-      // Create a new line using the final point locations.
-      final lineAndArea =
-          _getLineAndAreaElements(series, details, previousPointList, false);
-
-      animatingElements.line.setNewTarget(lineAndArea[0]);
-
-      if (config.includeArea) {
-        animatingElements.area.setNewTarget(lineAndArea[1]);
-      }
-
-      // Save the line points for the current series so that we can use them in
-      // the area skirt for the next stacked series.
-      previousPointList = lineAndArea[0].points;
+        // Save the line points for the current series so that we can use them in
+        // the area skirt for the next stacked series.
+        previousPointList[stackIndex] = lineAndArea[0].points;
+      });
     });
 
     // Animate out lines that don't exist anymore.
@@ -274,11 +377,11 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     }
   }
 
-  /// Creates a [_LineRendererElement] and a [_AreaRendererElement] for a given
-  /// segment of a series.
+  /// Creates a [_LineRendererElement] and an [_AreaRendererElement] for a given
+  /// style segment of a series.
   ///
-  /// [details] represents the element details for a line segment. Until
-  /// b/70576908 is implemented, there is only one segment for every series.
+  /// [styleSegment] represents the rendering style for a subset of the series
+  /// data, bounded by its domainExtent.
   ///
   /// [previousPointList] contains the points for the line below this series in
   /// the stack, if stacking is enabled. It forms the bottom edges for the area
@@ -289,21 +392,24 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   /// point positions to animate in from the measure axis.
   List _getLineAndAreaElements(
       ImmutableSeries<D> series,
-      _LineRendererElement details,
+      _LineRendererElement styleSegment,
       List previousPointList,
       bool initializeFromZero) {
-    var domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
-    var domainFn = series.domainFn;
-    var measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
-    var measureFn = series.measureFn;
-    var measureOffsetFn = series.measureOffsetFn;
-    var colorFn = series.colorFn;
-    var lineKey = series.id;
-    var dashPattern = series.dashPattern;
+    final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
+    final domainFn = series.domainFn;
+    final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+    final measureFn = series.measureFn;
+    final measureOffsetFn = series.measureOffsetFn;
+
+    final color = styleSegment.color;
+    final dashPattern = styleSegment.dashPattern;
+    final domainExtent = styleSegment.domainExtent;
+    final strokeWidthPx = styleSegment.strokeWidthPx;
+    final styleKey = styleSegment.styleKey;
 
     // Create a new line using the final point locations.
-    var pointList = <_DatumPoint<D>>[];
-    var areaPointList = <_DatumPoint<D>>[];
+    final pointList = <_DatumPoint<D>>[];
+    final areaPointList = <_DatumPoint<D>>[];
 
     if (config.includeArea && series.data.length > 0) {
       if (!config.stacked || previousPointList == null) {
@@ -322,9 +428,20 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       }
     }
 
-    // TODO: Use the first datum until we break out line segments.
-    Color color = colorFn(0);
+    // Convert the domain extent into axis positions.
+    // Clamp start position to the beginning of the draw area if it is outside
+    // the domain viewport range.
+    final startPosition = domainAxis.getLocation(domainExtent.start) ??
+        (rtl ? drawBounds.right.toDouble() : drawBounds.left.toDouble());
 
+    // Clamp end position to the end of the draw area if it is outside the
+    // domain viewport range.
+    final endPosition = domainAxis.getLocation(domainExtent.end) ??
+        (rtl ? drawBounds.left.toDouble() : drawBounds.right.toDouble());
+
+    final positionExtent = new _Range<num>(startPosition, endPosition);
+
+    // Generate [_DatumPoints]s for the series data.
     for (var index = 0; index < series.data.length; index++) {
       final datum = series.data[index];
 
@@ -332,32 +449,32 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       final measure = !initializeFromZero ? measureFn(index) : 0.0;
       final measureOffset = !initializeFromZero ? measureOffsetFn(index) : 0.0;
 
-      final datumPoint = _getPoint(datum, domainFn(index), series, domainAxis,
-          measure, measureOffset, measureAxis);
-
-      pointList.add(datumPoint);
+      pointList.add(_getPoint(datum, domainFn(index), series, domainAxis,
+          measure, measureOffset, measureAxis));
 
       // Create points for the area element.
       if (config.includeArea) {
         areaPointList.add(_getPoint(datum, domainFn(index), series, domainAxis,
-            measureFn(index), measureOffsetFn(index), measureAxis));
+            measure, measureOffset, measureAxis));
       }
     }
 
     // Update the set of lines that still exist in the series data.
-    _currentKeys.add(lineKey);
+    _currentKeys.add(styleKey);
 
     // Get the line element we are going to to set up.
     final lineElement = new _LineRendererElement<D>()
       ..points = pointList
       ..color = color
       ..dashPattern = dashPattern
+      ..domainExtent = domainExtent
       ..measureAxisPosition = measureAxis.getLocation(0.0)
-      ..strokeWidthPx = details.strokeWidthPx;
-
-    _AreaRendererElement areaElement;
+      ..positionExtent = positionExtent
+      ..strokeWidthPx = strokeWidthPx
+      ..styleKey = styleKey;
 
     // Get the area element we are going to set up.
+    var areaElement;
     if (config.includeArea) {
       // Apply opacity to the series color for the area skirt.
       Color areaColor = new Color(
@@ -369,10 +486,22 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       areaElement = new _AreaRendererElement<D>()
         ..points = areaPointList
         ..color = areaColor
-        ..measureAxisPosition = measureAxis.getLocation(0.0);
+        ..domainExtent = domainExtent
+        ..measureAxisPosition = measureAxis.getLocation(0.0)
+        ..positionExtent = positionExtent
+        ..styleKey = styleKey;
     }
 
     return [lineElement, areaElement];
+  }
+
+  @override
+  void onAttach(BaseChart<D> chart) {
+    super.onAttach(chart);
+    // We only need the chart.context.rtl setting, but context is not yet
+    // available when the default renderer is attached to the chart on chart
+    // creation time, since chart onInit is called after the chart is created.
+    _chart = chart;
   }
 
   void paint(ChartCanvas canvas, double animationPercent) {
@@ -392,57 +521,69 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       keysToRemove.forEach((String key) => _seriesLineMap.remove(key));
     }
 
-    // Clip the canvas so that line and area drawn will not be outside of the
-    // drawBounds. We can't just exclude points that are outside of the
-    // drawBounds, because this leads to lines not extending to the edge of the
-    // draw area if a point doesn't exist exactly on the edge of the draw area.
-    //
-    // The clip bounds is the draw bounds, plus:
-    // 5 pixels on top to prevent a line that connects at the very edge of the
-    // top of the draw area from being cut off.
-    // 5 pixels on the bottom to prevent a line at the very bottom of the draw
-    // area from being cut off.
-    canvas.setClipBounds(new Rectangle<int>(
-        drawBounds.left,
-        drawBounds.top - drawBoundTopExtensionPx,
-        drawBounds.width,
-        drawBounds.height +
-            drawBoundTopExtensionPx +
-            drawBoundBottomExtensionPx));
-
     _seriesLineMap.forEach((String key, List<_AnimatedElements<D>> elements) {
-      elements
-          .map<_AreaRendererElement<D>>(
-              (_AnimatedElements<D> animatingElement) =>
-                  animatingElement.area?.getCurrentArea(animationPercent))
-          .forEach((_AreaRendererElement area) {
-        if (area != null) {
-          canvas.drawPolygon(points: area.points, fill: area.color);
-        }
-      });
+      if (config.includeArea) {
+        elements
+            .map<_AreaRendererElement<D>>(
+                (_AnimatedElements<D> animatingElement) =>
+                    animatingElement.area?.getCurrentArea(animationPercent))
+            .forEach((_AreaRendererElement area) {
+          if (area != null) {
+            canvas.drawPolygon(
+                clipBounds: _getClipBoundsForExtent(area.positionExtent),
+                fill: area.color,
+                points: area.points);
+          }
+        });
+      }
 
-      elements
-          .map<_LineRendererElement<D>>(
-              (_AnimatedElements<D> animatingElement) =>
-                  animatingElement.line?.getCurrentLine(animationPercent))
-          .forEach((_LineRendererElement line) {
-        if (line != null) {
-          canvas.drawLine(
-              dashPattern: line.dashPattern,
-              points: line.points,
-              stroke: line.color,
-              strokeWidthPx: line.strokeWidthPx);
-        }
-      });
+      if (config.includeLine) {
+        elements
+            .map<_LineRendererElement<D>>(
+                (_AnimatedElements<D> animatingElement) =>
+                    animatingElement.line?.getCurrentLine(animationPercent))
+            .forEach((_LineRendererElement line) {
+          if (line != null) {
+            canvas.drawLine(
+                clipBounds: _getClipBoundsForExtent(line.positionExtent),
+                dashPattern: line.dashPattern,
+                points: line.points,
+                stroke: line.color,
+                strokeWidthPx: line.strokeWidthPx);
+          }
+        });
+      }
     });
-
-    // Reset canvas clip after line and area drawing is completed.
-    canvas.resetClipBounds();
 
     if (config.includePoints) {
       _pointRenderer.paint(canvas, animationPercent);
     }
   }
+
+  /// Builds a clip region bounding box within the component [drawBounds] for a
+  /// given domain range [extent].
+  Rectangle<num> _getClipBoundsForExtent(_Range<num> extent) {
+    // In RTL mode, the domain range extent has start on the right side of the
+    // chart. Adjust the calculated positions to define a regular left-anchored
+    // [Rectangle]. Clamp both ends to be within the draw area.
+    final left = rtl
+        ? clamp(extent.end, drawBounds.left, drawBounds.right)
+        : clamp(extent.start, drawBounds.left, drawBounds.right);
+
+    final right = rtl
+        ? clamp((extent.start), drawBounds.left, drawBounds.right)
+        : clamp((extent.end), drawBounds.left, drawBounds.right);
+
+    return new Rectangle<num>(
+        left,
+        drawBounds.top - drawBoundTopExtensionPx,
+        right - left,
+        drawBounds.height +
+            drawBoundTopExtensionPx +
+            drawBoundBottomExtensionPx);
+  }
+
+  bool get rtl => _chart?.context?.rtl ?? false;
 
   _DatumPoint<D> _getPoint(
       dynamic datum,
@@ -576,8 +717,11 @@ class _LineRendererElement<D> {
   List<_DatumPoint<D>> points;
   Color color;
   List<int> dashPattern;
+  _Range<D> domainExtent;
   double measureAxisPosition;
+  _Range<num> positionExtent;
   double strokeWidthPx;
+  String styleKey;
 
   _LineRendererElement<D> clone() {
     return new _LineRendererElement<D>()
@@ -585,8 +729,11 @@ class _LineRendererElement<D> {
       ..color = color != null ? new Color.fromOther(color: color) : null
       ..dashPattern =
           dashPattern != null ? new List<int>.from(dashPattern) : null
+      ..domainExtent = domainExtent
       ..measureAxisPosition = measureAxisPosition
-      ..strokeWidthPx = strokeWidthPx;
+      ..positionExtent = positionExtent
+      ..strokeWidthPx = strokeWidthPx
+      ..styleKey = styleKey;
   }
 
   void updateAnimationPercent(_LineRendererElement previous,
@@ -708,13 +855,19 @@ class _AnimatedLine<D> {
 class _AreaRendererElement<D> {
   List<_DatumPoint<D>> points;
   Color color;
+  _Range<D> domainExtent;
   double measureAxisPosition;
+  _Range<num> positionExtent;
+  String styleKey;
 
   _AreaRendererElement<D> clone() {
     return new _AreaRendererElement<D>()
       ..points = new List<_DatumPoint<D>>.from(points)
       ..color = color != null ? new Color.fromOther(color: color) : null
-      ..measureAxisPosition = measureAxisPosition;
+      ..domainExtent = domainExtent
+      ..measureAxisPosition = measureAxisPosition
+      ..positionExtent = positionExtent
+      ..styleKey = styleKey;
   }
 
   void updateAnimationPercent(_AreaRendererElement previous,
@@ -823,6 +976,7 @@ class _AnimatedArea<D> {
 class _AnimatedElements<D> {
   _AnimatedArea<D> area;
   _AnimatedLine<D> line;
+  String styleKey;
 
   bool get animatingOut {
     return (area == null || area.animatingOut) &&
@@ -832,5 +986,66 @@ class _AnimatedElements<D> {
   bool get overlaySeries {
     return (area == null || area.overlaySeries) &&
         (line == null || line.overlaySeries);
+  }
+}
+
+/// Describes a numeric range with a start and end value.
+///
+/// [start] must always be less than [end].
+class _Range<D> {
+  D _start;
+  D _end;
+
+  _Range(D start, D end) {
+    _start = start;
+    _end = end;
+  }
+
+  /// Gets the start of the range.
+  D get start => _start;
+
+  /// Gets the end of the range.
+  D get end => _end;
+
+  /// Extends the range to include [value].
+  void includePoint(D value) {
+    if (value == null) {
+      return;
+    } else if (value is num || value is double || value is int) {
+      _includePointAsNum(value);
+    } else if (value is DateTime) {
+      _includePointAsDateTime(value);
+    } else if (value is String) {
+      _includePointAsString(value);
+    } else {
+      throw ('Unsupported object type for LineRenderer domain value: ' +
+          '${value.runtimeType}');
+    }
+  }
+
+  /// Extends the range to include value by casting as numbers.
+  void _includePointAsNum(D value) {
+    if ((value as num) < (_start as num)) {
+      _start = value;
+    } else if ((value as num) > (_end as num)) {
+      _end = value;
+    }
+  }
+
+  /// Extends the range to include value by casting as DateTime objects.
+  void _includePointAsDateTime(D value) {
+    if ((value as DateTime).isBefore(_start as DateTime)) {
+      _start = value;
+    } else if ((value as DateTime).isAfter(_end as DateTime)) {
+      _end = value;
+    }
+  }
+
+  /// Extends the range to include value by casting as String objects.
+  ///
+  /// In this case, we assume that the data is ordered in the same order as the
+  /// axis.
+  void _includePointAsString(D value) {
+    _end = value;
   }
 }

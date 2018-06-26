@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Point;
+import 'dart:math' show Point, Rectangle;
 import 'package:flutter/material.dart';
 import 'package:charts_common/common.dart' as common show Color;
 
@@ -34,6 +34,7 @@ class LinePainter {
       {Canvas canvas,
       Paint paint,
       List<Point> points,
+      Rectangle<num> clipBounds,
       common.Color fill,
       common.Color stroke,
       bool roundEndCaps,
@@ -42,6 +43,18 @@ class LinePainter {
     if (points.isEmpty) {
       return;
     }
+
+    // Apply clip bounds as a clip region.
+    if (clipBounds != null) {
+      canvas
+        ..save()
+        ..clipRect(new Rect.fromLTWH(
+            clipBounds.left.toDouble(),
+            clipBounds.top.toDouble(),
+            clipBounds.width.toDouble(),
+            clipBounds.height.toDouble()));
+    }
+
     paint.color = new Color.fromARGB(stroke.a, stroke.r, stroke.g, stroke.b);
 
     // If the line has a single point, draw a circle.
@@ -65,6 +78,10 @@ class LinePainter {
       } else {
         _drawDashedLine(canvas, paint, points, dashPattern);
       }
+    }
+
+    if (clipBounds != null) {
+      canvas.restore();
     }
   }
 

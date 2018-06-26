@@ -40,7 +40,7 @@ class DateTimeScale extends MutableScale<DateTime> {
   @override
   DateTime reverse(double pixelLocation) =>
       dateTimeFactory.createDateTimeFromMilliSecondsSinceEpoch(
-          _linearScale.reverse(pixelLocation));
+          _linearScale.reverse(pixelLocation).round());
 
   @override
   void resetDomain() {

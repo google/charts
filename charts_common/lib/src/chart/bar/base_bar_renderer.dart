@@ -136,7 +136,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       var fillPatternFn = series.fillPatternFn;
       var strokeWidthPxFn = series.strokeWidthPxFn;
 
-      series.dashPattern ??= config.dashPattern;
+      series.dashPatternFn ??= (_) => config.dashPattern;
 
       // Identifies which stack the series will go in, by default a single
       // stack.
@@ -333,19 +333,19 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     final orderedSeriesList = getOrderedSeriesList(seriesList);
 
     orderedSeriesList.forEach((final ImmutableSeries<D> series) {
-      var domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
-      var domainFn = series.domainFn;
-      var measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
-      var measureFn = series.measureFn;
-      var colorFn = series.colorFn;
-      var dashPattern = series.dashPattern;
-      var fillColorFn = series.fillColorFn;
-      var seriesStackKey = series.getAttr(stackKeyKey);
-      var barGroupCount = series.getAttr(barGroupCountKey);
-      var barGroupIndex = series.getAttr(barGroupIndexKey);
-      var previousBarGroupWeight = series.getAttr(previousBarGroupWeightKey);
-      var barGroupWeight = series.getAttr(barGroupWeightKey);
-      var measureAxisPosition = measureAxis.getLocation(0.0);
+      final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
+      final domainFn = series.domainFn;
+      final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+      final measureFn = series.measureFn;
+      final colorFn = series.colorFn;
+      final dashPatternFn = series.dashPatternFn;
+      final fillColorFn = series.fillColorFn;
+      final seriesStackKey = series.getAttr(stackKeyKey);
+      final barGroupCount = series.getAttr(barGroupCountKey);
+      final barGroupIndex = series.getAttr(barGroupIndexKey);
+      final previousBarGroupWeight = series.getAttr(previousBarGroupWeightKey);
+      final barGroupWeight = series.getAttr(barGroupWeightKey);
+      final measureAxisPosition = measureAxis.getLocation(0.0);
 
       var elementsList = series.getAttr(barElementsKey);
 
@@ -389,7 +389,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
               previousBarGroupWeight: previousBarGroupWeight,
               barGroupWeight: barGroupWeight,
               color: colorFn(barIndex),
-              dashPattern: dashPattern,
+              dashPattern: dashPatternFn(barIndex),
               details: details,
               domainValue: domainFn(barIndex),
               domainAxis: domainAxis,
@@ -427,7 +427,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             previousBarGroupWeight: previousBarGroupWeight,
             barGroupWeight: barGroupWeight,
             color: colorFn(barIndex),
-            dashPattern: dashPattern,
+            dashPattern: dashPatternFn(barIndex),
             details: details,
             domainValue: domainFn(barIndex),
             domainAxis: domainAxis,
@@ -442,10 +442,6 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             strokeWidthPx: details.strokeWidthPx);
 
         animatingBar.setNewTarget(barElement);
-      }
-
-      if (config.grouped) {
-        barGroupIndex++;
       }
     });
 

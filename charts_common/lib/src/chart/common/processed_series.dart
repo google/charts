@@ -44,6 +44,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<num> rawMeasureUpperBoundFn;
 
   AccessorFn<Color> colorFn;
+  AccessorFn<List<int>> dashPatternFn;
   AccessorFn<Color> fillColorFn;
   AccessorFn<FillPatternType> fillPatternFn;
   AccessorFn<num> radiusPxFn;
@@ -51,8 +52,6 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<String> labelAccessorFn;
   AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;
   AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
-
-  List<int> dashPattern;
 
   final _attrs = new SeriesAttributes();
 
@@ -89,6 +88,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     }
 
     colorFn = series.colorFn;
+    dashPatternFn = series.dashPatternFn;
     fillColorFn = series.fillColorFn;
     fillPatternFn = series.fillPatternFn;
     labelAccessorFn = series.labelAccessorFn ?? (i) => domainFn(i).toString();
@@ -97,8 +97,6 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
     radiusPxFn = series.radiusPxFn;
     strokeWidthPxFn = series.strokeWidthPxFn;
-
-    dashPattern = series.dashPattern;
 
     _attrs.mergeFrom(series.attributes);
   }
@@ -126,6 +124,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     seriesMeasureTotal = other.seriesMeasureTotal;
 
     colorFn = other.colorFn;
+    dashPatternFn = other.dashPatternFn;
     fillColorFn = other.fillColorFn;
     fillPatternFn = other.fillPatternFn;
     labelAccessorFn = other.labelAccessorFn;
@@ -133,8 +132,6 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     outsideLabelStyleAccessorFn = other.outsideLabelStyleAccessorFn;
     radiusPxFn = other.radiusPxFn;
     strokeWidthPxFn = other.strokeWidthPxFn;
-
-    dashPattern = other.dashPattern;
 
     _attrs.mergeFrom(other._attrs);
     measureAxis = other.measureAxis;
@@ -180,6 +177,7 @@ abstract class ImmutableSeries<D> {
   AccessorFn<num> get rawMeasureUpperBoundFn;
 
   AccessorFn<Color> get colorFn;
+  AccessorFn<List<int>> get dashPatternFn;
   AccessorFn<Color> get fillColorFn;
   AccessorFn<FillPatternType> get fillPatternFn;
   AccessorFn<String> get labelAccessorFn;
@@ -187,8 +185,6 @@ abstract class ImmutableSeries<D> {
   AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
   AccessorFn<num> get radiusPxFn;
   AccessorFn<num> get strokeWidthPxFn;
-
-  List<int> get dashPattern;
 
   void setAttr<R>(AttributeKey<R> key, R value);
   R getAttr<R>(AttributeKey<R> key);
