@@ -21,6 +21,7 @@ import 'axis_spec.dart' show AxisSpec, RenderSpec;
 import 'numeric_axis_spec.dart'
     show
         BasicNumericTickFormatterSpec,
+        BasicNumericTickProviderSpec,
         NumericAxisSpec,
         NumericTickProviderSpec,
         NumericTickFormatterSpec;
@@ -37,7 +38,8 @@ class PercentAxisSpec extends NumericAxisSpec {
     NumericExtents viewport,
   }) : super(
             renderSpec: renderSpec,
-            tickProviderSpec: tickProviderSpec,
+            tickProviderSpec: tickProviderSpec ??
+                new BasicNumericTickProviderSpec(dataIsInWholeNumbers: false),
             tickFormatterSpec: tickFormatterSpec ??
                 new BasicNumericTickFormatterSpec.fromNumberFormat(
                     new NumberFormat.percentPattern()),
