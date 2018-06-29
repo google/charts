@@ -15,6 +15,7 @@
 
 import 'package:meta/meta.dart' show immutable;
 
+import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis;
@@ -75,6 +76,15 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
       axis.setScaleViewport(viewport);
     }
   }
+
+  Axis<DateTime> createAxis() {
+    assert(false, 'Call createDateTimeAxis() to create a DateTimeAxis.');
+    return null;
+  }
+
+  /// Creates a [DateTimeAxis]. This should be called in place of createAxis.
+  DateTimeAxis createDateTimeAxis(DateTimeFactory dateTimeFactory) =>
+      new DateTimeAxis(dateTimeFactory);
 
   @override
   bool operator ==(Object other) =>

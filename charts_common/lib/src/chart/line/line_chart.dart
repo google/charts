@@ -14,13 +14,22 @@
 // limitations under the License.
 
 import '../line/line_renderer.dart' show LineRenderer;
+import '../cartesian/axis/axis.dart' show NumericAxis;
 import '../cartesian/cartesian_chart.dart' show NumericCartesianChart;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
 
 class LineChart extends NumericCartesianChart {
-  LineChart({bool vertical, LayoutConfig layoutConfig})
-      : super(vertical: vertical, layoutConfig: layoutConfig);
+  LineChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
+      : super(
+            vertical: vertical,
+            layoutConfig: layoutConfig,
+            primaryMeasureAxis: primaryMeasureAxis,
+            secondaryMeasureAxis: secondaryMeasureAxis);
 
   @override
   SeriesRenderer<num> makeDefaultRenderer() {

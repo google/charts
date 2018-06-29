@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'point_renderer.dart' show PointRenderer;
+import '../cartesian/axis/axis.dart' show NumericAxis;
 import '../cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 import '../cartesian/cartesian_chart.dart' show NumericCartesianChart;
@@ -39,8 +40,16 @@ class ScatterPlotChart extends NumericCartesianChart {
   @override
   bool get selectNearestByDomain => false;
 
-  ScatterPlotChart({bool vertical, LayoutConfig layoutConfig})
-      : super(vertical: vertical, layoutConfig: layoutConfig);
+  ScatterPlotChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
+      : super(
+            vertical: vertical,
+            layoutConfig: layoutConfig,
+            primaryMeasureAxis: primaryMeasureAxis,
+            secondaryMeasureAxis: secondaryMeasureAxis);
 
   @override
   SeriesRenderer<num> makeDefaultRenderer() {

@@ -56,6 +56,8 @@ export 'package:charts_common/src/chart/cartesian/axis/spec/date_time_axis_spec.
         DayTickProviderSpec,
         TimeFormatterSpec,
         StaticDateTimeTickProviderSpec;
+export 'package:charts_common/src/chart/cartesian/axis/spec/bucketing_axis_spec.dart'
+    show BucketingAxisSpec, BucketingNumericTickProviderSpec;
 export 'package:charts_common/src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
     show
         NumericAxisSpec,

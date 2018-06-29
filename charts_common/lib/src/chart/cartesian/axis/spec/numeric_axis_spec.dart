@@ -70,6 +70,9 @@ class NumericAxisSpec extends AxisSpec<num> {
   }
 
   @override
+  NumericAxis createAxis() => new NumericAxis();
+
+  @override
   bool operator ==(Object other) =>
       other is NumericAxisSpec &&
       viewport == other.viewport &&

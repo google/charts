@@ -17,6 +17,7 @@ import '../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../cartesian/axis/time/date_time_axis.dart' show DateTimeAxis;
 import '../cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
+import '../cartesian/axis/axis.dart' show NumericAxis;
 import '../common/chart_context.dart' show ChartContext;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
@@ -33,10 +34,16 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
   TimeSeriesChart(
       {bool vertical,
       LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis,
       this.dateTimeFactory = const LocalDateTimeFactory()})
       : domainAxis = new DateTimeAxis(dateTimeFactory)
           ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
-        super(vertical: vertical, layoutConfig: layoutConfig);
+        super(
+            vertical: vertical,
+            layoutConfig: layoutConfig,
+            primaryMeasureAxis: primaryMeasureAxis,
+            secondaryMeasureAxis: secondaryMeasureAxis);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);

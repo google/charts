@@ -65,9 +65,15 @@ class NumericComboChart extends CartesianChart<num> {
         );
 
   @override
-  common.NumericCartesianChart createCommonChart(BaseChartState chartState) =>
-      new common.NumericCartesianChart(
-          layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.NumericCartesianChart createCommonChart(BaseChartState chartState) {
+    // Optionally create primary and secondary measure axes if the chart was
+    // configured with them. If no axes were configured, then the chart will
+    // use its default types (usually a numeric axis).
+    return new common.NumericCartesianChart(
+        layoutConfig: layoutConfig?.commonLayoutConfig,
+        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis());
+  }
 }
 
 /// An ordinal combo chart supports rendering each series of data with different
@@ -104,7 +110,13 @@ class OrdinalComboChart extends CartesianChart<String> {
         );
 
   @override
-  common.OrdinalCartesianChart createCommonChart(BaseChartState chartState) =>
-      new common.OrdinalCartesianChart(
-          layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.OrdinalCartesianChart createCommonChart(BaseChartState chartState) {
+    // Optionally create primary and secondary measure axes if the chart was
+    // configured with them. If no axes were configured, then the chart will
+    // use its default types (usually a numeric axis).
+    return new common.OrdinalCartesianChart(
+        layoutConfig: layoutConfig?.commonLayoutConfig,
+        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis());
+  }
 }

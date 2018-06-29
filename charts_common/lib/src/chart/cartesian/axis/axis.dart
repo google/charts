@@ -77,14 +77,22 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   static const primaryMeasureAxisId = 'primaryMeasureAxisId';
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
 
-  /// [Scale] of this axis.
   final MutableScale<D> _scale;
+
+  /// [Scale] of this axis.
+  @protected
+  MutableScale<D> get scale => _scale;
 
   /// Previous [Scale] of this axis, used to calculate tick animation.
   MutableScale<D> _previousScale;
 
+  TickProvider<D> _tickProvider;
+
   /// [TickProvider] for this axis.
-  TickProvider<D> tickProvider;
+  TickProvider<D> get tickProvider => _tickProvider;
+  set tickProvider(TickProvider<D> tickProvider) {
+    _tickProvider = tickProvider;
+  }
 
   /// [TickFormatter] for this axis.
   TickFormatter<D> tickFormatter;
@@ -93,7 +101,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// [TickDrawStrategy] for this axis.
   TickDrawStrategy<D> tickDrawStrategy;
 
-  /// [AxisOrienation] for this axis.
+  /// [AxisOrientation] for this axis.
   AxisOrientation axisOrientation;
 
   ChartContext context;
@@ -130,8 +138,10 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// that the domain axis line appears on top of any measure axis grid lines.
   int layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
 
-  Axis({this.tickProvider, this.tickFormatter, MutableScale<D> scale})
-      : this._scale = scale;
+  Axis(
+      {TickProvider<D> tickProvider, this.tickFormatter, MutableScale<D> scale})
+      : this._scale = scale,
+        this._tickProvider = tickProvider;
 
   @protected
   MutableScale<D> get mutableScale => _scale;
@@ -448,9 +458,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 }
 
 class NumericAxis extends Axis<num> {
-  NumericAxis()
+  NumericAxis({NumericTickProvider tickProvider})
       : super(
-          tickProvider: new NumericTickProvider(),
+          tickProvider: tickProvider ?? new NumericTickProvider(),
           tickFormatter: new NumericTickFormatter(),
           scale: new LinearScale(),
         );

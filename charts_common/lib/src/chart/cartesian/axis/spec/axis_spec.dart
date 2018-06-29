@@ -57,6 +57,9 @@ class AxisSpec<D> {
     }
   }
 
+  /// Creates an appropriately typed [Axis].
+  Axis<D> createAxis() => null;
+
   @override
   bool operator ==(Object other) =>
       other is AxisSpec &&

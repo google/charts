@@ -46,10 +46,18 @@ import '../../data/series.dart' show Series;
 class NumericCartesianChart extends CartesianChart<num> {
   final NumericAxis _domainAxis;
 
-  NumericCartesianChart({bool vertical, LayoutConfig layoutConfig})
+  NumericCartesianChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
       : _domainAxis = new NumericAxis()
           ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
-        super(vertical: vertical, layoutConfig: layoutConfig);
+        super(
+            vertical: vertical,
+            layoutConfig: layoutConfig,
+            primaryMeasureAxis: primaryMeasureAxis,
+            secondaryMeasureAxis: secondaryMeasureAxis);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);
@@ -71,10 +79,18 @@ class NumericCartesianChart extends CartesianChart<num> {
 class OrdinalCartesianChart extends CartesianChart<String> {
   final OrdinalAxis _domainAxis;
 
-  OrdinalCartesianChart({bool vertical, LayoutConfig layoutConfig})
+  OrdinalCartesianChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
       : _domainAxis = new OrdinalAxis()
           ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
-        super(vertical: vertical, layoutConfig: layoutConfig);
+        super(
+            vertical: vertical,
+            layoutConfig: layoutConfig,
+            primaryMeasureAxis: primaryMeasureAxis,
+            secondaryMeasureAxis: secondaryMeasureAxis);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);
@@ -97,17 +113,26 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   );
 
   bool vertical;
-  final _primaryMeasureAxis = new NumericAxis()
-    ..layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
-  final _secondaryMeasureAxis = new NumericAxis()
-    ..layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
+  final _primaryMeasureAxis;
+  final _secondaryMeasureAxis;
 
   bool _usePrimaryMeasureAxis = false;
   bool _useSecondaryMeasureAxis = false;
 
-  CartesianChart({bool vertical, LayoutConfig layoutConfig})
+  CartesianChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
       : vertical = vertical ?? true,
-        super(layoutConfig: layoutConfig ?? _defaultLayoutConfig);
+        _primaryMeasureAxis = primaryMeasureAxis ?? new NumericAxis(),
+        _secondaryMeasureAxis = secondaryMeasureAxis ?? new NumericAxis(),
+        super(layoutConfig: layoutConfig ?? _defaultLayoutConfig) {
+    // As a convenience for chart configuration, set the paint order on any axis
+    // that is missing one.
+    _primaryMeasureAxis.layoutPaintOrder ??= LayoutViewPaintOrder.measureAxis;
+    _secondaryMeasureAxis.layoutPaintOrder ??= LayoutViewPaintOrder.measureAxis;
+  }
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);

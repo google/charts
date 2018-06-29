@@ -16,6 +16,7 @@
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'animation_zoom.dart';
+import 'bucketing_axis.dart';
 import 'comparison_points.dart';
 import 'simple.dart';
 
@@ -38,6 +39,13 @@ List<GalleryScaffold> buildGallery() {
       title: 'Pan and Zoom Scatter Plot Chart',
       subtitle: 'Simple scatter plot chart pan and zoom behaviors enabled',
       childBuilder: () => new ScatterPlotAnimationZoomChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.scatter_plot),
+      title: 'Bucketing Axis Scatter Plot Chart',
+      subtitle: 'Scatter plot with a measure axis that buckets values less ' +
+          'than 10% into a single region below the draw area',
+      childBuilder: () => new BucketingAxisScatterPlotChart.withRandomData(),
     ),
   ];
 }

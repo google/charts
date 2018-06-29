@@ -57,6 +57,11 @@ const boundsLineRadiusPxFnKey = const AttributeKey<AccessorFn<double>>(
 
 const defaultSymbolRendererId = '__default__';
 
+/// Large number used as a starting sentinel for data distance comparisons.
+///
+/// This is generally larger than the distance from any datum to the mouse.
+const _maxInitialDistance = 10000.0;
+
 class PointRenderer<D> extends BaseCartesianRenderer<D> {
   final PointRendererConfig config;
 
@@ -306,12 +311,6 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
           .map<PointRendererElement<D>>((AnimatedPoint<D> animatingPoint) =>
               animatingPoint.getCurrentPoint(animationPercent))
           .forEach((PointRendererElement point) {
-        final bounds = new Rectangle<double>(
-            point.point.x - point.radiusPx,
-            point.point.y - point.radiusPx,
-            point.radiusPx * 2,
-            point.radiusPx * 2);
-
         // Decorate the points with decorators that should appear below the main
         // series data.
         pointRendererDecorators
@@ -326,7 +325,14 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         // Skip points whose center lies outside the draw bounds. Those that lie
         // near the edge will be allowed to render partially outside. This
         // prevents harshly clipping off half of the shape.
-        if (componentBounds.containsPoint(point.point)) {
+        if (point.point.y != null &&
+            componentBounds.containsPoint(point.point)) {
+          final bounds = new Rectangle<double>(
+              point.point.x - point.radiusPx,
+              point.point.y - point.radiusPx,
+              point.radiusPx * 2,
+              point.radiusPx * 2);
+
           if (point.symbolRendererId == defaultSymbolRendererId) {
             symbolRenderer.paint(canvas, bounds, fillColor: point.color);
           } else {
@@ -415,9 +421,9 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
     seriesPointMap.values.forEach((List<AnimatedPoint<D>> points) {
       DatumPoint<D> nearestPoint;
-      double nearestDomainDistance = 10000.0;
-      double nearestMeasureDistance = 10000.0;
-      double nearestRelativeDistance = 10000.0;
+      double nearestDomainDistance = _maxInitialDistance;
+      double nearestMeasureDistance = _maxInitialDistance;
+      double nearestRelativeDistance = _maxInitialDistance;
 
       points.forEach((AnimatedPoint<D> point) {
         if (point.overlaySeries) {
@@ -480,8 +486,15 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
     // Compute distances from [chartPoint] to the primary point of the datum.
     final domainDistance = (chartPoint.x - datumPoint.x).abs();
-    final measureDistance = (chartPoint.y - datumPoint.y).abs();
-    var relativeDistance = chartPoint.distanceTo(datumPoint);
+
+    final measureDistance = datumPoint.y != null
+        ? (chartPoint.y - datumPoint.y).abs()
+        : _maxInitialDistance;
+
+    var relativeDistance = datumPoint.y != null
+        ? chartPoint.distanceTo(datumPoint)
+        : _maxInitialDistance;
+
     var insidePoint = false;
 
     if (datumPoint.xLower != null &&
@@ -625,8 +638,15 @@ class PointRendererElement<D> {
             previousPoint.xUpper
         : null;
 
-    final y = ((targetPoint.y - previousPoint.y) * animationPercent) +
-        previousPoint.y;
+    var y;
+    if (targetPoint.y != null && previousPoint.y != null) {
+      y = ((targetPoint.y - previousPoint.y) * animationPercent) +
+          previousPoint.y;
+    } else if (targetPoint.y != null) {
+      y = targetPoint.y;
+    } else {
+      y = null;
+    }
 
     final yLower = targetPoint.yLower != null && previousPoint.yLower != null
         ? ((targetPoint.yLower - previousPoint.yLower) * animationPercent) +

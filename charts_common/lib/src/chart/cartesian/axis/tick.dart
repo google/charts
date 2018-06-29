@@ -29,5 +29,20 @@ class Tick<D> {
   /// Location on the axis where this tick is rendered (in canvas coordinates).
   double locationPx;
 
-  Tick({@required this.value, @required this.textElement, this.locationPx});
+  /// Offset of the label for this tick from its location.
+  ///
+  /// This is a vertical offset for ticks on a vertical axis, or horizontal
+  /// offset for ticks on a horizontal axis.
+  double labelOffsetPx;
+
+  Tick(
+      {@required this.value,
+      @required this.textElement,
+      this.locationPx,
+      this.labelOffsetPx});
+
+  @override
+  String toString() =>
+      'Tick(value: ${value}, locationPx: ${locationPx}, ' +
+      'labelOffsetPx: ${labelOffsetPx})';
 }

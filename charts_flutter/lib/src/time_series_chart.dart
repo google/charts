@@ -65,9 +65,15 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
         );
 
   @override
-  common.TimeSeriesChart createCommonChart(BaseChartState chartState) =>
-      new common.TimeSeriesChart(
-          layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.TimeSeriesChart createCommonChart(BaseChartState chartState) {
+    // Optionally create primary and secondary measure axes if the chart was
+    // configured with them. If no axes were configured, then the chart will
+    // use its default types (usually a numeric axis).
+    return new common.TimeSeriesChart(
+        layoutConfig: layoutConfig?.commonLayoutConfig,
+        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis());
+  }
 
   @override
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
