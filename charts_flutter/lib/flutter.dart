@@ -173,6 +173,7 @@ export 'src/behaviors/range_annotation.dart' show RangeAnnotation;
 export 'src/behaviors/select_nearest.dart' show SelectNearest;
 export 'src/behaviors/sliding_viewport.dart' show SlidingViewport;
 export 'src/behaviors/slider/slider.dart' show Slider;
+export 'src/behaviors/zoom/initial_hint_behavior.dart' show InitialHintBehavior;
 export 'src/behaviors/zoom/pan_and_zoom_behavior.dart' show PanAndZoomBehavior;
 export 'src/behaviors/zoom/pan_behavior.dart' show PanBehavior;
 export 'src/combo_chart/combo_chart.dart';

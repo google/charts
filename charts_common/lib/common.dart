@@ -67,6 +67,8 @@ export 'src/chart/common/behavior/selection/selection_trigger.dart'
     show SelectionTrigger;
 export 'src/chart/common/behavior/slider/slider.dart'
     show Slider, SliderListenerCallback, SliderListenerDragState, SliderStyle;
+export 'src/chart/common/behavior/zoom/initial_hint_behavior.dart'
+    show InitialHintBehavior;
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
     show PanAndZoomBehavior;
 export 'src/chart/common/behavior/zoom/pan_behavior.dart'

@@ -15,6 +15,7 @@
 
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
+import 'initial_hint_animation.dart';
 import 'initial_selection.dart';
 import 'percent_of_domain.dart';
 import 'percent_of_domain_by_category.dart';
@@ -84,6 +85,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Sliding viewport on domain selection',
       subtitle: 'Center viewport on selected domain',
       childBuilder: () => new SlidingViewportOnSelection.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Initial hint animation ',
+      subtitle: 'Animate into final viewport',
+      childBuilder: () => new InitialHintAnimation.withRandomData(),
     ),
   ];
 }
