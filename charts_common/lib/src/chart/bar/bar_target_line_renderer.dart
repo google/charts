@@ -212,6 +212,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       // TODO: Combine common line attributes into
       // GraphicsFactory.lineStyle or similar.
       canvas.drawLine(
+          clipBounds: drawBounds,
           points: bar.points,
           stroke: bar.color,
           roundEndCaps: bar.roundEndCaps,

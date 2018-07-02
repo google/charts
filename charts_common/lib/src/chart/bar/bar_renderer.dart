@@ -217,7 +217,7 @@ class BarRenderer<D>
     final unmodifiedBar =
         renderingVertically ? barElements.first : barElements.last;
 
-    // Find the max bar width from each segement to calculate corner radius.
+    // Find the max bar width from each segment to calculate corner radius.
     int maxBarWidth = 0;
 
     for (var bar in barElements) {
