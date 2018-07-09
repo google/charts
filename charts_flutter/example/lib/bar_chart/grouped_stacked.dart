@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// Bar chart example
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -30,6 +33,107 @@ class GroupedStackedBarChart extends StatelessWidget {
       animate: false,
     );
   }
+
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory GroupedStackedBarChart.withRandomData() {
+    return new GroupedStackedBarChart(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final desktopSalesDataA = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final tableSalesDataA = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final mobileSalesDataA = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final desktopSalesDataB = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final tableSalesDataB = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final mobileSalesDataB = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+        id: 'Desktop A',
+        seriesCategory: 'A',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: desktopSalesDataA,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Tablet A',
+        seriesCategory: 'A',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: tableSalesDataA,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Mobile A',
+        seriesCategory: 'A',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: mobileSalesDataA,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Desktop B',
+        seriesCategory: 'B',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: desktopSalesDataB,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Tablet B',
+        seriesCategory: 'B',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: tableSalesDataB,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Mobile B',
+        seriesCategory: 'B',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: mobileSalesDataB,
+      ),
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
 
   @override
   Widget build(BuildContext context) {

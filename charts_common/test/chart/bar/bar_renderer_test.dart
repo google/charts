@@ -34,8 +34,8 @@ class MyRow {
 
 void main() {
   BarRenderer renderer;
-  List<MutableSeries<MyRow, String>> seriesList;
-  List<MutableSeries<MyRow, String>> groupedStackedSeriesList;
+  List<MutableSeries<String>> seriesList;
+  List<MutableSeries<String>> groupedStackedSeriesList;
 
   setUp(() {
     var myFakeDesktopAData = [
@@ -81,21 +81,21 @@ void main() {
     ];
 
     seriesList = [
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Desktop',
           colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
           domainFn: (MyRow row, _) => row.campaign,
           measureFn: (MyRow row, _) => row.clickCount,
           measureOffsetFn: (MyRow row, _) => 0,
           data: myFakeDesktopAData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Tablet',
           colorFn: (_, __) => MaterialPalette.red.shadeDefault,
           domainFn: (MyRow row, _) => row.campaign,
           measureFn: (MyRow row, _) => row.clickCount,
           measureOffsetFn: (MyRow row, _) => 0,
           data: myFakeTabletAData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Mobile',
           colorFn: (_, __) => MaterialPalette.green.shadeDefault,
           domainFn: (MyRow row, _) => row.campaign,
@@ -105,7 +105,7 @@ void main() {
     ];
 
     groupedStackedSeriesList = [
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Desktop A',
           seriesCategory: 'A',
           colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
@@ -113,7 +113,7 @@ void main() {
           measureFn: (MyRow row, _) => row.clickCount,
           measureOffsetFn: (MyRow row, _) => 0,
           data: myFakeDesktopAData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Tablet A',
           seriesCategory: 'A',
           colorFn: (_, __) => MaterialPalette.red.shadeDefault,
@@ -121,7 +121,7 @@ void main() {
           measureFn: (MyRow row, _) => row.clickCount,
           measureOffsetFn: (MyRow row, _) => 0,
           data: myFakeTabletAData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Mobile A',
           seriesCategory: 'A',
           colorFn: (_, __) => MaterialPalette.green.shadeDefault,
@@ -129,7 +129,7 @@ void main() {
           measureFn: (MyRow row, _) => row.clickCount,
           measureOffsetFn: (MyRow row, _) => 0,
           data: myFakeMobileAData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Desktop B',
           seriesCategory: 'B',
           colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
@@ -137,7 +137,7 @@ void main() {
           measureFn: (MyRow row, _) => row.clickCount,
           measureOffsetFn: (MyRow row, _) => 0,
           data: myFakeDesktopBData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Tablet B',
           seriesCategory: 'B',
           colorFn: (_, __) => MaterialPalette.red.shadeDefault,
@@ -145,7 +145,7 @@ void main() {
           measureFn: (MyRow row, _) => row.clickCount,
           measureOffsetFn: (MyRow row, _) => 0,
           data: myFakeTabletBData)),
-      new MutableSeries<MyRow, String>(new Series<MyRow, String>(
+      new MutableSeries<String>(new Series<MyRow, String>(
           id: 'Mobile B',
           seriesCategory: 'B',
           colorFn: (_, __) => MaterialPalette.green.shadeDefault,
@@ -178,7 +178,7 @@ void main() {
       expect(element.barStackIndex, equals(0));
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(null));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(0));
+      expect(series.measureOffsetFn(0), equals(0));
 
       // Validate Tablet series.
       series = seriesList[1];
@@ -193,7 +193,7 @@ void main() {
       expect(element.barStackIndex, equals(0));
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(null));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(0));
+      expect(series.measureOffsetFn(0), equals(0));
 
       // Validate Mobile series.
       series = seriesList[2];
@@ -208,7 +208,7 @@ void main() {
       expect(element.barStackIndex, equals(0));
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(null));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(0));
+      expect(series.measureOffsetFn(0), equals(0));
     });
 
     test('with grouped stacked bars', () {
@@ -233,7 +233,7 @@ void main() {
       expect(element.barStackIndex, equals(2));
       expect(element.measureOffset, equals(10));
       expect(element.measureOffsetPlusMeasure, equals(15));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(10));
+      expect(series.measureOffsetFn(0), equals(10));
 
       // Validate Tablet A series.
       series = groupedStackedSeriesList[1];
@@ -248,7 +248,7 @@ void main() {
       expect(element.barStackIndex, equals(1));
       expect(element.measureOffset, equals(5));
       expect(element.measureOffsetPlusMeasure, equals(10));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(5));
+      expect(series.measureOffsetFn(0), equals(5));
 
       // Validate Mobile A series.
       series = groupedStackedSeriesList[2];
@@ -263,7 +263,7 @@ void main() {
       expect(element.barStackIndex, equals(0));
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(5));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(0));
+      expect(series.measureOffsetFn(0), equals(0));
 
       // Validate Desktop B series.
       series = groupedStackedSeriesList[3];
@@ -278,7 +278,7 @@ void main() {
       expect(element.barStackIndex, equals(2));
       expect(element.measureOffset, equals(10));
       expect(element.measureOffsetPlusMeasure, equals(15));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(10));
+      expect(series.measureOffsetFn(0), equals(10));
 
       // Validate Tablet B series.
       series = groupedStackedSeriesList[4];
@@ -293,7 +293,7 @@ void main() {
       expect(element.barStackIndex, equals(1));
       expect(element.measureOffset, equals(5));
       expect(element.measureOffsetPlusMeasure, equals(10));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(5));
+      expect(series.measureOffsetFn(0), equals(5));
 
       // Validate Mobile B series.
       series = groupedStackedSeriesList[5];
@@ -308,7 +308,7 @@ void main() {
       expect(element.barStackIndex, equals(0));
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(5));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(0));
+      expect(series.measureOffsetFn(0), equals(0));
     });
 
     test('with stacked bars', () {
@@ -332,7 +332,7 @@ void main() {
       expect(element.barStackIndex, equals(2));
       expect(element.measureOffset, equals(10));
       expect(element.measureOffsetPlusMeasure, equals(15));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(10));
+      expect(series.measureOffsetFn(0), equals(10));
 
       // Validate Tablet series.
       series = seriesList[1];
@@ -347,7 +347,7 @@ void main() {
       expect(element.barStackIndex, equals(1));
       expect(element.measureOffset, equals(5));
       expect(element.measureOffsetPlusMeasure, equals(10));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(5));
+      expect(series.measureOffsetFn(0), equals(5));
 
       // Validate Mobile series.
       series = seriesList[2];
@@ -362,7 +362,7 @@ void main() {
       expect(element.barStackIndex, equals(0));
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(5));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(0));
+      expect(series.measureOffsetFn(0), equals(0));
     });
 
     test('with stacked bars containing zero and null', () {
@@ -390,22 +390,22 @@ void main() {
       expect(element.barStackIndex, equals(2));
       expect(element.measureOffset, equals(5));
       expect(element.measureOffsetPlusMeasure, equals(10));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(5));
+      expect(series.measureOffsetFn(0), equals(5));
 
       element = elementsList[1];
       expect(element.measureOffset, equals(25));
       expect(element.measureOffsetPlusMeasure, equals(50));
-      expect(series.measureOffsetFn(series.data[1], 1), equals(25));
+      expect(series.measureOffsetFn(1), equals(25));
 
       element = elementsList[2];
       expect(element.measureOffset, equals(100));
       expect(element.measureOffsetPlusMeasure, equals(100));
-      expect(series.measureOffsetFn(series.data[2], 2), equals(100));
+      expect(series.measureOffsetFn(2), equals(100));
 
       element = elementsList[3];
       expect(element.measureOffset, equals(75));
       expect(element.measureOffsetPlusMeasure, equals(150));
-      expect(series.measureOffsetFn(series.data[3], 3), equals(75));
+      expect(series.measureOffsetFn(3), equals(75));
 
       // Validate Tablet series.
       series = seriesList[1];
@@ -417,22 +417,22 @@ void main() {
       expect(element.barStackIndex, equals(1));
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(5));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(0));
+      expect(series.measureOffsetFn(0), equals(0));
 
       element = elementsList[1];
       expect(element.measureOffset, equals(25));
       expect(element.measureOffsetPlusMeasure, equals(25));
-      expect(series.measureOffsetFn(series.data[1], 1), equals(25));
+      expect(series.measureOffsetFn(1), equals(25));
 
       element = elementsList[2];
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(100));
-      expect(series.measureOffsetFn(series.data[2], 2), equals(0));
+      expect(series.measureOffsetFn(2), equals(0));
 
       element = elementsList[3];
       expect(element.measureOffset, equals(75));
       expect(element.measureOffsetPlusMeasure, equals(75));
-      expect(series.measureOffsetFn(series.data[3], 3), equals(75));
+      expect(series.measureOffsetFn(3), equals(75));
 
       // Validate Mobile series.
       series = seriesList[2];
@@ -442,22 +442,22 @@ void main() {
       expect(element.barStackIndex, equals(0));
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(0));
-      expect(series.measureOffsetFn(series.data[0], 0), equals(0));
+      expect(series.measureOffsetFn(0), equals(0));
 
       element = elementsList[1];
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(25));
-      expect(series.measureOffsetFn(series.data[1], 1), equals(0));
+      expect(series.measureOffsetFn(1), equals(0));
 
       element = elementsList[2];
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(0));
-      expect(series.measureOffsetFn(series.data[2], 2), equals(0));
+      expect(series.measureOffsetFn(2), equals(0));
 
       element = elementsList[3];
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(75));
-      expect(series.measureOffsetFn(series.data[3], 3), equals(0));
+      expect(series.measureOffsetFn(3), equals(0));
     });
   });
 }

@@ -20,11 +20,18 @@ import '../../common/color.dart' show Color;
 /// A rectangle to be painted by [ChartCanvas].
 class CanvasRect {
   final Rectangle<int> bounds;
+  final List<int> dashPattern;
   final Color fill;
   final FillPatternType pattern;
   final Color stroke;
+  final double strokeWidthPx;
 
-  CanvasRect(this.bounds, {this.fill, this.pattern, this.stroke});
+  CanvasRect(this.bounds,
+      {this.dashPattern,
+      this.fill,
+      this.pattern,
+      this.stroke,
+      this.strokeWidthPx});
 }
 
 /// A stack of [CanvasRect] to be painted by [ChartCanvas].

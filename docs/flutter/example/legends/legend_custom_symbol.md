@@ -12,7 +12,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 /// Example custom renderer that renders [IconData].
 ///
 /// This is used to show that legend symbols can be assigned a custom symbol.
-class IconRenderer implements charts.SymbolRenderer {
+class IconRenderer extends charts.SymbolRenderer {
   final IconData iconData;
 
   IconRenderer(this.iconData);
@@ -39,6 +39,7 @@ class LegendWithCustomSymbol extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return new charts.BarChart(
@@ -51,9 +52,9 @@ class LegendWithCustomSymbol extends StatelessWidget {
       // To change the symbol used in the legend, set the renderer attribute of
       // symbolRendererKey to a SymbolRenderer.
       behaviors: [new charts.SeriesLegend()],
-    )..defaultRenderer
-        .rendererAttributes
-        .setAttr(charts.symbolRendererKey, new IconRenderer(Icons.cloud));
+      defaultRenderer: new charts.BarRendererConfig(
+          symbolRenderer: new IconRenderer(Icons.cloud)),
+    );
   }
 
   /// Create series list with multiple series

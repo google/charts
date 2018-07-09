@@ -31,6 +31,7 @@ class TimeSeriesRangeAnnotationChart extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return new charts.TimeSeriesChart(seriesList, animate: animate, behaviors: [

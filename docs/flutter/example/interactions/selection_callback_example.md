@@ -36,6 +36,7 @@ class SelectionCallbackExample extends StatefulWidget {
     );
   }
 
+
   // We need a Stateful widget to build the selection details with the current
   // selection as the state.
   @override
@@ -81,7 +82,7 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
   // Listens to the underlying selection changes, and updates the information
   // relevant to building the primitive legend like information under the
   // chart.
-  _onSelectionChanged(charts.SelectionModel<TimeSeriesSales, DateTime> model) {
+  _onSelectionChanged(charts.SelectionModel model) {
     final selectedDatum = model.selectedDatum;
 
     DateTime time;
@@ -94,8 +95,7 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
     // series name for each selection point.
     if (selectedDatum.isNotEmpty) {
       time = selectedDatum.first.datum.time;
-      selectedDatum
-          .forEach((charts.SeriesDatum<TimeSeriesSales, DateTime> datumPair) {
+      selectedDatum.forEach((charts.SeriesDatum datumPair) {
         measures[datumPair.series.displayName] = datumPair.datum.sales;
       });
     }

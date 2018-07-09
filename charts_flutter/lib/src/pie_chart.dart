@@ -14,20 +14,20 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show ArcRendererConfig, BaseChart, PieChart, RTLSpec, Series;
+    show ArcRendererConfig, PieChart, RTLSpec, Series;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'base_chart.dart' show BaseChart, LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class PieChart extends BaseChart {
+class PieChart<D> extends BaseChart<D> {
   PieChart(
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
-    common.ArcRendererConfig defaultRenderer,
+    common.ArcRendererConfig<D> defaultRenderer,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<D>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
     bool defaultInteractions: true,
@@ -44,8 +44,8 @@ class PieChart extends BaseChart {
         );
 
   @override
-  common.BaseChart createCommonChart(BaseChartState chartState) =>
-      new common.PieChart(layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.PieChart<D> createCommonChart(BaseChartState chartState) =>
+      new common.PieChart<D>(layoutConfig: layoutConfig?.commonLayoutConfig);
 
   @override
   void addDefaultInteractions(List<ChartBehavior> behaviors) {

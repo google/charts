@@ -22,15 +22,27 @@ import '../../processed_series.dart' show ImmutableSeries;
 ///
 /// [T] the datum class type for the series passed in.
 /// [D] the domain class type for the datum.
-class LegendEntry<T, D> {
+class LegendEntry<D> {
   final String label;
-  final ImmutableSeries<T, D> series;
-  final T datum;
+  final ImmutableSeries<D> series;
+  final dynamic datum;
   final int datumIndex;
   final D domain;
   final double value;
   final Color color;
   bool isSelected;
+
+  /// Indicates whether this is in the first row of a tabular layout.
+  bool inFirstRow;
+
+  /// Indicates whether this is in the first column of a tabular layout.
+  bool inFirstColumn;
+
+  /// Indicates whether this is in the last row of a tabular layout.
+  bool inLastRow;
+
+  /// Indicates whether this is in the last column of a tabular layout.
+  bool inLastColumn;
 
   // TODO: Forward the default formatters from series and allow for
   // native legends to provide separate formatters.
@@ -41,7 +53,11 @@ class LegendEntry<T, D> {
       this.domain,
       this.value,
       this.color,
-      this.isSelected: false});
+      this.isSelected: false,
+      this.inFirstRow,
+      this.inFirstColumn,
+      this.inLastRow,
+      this.inLastColumn});
 
   /// Get the native symbol renderer stored in the series.
   SymbolRenderer get symbolRenderer =>

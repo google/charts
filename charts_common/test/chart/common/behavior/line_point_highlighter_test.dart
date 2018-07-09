@@ -65,25 +65,25 @@ void main() {
   MockChart _chart;
   MockSelectionModel _selectionModel;
 
-  MutableSeries<MyRow, int> _series1;
+  MutableSeries<int> _series1;
   final _s1D1 = new MyRow(1, 11);
   final _s1D2 = new MyRow(2, 12);
   final _s1D3 = new MyRow(3, 13);
 
-  MutableSeries<MyRow, int> _series2;
+  MutableSeries<int> _series2;
   final _s2D1 = new MyRow(4, 21);
   final _s2D2 = new MyRow(5, 22);
   final _s2D3 = new MyRow(6, 23);
 
   _setupSelection(List<MyRow> selected) {
-    _series1.data.forEach((MyRow row) {
-      when(_selectionModel.isDatumSelected(_series1, row))
-          .thenReturn(selected.contains(row));
-    });
-    _series2.data.forEach((MyRow row) {
-      when(_selectionModel.isDatumSelected(_series2, row))
-          .thenReturn(selected.contains(row));
-    });
+    for (int i = 0; i < _series1.data.length; i++) {
+      when(_selectionModel.isDatumSelected(_series1, i))
+          .thenReturn(selected.contains(_series1.data[i]));
+    }
+    for (int i = 0; i < _series2.data.length; i++) {
+      when(_selectionModel.isDatumSelected(_series2, i))
+          .thenReturn(selected.contains(_series2.data[i]));
+    }
   }
 
   setUp(() {
@@ -99,7 +99,7 @@ void main() {
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
         colorFn: (_, __) => MaterialPalette.blue.shadeDefault))
-      ..measureFn = (_, __) => 0.0;
+      ..measureFn = (_) => 0.0;
 
     _series2 = new MutableSeries(new Series<MyRow, int>(
         id: 's2',
@@ -107,7 +107,7 @@ void main() {
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
         colorFn: (_, __) => MaterialPalette.red.shadeDefault))
-      ..measureFn = (_, __) => 0.0;
+      ..measureFn = (_) => 0.0;
   });
 
   group('LinePointHighlighter', () {
@@ -125,11 +125,11 @@ void main() {
 
       _series1.setAttr(domainAxisKey, domainAxis);
       _series1.setAttr(measureAxisKey, primaryMeasureAxis);
-      _series1.measureOffsetFn = (MyRow datum, int index) => 0.0;
+      _series1.measureOffsetFn = (_) => 0.0;
 
       _series2.setAttr(domainAxisKey, domainAxis);
       _series2.setAttr(measureAxisKey, primaryMeasureAxis);
-      _series2.measureOffsetFn = (MyRow datum, int index) => 0.0;
+      _series2.measureOffsetFn = (_) => 0.0;
 
       final seriesList = [_series1, _series2];
 

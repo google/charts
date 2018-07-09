@@ -24,6 +24,7 @@ class RTLBarChart extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     // Charts will determine if RTL is enabled by checking the directionality by

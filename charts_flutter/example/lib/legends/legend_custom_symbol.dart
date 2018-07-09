@@ -14,20 +14,28 @@
 // limitations under the License.
 
 /// Bar chart with custom symbol in legend example.
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 /// Example custom renderer that renders [IconData].
 ///
 /// This is used to show that legend symbols can be assigned a custom symbol.
-class IconRenderer extends charts.SymbolRenderer {
+class IconRenderer extends charts.CustomSymbolRenderer {
   final IconData iconData;
 
   IconRenderer(this.iconData);
 
   @override
-  Widget build(BuildContext context,
-      {Size size, Color color, bool isSelected}) {
+  Widget build(BuildContext context, {Size size, Color color, bool enabled}) {
+    // Lighten the color if the symbol is not enabled
+    // Example: If user has tapped on a Series deselecting it.
+    if (!enabled) {
+      color = color.withOpacity(0.26);
+    }
+
     return new SizedBox.fromSize(
         size: size, child: new Icon(iconData, color: color, size: 12.0));
   }
@@ -46,6 +54,75 @@ class LegendWithCustomSymbol extends StatelessWidget {
       animate: false,
     );
   }
+
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory LegendWithCustomSymbol.withRandomData() {
+    return new LegendWithCustomSymbol(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final desktopSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final tabletSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final mobileSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final otherSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+        id: 'Desktop',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: desktopSalesData,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Tablet',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: tabletSalesData,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Mobile',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: mobileSalesData,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Other',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: otherSalesData,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
 
   @override
   Widget build(BuildContext context) {

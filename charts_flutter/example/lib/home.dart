@@ -23,6 +23,8 @@ import 'bar_chart/bar_gallery.dart' as bar show buildGallery;
 import 'time_series_chart/time_series_gallery.dart' as time_series
     show buildGallery;
 import 'line_chart/line_gallery.dart' as line show buildGallery;
+import 'scatter_plot_chart/scatter_plot_gallery.dart' as scatter_plot
+    show buildGallery;
 import 'pie_chart/pie_gallery.dart' as pie show buildGallery;
 import 'axes/axes_gallery.dart' as axes show buildGallery;
 import 'interactions/interactions_gallery.dart' as interactions
@@ -40,6 +42,7 @@ class Home extends StatelessWidget {
   final barGalleries = bar.buildGallery();
   final timeSeriesGalleries = time_series.buildGallery();
   final lineGalleries = line.buildGallery();
+  final scatterPlotGalleries = scatter_plot.buildGallery();
   final pieGalleries = pie.buildGallery();
   final axesGalleries = axes.buildGallery();
   final interactionsGalleries = interactions.buildGallery();
@@ -72,6 +75,10 @@ class Home extends StatelessWidget {
     // Add example line charts.
     galleries.addAll(
         lineGalleries.map((gallery) => gallery.buildGalleryListTile(context)));
+
+    // Add example scatter plot charts.
+    galleries.addAll(scatterPlotGalleries
+        .map((gallery) => gallery.buildGalleryListTile(context)));
 
     // Add example pie charts.
     galleries.addAll(

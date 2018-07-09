@@ -19,48 +19,46 @@ import 'package:charts_common/src/data/series.dart';
 import 'package:test/test.dart';
 
 void main() {
-  SelectionModel<MyDatum, String> _selectionModel;
+  SelectionModel<String> _selectionModel;
 
-  ImmutableSeries<MyDatum, String> _closestSeries;
+  ImmutableSeries<String> _closestSeries;
   MyDatum _closestDatumClosestSeries;
-  SeriesDatum<MyDatum, String> _closestDatumClosestSeriesPair;
+  SeriesDatum<String> _closestDatumClosestSeriesPair;
   MyDatum _otherDatumClosestSeries;
-  SeriesDatum<MyDatum, String> _otherDatumClosestSeriesPair;
+  SeriesDatum<String> _otherDatumClosestSeriesPair;
 
-  ImmutableSeries<MyDatum, String> _otherSeries;
+  ImmutableSeries<String> _otherSeries;
   MyDatum _closestDatumOtherSeries;
-  SeriesDatum<MyDatum, String> _closestDatumOtherSeriesPair;
+  SeriesDatum<String> _closestDatumOtherSeriesPair;
   MyDatum _otherDatumOtherSeries;
-  SeriesDatum<MyDatum, String> _otherDatumOtherSeriesPair;
+  SeriesDatum<String> _otherDatumOtherSeriesPair;
 
   setUp(() {
-    _selectionModel = new SelectionModel<MyDatum, String>();
+    _selectionModel = new SelectionModel<String>();
 
     _closestDatumClosestSeries = new MyDatum('cDcS');
     _otherDatumClosestSeries = new MyDatum('oDcS');
-    _closestSeries = new MutableSeries<MyDatum, String>(
-        new Series<MyDatum, String>(
-            id: 'closest',
-            data: [_closestDatumClosestSeries, _otherDatumClosestSeries],
-            domainFn: (MyDatum d, _) => d.id,
-            measureFn: (_, __) => 0));
-    _closestDatumClosestSeriesPair = new SeriesDatum<MyDatum, String>(
-        _closestSeries, _closestDatumClosestSeries);
-    _otherDatumClosestSeriesPair = new SeriesDatum<MyDatum, String>(
-        _closestSeries, _otherDatumClosestSeries);
+    _closestSeries = new MutableSeries<String>(new Series<MyDatum, String>(
+        id: 'closest',
+        data: [_closestDatumClosestSeries, _otherDatumClosestSeries],
+        domainFn: (dynamic d, _) => d.id,
+        measureFn: (dynamic, __) => 0));
+    _closestDatumClosestSeriesPair =
+        new SeriesDatum<String>(_closestSeries, _closestDatumClosestSeries);
+    _otherDatumClosestSeriesPair =
+        new SeriesDatum<String>(_closestSeries, _otherDatumClosestSeries);
 
     _closestDatumOtherSeries = new MyDatum('cDoS');
     _otherDatumOtherSeries = new MyDatum('oDoS');
-    _otherSeries = new MutableSeries<MyDatum, String>(
-        new Series<MyDatum, String>(
-            id: 'other',
-            data: [_closestDatumOtherSeries, _otherDatumOtherSeries],
-            domainFn: (MyDatum d, _) => d.id,
-            measureFn: (_, __) => 0));
-    _closestDatumOtherSeriesPair = new SeriesDatum<MyDatum, String>(
-        _otherSeries, _closestDatumOtherSeries);
+    _otherSeries = new MutableSeries<String>(new Series<MyDatum, String>(
+        id: 'other',
+        data: [_closestDatumOtherSeries, _otherDatumOtherSeries],
+        domainFn: (dynamic d, _) => d.id,
+        measureFn: (dynamic, __) => 0));
+    _closestDatumOtherSeriesPair =
+        new SeriesDatum<String>(_otherSeries, _closestDatumOtherSeries);
     _otherDatumOtherSeriesPair =
-        new SeriesDatum<MyDatum, String>(_otherSeries, _otherDatumOtherSeries);
+        new SeriesDatum<String>(_otherSeries, _otherDatumOtherSeries);
   });
 
   group('SelectionModel persists values', () {
@@ -185,10 +183,9 @@ void main() {
 
   group('SelectionModel update listeners', () {
     test('listener triggered for change', () {
-      SelectionModel<MyDatum, String> triggeredModel;
+      SelectionModel<String> triggeredModel;
       // Listen
-      _selectionModel
-          .addSelectionListener((SelectionModel<MyDatum, String> model) {
+      _selectionModel.addSelectionListener((SelectionModel<String> model) {
         triggeredModel = model;
       });
 
@@ -204,7 +201,7 @@ void main() {
     });
 
     test('listener not triggered for no change', () {
-      SelectionModel<MyDatum, String> triggeredModel;
+      SelectionModel<String> triggeredModel;
       // Set the selection to closest datum.
       _selectionModel.updateSelection([
         new SeriesDatum(_closestSeries, _closestDatumClosestSeries),
@@ -213,8 +210,7 @@ void main() {
       ]);
 
       // Listen
-      _selectionModel
-          .addSelectionListener((SelectionModel<MyDatum, String> model) {
+      _selectionModel.addSelectionListener((SelectionModel<String> model) {
         triggeredModel = model;
       });
 
@@ -230,9 +226,9 @@ void main() {
     });
 
     test('removed listener not triggered for change', () {
-      SelectionModel<MyDatum, String> triggeredModel;
+      SelectionModel<String> triggeredModel;
 
-      Function cb = (SelectionModel<MyDatum, String> model) {
+      Function cb = (SelectionModel<String> model) {
         triggeredModel = model;
       };
 

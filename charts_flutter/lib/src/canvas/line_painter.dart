@@ -42,33 +42,29 @@ class LinePainter {
     if (points.isEmpty) {
       return;
     }
-
-    // If the line has a single point and end caps, draw a line from +epsilon to
-    // -epsilon to draw a small circle for discontinuity support. Otherwise,
-    // draw nothing.
-    if (points.length == 1) {
-      if (roundEndCaps) {
-        final point = points.first;
-        points = [
-          new Point<num>(point.x - 0.0001, point.y),
-          new Point<num>(point.x + 0.0001, point.y),
-        ];
-      } else {
-        return;
-      }
-    }
-
     paint.color = new Color.fromARGB(stroke.a, stroke.r, stroke.g, stroke.b);
-    if (strokeWidthPx != null) {
-      paint.strokeWidth = strokeWidthPx;
-    }
-    paint.strokeJoin = StrokeJoin.bevel;
-    paint.style = PaintingStyle.stroke;
 
-    if (dashPattern == null || dashPattern.isEmpty) {
-      _drawSolidLine(canvas, paint, points);
+    // If the line has a single point, draw a circle.
+    if (points.length == 1) {
+      final point = points.first;
+      paint.style = PaintingStyle.fill;
+      canvas.drawCircle(new Offset(point.x, point.y), strokeWidthPx, paint);
     } else {
-      _drawDashedLine(canvas, paint, points, dashPattern);
+      if (strokeWidthPx != null) {
+        paint.strokeWidth = strokeWidthPx;
+      }
+      paint.strokeJoin = StrokeJoin.bevel;
+      paint.style = PaintingStyle.stroke;
+
+      if (dashPattern == null || dashPattern.isEmpty) {
+        if (roundEndCaps == true) {
+          paint.strokeCap = StrokeCap.round;
+        }
+
+        _drawSolidLine(canvas, paint, points);
+      } else {
+        _drawDashedLine(canvas, paint, points, dashPattern);
+      }
     }
   }
 

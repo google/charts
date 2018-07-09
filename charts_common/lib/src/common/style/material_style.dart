@@ -28,6 +28,9 @@ class MaterialStyle implements Style {
   Color get black => MaterialPalette.black;
 
   @override
+  Color get transparent => MaterialPalette.transparent;
+
+  @override
   Color get white => MaterialPalette.white;
 
   @override

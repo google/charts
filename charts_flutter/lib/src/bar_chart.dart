@@ -20,7 +20,6 @@ import 'package:charts_common/common.dart' as common
         BarGroupingType,
         BarRendererConfig,
         BarRendererDecorator,
-        BaseChart,
         RTLSpec,
         Series,
         SeriesRendererConfig;
@@ -31,15 +30,14 @@ import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'cartesian_chart.dart' show CartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
-import 'symbol_renderer.dart' show RoundedRectSymbolRenderer;
 
 @immutable
-class BarChart extends CartesianChart {
+class BarChart extends CartesianChart<String> {
   final bool vertical;
   final common.BarRendererDecorator barRendererDecorator;
 
   BarChart(
-    List<common.Series> seriesList, {
+    List<common.Series<dynamic, String>> seriesList, {
     bool animate,
     Duration animationDuration,
     common.AxisSpec domainAxis,
@@ -47,9 +45,9 @@ class BarChart extends CartesianChart {
     common.AxisSpec secondaryMeasureAxis,
     common.BarGroupingType barGroupingType,
     common.BarRendererConfig defaultRenderer,
-    List<common.SeriesRendererConfig> customSeriesRenderers,
+    List<common.SeriesRendererConfig<String>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<String>> selectionModels,
     common.RTLSpec rtlSpec,
     this.vertical: true,
     bool defaultInteractions: true,
@@ -65,8 +63,7 @@ class BarChart extends CartesianChart {
           defaultRenderer: defaultRenderer ??
               new common.BarRendererConfig(
                   groupingType: barGroupingType,
-                  barRendererDecorator: barRendererDecorator,
-                  symbolRenderer: new RoundedRectSymbolRenderer()),
+                  barRendererDecorator: barRendererDecorator),
           customSeriesRenderers: customSeriesRenderers,
           behaviors: behaviors,
           selectionModels: selectionModels,
@@ -76,7 +73,7 @@ class BarChart extends CartesianChart {
         );
 
   @override
-  common.BaseChart createCommonChart(BaseChartState chartState) =>
+  common.BarChart createCommonChart(BaseChartState chartState) =>
       new common.BarChart(
           vertical: vertical, layoutConfig: layoutConfig?.commonLayoutConfig);
 

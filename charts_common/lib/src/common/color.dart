@@ -42,8 +42,8 @@ class Color {
         g = color.g,
         b = color.b,
         a = color.a,
-        _darker = darker ?? color.darker,
-        _lighter = lighter ?? color.lighter;
+        _darker = darker ?? color._darker,
+        _lighter = lighter ?? color._lighter;
 
   /// Construct the color from a hex code string, of the format #RRGGBB.
   factory Color.fromHex({String code}) {
@@ -87,5 +87,19 @@ class Color {
     hashcode = hashcode * 37 + b.hashCode;
     hashcode = hashcode * 37 + a.hashCode;
     return hashcode;
+  }
+
+  String get hexString {
+    // Alpha is not included in the hex string.
+    assert(a == 255);
+    return '#${_get2CharHex(r)}${_get2CharHex(g)}${_get2CharHex(b)}';
+  }
+
+  String _get2CharHex(int num) {
+    var str = num.toRadixString(16);
+    while (str.length < 2) {
+      str = '0' + str;
+    }
+    return str;
   }
 }

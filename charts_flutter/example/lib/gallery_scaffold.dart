@@ -13,11 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-typedef Widget GalleryWidgetBuilder(List<charts.Series> seriesList);
-typedef List<charts.Series> SeriesListBuilder();
+typedef Widget GalleryWidgetBuilder();
 
 /// Helper to build gallery.
 class GalleryScaffold extends StatefulWidget {
@@ -26,14 +24,9 @@ class GalleryScaffold extends StatefulWidget {
   final String title;
   final String subtitle;
   final GalleryWidgetBuilder childBuilder;
-  final SeriesListBuilder seriesListBuilder;
 
   GalleryScaffold(
-      {this.listTileIcon,
-      this.title,
-      this.subtitle,
-      this.childBuilder,
-      this.seriesListBuilder});
+      {this.listTileIcon, this.title, this.subtitle, this.childBuilder});
 
   /// Gets the gallery
   Widget buildGalleryListTile(BuildContext context) => new ListTile(
@@ -49,28 +42,18 @@ class GalleryScaffold extends StatefulWidget {
 }
 
 class _GalleryScaffoldState extends State<GalleryScaffold> {
-  List<charts.Series> seriesList;
-
-  void _refreshData() {
-    seriesList = widget.seriesListBuilder();
-  }
-
   void _handleButtonPress() {
-    setState(() => _refreshData());
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    if (seriesList == null) {
-      _refreshData();
-    }
-
     return new Scaffold(
       appBar: new AppBar(title: new Text(widget.title)),
       body: new Padding(
           padding: const EdgeInsets.all(8.0),
           child: new ListView(children: <Widget>[
-            new SizedBox(height: 250.0, child: widget.childBuilder(seriesList)),
+            new SizedBox(height: 250.0, child: widget.childBuilder()),
           ])),
       floatingActionButton: new FloatingActionButton(
           child: new Icon(Icons.refresh), onPressed: _handleButtonPress),

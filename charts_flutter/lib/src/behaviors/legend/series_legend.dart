@@ -14,18 +14,22 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show SeriesLegend, SelectionModelType;
-import 'package:flutter/widgets.dart' show BuildContext, EdgeInsets, Widget;
+    show
+        BehaviorPosition,
+        InsideJustification,
+        LegendEntry,
+        LegendTapHandling,
+        OutsideJustification,
+        SeriesLegend,
+        SelectionModelType;
+import 'package:collection/collection.dart' show ListEquality;
+import 'package:flutter/widgets.dart'
+    show BuildContext, EdgeInsets, Widget, hashValues;
 import 'package:meta/meta.dart' show immutable;
 import '../../chart_container.dart' show ChartContainerRenderObject;
 import '../chart_behavior.dart'
-    show
-        BuildableBehavior,
-        BuildablePosition,
-        ChartBehavior,
-        GestureType,
-        InsideJustification,
-        OutsideJustification;
+    show BuildableBehavior, ChartBehavior, GestureType;
+import 'legend.dart' show TappableLegend;
 import 'legend_content_builder.dart'
     show LegendContentBuilder, TabularLegendContentBuilder;
 import 'legend_layout.dart' show TabularLegendLayout;
@@ -41,13 +45,15 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   final LegendContentBuilder contentBuilder;
 
   /// Position of the legend relative to the chart.
-  final BuildablePosition position;
+  final common.BehaviorPosition position;
 
   /// Justification of the legend relative to the chart
-  final OutsideJustification outsideJustification;
-  final InsideJustification insideJustification;
+  final common.OutsideJustification outsideJustification;
+  final common.InsideJustification insideJustification;
 
   static const defaultCellPadding = const EdgeInsets.all(8.0);
+
+  final List<String> defaultHiddenSeries;
 
   /// Create a new tabular layout legend.
   ///
@@ -76,26 +82,30 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// [desiredMaxColumns] the max columns to use before laying out items in a
   /// new row. By default there is no limit. The max columns created is the
   /// smaller of desiredMaxColumns and number of legend entries.
+  ///
+  /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
+  /// first chart draw.
   factory SeriesLegend({
-    BuildablePosition position,
-    OutsideJustification outsideJustification,
-    InsideJustification insideJustification,
+    common.BehaviorPosition position,
+    common.OutsideJustification outsideJustification,
+    common.InsideJustification insideJustification,
     bool horizontalFirst,
     int desiredMaxRows,
     int desiredMaxColumns,
     EdgeInsets cellPadding,
+    List<String> defaultHiddenSeries,
   }) {
     // Set defaults if empty.
-    position ??= BuildablePosition.top;
-    outsideJustification ??= OutsideJustification.startDrawArea;
-    insideJustification ??= InsideJustification.topStart;
+    position ??= common.BehaviorPosition.top;
+    outsideJustification ??= common.OutsideJustification.startDrawArea;
+    insideJustification ??= common.InsideJustification.topStart;
     cellPadding ??= defaultCellPadding;
 
     // Set the tabular layout settings to match the position if it is not
     // specified.
-    horizontalFirst ??= (position == BuildablePosition.top ||
-        position == BuildablePosition.bottom ||
-        position == BuildablePosition.inside);
+    horizontalFirst ??= (position == common.BehaviorPosition.top ||
+        position == common.BehaviorPosition.bottom ||
+        position == common.BehaviorPosition.inside);
     final layoutBuilder = horizontalFirst
         ? new TabularLegendLayout.horizontalFirst(
             desiredMaxColumns: desiredMaxColumns, cellPadding: cellPadding)
@@ -108,7 +118,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         selectionModelType: common.SelectionModelType.info,
         position: position,
         outsideJustification: outsideJustification,
-        insideJustification: insideJustification);
+        insideJustification: insideJustification,
+        defaultHiddenSeries: defaultHiddenSeries);
   }
 
   SeriesLegend._internal(
@@ -116,11 +127,12 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
       this.selectionModelType,
       this.position,
       this.outsideJustification,
-      this.insideJustification});
+      this.insideJustification,
+      this.defaultHiddenSeries});
 
   @override
-  common.SeriesLegend<T, D> createCommonBehavior<T, D>() =>
-      new _FlutterSeriesLegend<T, D>(this);
+  common.SeriesLegend<D> createCommonBehavior<D>() =>
+      new _FlutterSeriesLegend<D>(this);
 
   @override
   void updateCommonBehavior(common.SeriesLegend commonBehavior) {
@@ -131,20 +143,32 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   String get role => 'legend-${selectionModelType.toString()}';
 
   @override
-  bool operator ==(Object o) =>
-      o is SeriesLegend && selectionModelType == o.selectionModelType;
+  bool operator ==(Object o) {
+    return o is SeriesLegend &&
+        selectionModelType == o.selectionModelType &&
+        contentBuilder == o.contentBuilder &&
+        position == o.position &&
+        outsideJustification == o.outsideJustification &&
+        insideJustification == o.insideJustification &&
+        new ListEquality().equals(defaultHiddenSeries, o.defaultHiddenSeries);
+  }
 
   @override
-  int get hashCode => selectionModelType.hashCode;
+  int get hashCode {
+    return hashValues(selectionModelType, contentBuilder, position,
+        outsideJustification, insideJustification, defaultHiddenSeries);
+  }
 }
 
 /// Flutter specific wrapper on the common Legend for building content.
-class _FlutterSeriesLegend<T, D> extends common.SeriesLegend<T, D>
-    implements BuildableBehavior {
+class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
+    implements BuildableBehavior, TappableLegend {
   SeriesLegend config;
 
   _FlutterSeriesLegend(this.config)
-      : super(selectionModelType: config.selectionModelType);
+      : super(selectionModelType: config.selectionModelType) {
+    super.defaultHiddenSeries = config.defaultHiddenSeries;
+  }
 
   @override
   void updateLegend() {
@@ -152,15 +176,48 @@ class _FlutterSeriesLegend<T, D> extends common.SeriesLegend<T, D>
   }
 
   @override
-  BuildablePosition get position => config.position;
+  common.BehaviorPosition get position => config.position;
 
   @override
-  OutsideJustification get outsideJustification => config.outsideJustification;
+  common.OutsideJustification get outsideJustification =>
+      config.outsideJustification;
 
   @override
-  InsideJustification get insideJustification => config.insideJustification;
+  common.InsideJustification get insideJustification =>
+      config.insideJustification;
 
   @override
   Widget build(BuildContext context) =>
-      config.contentBuilder.build(context, legendState);
+      config.contentBuilder.build(context, legendState, this);
+
+  @override
+  onLegendEntryTapUp(common.LegendEntry detail) {
+    switch (legendTapHandling) {
+      case common.LegendTapHandling.hide:
+        _hideSeries(detail);
+        break;
+
+      case common.LegendTapHandling.none:
+      default:
+        break;
+    }
+  }
+
+  /// Handles tap events by hiding or un-hiding entries tapped in the legend.
+  ///
+  /// Tapping on a visible series in the legend will hide it. Tapping on a
+  /// hidden series will make it visible again.
+  void _hideSeries(common.LegendEntry detail) {
+    final seriesId = detail.series.id;
+
+    // Handle the event by toggling the hidden state of the target.
+    if (isSeriesHidden(seriesId)) {
+      showSeries(seriesId);
+    } else {
+      hideSeries(seriesId);
+    }
+
+    // Redraw the chart to actually hide hidden series.
+    chart.redraw(skipLayout: true, skipAnimation: false);
+  }
 }

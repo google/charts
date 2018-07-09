@@ -18,13 +18,13 @@ import '../cartesian/cartesian_chart.dart' show NumericCartesianChart;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
 
-class LineChart<T> extends NumericCartesianChart<T> {
+class LineChart extends NumericCartesianChart {
   LineChart({bool vertical, LayoutConfig layoutConfig})
       : super(vertical: vertical, layoutConfig: layoutConfig);
 
   @override
-  SeriesRenderer<T, num> makeDefaultRenderer() {
-    return new LineRenderer<T, num>()
+  SeriesRenderer<num> makeDefaultRenderer() {
+    return new LineRenderer<num>()
       ..rendererId = SeriesRenderer.defaultRendererId;
   }
 }

@@ -41,6 +41,7 @@ class DomainA11yExploreBarChart extends StatelessWidget {
     );
   }
 
+
   /// An example of how to generate a customized vocalization for
   /// [DomainA11yExploreBehavior] from a list of [SeriesDatum]s.
   ///
@@ -49,13 +50,12 @@ class DomainA11yExploreBarChart extends StatelessWidget {
   /// This example vocalizes the domain, then for each series that has that
   /// domain, it vocalizes the series display name and the measure and a
   /// description of that measure.
-  String vocalizeDomainAndMeasures(
-      List<charts.SeriesDatum<OrdinalSales, String>> seriesDatums) {
+  String vocalizeDomainAndMeasures(List<charts.SeriesDatum> seriesDatums) {
     final buffer = new StringBuffer();
 
     buffer.write(seriesDatums.first.datum.year);
 
-    for (charts.SeriesDatum<OrdinalSales, String> seriesDatum in seriesDatums) {
+    for (charts.SeriesDatum seriesDatum in seriesDatums) {
       final series = seriesDatum.series;
       final datum = seriesDatum.datum;
 

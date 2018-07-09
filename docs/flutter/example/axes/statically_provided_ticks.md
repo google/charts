@@ -36,6 +36,7 @@ class StaticallyProvidedTicks extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     // Create the ticks to be used the domain axis.

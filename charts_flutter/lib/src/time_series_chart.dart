@@ -14,13 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show
-        AxisSpec,
-        BaseChart,
-        DateTimeFactory,
-        LineRendererConfig,
-        Series,
-        TimeSeriesChart;
+    show AxisSpec, DateTimeFactory, LineRendererConfig, Series, TimeSeriesChart;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'cartesian_chart.dart' show CartesianChart;
@@ -28,7 +22,7 @@ import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class TimeSeriesChart extends CartesianChart {
+class TimeSeriesChart extends CartesianChart<DateTime> {
   final common.DateTimeFactory dateTimeFactory;
 
   /// Create a [TimeSeriesChart].
@@ -36,15 +30,15 @@ class TimeSeriesChart extends CartesianChart {
   /// [dateTimeFactory] allows specifying a factory that creates [DateTime] to
   /// be used for the time axis. If none specified, local date time is used.
   TimeSeriesChart(
-    List<common.Series> seriesList, {
+    List<common.Series<dynamic, DateTime>> seriesList, {
     bool animate,
     Duration animationDuration,
     common.AxisSpec domainAxis,
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
-    common.LineRendererConfig defaultRenderer,
+    common.LineRendererConfig<DateTime> defaultRenderer,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<DateTime>> selectionModels,
     LayoutConfig layoutConfig,
     this.dateTimeFactory,
     bool defaultInteractions: true,
@@ -63,7 +57,7 @@ class TimeSeriesChart extends CartesianChart {
         );
 
   @override
-  common.BaseChart createCommonChart(BaseChartState chartState) =>
+  common.TimeSeriesChart createCommonChart(BaseChartState chartState) =>
       new common.TimeSeriesChart(
           layoutConfig: layoutConfig?.commonLayoutConfig);
 

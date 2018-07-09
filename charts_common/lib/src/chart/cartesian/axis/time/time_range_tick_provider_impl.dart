@@ -20,6 +20,7 @@ import '../axis.dart' show AxisOrientation;
 import '../tick.dart' show Tick;
 import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import '../tick_formatter.dart' show TickFormatter;
+import '../tick_provider.dart' show TickHint;
 import 'date_time_scale.dart' show DateTimeScale;
 import 'date_time_extents.dart' show DateTimeExtents;
 import 'time_range_tick_provider.dart' show TimeRangeTickProvider;
@@ -38,6 +39,30 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
     return cnt >= requiredMinimumTicks;
   }
 
+  /// Find the closet step size, from provided step size, in milliseconds.
+  @override
+  int getClosestStepSize(int stepSize) {
+    return timeStepper.typicalStepSizeMs *
+        _getClosestIncrementFromStepSize(stepSize);
+  }
+
+  // Find the increment that is closest to the step size.
+  int _getClosestIncrementFromStepSize(int stepSize) {
+    int minDifference;
+    int closestIncrement;
+
+    for (int increment in timeStepper.allowedTickIncrements) {
+      final difference =
+          (stepSize - (timeStepper.typicalStepSizeMs * increment)).abs();
+      if (minDifference == null || minDifference > difference) {
+        minDifference = difference;
+        closestIncrement = increment;
+      }
+    }
+
+    return closestIncrement;
+  }
+
   @override
   List<Tick<DateTime>> getTicks({
     @required ChartContext context,
@@ -48,6 +73,7 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled: false,
+    TickHint<DateTime> tickHint,
   }) {
     List<Tick<DateTime>> currentTicks;
     final tickValues = <DateTime>[];
@@ -56,7 +82,16 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
     // Try different tickIncrements and choose the first that has no collisions.
     // If none exist use the last one which should have the fewest ticks and
     // hope that the renderer will resolve collisions.
-    final allowedTickIncrements = timeStepper.allowedTickIncrements;
+    //
+    // If a tick hint was provided, use the tick hint to search for the closest
+    // increment and use that.
+    List<int> allowedTickIncrements;
+    if (tickHint != null) {
+      final stepSize = tickHint.end.difference(tickHint.start).inMilliseconds;
+      allowedTickIncrements = [_getClosestIncrementFromStepSize(stepSize)];
+    } else {
+      allowedTickIncrements = timeStepper.allowedTickIncrements;
+    }
 
     for (int i = 0; i < allowedTickIncrements.length; i++) {
       // Create tick values with a specified increment.

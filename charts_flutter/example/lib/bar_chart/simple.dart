@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// Bar chart example
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -31,6 +34,37 @@ class SimpleBarChart extends StatelessWidget {
       animate: false,
     );
   }
+
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory SimpleBarChart.withRandomData() {
+    return new SimpleBarChart(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final data = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+        id: 'Sales',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: data,
+      )
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
 
   @override
   Widget build(BuildContext context) {

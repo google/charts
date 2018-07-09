@@ -14,21 +14,32 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show LineChart, BaseChart, RTLSpec, Series, LineRendererConfig;
+    show
+        AxisSpec,
+        LineChart,
+        RTLSpec,
+        Series,
+        LineRendererConfig,
+        SeriesRendererConfig;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
-import 'base_chart.dart' show BaseChart, LayoutConfig;
+import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
+import 'cartesian_chart.dart' show CartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
-class LineChart extends BaseChart {
+class LineChart extends CartesianChart<num> {
   LineChart(
     List<common.Series> seriesList, {
     bool animate,
     Duration animationDuration,
-    common.LineRendererConfig defaultRenderer,
+    common.AxisSpec domainAxis,
+    common.AxisSpec primaryMeasureAxis,
+    common.AxisSpec secondaryMeasureAxis,
+    common.LineRendererConfig<num> defaultRenderer,
+    List<common.SeriesRendererConfig<num>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<num>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
     bool defaultInteractions: true,
@@ -36,7 +47,11 @@ class LineChart extends BaseChart {
           seriesList,
           animate: animate,
           animationDuration: animationDuration,
+          domainAxis: domainAxis,
+          primaryMeasureAxis: primaryMeasureAxis,
+          secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer,
+          customSeriesRenderers: customSeriesRenderers,
           behaviors: behaviors,
           selectionModels: selectionModels,
           rtlSpec: rtlSpec,
@@ -45,7 +60,7 @@ class LineChart extends BaseChart {
         );
 
   @override
-  common.BaseChart createCommonChart(BaseChartState chartState) =>
+  common.LineChart createCommonChart(BaseChartState chartState) =>
       new common.LineChart(layoutConfig: layoutConfig?.commonLayoutConfig);
 
   @override

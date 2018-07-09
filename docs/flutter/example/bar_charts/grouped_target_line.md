@@ -23,6 +23,7 @@ class GroupedBarTargetLineChart extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return new charts.BarChart(seriesList,

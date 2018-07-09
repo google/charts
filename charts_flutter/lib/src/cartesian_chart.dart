@@ -29,22 +29,22 @@ import 'base_chart.dart' show BaseChart, LayoutConfig;
 import 'selection_model_config.dart' show SelectionModelConfig;
 
 @immutable
-abstract class CartesianChart extends BaseChart {
+abstract class CartesianChart<D> extends BaseChart<D> {
   final common.AxisSpec domainAxis;
   final common.AxisSpec primaryMeasureAxis;
   final common.AxisSpec secondaryMeasureAxis;
 
   CartesianChart(
-    List<common.Series> seriesList, {
+    List<common.Series<dynamic, D>> seriesList, {
     bool animate,
     Duration animationDuration,
     this.domainAxis,
     this.primaryMeasureAxis,
     this.secondaryMeasureAxis,
-    common.SeriesRendererConfig defaultRenderer,
-    List<common.SeriesRendererConfig> customSeriesRenderers,
+    common.SeriesRendererConfig<D> defaultRenderer,
+    List<common.SeriesRendererConfig<D>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
-    List<SelectionModelConfig> selectionModels,
+    List<SelectionModelConfig<D>> selectionModels,
     common.RTLSpec rtlSpec,
     bool defaultInteractions: true,
     LayoutConfig layoutConfig,
@@ -61,6 +61,7 @@ abstract class CartesianChart extends BaseChart {
           layoutConfig: layoutConfig,
         );
 
+  @override
   void updateCommonChart(common.BaseChart baseChart, BaseChart oldWidget,
       BaseChartState chartState) {
     super.updateCommonChart(baseChart, oldWidget, chartState);

@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show PI;
+
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/symbol_renderer.dart';
 import '../../common/color.dart' show Color;
@@ -22,8 +24,8 @@ import '../common/series_renderer_config.dart'
 import 'arc_renderer.dart' show ArcRenderer;
 
 /// Configuration for an [ArcRenderer].
-class ArcRendererConfig extends LayoutViewConfig
-    implements SeriesRendererConfig {
+class ArcRendererConfig<D> extends LayoutViewConfig
+    implements SeriesRendererConfig<D> {
   final String customRendererId;
 
   final SymbolRenderer symbolRenderer;
@@ -37,6 +39,12 @@ class ArcRendererConfig extends LayoutViewConfig
   ///
   /// If arcRatio is set, this value will be ignored.
   final int arcWidth;
+
+  /// Start angle for pie slices, in radians.
+  ///
+  /// Angles are defined from the positive x axis in Cartesian space. The
+  /// default startAngle is -π/2.
+  final double startAngle;
 
   /// Stroke width of the border of the arcs.
   final double strokeWidthPx;
@@ -52,13 +60,14 @@ class ArcRendererConfig extends LayoutViewConfig
       {this.customRendererId,
       this.arcRatio,
       this.arcWidth,
+      this.startAngle = -PI / 2,
       this.strokeWidthPx = 2.0,
       this.symbolRenderer})
       : this.stroke = StyleFactory.style.white,
         this.noDataColor = StyleFactory.style.noDataColor;
 
   @override
-  ArcRenderer build() {
-    return new ArcRenderer(config: this, rendererId: customRendererId);
+  ArcRenderer<D> build() {
+    return new ArcRenderer<D>(config: this, rendererId: customRendererId);
   }
 }

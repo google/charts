@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// RTL Bar chart example
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -32,6 +35,75 @@ class RTLSeriesLegend extends StatelessWidget {
     );
   }
 
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory RTLSeriesLegend.withRandomData() {
+    return new RTLSeriesLegend(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final desktopSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final tabletSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final mobileSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    final otherSalesData = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+        id: 'Desktop',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: desktopSalesData,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Tablet',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: tabletSalesData,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Mobile',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: mobileSalesData,
+      ),
+      new charts.Series<OrdinalSales, String>(
+        id: 'Other',
+        domainFn: (OrdinalSales sales, _) => sales.year,
+        measureFn: (OrdinalSales sales, _) => sales.sales,
+        data: otherSalesData,
+      ),
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
+
   @override
   Widget build(BuildContext context) {
     // Charts will determine if RTL is enabled by checking the directionality by
@@ -42,10 +114,10 @@ class RTLSeriesLegend extends StatelessWidget {
     // chart. It is show here as an example only.
     //
     // When the legend behavior detects RTL:
-    // [BuildablePosition.start] is to the right of the chart.
-    // [BuildablePosition.end] is to the left of the chart.
+    // [BehaviorPosition.start] is to the right of the chart.
+    // [BehaviorPosition.end] is to the left of the chart.
     //
-    // If the [BuildablePosition] is top or bottom, the start justification
+    // If the [BehaviorPosition] is top or bottom, the start justification
     // is to the right, and the end justification is to the left.
     //
     // The legend's tabular layout will also layout rows and columns from right
@@ -61,7 +133,7 @@ class RTLSeriesLegend extends StatelessWidget {
           animate: animate,
           behaviors: [
             new charts.SeriesLegend(
-                position: charts.BuildablePosition.end, desiredMaxRows: 2)
+                position: charts.BehaviorPosition.end, desiredMaxRows: 2)
           ],
         ));
   }

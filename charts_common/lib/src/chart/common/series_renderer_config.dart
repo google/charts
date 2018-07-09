@@ -18,7 +18,7 @@ import '../../common/typed_registry.dart';
 import 'series_renderer.dart' show SeriesRenderer;
 
 /// Interface for series renderer configuration.
-abstract class SeriesRendererConfig<T, D> {
+abstract class SeriesRendererConfig<D> {
   /// Stores typed renderer attributes
   ///
   /// This is useful for storing attributes that is used on the native platform.
@@ -30,7 +30,7 @@ abstract class SeriesRendererConfig<T, D> {
 
   SymbolRenderer get symbolRenderer;
 
-  SeriesRenderer<T, D> build();
+  SeriesRenderer<D> build();
 }
 
 class RendererAttributeKey<R> extends TypedKey<R> {

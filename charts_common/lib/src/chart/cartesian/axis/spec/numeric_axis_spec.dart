@@ -16,19 +16,25 @@
 import 'package:meta/meta.dart' show immutable;
 import 'package:intl/intl.dart';
 
+import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
+import '../axis.dart' show Axis, NumericAxis;
+import '../numeric_extents.dart' show NumericExtents;
 import '../numeric_tick_provider.dart' show NumericTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../tick_formatter.dart' show NumericTickFormatter;
-import '../numeric_extents.dart' show NumericExtents;
-import '../numeric_scale.dart' show NumericScale;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
 
 /// [AxisSpec] specialized for numeric/continuous axes like the measure axis.
 @immutable
-class NumericAxisSpec extends AxisSpec<num, NumericExtents, NumericScale> {
+class NumericAxisSpec extends AxisSpec<num> {
+  /// Sets viewport for this Axis.
+  ///
+  /// If pan / zoom behaviors are set, this is the initial viewport.
+  final NumericExtents viewport;
+
   /// Creates a [AxisSpec] that specialized for numeric data.
   ///
   /// [renderSpec] spec used to configure how the ticks and labels
@@ -44,6 +50,7 @@ class NumericAxisSpec extends AxisSpec<num, NumericExtents, NumericScale> {
     NumericTickProviderSpec tickProviderSpec,
     NumericTickFormatterSpec tickFormatterSpec,
     bool showAxisLine,
+    this.viewport,
   }) : super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec,
@@ -51,12 +58,23 @@ class NumericAxisSpec extends AxisSpec<num, NumericExtents, NumericScale> {
             showAxisLine: showAxisLine);
 
   @override
+  configure(
+      Axis<num> axis, ChartContext context, GraphicsFactory graphicsFactory) {
+    super.configure(axis, context, graphicsFactory);
+
+    if (axis is NumericAxis && viewport != null) {
+      axis.setScaleViewport(viewport);
+    }
+  }
+
+  @override
   bool operator ==(Object other) =>
-      other is NumericAxisSpec && super == (other);
+      other is NumericAxisSpec &&
+      viewport == other.viewport &&
+      super == (other);
 }
 
-abstract class NumericTickProviderSpec
-    extends TickProviderSpec<num, NumericExtents, NumericScale> {}
+abstract class NumericTickProviderSpec extends TickProviderSpec<num> {}
 
 abstract class NumericTickFormatterSpec extends TickFormatterSpec<num> {}
 
@@ -137,9 +155,8 @@ class StaticNumericTickProviderSpec implements NumericTickProviderSpec {
   StaticNumericTickProviderSpec(this.tickSpecs);
 
   @override
-  StaticTickProvider<num, NumericExtents, NumericScale> createTickProvider(
-          ChartContext context) =>
-      new StaticTickProvider<num, NumericExtents, NumericScale>(tickSpecs);
+  StaticTickProvider<num> createTickProvider(ChartContext context) =>
+      new StaticTickProvider<num>(tickSpecs);
 
   @override
   bool operator ==(Object other) =>

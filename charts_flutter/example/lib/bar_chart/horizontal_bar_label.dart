@@ -14,6 +14,9 @@
 // limitations under the License.
 
 /// Horizontal bar chart with bar label renderer example and hidden domain axis.
+// EXCLUDE_FROM_GALLERY_DOCS_START
+import 'dart:math';
+// EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -32,6 +35,38 @@ class HorizontalBarLabelChart extends StatelessWidget {
     );
   }
 
+  // EXCLUDE_FROM_GALLERY_DOCS_START
+  // This section is excluded from being copied to the gallery.
+  // It is used for creating random series data to demonstrate animation in
+  // the example app only.
+  factory HorizontalBarLabelChart.withRandomData() {
+    return new HorizontalBarLabelChart(_createRandomData());
+  }
+
+  /// Create random data.
+  static List<charts.Series<OrdinalSales, String>> _createRandomData() {
+    final random = new Random();
+
+    final data = [
+      new OrdinalSales('2014', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2016', random.nextInt(100)),
+      new OrdinalSales('2017', random.nextInt(100)),
+    ];
+
+    return [
+      new charts.Series<OrdinalSales, String>(
+          id: 'Sales',
+          domainFn: (OrdinalSales sales, _) => sales.year,
+          measureFn: (OrdinalSales sales, _) => sales.sales,
+          data: data,
+          // Set a label accessor to control the text of the bar label.
+          labelAccessorFn: (OrdinalSales sales, _) =>
+              '${sales.year}: \$${sales.sales.toString()}')
+    ];
+  }
+  // EXCLUDE_FROM_GALLERY_DOCS_END
+
   // [BarLabelDecorator] will automatically position the label
   // inside the bar if the label will fit. If the label will not fit and the
   // area outside of the bar is larger than the bar, it will draw outside of the
@@ -47,10 +82,10 @@ class HorizontalBarLabelChart extends StatelessWidget {
       vertical: false,
       // Set a bar label decorator.
       // Example configuring different styles for inside/outside:
-      //       barRendererDecorator: new Charts.BarLabelDecorator(
-      //          insideLabelStyleSpec: new Charts.TextStyleSpec(...),
-      //          outsideLabelStyleSpec: new Charts.TextStyleSpec(...)),
-      barRendererDecorator: new charts.BarLabelDecorator(),
+      //       barRendererDecorator: new charts.BarLabelDecorator(
+      //          insideLabelStyleSpec: new charts.TextStyleSpec(...),
+      //          outsideLabelStyleSpec: new charts.TextStyleSpec(...)),
+      barRendererDecorator: new charts.BarLabelDecorator<String>(),
       // Hide domain axis.
       domainAxis:
           new charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec()),

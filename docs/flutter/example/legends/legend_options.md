@@ -27,15 +27,16 @@ class LegendOptions extends StatelessWidget {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return new charts.BarChart(
       seriesList,
       animate: animate,
       barGroupingType: charts.BarGroupingType.grouped,
-        // Add the legend behavior to the chart to turn on legends.
-        // This example shows how to change the position and justification of
-        // the legend, in addition to altering the max rows and padding.
+      // Add the legend behavior to the chart to turn on legends.
+      // This example shows how to change the position and justification of
+      // the legend, in addition to altering the max rows and padding.
       behaviors: [
         new charts.SeriesLegend(
           // Positions for "start" and "end" will be left and right respectively
@@ -43,7 +44,7 @@ class LegendOptions extends StatelessWidget {
           // For rtl, "start" and "end" will be right and left respectively.
           // Since this example has directionality of ltr, the legend is
           // positioned on the right side of the chart.
-          position: charts.BuildablePosition.end,
+          position: charts.BehaviorPosition.end,
           // For a legend that is positioned on the left or right of the chart,
           // setting the justification for [endDrawArea] is aligned to the
           // bottom of the chart draw area.

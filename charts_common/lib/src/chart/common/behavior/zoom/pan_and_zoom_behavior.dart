@@ -17,8 +17,8 @@ import 'dart:math' show min, max, Point;
 
 import 'package:meta/meta.dart' show protected;
 
-import '../../../cartesian/cartesian_chart.dart';
 import 'pan_behavior.dart';
+import 'panning_tick_provider.dart' show PanningTickProviderMode;
 
 /// Adds domain axis panning and zooming support to the chart.
 ///
@@ -30,7 +30,7 @@ import 'pan_behavior.dart';
 ///
 /// Panning is supported by clicking and dragging the mouse for web, or tapping
 /// and dragging on the chart for mobile devices.
-class PanAndZoomBehavior<T, D> extends PanBehavior<T, D> {
+class PanAndZoomBehavior<D> extends PanBehavior<D> {
   @override
   String get role => 'PanAndZoom';
 
@@ -61,9 +61,9 @@ class PanAndZoomBehavior<T, D> extends PanBehavior<T, D> {
     super.onDragStart(localPosition);
 
     // Save the current scaling factor to make zoom events relative.
-    _scalingFactor =
-        (chart as CartesianChart)?.domainAxis?.viewportScalingFactor;
+    _scalingFactor = chart.domainAxis?.viewportScalingFactor;
     _isZooming = true;
+
     return true;
   }
 
@@ -83,11 +83,17 @@ class PanAndZoomBehavior<T, D> extends PanBehavior<T, D> {
     }
 
     // Update the domain axis's viewport scale factor to zoom the chart.
-    final domainAxis = (chart as CartesianChart).domainAxis;
+    final domainAxis = chart.domainAxis;
 
     if (domainAxis == null) {
       return false;
     }
+
+    // This is set during onDragUpdate and NOT onDragStart because we don't yet
+    // know during onDragStart whether pan/zoom behavior is panning or zooming.
+    // During zoom in / zoom out, domain tick provider set to return existing
+    // cached ticks.
+    domainAxisTickProvider.mode = PanningTickProviderMode.useCachedTicks;
 
     // Clamp the scale to prevent zooming out beyond the range of the data, or
     // zooming in so far that we show nothing useful.
@@ -107,6 +113,7 @@ class PanAndZoomBehavior<T, D> extends PanBehavior<T, D> {
   bool onDragEnd(
       Point<double> localPosition, double scale, double pixelsPerSec) {
     _isZooming = false;
+
     return super.onDragEnd(localPosition, scale, pixelsPerSec);
   }
 }
