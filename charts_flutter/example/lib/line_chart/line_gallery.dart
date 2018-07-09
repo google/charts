@@ -22,7 +22,9 @@ import 'points.dart';
 import 'range_annotation.dart';
 import 'segments.dart';
 import 'simple.dart';
+import 'simple_nulls.dart';
 import 'stacked_area.dart';
+import 'stacked_area_nulls.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -49,6 +51,18 @@ List<GalleryScaffold> buildGallery() {
       title: 'Points Line Chart',
       subtitle: 'Line chart with points on a single series',
       childBuilder: () => new PointsLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Null Data Line Chart',
+      subtitle: 'With a single series and null measure values',
+      childBuilder: () => new SimpleNullsLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Stacked Area with Nulls Chart',
+      subtitle: 'Stacked area chart with three series and null measure values',
+      childBuilder: () => new StackedAreaNullsLineChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),

@@ -13,22 +13,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Example of a stacked area chart.
+/// Example of a line chart with null measure values.
+///
+/// Null values will be visible as gaps in lines and area skirts. Any data
+/// points that exist between two nulls in a line will be rendered as an
+/// isolated point, as seen in the green series.
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
-class StackedAreaLineChart extends StatelessWidget {
+class SimpleNullsLineChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
-  StackedAreaLineChart(this.seriesList, {this.animate});
+  SimpleNullsLineChart(this.seriesList, {this.animate});
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory StackedAreaLineChart.withSampleData() {
-    return new StackedAreaLineChart(
+  factory SimpleNullsLineChart.withSampleData() {
+    return new SimpleNullsLineChart(
       _createSampleData(),
       // Disable animations for image tests.
       animate: false,
@@ -39,8 +43,8 @@ class StackedAreaLineChart extends StatelessWidget {
   // This section is excluded from being copied to the gallery.
   // It is used for creating random series data to demonstrate animation in
   // the example app only.
-  factory StackedAreaLineChart.withRandomData() {
-    return new StackedAreaLineChart(_createRandomData());
+  factory SimpleNullsLineChart.withRandomData() {
+    return new SimpleNullsLineChart(_createRandomData());
   }
 
   /// Create random data.
@@ -50,8 +54,11 @@ class StackedAreaLineChart extends StatelessWidget {
     final myFakeDesktopData = [
       new LinearSales(0, random.nextInt(100)),
       new LinearSales(1, random.nextInt(100)),
-      new LinearSales(2, random.nextInt(100)),
+      new LinearSales(2, null),
       new LinearSales(3, random.nextInt(100)),
+      new LinearSales(4, random.nextInt(100)),
+      new LinearSales(5, random.nextInt(100)),
+      new LinearSales(6, random.nextInt(100)),
     ];
 
     var myFakeTabletData = [
@@ -59,13 +66,19 @@ class StackedAreaLineChart extends StatelessWidget {
       new LinearSales(1, random.nextInt(100)),
       new LinearSales(2, random.nextInt(100)),
       new LinearSales(3, random.nextInt(100)),
+      new LinearSales(4, random.nextInt(100)),
+      new LinearSales(5, random.nextInt(100)),
+      new LinearSales(6, random.nextInt(100)),
     ];
 
     var myFakeMobileData = [
       new LinearSales(0, random.nextInt(100)),
       new LinearSales(1, random.nextInt(100)),
-      new LinearSales(2, random.nextInt(100)),
+      new LinearSales(2, null),
       new LinearSales(3, random.nextInt(100)),
+      new LinearSales(4, null),
+      new LinearSales(5, random.nextInt(100)),
+      new LinearSales(6, random.nextInt(100)),
     ];
 
     return [
@@ -96,33 +109,39 @@ class StackedAreaLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(seriesList,
-        defaultRenderer:
-            new charts.LineRendererConfig(includeArea: true, stacked: true),
-        animate: animate);
+    return new charts.LineChart(seriesList, animate: animate);
   }
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData() {
     final myFakeDesktopData = [
       new LinearSales(0, 5),
-      new LinearSales(1, 25),
-      new LinearSales(2, 100),
+      new LinearSales(1, 15),
+      new LinearSales(2, null),
       new LinearSales(3, 75),
+      new LinearSales(4, 100),
+      new LinearSales(5, 90),
+      new LinearSales(6, 75),
     ];
 
-    var myFakeTabletData = [
+    final myFakeTabletData = [
       new LinearSales(0, 10),
-      new LinearSales(1, 50),
-      new LinearSales(2, 200),
+      new LinearSales(1, 30),
+      new LinearSales(2, 50),
       new LinearSales(3, 150),
+      new LinearSales(4, 200),
+      new LinearSales(5, 180),
+      new LinearSales(6, 150),
     ];
 
-    var myFakeMobileData = [
+    final myFakeMobileData = [
       new LinearSales(0, 15),
-      new LinearSales(1, 75),
-      new LinearSales(2, 300),
+      new LinearSales(1, 45),
+      new LinearSales(2, null),
       new LinearSales(3, 225),
+      new LinearSales(4, null),
+      new LinearSales(5, 270),
+      new LinearSales(6, 225),
     ];
 
     return [

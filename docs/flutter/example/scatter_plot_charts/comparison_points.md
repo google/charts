@@ -27,12 +27,13 @@ class ComparisonPointsScatterPlotChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.ScatterPlotChart<LinearSales>(seriesList,
+    return new charts.ScatterPlotChart(seriesList,
         animate: animate,
-        defaultRenderer: new charts.PointRendererConfig(pointRendererDecorators: [
-            new charts.ComparisonPointsDecorator(
-                symbolRenderer: new charts.CylinderSymbolRenderer())
-    ]));
+        defaultRenderer:
+            new charts.PointRendererConfig(pointRendererDecorators: [
+          new charts.ComparisonPointsDecorator(
+              symbolRenderer: new charts.CylinderSymbolRenderer())
+        ]));
   }
 
   /// Create one series with sample hard coded data.

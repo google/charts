@@ -185,7 +185,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
           ? detail.radiusPx.toDouble() + radiusPaddingPx
           : defaultRadiusPx;
 
-      var pointKey = '${lineKey}::${detail.domain}';
+      final pointKey = '${lineKey}::${detail.domain}';
 
       // If we already have a point for that key, use it.
       _AnimatedPoint<D> animatingPoint;
@@ -193,8 +193,12 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
         animatingPoint = _seriesPointMap[pointKey];
       } else {
         // Create a new point and have it animate in from axis.
-        var point = _getPoint(
-            datum, detail.domain, series, domainAxis, 0.0, 0.0, measureAxis);
+        final point = new _DatumPoint<D>(
+            datum: datum,
+            domain: detail.domain,
+            series: series,
+            x: domainAxis.getLocation(detail.domain),
+            y: measureAxis.getLocation(0.0));
 
         animatingPoint = new _AnimatedPoint<D>(
             key: pointKey, overlaySeries: series.overlaySeries)
@@ -208,7 +212,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
       newSeriesMap[pointKey] = animatingPoint;
 
       // Create a new line using the final point locations.
-      var point = new _DatumPoint<D>(
+      final point = new _DatumPoint<D>(
           datum: datum,
           domain: detail.domain,
           series: series,
@@ -238,30 +242,6 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 
     _seriesPointMap = newSeriesMap;
     _view.seriesPointMap = _seriesPointMap;
-  }
-
-  _DatumPoint<D> _getPoint(
-      dynamic datum,
-      D domainValue,
-      ImmutableSeries<D> series,
-      ImmutableAxis<D> domainAxis,
-      num measureValue,
-      num measureOffsetValue,
-      ImmutableAxis<num> measureAxis) {
-    final domainPosition = domainAxis.getLocation(domainValue);
-
-    // (TODO: Support null measure values for line point highlighter
-    measureValue ??= 0;
-
-    final measurePosition =
-        measureAxis.getLocation(measureValue + measureOffsetValue);
-
-    return new _DatumPoint<D>(
-        datum: datum,
-        domain: domainValue,
-        series: series,
-        x: domainPosition,
-        y: measurePosition);
   }
 
   @override
@@ -363,6 +343,10 @@ class _LinePointLayoutView<D> extends LayoutView {
 
     // Draw the follow lines first, below all of the highlight shapes.
     for (_PointRendererElement<D> pointElement in points) {
+      if (pointElement.point.x == null || pointElement.point.y == null) {
+        continue;
+      }
+
       final roundedX = pointElement.point.x.round();
       final roundedY = pointElement.point.y.round();
 
@@ -415,6 +399,10 @@ class _LinePointLayoutView<D> extends LayoutView {
 
     // Draw the highlight shapes on top of all follow lines.
     for (_PointRendererElement<D> pointElement in points) {
+      if (pointElement.point.x == null || pointElement.point.y == null) {
+        continue;
+      }
+
       // Draw the highlight dot.
       // TODO: Draw the shape of the PointRenderer
       canvas.drawPoint(

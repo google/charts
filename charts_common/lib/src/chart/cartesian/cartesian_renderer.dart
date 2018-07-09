@@ -127,9 +127,9 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
     for (int i = startIndex; i <= endIndex; i++) {
       final measure = measureFn(i);
+      final measureOffset = measureOffsetFn(i);
 
-      if (measure != null) {
-        final measureOffset = measureOffsetFn(i);
+      if (measure != null && measureOffset != null) {
         measureAxis.addDomainValue(measure + measureOffset);
 
         if (measureLowerBoundFn != null && measureUpperBoundFn != null) {
