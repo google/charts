@@ -129,6 +129,8 @@ export 'package:charts_common/src/chart/scatter_plot/point_renderer.dart'
     show boundsLineRadiusPxKey, boundsLineRadiusPxFnKey;
 export 'package:charts_common/src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
+export 'package:charts_common/src/chart/scatter_plot/point_renderer_decorator.dart'
+    show PointRendererDecorator;
 export 'package:charts_common/src/chart/scatter_plot/symbol_annotation_renderer_config.dart'
     show SymbolAnnotationRendererConfig;
 export 'package:charts_common/src/chart/pie/arc_label_decorator.dart'
@@ -146,7 +148,7 @@ export 'package:charts_common/src/common/performance.dart' show Performance;
 export 'package:charts_common/src/common/rtl_spec.dart'
     show RTLSpec, AxisPosition;
 export 'package:charts_common/src/common/symbol_renderer.dart'
-    show CylinderSymbolRenderer;
+    show CylinderSymbolRenderer, PointSymbolRenderer;
 export 'package:charts_common/src/common/style/material_style.dart'
     show MaterialStyle;
 export 'package:charts_common/src/common/style/style_factory.dart'
