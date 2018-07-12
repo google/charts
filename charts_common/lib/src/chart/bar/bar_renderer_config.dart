@@ -22,7 +22,7 @@ import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/symbol_renderer.dart';
 
 /// Configuration for a bar renderer.
-class BarRendererConfig extends BaseBarRendererConfig<String> {
+class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   /// Strategy for determining the corner radius of a bar.
   final CornerStrategy cornerStrategy;
 
@@ -55,8 +55,8 @@ class BarRendererConfig extends BaseBarRendererConfig<String> {
         );
 
   @override
-  BarRenderer<String> build() {
-    return new BarRenderer<String>(config: this, rendererId: customRendererId);
+  BarRenderer<D> build() {
+    return new BarRenderer<D>(config: this, rendererId: customRendererId);
   }
 
   @override

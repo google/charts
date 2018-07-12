@@ -25,7 +25,7 @@ import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/symbol_renderer.dart';
 
 /// Configuration for a bar lane renderer.
-class BarLaneRendererConfig extends BarRendererConfig {
+class BarLaneRendererConfig extends BarRendererConfig<String> {
   /// The color of background bars.
   final Color backgroundBarColor;
 

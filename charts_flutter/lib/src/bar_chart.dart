@@ -44,7 +44,7 @@ class BarChart extends CartesianChart<String> {
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
     common.BarGroupingType barGroupingType,
-    common.BarRendererConfig defaultRenderer,
+    common.BarRendererConfig<String> defaultRenderer,
     List<common.SeriesRendererConfig<String>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig<String>> selectionModels,
@@ -61,7 +61,7 @@ class BarChart extends CartesianChart<String> {
           primaryMeasureAxis: primaryMeasureAxis,
           secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer ??
-              new common.BarRendererConfig(
+              new common.BarRendererConfig<String>(
                   groupingType: barGroupingType,
                   barRendererDecorator: barRendererDecorator),
           customSeriesRenderers: customSeriesRenderers,
