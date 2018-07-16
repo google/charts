@@ -14,15 +14,68 @@
 // limitations under the License.
 
 export 'src/chart/bar/bar_chart.dart' show BarChart;
-export 'src/chart/bar/bar_label_decorator.dart' show BarLabelDecorator;
+export 'src/chart/bar/bar_label_decorator.dart'
+    show BarLabelAnchor, BarLabelDecorator, BarLabelPosition;
+export 'src/chart/bar/bar_lane_renderer_config.dart' show BarLaneRendererConfig;
 export 'src/chart/bar/bar_renderer.dart'
     show BarRenderer, ImmutableBarRendererElement;
-export 'src/chart/bar/bar_renderer_config.dart' show BarRendererConfig;
+export 'src/chart/bar/bar_renderer_config.dart'
+    show
+        BarRendererConfig,
+        CornerStrategy,
+        ConstCornerStrategy,
+        NoCornerStrategy;
 export 'src/chart/bar/bar_renderer_decorator.dart' show BarRendererDecorator;
+export 'src/chart/bar/bar_target_line_renderer.dart' show BarTargetLineRenderer;
+export 'src/chart/bar/bar_target_line_renderer_config.dart'
+    show BarTargetLineRendererConfig;
 export 'src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType, BaseBarRendererConfig;
-export 'src/chart/cartesian/axis/axis.dart' show domainAxisKey, measureAxisKey;
-export 'src/chart/cartesian/axis/spec/axis_spec.dart' show AxisSpec;
+export 'src/chart/cartesian/axis/axis.dart'
+    show
+        domainAxisKey,
+        measureAxisIdKey,
+        measureAxisKey,
+        Axis,
+        NumericAxis,
+        OrdinalAxis,
+        OrdinalViewport;
+export 'src/chart/cartesian/axis/numeric_extents.dart' show NumericExtents;
+export 'src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
+    show GridlineRendererSpec;
+export 'src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
+    show NoneRenderSpec;
+export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
+    show SmallTickRendererSpec;
+export 'src/chart/cartesian/axis/spec/axis_spec.dart'
+    show
+        AxisSpec,
+        LineStyleSpec,
+        TextStyleSpec,
+        TickLabelAnchor,
+        TickLabelJustification;
+export 'src/chart/cartesian/axis/spec/bucketing_axis_spec.dart'
+    show BucketingAxisSpec, BucketingNumericTickProviderSpec;
+export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
+    show
+        DateTimeAxisSpec,
+        AutoDateTimeTickFormatterSpec,
+        AutoDateTimeTickProviderSpec,
+        TimeFormatterSpec,
+        StaticDateTimeTickProviderSpec;
+export 'src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
+    show
+        NumericAxisSpec,
+        BasicNumericTickFormatterSpec,
+        BasicNumericTickProviderSpec,
+        StaticNumericTickProviderSpec;
+export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
+    show OrdinalAxisSpec, StaticOrdinalTickProviderSpec;
+export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
+    show PercentAxisSpec;
+export 'src/chart/cartesian/axis/time/date_time_extents.dart'
+    show DateTimeExtents;
+export 'src/chart/cartesian/axis/spec/tick_spec.dart' show TickSpec;
 export 'src/chart/cartesian/cartesian_chart.dart'
     show CartesianChart, NumericCartesianChart, OrdinalCartesianChart;
 export 'src/chart/cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
@@ -81,22 +134,39 @@ export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
-export 'src/chart/common/processed_series.dart' show ImmutableSeries;
+export 'src/chart/common/processed_series.dart'
+    show ImmutableSeries, SeriesDatum;
 export 'src/chart/common/selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType, SelectionModelListener;
-export 'src/chart/common/series_renderer.dart' show SeriesRenderer, rendererKey;
+export 'src/chart/common/series_renderer.dart'
+    show rendererIdKey, rendererKey, SeriesRenderer;
 export 'src/chart/common/series_renderer_config.dart'
     show RendererAttributeKey, SeriesRendererConfig;
 export 'src/chart/layout/layout_config.dart' show LayoutConfig, MarginSpec;
 export 'src/chart/layout/layout_view.dart'
-    show LayoutPosition, ViewMargin, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutViewPaintOrder,
+        LayoutViewPositionOrder,
+        ViewMargin,
+        ViewMeasuredSizes;
 export 'src/chart/line/line_chart.dart' show LineChart;
 export 'src/chart/line/line_renderer.dart' show LineRenderer;
 export 'src/chart/line/line_renderer_config.dart' show LineRendererConfig;
+export 'src/chart/pie/arc_label_decorator.dart'
+    show ArcLabelDecorator, ArcLabelLeaderLineStyleSpec, ArcLabelPosition;
 export 'src/chart/pie/arc_renderer.dart' show ArcRenderer;
 export 'src/chart/pie/arc_renderer_config.dart' show ArcRendererConfig;
 export 'src/chart/pie/pie_chart.dart' show PieChart;
-export 'src/chart/scatter_plot/point_renderer.dart' show PointRenderer;
+export 'src/chart/scatter_plot/comparison_points_decorator.dart'
+    show ComparisonPointsDecorator;
+export 'src/chart/scatter_plot/point_renderer.dart'
+    show
+        boundsLineRadiusPxKey,
+        boundsLineRadiusPxFnKey,
+        pointSymbolRendererFnKey,
+        pointSymbolRendererIdKey,
+        PointRenderer;
 export 'src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
 export 'src/chart/scatter_plot/scatter_plot_chart.dart' show ScatterPlotChart;
@@ -120,6 +190,7 @@ export 'src/common/style/style_factory.dart' show StyleFactory;
 export 'src/common/symbol_renderer.dart'
     show
         CircleSymbolRenderer,
+        CylinderSymbolRenderer,
         LineSymbolRenderer,
         RectSymbolRenderer,
         RoundedRectSymbolRenderer,
@@ -128,4 +199,4 @@ export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;
 export 'src/common/text_style.dart' show TextStyle;
-export 'src/data/series.dart' show Series;
+export 'src/data/series.dart' show Series, TypedAccessorFn;
