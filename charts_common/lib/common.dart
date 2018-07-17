@@ -47,6 +47,8 @@ export 'src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
     show NoneRenderSpec;
 export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
+export 'src/chart/cartesian/axis/tick_formatter.dart'
+    show SimpleTickFormatterBase, TickFormatter;
 export 'src/chart/cartesian/axis/spec/axis_spec.dart'
     show
         AxisSpec,
@@ -70,11 +72,16 @@ export 'src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
         BasicNumericTickProviderSpec,
         StaticNumericTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
-    show OrdinalAxisSpec, StaticOrdinalTickProviderSpec;
+    show
+        OrdinalAxisSpec,
+        OrdinalTickFormatterSpec,
+        StaticOrdinalTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
     show PercentAxisSpec;
 export 'src/chart/cartesian/axis/time/date_time_extents.dart'
     show DateTimeExtents;
+export 'src/chart/cartesian/axis/time/date_time_tick_formatter.dart'
+    show DateTimeTickFormatter;
 export 'src/chart/cartesian/axis/spec/tick_spec.dart' show TickSpec;
 export 'src/chart/cartesian/cartesian_chart.dart'
     show CartesianChart, NumericCartesianChart, OrdinalCartesianChart;
