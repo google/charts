@@ -33,6 +33,18 @@ class LegendEntry<D> {
   String formattedValue;
   bool isSelected;
 
+  /// Zero based index for the row where this legend appears in the legend.
+  int rowNumber;
+
+  /// Zero based index for the column where this legend appears in the legend.
+  int columnNumber;
+
+  /// Total number of rows in the legend.
+  int rowCount;
+
+  /// Total number of columns in the legend.
+  int columnCount;
+
   /// Indicates whether this is in the first row of a tabular layout.
   bool inFirstRow;
 
@@ -54,7 +66,11 @@ class LegendEntry<D> {
       this.domain,
       this.value,
       this.color,
-      this.isSelected: false,
+      this.isSelected = false,
+      this.rowNumber,
+      this.columnNumber,
+      this.rowCount,
+      this.columnCount,
       this.inFirstRow,
       this.inFirstColumn,
       this.inLastRow,
