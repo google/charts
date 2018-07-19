@@ -45,7 +45,7 @@ class BucketingNumericAxis extends NumericAxis {
   /// visible on the chart, or collapsed.
   ///
   /// If this is false, then any data with measure values smaller than
-  /// [threshold] will not be rendered on the chart.
+  /// [threshold] will be rendered at the baseline of the chart. The
   bool _showBucket;
 
   BucketingNumericAxis()
@@ -68,7 +68,7 @@ class BucketingNumericAxis extends NumericAxis {
     if (domain == null) {
       return null;
     } else if (_threshold != null && domain < _threshold) {
-      return _showBucket ? scale[_threshold / 2] : null;
+      return _showBucket ? scale[_threshold / 2] : scale[0.0];
     } else {
       return scale[domain];
     }
