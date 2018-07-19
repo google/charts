@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show log, LOG10E, max, min, pow;
+import 'dart:math' show log, log10e, max, min, pow;
 import 'package:meta/meta.dart' show required;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
@@ -264,7 +264,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     }
 
     if (_hasTickParametersChanged() || ticks == null) {
-      var selectedTicksRange = double.MAX_FINITE;
+      var selectedTicksRange = double.maxFinite;
       var foundPreferredTicks = false;
       var viewportDomain = scale.viewportDomain;
       final axisUnitsHigh = dataToAxisUnitConverter.convert(_high);
@@ -544,7 +544,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       return 1.0;
     }
 
-    return pow(10, (LOG10E * log(number.abs())).ceil()) *
+    return pow(10, (log10e * log(number.abs())).ceil()) *
         (number < 0.0 ? -1.0 : 1.0);
   }
 

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show PI, Point, Rectangle;
+import 'dart:math' show pi, Point, Rectangle;
 import 'package:charts_common/src/chart/common/processed_series.dart'
     show ImmutableSeries;
 import 'package:charts_common/src/common/color.dart' show Color;
@@ -115,16 +115,16 @@ void main() {
           // 'LongLabelB' should not fit inside the arc because it has length
           // greater than 10.
           new FakeArcRendererElement((_) => 'A', data)
-            ..startAngle = -PI / 2
-            ..endAngle = PI / 2,
+            ..startAngle = -pi / 2
+            ..endAngle = pi / 2,
           new FakeArcRendererElement((_) => 'LongLabelB', data)
-            ..startAngle = PI / 2
-            ..endAngle = 3 * PI / 2,
+            ..startAngle = pi / 2
+            ..endAngle = 3 * pi / 2,
         ]
         ..center = new Point(100.0, 100.0)
         ..innerRadius = 30.0
         ..radius = 40.0
-        ..startAngle = -PI / 2;
+        ..startAngle = -pi / 2;
 
       final decorator = new ArcLabelDecorator();
 
@@ -161,13 +161,13 @@ void main() {
           // 'LongLabelABC' would not fit inside the arc because it has length
           // greater than 10. [ArcLabelPosition.inside] should override this.
           new FakeArcRendererElement((_) => 'LongLabelABC', ['A'])
-            ..startAngle = -PI / 2
-            ..endAngle = PI / 2,
+            ..startAngle = -pi / 2
+            ..endAngle = pi / 2,
         ]
         ..center = new Point(100.0, 100.0)
         ..innerRadius = 30.0
         ..radius = 40.0
-        ..startAngle = -PI / 2;
+        ..startAngle = -pi / 2;
 
       final decorator = new ArcLabelDecorator(
           labelPosition: ArcLabelPosition.inside,
@@ -193,13 +193,13 @@ void main() {
           // 'A' will fit inside the arc because it has length less than 10.
           // [ArcLabelPosition.outside] should override this.
           new FakeArcRendererElement((_) => 'A', ['A'])
-            ..startAngle = -PI / 2
-            ..endAngle = PI / 2,
+            ..startAngle = -pi / 2
+            ..endAngle = pi / 2,
         ]
         ..center = new Point(100.0, 100.0)
         ..innerRadius = 30.0
         ..radius = 40.0
-        ..startAngle = -PI / 2;
+        ..startAngle = -pi / 2;
 
       final decorator = new ArcLabelDecorator(
           labelPosition: ArcLabelPosition.outside,
@@ -231,16 +231,16 @@ void main() {
           // 'LongLabelB' should not fit inside the arc because it has length
           // greater than 10.
           new FakeArcRendererElement((_) => 'A', data)
-            ..startAngle = -PI / 2
-            ..endAngle = PI / 2,
+            ..startAngle = -pi / 2
+            ..endAngle = pi / 2,
           new FakeArcRendererElement((_) => 'LongLabelB', data)
-            ..startAngle = PI / 2
-            ..endAngle = 3 * PI / 2,
+            ..startAngle = pi / 2
+            ..endAngle = 3 * pi / 2,
         ]
         ..center = new Point(100.0, 100.0)
         ..innerRadius = 30.0
         ..radius = 40.0
-        ..startAngle = -PI / 2;
+        ..startAngle = -pi / 2;
 
       final insideColor = new Color(r: 0, g: 0, b: 0);
       final outsideColor = new Color(r: 255, g: 255, b: 255);
@@ -288,13 +288,13 @@ void main() {
       final arcElements = new ArcRendererElementList()
         ..arcs = [
           new FakeArcRendererElement(null, ['A'])
-            ..startAngle = -PI / 2
-            ..endAngle = PI / 2,
+            ..startAngle = -pi / 2
+            ..endAngle = pi / 2,
         ]
         ..center = new Point(100.0, 100.0)
         ..innerRadius = 30.0
         ..radius = 40.0
-        ..startAngle = -PI / 2;
+        ..startAngle = -pi / 2;
 
       new ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
@@ -307,16 +307,16 @@ void main() {
       final arcElements = new ArcRendererElementList()
         ..arcs = [
           new FakeArcRendererElement(null, data)
-            ..startAngle = -PI / 2
-            ..endAngle = PI / 2,
+            ..startAngle = -pi / 2
+            ..endAngle = pi / 2,
           new FakeArcRendererElement((_) => '', data)
-            ..startAngle = PI / 2
-            ..endAngle = 3 * PI / 2,
+            ..startAngle = pi / 2
+            ..endAngle = 3 * pi / 2,
         ]
         ..center = new Point(100.0, 100.0)
         ..innerRadius = 30.0
         ..radius = 40.0
-        ..startAngle = -PI / 2;
+        ..startAngle = -pi / 2;
 
       new ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);

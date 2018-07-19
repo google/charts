@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show cos, min, sin, PI, Point, Rectangle;
+import 'dart:math' show cos, min, sin, pi, Point, Rectangle;
 import 'package:meta/meta.dart' show immutable, required;
 import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../common/chart_canvas.dart' show ChartCanvas;
@@ -148,7 +148,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       // Get space available inside and outside the arc.
       final totalPadding = labelPadding * 2;
       final insideArcWidth = (min(
-              (((arcAngle * 180 / PI) / 360) * (2 * PI * centerRadius)).round(),
+              (((arcAngle * 180 / pi) / 360) * (2 * pi * centerRadius)).round(),
               (arcElements.radius - arcElements.innerRadius) - labelPadding)
           .round());
 
@@ -271,7 +271,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
         arcElements.center.y + labelRadius * sin(centerAngle));
 
     // Factor in the [ArcRenderer] start angle (defaults to -PI/2).
-    final labelLeftOfChart = centerAngle > PI + arcElements.startAngle;
+    final labelLeftOfChart = centerAngle > pi + arcElements.startAngle;
 
     // Shift the label horizontally away from the center of the chart.
     var labelX = labelLeftOfChart

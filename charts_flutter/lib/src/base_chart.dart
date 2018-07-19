@@ -118,7 +118,7 @@ abstract class BaseChart<D> extends StatefulWidget {
 
     _updateSelectionModel(chart, chartState);
 
-    chart.transition = animate ? animationDuration : Duration.ZERO;
+    chart.transition = animate ? animationDuration : Duration.zero;
   }
 
   void _updateBehaviors(common.BaseChart chart, BaseChartState chartState) {

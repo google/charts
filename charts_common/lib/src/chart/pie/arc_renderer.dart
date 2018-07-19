@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
-import 'dart:math' show atan2, cos, max, sin, PI, Point, Rectangle;
+import 'dart:math' show atan2, cos, max, sin, pi, Point, Rectangle;
 
 import 'package:meta/meta.dart' show required;
 
@@ -37,7 +37,7 @@ const arcElementsKey =
 class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   // Constant used in the calculation of [centerContentBounds], calculated once
   // to save runtime cost.
-  static final _cosPIOver4 = cos(PI / 4);
+  static final _cosPIOver4 = cos(pi / 4);
 
   final ArcRendererConfig<D> config;
 
@@ -106,7 +106,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         //
         // Use a tiny epsilon difference to ensure that the canvas renders a
         // "full" circle, in the correct direction.
-        var angle = 2 * PI * .999999;
+        var angle = 2 * pi * .999999;
         var endAngle = startAngle + angle;
 
         var details = new ArcRendererElement<D>();
@@ -128,7 +128,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           }
 
           final percentOfSeries = (measure / seriesMeasureTotal);
-          var angle = percentOfSeries * 2 * PI;
+          var angle = percentOfSeries * 2 * pi;
           var endAngle = startAngle + angle;
 
           var details = new ArcRendererElement<D>();
@@ -293,7 +293,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         if (_currentKeys.contains(arc.key) != true) {
           // Default to animating out to the top of the chart, clockwise, if
           // there are no arcs that start past this arc.
-          var targetArcAngle = (2 * PI) + config.startAngle;
+          var targetArcAngle = (2 * pi) + config.startAngle;
 
           // Find the nearest start angle of the next arc that still exists in
           // the data.
@@ -502,7 +502,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       // if angle is in the -x, +y section of the circle, we need to adjust the
       // angle into our range.
       if (chartPointAngle < config.startAngle && chartPointAngle < 0) {
-        chartPointAngle = 2 * PI + chartPointAngle;
+        chartPointAngle = 2 * pi + chartPointAngle;
       }
 
       arcList.arcs.forEach((_AnimatedArc<D> arc) {

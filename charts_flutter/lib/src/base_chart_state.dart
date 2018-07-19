@@ -142,7 +142,7 @@ class BaseChartState<D> extends State<BaseChart<D>>
 
   void _playAnimation(Duration duration) {
     _animationController.duration = duration;
-    _animationController.forward(from: (duration == Duration.ZERO) ? 1.0 : 0.0);
+    _animationController.forward(from: (duration == Duration.zero) ? 1.0 : 0.0);
     _animationValue = _animationController.value;
   }
 

@@ -53,9 +53,9 @@ class MonthTimeStepper extends BaseTimeStepper {
   @override
   DateTime getStepTimeBeforeInclusive(DateTime time, int tickIncrement) {
     final monthRemainder = time.month % tickIncrement;
-    final newMonth = (time.month - monthRemainder) % DateTime.MONTHS_PER_YEAR;
+    final newMonth = (time.month - monthRemainder) % DateTime.monthsPerYear;
     final newYear =
-        time.year - (monthRemainder / DateTime.MONTHS_PER_YEAR).floor();
+        time.year - (monthRemainder / DateTime.monthsPerYear).floor();
 
     return dateTimeFactory.createDateTime(newYear, newMonth);
   }
@@ -63,9 +63,9 @@ class MonthTimeStepper extends BaseTimeStepper {
   @override
   DateTime getNextStepTime(DateTime time, int tickIncrement) {
     final incrementedMonth = time.month + tickIncrement;
-    final newMonth = incrementedMonth % DateTime.MONTHS_PER_YEAR;
+    final newMonth = incrementedMonth % DateTime.monthsPerYear;
     final newYear =
-        time.year + (incrementedMonth / DateTime.MONTHS_PER_YEAR).floor();
+        time.year + (incrementedMonth / DateTime.monthsPerYear).floor();
 
     return dateTimeFactory.createDateTime(newYear, newMonth);
   }
