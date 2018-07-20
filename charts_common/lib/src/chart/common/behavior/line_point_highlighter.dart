@@ -456,18 +456,26 @@ class _PointRendererElement<D> {
     final targetPoint = target.point;
     final previousPoint = previous.point;
 
-    final x = ((targetPoint.x - previousPoint.x) * animationPercent) +
-        previousPoint.x;
+    final x = _lerpDouble(previousPoint.x, targetPoint.x, animationPercent);
 
-    final y = ((targetPoint.y - previousPoint.y) * animationPercent) +
-        previousPoint.y;
+    final y = _lerpDouble(previousPoint.y, targetPoint.y, animationPercent);
 
     point = new _DatumPoint<D>.from(targetPoint, x, y);
 
     color = getAnimatedColor(previous.color, target.color, animationPercent);
 
-    radiusPx = (((target.radiusPx - previous.radiusPx) * animationPercent) +
-        previous.radiusPx);
+    radiusPx =
+        _lerpDouble(previous.radiusPx, target.radiusPx, animationPercent);
+  }
+
+  /// Linear interpolation for doubles.
+  ///
+  /// If either [a] or [b] is null, return null.
+  /// This is different than Flutter's lerpDouble method, we want to return null
+  /// instead of assuming it is 0.0.
+  double _lerpDouble(double a, double b, double t) {
+    if (a == null || b == null) return null;
+    return a + (b - a) * t;
   }
 }
 
