@@ -102,12 +102,14 @@ class ProxyGestureListener {
 
   bool onDragUpdate(Point<double> localPosition, double scale) {
     return _activeListeners.any((GestureListener listener) =>
+        listener.onDragUpdate != null &&
         listener.onDragUpdate(localPosition, scale));
   }
 
   bool onDragEnd(
       Point<double> localPosition, double scale, double pixelsPerSecond) {
     return _activeListeners.any((GestureListener listener) =>
+        listener.onDragEnd != null &&
         listener.onDragEnd(localPosition, scale, pixelsPerSecond));
   }
 
