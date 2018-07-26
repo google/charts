@@ -82,6 +82,7 @@ class NumericAxisSpec extends AxisSpec<num> {
   int get hashCode {
     int hashcode = super.hashCode;
     hashcode = (hashcode * 37) + viewport.hashCode;
+    hashcode = (hashcode * 37) + super.hashCode;
     return hashcode;
   }
 }
@@ -155,7 +156,7 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
     hashcode = (hashcode * 37) + desiredTickCount?.hashCode ?? 0;
     hashcode = (hashcode * 37) + desiredMinTickCount?.hashCode ?? 0;
     hashcode = (hashcode * 37) + desiredMaxTickCount?.hashCode ?? 0;
-    return hashCode;
+    return hashcode;
   }
 }
 
@@ -202,7 +203,7 @@ class BasicNumericTickFormatterSpec implements NumericTickFormatterSpec {
   @override
   bool operator ==(Object other) {
     return other is BasicNumericTickFormatterSpec &&
-        formatter == formatter &&
+        formatter == other.formatter &&
         numberFormat == other.numberFormat;
   }
 

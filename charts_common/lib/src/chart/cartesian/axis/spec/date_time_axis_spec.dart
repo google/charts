@@ -208,7 +208,7 @@ class TimeFormatterSpec {
     int hashcode = format?.hashCode ?? 0;
     hashcode = (hashcode * 37) + transitionFormat?.hashCode ?? 0;
     hashcode = (hashcode * 37) + noonFormat?.hashCode ?? 0;
-    return hashCode;
+    return hashcode;
   }
 }
 
@@ -294,6 +294,6 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
     hashcode = (hashcode * 37) + day?.hashCode ?? 0;
     hashcode = (hashcode * 37) + month?.hashCode ?? 0;
     hashcode = (hashcode * 37) + year?.hashCode ?? 0;
-    return hashCode;
+    return hashcode;
   }
 }
