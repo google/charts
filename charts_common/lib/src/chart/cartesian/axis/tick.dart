@@ -24,7 +24,7 @@ class Tick<D> {
   final D value;
 
   /// [TextElement] for this tick.
-  final TextElement textElement;
+  TextElement textElement;
 
   /// Location on the axis where this tick is rendered (in canvas coordinates).
   double locationPx;

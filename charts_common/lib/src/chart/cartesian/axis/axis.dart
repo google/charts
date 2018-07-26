@@ -17,6 +17,7 @@ import 'dart:math' show Rectangle, min, max;
 import 'package:meta/meta.dart' show protected;
 
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../common/text_element.dart' show TextElement;
 import '../../../data/series.dart' show AttributeKey;
 import '../../common/chart_canvas.dart' show ChartCanvas;
 import '../../common/chart_context.dart' show ChartContext;
@@ -95,7 +96,15 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   /// [TickFormatter] for this axis.
-  TickFormatter<D> tickFormatter;
+  TickFormatter<D> _tickFormatter;
+  set tickFormatter(TickFormatter<D> formatter) {
+    if (_tickFormatter != formatter) {
+      _tickFormatter = formatter;
+      _formatterValueCache.clear();
+    }
+  }
+
+  TickFormatter<D> get tickFormatter => _tickFormatter;
   final _formatterValueCache = <D, String>{};
 
   /// [TickDrawStrategy] for this axis.
@@ -139,9 +148,12 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   int layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
 
   Axis(
-      {TickProvider<D> tickProvider, this.tickFormatter, MutableScale<D> scale})
+      {TickProvider<D> tickProvider,
+      TickFormatter<D> tickFormatter,
+      MutableScale<D> scale})
       : this._scale = scale,
-        this._tickProvider = tickProvider;
+        this._tickProvider = tickProvider,
+        this._tickFormatter = tickFormatter;
 
   @protected
   MutableScale<D> get mutableScale => _scale;
@@ -179,6 +191,25 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     if (lockAxis) {
       return;
     }
+
+    // If the series list changes, clear the cache.
+    //
+    // There are cases where tick formatter has not "changed", but if measure
+    // formatter provided to the tick formatter uses a closure value, the
+    // formatter cache needs to be cleared.
+    //
+    // This type of use case for the measure formatter surfaced where the series
+    // list also changes. So this is a round about way to also clear the
+    // tick formatter cache.
+    //
+    // TODO: Measure formatter should be changed from a typedef to
+    // a concrete class to force users to create a new tick formatter when
+    // formatting is different, so we can recognize when the tick formatter is
+    // changed and then clear cache accordingly.
+    //
+    // Remove this when bug above is fixed, and verify it did not cause
+    // regression for b/110371453.
+    _formatterValueCache.clear();
 
     _scale.resetDomain();
     reverseOutputRange = false;
@@ -246,6 +277,12 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
           orElse: () => null);
 
       if (tick != null) {
+        // Swap out the text element only if the settings are different.
+        // This prevents a costly new TextPainter in Flutter.
+        if (!TextElement.elementSettingsSame(
+            animatedTick.textElement, tick.textElement)) {
+          animatedTick.textElement = tick.textElement;
+        }
         // Update target for all existing ticks
         animatedTick.setNewTarget(_scale[tick.value]);
         providedTicks.remove(tick);

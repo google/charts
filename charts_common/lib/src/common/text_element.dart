@@ -51,6 +51,20 @@ abstract class TextElement {
   /// The direction to render the text relative to the coordinate.
   TextDirection get textDirection;
   set textDirection(TextDirection direction);
+
+  /// Return true if settings are all the same.
+  ///
+  /// Purposely excludes measurement because the measurement will request the
+  /// native [TextElement] to layout, which is expensive. We want to avoid the
+  /// layout by comparing with another [TextElement] to see if they have the
+  /// same settings.
+  static bool elementSettingsSame(TextElement a, TextElement b) {
+    return a.textStyle == b.textStyle &&
+        a.maxWidth == b.maxWidth &&
+        a.maxWidthStrategy == b.maxWidthStrategy &&
+        a.text == b.text &&
+        a.textDirection == b.textDirection;
+  }
 }
 
 enum TextDirection {
