@@ -113,8 +113,8 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   );
 
   bool vertical;
-  final _primaryMeasureAxis;
-  final _secondaryMeasureAxis;
+  final Axis<num> _primaryMeasureAxis;
+  final Axis<num> _secondaryMeasureAxis;
 
   bool _usePrimaryMeasureAxis = false;
   bool _useSecondaryMeasureAxis = false;

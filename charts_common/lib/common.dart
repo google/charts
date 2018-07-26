@@ -55,12 +55,14 @@ export 'src/chart/cartesian/axis/spec/axis_spec.dart'
         LineStyleSpec,
         TextStyleSpec,
         TickLabelAnchor,
-        TickLabelJustification;
+        TickLabelJustification,
+        TickFormatterSpec;
 export 'src/chart/cartesian/axis/spec/bucketing_axis_spec.dart'
     show BucketingAxisSpec, BucketingNumericTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
     show
         DateTimeAxisSpec,
+        DayTickProviderSpec,
         AutoDateTimeTickFormatterSpec,
         AutoDateTimeTickProviderSpec,
         TimeFormatterSpec,
@@ -68,6 +70,7 @@ export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
 export 'src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
     show
         NumericAxisSpec,
+        NumericTickFormatterSpec,
         BasicNumericTickFormatterSpec,
         BasicNumericTickProviderSpec,
         StaticNumericTickProviderSpec;
@@ -75,6 +78,7 @@ export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
     show
         OrdinalAxisSpec,
         OrdinalTickFormatterSpec,
+        OrdinalTickProviderSpec,
         StaticOrdinalTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
     show PercentAxisSpec;
