@@ -125,8 +125,8 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     // and doesn't override the equality checks.
     if (_chartState.chartIsDirty) {
       final currentTime = DateTime.now();
-      final lastConfigurationBelowThreshold = _lastConfigurationChangeTime ==
-              null ||
+      final lastConfigurationBelowThreshold = _lastConfigurationChangeTime !=
+              null &&
           currentTime.difference(_lastConfigurationChangeTime).inMilliseconds <
               configurationChangeThresholdMs;
 
