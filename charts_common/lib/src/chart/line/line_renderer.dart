@@ -363,12 +363,32 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         final allPointList = lineAndArea[2];
 
         for (var index = 0; index < lineElementList.length; index++) {
-          animatingElements.lines[index].setNewTarget(lineElementList[index]);
+          final lineElement = lineElementList[index];
+
+          // Add a new animated line if we have more segments in this draw cycle
+          // than we did in the previous chart draw cycle.
+          // TODO: Nicer animations for incoming segments.
+          if (index >= animatingElements.lines.length) {
+            animatingElements.lines.add(new _AnimatedLine<D>(
+                key: lineElement.styleKey,
+                overlaySeries: series.overlaySeries));
+          }
+          animatingElements.lines[index].setNewTarget(lineElement);
         }
 
         if (config.includeArea) {
           for (var index = 0; index < areaElementList.length; index++) {
-            animatingElements.areas[index].setNewTarget(areaElementList[index]);
+            final areaElement = areaElementList[index];
+
+            // Add a new animated area if we have more segments in this draw
+            // cycle than we did in the previous chart draw cycle.
+            // TODO: Nicer animations for incoming segments.
+            if (index >= animatingElements.areas.length) {
+              animatingElements.areas.add(new _AnimatedArea<D>(
+                  key: areaElement.styleKey,
+                  overlaySeries: series.overlaySeries));
+            }
+            animatingElements.areas[index].setNewTarget(areaElement);
           }
         }
 
