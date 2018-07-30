@@ -16,6 +16,7 @@
 import 'dart:math' show cos, sin, Point;
 import 'package:flutter/material.dart';
 import 'package:charts_common/common.dart' as common show Color;
+import 'dart:math' show PI;
 
 /// Draws a sector of a circle, with an optional hole in the center.
 class CircleSectorPainter {
@@ -46,13 +47,19 @@ class CircleSectorPainter {
     paint.color = new Color.fromARGB(fill.a, fill.r, fill.g, fill.b);
     paint.style = PaintingStyle.fill;
 
+    // Make sure that the complete circle range for one item is not more than
+    // or equals 2 times PI. Otherwise the circle is not drawn.
+    final fixedEndAngle = startAngle != null && endAngle != null
+        && endAngle - startAngle >= 2 * PI
+        ? (2 * PI - startAngle.abs() - PI * 0.001) : endAngle;
+
     final innerRadiusStartPoint = new Point<double>(
         innerRadius * cos(startAngle) + center.x,
         innerRadius * sin(startAngle) + center.y);
 
     final innerRadiusEndPoint = new Point<double>(
-        innerRadius * cos(endAngle) + center.x,
-        innerRadius * sin(endAngle) + center.y);
+        innerRadius * cos(fixedEndAngle) + center.x,
+        innerRadius * sin(fixedEndAngle) + center.y);
 
     final radiusStartPoint = new Point<double>(
         radius * cos(startAngle) + center.x,
@@ -66,12 +73,12 @@ class CircleSectorPainter {
     path.lineTo(radiusStartPoint.x, radiusStartPoint.y);
 
     path.arcTo(new Rect.fromCircle(center: centerOffset, radius: radius),
-        startAngle, endAngle - startAngle, true);
+        startAngle, fixedEndAngle - startAngle, true);
 
     path.lineTo(innerRadiusEndPoint.x, innerRadiusEndPoint.y);
 
     path.arcTo(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
-        endAngle, startAngle - endAngle, true);
+        fixedEndAngle, startAngle - fixedEndAngle, true);
 
     // Drawing two copies of this line segment, before and after the arcs,
     // ensures that the path actually gets closed correctly.
