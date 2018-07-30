@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show PI;
+import 'dart:math' show pi;
 
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/symbol_renderer.dart';
@@ -60,7 +60,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
       {this.customRendererId,
       this.arcRatio,
       this.arcWidth,
-      this.startAngle = -PI / 2,
+      this.startAngle = -pi / 2,
       this.strokeWidthPx = 2.0,
       this.symbolRenderer})
       : this.stroke = StyleFactory.style.white,

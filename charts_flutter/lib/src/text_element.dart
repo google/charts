@@ -155,7 +155,7 @@ class TextElement implements common.TextElement {
       ..ellipsis = maxWidthStrategy == common.MaxWidthStrategy.ellipsize
           ? ellipsis
           : null
-      ..layout(maxWidth: maxWidth?.toDouble() ?? double.INFINITY);
+      ..layout(maxWidth: maxWidth?.toDouble() ?? double.infinity);
 
     final baseline =
         _textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);

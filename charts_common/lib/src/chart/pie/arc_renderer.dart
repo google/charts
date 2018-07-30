@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
-import 'dart:math' show max, PI, Point;
+import 'dart:math' show max, pi, Point;
 
 import 'package:meta/meta.dart' show required;
 
@@ -101,7 +101,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         //
         // Use a tiny epsilon difference to ensure that the canvas renders a
         // "full" circle, in the correct direction.
-        var angle = 2 * PI * .999999;
+        var angle = 2 * pi * .999999;
         var endAngle = startAngle + angle;
 
         var details = new _ArcRendererElement<D>();
@@ -120,7 +120,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
             continue;
           }
 
-          var angle = (measure / seriesTotal) * 2 * PI;
+          var angle = (measure / seriesTotal) * 2 * pi;
           var endAngle = startAngle + angle;
 
           var details = new _ArcRendererElement<D>();
@@ -274,7 +274,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         if (_currentKeys.contains(arc.key) != true) {
           // Default to animating out to the top of the chart, clockwise, if
           // there are no arcs that start past this arc.
-          var targetArcAngle = (2 * PI) + config.startAngle;
+          var targetArcAngle = (2 * pi) + config.startAngle;
 
           // Find the nearest start angle of the next arc that still exists in
           // the data.

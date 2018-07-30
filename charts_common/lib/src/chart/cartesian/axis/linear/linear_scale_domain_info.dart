@@ -21,11 +21,11 @@ class LinearScaleDomainInfo {
   NumericExtents domainOverride;
 
   /// The minimum added domain value.
-  num _dataDomainStart = double.INFINITY;
+  num _dataDomainStart = double.infinity;
   num get dataDomainStart => _dataDomainStart;
 
   /// The maximum added domain value.
-  num _dataDomainEnd = double.NEGATIVE_INFINITY;
+  num _dataDomainEnd = double.negativeInfinity;
   num get dataDomainEnd => _dataDomainEnd;
 
   /// Previous domain added so we can calculate minimumDetectedDomainStep.
@@ -34,7 +34,7 @@ class LinearScaleDomainInfo {
   /// The step size between data points in domain units.
   ///
   /// Measured as the minimum distance between consecutive added points.
-  num _minimumDetectedDomainStep = double.INFINITY;
+  num _minimumDetectedDomainStep = double.infinity;
   num get minimumDetectedDomainStep => _minimumDetectedDomainStep;
 
   ///The diff of the nicedDomain extent.
@@ -55,9 +55,9 @@ class LinearScaleDomainInfo {
   /// Resets everything back to initial state.
   void reset() {
     _previouslyAddedDomain = null;
-    _dataDomainStart = double.INFINITY;
-    _dataDomainEnd = double.NEGATIVE_INFINITY;
-    _minimumDetectedDomainStep = double.INFINITY;
+    _dataDomainStart = double.infinity;
+    _dataDomainEnd = double.negativeInfinity;
+    _minimumDetectedDomainStep = double.infinity;
   }
 
   /// Updates the domain extent and detected step size given the [domainValue].

@@ -163,7 +163,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       }
     });
 
-    double previousEnd = double.NEGATIVE_INFINITY;
+    double previousEnd = double.negativeInfinity;
     bool collides = false;
 
     for (final tick in ticks) {
