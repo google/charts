@@ -16,13 +16,21 @@
 import 'dart:math' show Rectangle;
 
 import 'package:meta/meta.dart' show protected;
+import 'package:intl/intl.dart';
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../layout/layout_view.dart'
-    show LayoutPosition, LayoutView, LayoutViewConfig, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
+        LayoutViewPositionOrder,
+        LayoutViewPaintOrder,
+        ViewMeasuredSizes;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../chart_canvas.dart' show ChartCanvas;
 import '../../chart_context.dart' show ChartContext;
+import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
 import '../../selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
@@ -49,13 +57,25 @@ class SeriesLegend<D> extends Legend<D> {
   /// List of series IDs that should be hidden by default.
   List<String> _defaultHiddenSeries;
 
+  /// Whether or not the series legend should show measures on datum selection.
+  bool _showMeasures;
+
   SeriesLegend(
       {SelectionModelType selectionModelType,
-      LegendEntryGenerator<D> legendEntryGenerator})
+      LegendEntryGenerator<D> legendEntryGenerator,
+      MeasureFormatter measureFormatter,
+      MeasureFormatter secondaryMeasureFormatter,
+      bool showMeasures})
       : super(
-            selectionModelType: selectionModelType ?? SelectionModelType.info,
-            legendEntryGenerator:
-                legendEntryGenerator ?? new PerSeriesLegendEntryGenerator());
+          selectionModelType: selectionModelType ?? SelectionModelType.info,
+          legendEntryGenerator:
+              legendEntryGenerator ?? new PerSeriesLegendEntryGenerator(),
+        ) {
+    // Call the setters that include the setting for default.
+    this.showMeasures = showMeasures;
+    this.measureFormatter = measureFormatter;
+    this.secondaryMeasureFormatter = secondaryMeasureFormatter;
+  }
 
   /// Sets a list of series IDs that should be hidden by default on first chart
   /// draw.
@@ -77,6 +97,36 @@ class SeriesLegend<D> extends Legend<D> {
   /// Gets a list of series IDs that should be hidden by default on first chart
   /// draw.
   List<String> get defaultHiddenSeries => _defaultHiddenSeries;
+
+  /// Whether or not the legend should show measures on datum selection.
+  ///
+  /// By default this is false, measures are not shown.
+  /// If [showMeasure] is set to null, it is changed to the default of false.
+  bool get showMeasures => _showMeasures;
+
+  set showMeasures(bool showMeasures) {
+    _showMeasures = showMeasures ?? false;
+  }
+
+  /// Formatter for measure values.
+  ///
+  /// This is optional. The default formatter formats measure values with
+  /// NumberFormat.decimalPattern. If the measure value is null, a dash is
+  /// returned.
+  set measureFormatter(MeasureFormatter formatter) {
+    legendEntryGenerator.measureFormatter =
+        formatter ?? _defaultLegendMeasureFormatter;
+  }
+
+  /// Formatter for measure values of series that uses the secondary axis.
+  ///
+  /// This is optional. The default formatter formats measure values with
+  /// NumberFormat.decimalPattern. If the measure value is null, a dash is
+  /// returned.
+  set secondaryMeasureFormatter(MeasureFormatter formatter) {
+    legendEntryGenerator.secondaryMeasureFormatter =
+        formatter ?? _defaultLegendMeasureFormatter;
+  }
 
   /// Remove series IDs from the currently hidden list if those series have been
   /// removed from the chart data. The goal is to allow any metric that is
@@ -152,6 +202,13 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   List<MutableSeries<D>> _currentSeriesList;
 
+  static final _decimalPattern = new NumberFormat.decimalPattern();
+
+  /// Default measure formatter for legends.
+  String _defaultLegendMeasureFormatter(num value) {
+    return (value == null) ? '' : _decimalPattern.format(value);
+  }
+
   Legend({this.selectionModelType, this.legendEntryGenerator}) {
     _lifecycleListener = new LifecycleListener(
         onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
@@ -226,18 +283,35 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   void _postProcess(List<MutableSeries<D>> seriesList) {
     legendState._legendEntries =
         legendEntryGenerator.getLegendEntries(_currentSeriesList);
-    updateLegend();
+    // Get the selection model directly from chart on post process.
+    //
+    // This is because if initial selection is set as a behavior, it will be
+    // handled during onData. onData is prior to this behavior's postProcess
+    // call, so the selection will have changed prior to the entries being
+    // generated.
+    legendState._selectionModel = chart.getSelectionModel(selectionModelType);
+
+    _updateLegendEntries();
   }
+
+  // need to handle when series data changes, selection should be reset
 
   /// Update the legend state with [selectionModel] and request legend update.
   void _selectionChanged(SelectionModel selectionModel) {
     legendState._selectionModel = selectionModel;
-    legendEntryGenerator.updateLegendEntries(
-        legendState.legendEntries, legendState.selectionModel);
-    updateLegend();
+    _updateLegendEntries();
   }
 
   ChartContext get chartContext => _chart.context;
+
+  /// Internally update legend entries, before calling [updateLegend] that
+  /// notifies the native platform.
+  void _updateLegendEntries() {
+    legendEntryGenerator.updateLegendEntries(
+        legendState._legendEntries, legendState._selectionModel);
+
+    updateLegend();
+  }
 
   /// Requires override to show in native platform
   void updateLegend() {}
@@ -281,7 +355,10 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   @override
   LayoutViewConfig get layoutConfig {
-    return new LayoutViewConfig(position: _layoutPosition, positionOrder: 1);
+    return new LayoutViewConfig(
+        position: _layoutPosition,
+        positionOrder: LayoutViewPositionOrder.legend,
+        paintOrder: LayoutViewPaintOrder.legend);
   }
 
   /// Get layout position from legend position.
@@ -327,6 +404,9 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   @override
   Rectangle<int> get componentBounds => _componentBounds;
+
+  @override
+  bool get isSeriesRenderer => false;
 
   // Gets the draw area bounds for native legend content to position itself
   // accordingly.

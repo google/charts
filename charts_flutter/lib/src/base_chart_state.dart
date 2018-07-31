@@ -42,6 +42,8 @@ class BaseChartState<D> extends State<BaseChart<D>>
 
   ChartGestureDetector _chartGestureDetector;
 
+  bool _configurationChanged = false;
+
   final autoBehaviorWidgets = <ChartBehavior>[];
   final addedBehaviorWidgets = <ChartBehavior>[];
   final addedCommonBehaviorsByRole = <String, common.ChartBehavior>{};
@@ -62,6 +64,19 @@ class BaseChartState<D> extends State<BaseChart<D>>
   void requestRebuild() {
     setState(() {});
   }
+
+  @override
+  void markChartDirty() {
+    _configurationChanged = true;
+  }
+
+  @override
+  void resetChartDirtyFlag() {
+    _configurationChanged = false;
+  }
+
+  @override
+  bool get chartIsDirty => _configurationChanged;
 
   /// Builds the common chart canvas widget.
   Widget _buildChartContainer() {
@@ -127,7 +142,7 @@ class BaseChartState<D> extends State<BaseChart<D>>
 
   void _playAnimation(Duration duration) {
     _animationController.duration = duration;
-    _animationController.forward(from: (duration == Duration.ZERO) ? 1.0 : 0.0);
+    _animationController.forward(from: (duration == Duration.zero) ? 1.0 : 0.0);
     _animationValue = _animationController.value;
   }
 

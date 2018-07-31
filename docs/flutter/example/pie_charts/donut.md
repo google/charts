@@ -6,8 +6,6 @@ Example:
 
 ```
 /// Donut chart example. This is a simple pie chart with a hole in the middle.
-///
-/// Animation is not currently supported.
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 

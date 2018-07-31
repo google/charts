@@ -14,8 +14,6 @@
 // limitations under the License.
 
 /// Simple pie chart example.
-///
-/// Animation is not currently supported.
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END

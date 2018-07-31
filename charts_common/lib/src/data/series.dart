@@ -38,17 +38,19 @@ class Series<T, D> {
   /// [colorFn] returns the rendered stroke color for a given data value.
   final AccessorFn<Color> colorFn;
 
+  /// [dashPatternFn] returns the dash pattern for a given data value.
+  final AccessorFn<List<int>> dashPatternFn;
+
   /// [fillColorFn] returns the rendered fill color for a given data value. If
   /// not provided, then [colorFn] will be used as a fallback.
   final AccessorFn<Color> fillColorFn;
+
   final AccessorFn<FillPatternType> fillPatternFn;
   final AccessorFn<num> radiusPxFn;
   final AccessorFn<num> strokeWidthPxFn;
   final AccessorFn<String> labelAccessorFn;
   final AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;
   final AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
-
-  final List<int> dashPattern;
 
   // TODO: should this be immutable as well? If not, should any of
   // the non-required ones be final?
@@ -61,7 +63,7 @@ class Series<T, D> {
       @required TypedAccessorFn<T, num> measureFn,
       String displayName,
       TypedAccessorFn<T, Color> colorFn,
-      List<int> dashPattern,
+      TypedAccessorFn<T, List<int>> dashPatternFn,
       TypedAccessorFn<T, D> domainLowerBoundFn,
       TypedAccessorFn<T, D> domainUpperBoundFn,
       TypedAccessorFn<T, Color> fillColorFn,
@@ -81,6 +83,9 @@ class Series<T, D> {
     final _measureFn = (int index) => measureFn(data[index], index);
     final _colorFn =
         colorFn == null ? null : (int index) => colorFn(data[index], index);
+    final _dashPatternFn = dashPatternFn == null
+        ? null
+        : (int index) => dashPatternFn(data[index], index);
     final _domainLowerBoundFn = domainLowerBoundFn == null
         ? null
         : (int index) => domainLowerBoundFn(data[index], index);
@@ -125,7 +130,7 @@ class Series<T, D> {
       measureFn: _measureFn,
       displayName: displayName,
       colorFn: _colorFn,
-      dashPattern: dashPattern,
+      dashPatternFn: _dashPatternFn,
       domainLowerBoundFn: _domainLowerBoundFn,
       domainUpperBoundFn: _domainUpperBoundFn,
       fillColorFn: _fillColorFn,
@@ -150,7 +155,7 @@ class Series<T, D> {
     @required this.measureFn,
     this.displayName,
     this.colorFn,
-    this.dashPattern,
+    this.dashPatternFn,
     this.domainLowerBoundFn,
     this.domainUpperBoundFn,
     this.fillColorFn,

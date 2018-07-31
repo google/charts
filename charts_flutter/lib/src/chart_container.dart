@@ -27,6 +27,7 @@ import 'package:charts_common/common.dart' as common
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart' show required;
 import 'chart_canvas.dart' show ChartCanvas;
 import 'chart_state.dart' show ChartState;
@@ -75,6 +76,22 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   bool _exploreMode = false;
   List<common.A11yNode> _a11yNodes;
 
+  final Logger _log = new Logger('charts_flutter.charts_container');
+
+  /// Keeps the last time the configuration was changed and chart draw on the
+  /// common chart is called.
+  ///
+  /// An assert uses this value to check if the configuration changes more
+  /// frequently than a threshold. This is to notify developers of something
+  /// wrong in the configuration of their charts if it keeps changes (usually
+  /// due to equality checks not being implemented and when a new object is
+  /// created inside a new chart widget, a change is detected even if nothing
+  /// has changed).
+  DateTime _lastConfigurationChangeTime;
+
+  /// The minimum time required before the next configuration change.
+  static const configurationChangeThresholdMs = 500;
+
   void reconfigure(ChartContainer config) {
     _chartState = config.chartState;
 
@@ -97,9 +114,43 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     _rtlSpec = config.rtlSpec ?? const common.RTLSpec();
     common.Performance.timeEnd('chartsConfig');
 
-    // if series list changes, axis change, behavior, etc
-    // current check based on checking if it's the same instance
-    if (_seriesList != config.chartWidget.seriesList) {
+    // If the configuration is changed more frequently than the threshold,
+    // log the occurrence and reset the configurationChanged flag to false
+    // to skip calling chart draw and avoid getting into an infinite rebuild
+    // cycle.
+    //
+    // One common cause for the configuration changing on every chart build
+    // is because a behavior is detected to have changed when it has not.
+    // A common case is when a setting is passed to a behavior is an object
+    // and doesn't override the equality checks.
+    if (_chartState.chartIsDirty) {
+      final currentTime = DateTime.now();
+      final lastConfigurationBelowThreshold = _lastConfigurationChangeTime !=
+              null &&
+          currentTime.difference(_lastConfigurationChangeTime).inMilliseconds <
+              configurationChangeThresholdMs;
+
+      _lastConfigurationChangeTime = currentTime;
+
+      if (lastConfigurationBelowThreshold) {
+        _chartState.resetChartDirtyFlag();
+        _log.warning(
+            'Chart configuration is changing more frequent than threshold'
+            ' of $configurationChangeThresholdMs. Check if your behavior, axis,'
+            ' or renderer config is missing equality checks that may be causing'
+            ' configuration to be detected as changed. ');
+      }
+    }
+
+    // If series list changes or other configuration changed that triggered the
+    // _chartState.configurationChanged flag to be set (such as axis, behavior,
+    // and renderer changes). Otherwise, the chart only requests repainting and
+    // does not reprocess the series.
+    //
+    // Series list is considered "changed" based on the instance.
+    if (_seriesList != config.chartWidget.seriesList ||
+        _chartState.chartIsDirty) {
+      _chartState.resetChartDirtyFlag();
       _seriesList = config.chartWidget.seriesList;
 
       // Clear out the a11y nodes generated.

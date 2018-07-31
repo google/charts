@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:intl/intl.dart';
+import '../../common/datum_details.dart' show MeasureFormatter;
 
 // TODO: Break out into separate files.
 
@@ -65,25 +66,41 @@ class OrdinalTickFormatter extends SimpleTickFormatterBase<String> {
 ///
 /// The default format is [NumberFormat.decimalPattern].
 class NumericTickFormatter extends SimpleTickFormatterBase<num> {
-  final NumberFormat numberFormat;
+  final MeasureFormatter formatter;
 
-  /// Constructs a new [NumericTickFormatter].
+  NumericTickFormatter._internal(this.formatter);
+
+  /// Construct a a new [NumericTickFormatter].
   ///
-  /// By default the [NumberFormatFactory] will be [defaultDecimal].
-  NumericTickFormatter({NumberFormat numberFormat})
-      : this.numberFormat = numberFormat ?? new NumberFormat.decimalPattern();
+  /// [formatter] optionally specify a formatter to be used. Defaults to using
+  /// [NumberFormat.decimalPattern] if none is specified.
+  factory NumericTickFormatter({MeasureFormatter formatter}) {
+    formatter ??= _getFormatter(new NumberFormat.decimalPattern());
+    return new NumericTickFormatter._internal(formatter);
+  }
 
-  factory NumericTickFormatter.compactSimpleCurrency() =>
-      new NumericTickFormatter(
-          numberFormat: new NumberFormat.compactSimpleCurrency());
+  /// Constructs a new [NumericTickFormatter] that formats using [numberFormat].
+  factory NumericTickFormatter.fromNumberFormat(NumberFormat numberFormat) {
+    return new NumericTickFormatter._internal(_getFormatter(numberFormat));
+  }
+
+  /// Constructs a new formatter that uses [NumberFormat.compactCurrency].
+  factory NumericTickFormatter.compactSimpleCurrency() {
+    return new NumericTickFormatter._internal(
+        _getFormatter(new NumberFormat.compactCurrency()));
+  }
+
+  /// Returns a [MeasureFormatter] that calls format on [numberFormat].
+  static MeasureFormatter _getFormatter(NumberFormat numberFormat) {
+    return (num value) => numberFormat.format(value);
+  }
 
   @override
-  String formatValue(num value) => numberFormat.format(value);
+  String formatValue(num value) => formatter(value);
 
   @override
-  bool operator ==(o) =>
-      o is NumericTickFormatter && numberFormat == o.numberFormat;
+  bool operator ==(o) => o is NumericTickFormatter && formatter == o.formatter;
 
   @override
-  int get hashCode => numberFormat.hashCode;
+  int get hashCode => formatter.hashCode;
 }

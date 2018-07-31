@@ -65,6 +65,7 @@ class ChartCanvas implements common.ChartCanvas {
   @override
   void drawLine(
       {List<Point> points,
+      Rectangle<num> clipBounds,
       common.Color fill,
       common.Color stroke,
       bool roundEndCaps,
@@ -75,6 +76,7 @@ class ChartCanvas implements common.ChartCanvas {
         canvas: canvas,
         paint: _paint,
         points: points,
+        clipBounds: clipBounds,
         fill: fill,
         stroke: stroke,
         roundEndCaps: roundEndCaps,
@@ -102,6 +104,7 @@ class ChartCanvas implements common.ChartCanvas {
   @override
   void drawPolygon(
       {List<Point> points,
+      Rectangle<num> clipBounds,
       common.Color fill,
       common.Color stroke,
       double strokeWidthPx}) {
@@ -110,6 +113,7 @@ class ChartCanvas implements common.ChartCanvas {
         canvas: canvas,
         paint: _paint,
         points: points,
+        clipBounds: clipBounds,
         fill: fill,
         stroke: stroke,
         strokeWidthPx: strokeWidthPx);

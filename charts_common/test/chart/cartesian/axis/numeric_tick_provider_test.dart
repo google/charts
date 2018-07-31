@@ -268,6 +268,27 @@ void main() {
     expect(tickValues, contains(0.0));
   });
 
+  test('boundsCrossOrigin_returnsValidTickRange', () {
+    final drawStrategy = new FakeDrawStrategy(10, 10);
+    when(scale.viewportDomain).thenReturn(new NumericExtents(-55.0, 135.0));
+    when(scale.rangeWidth).thenReturn(1000);
+
+    final ticks = tickProvider.getTicks(
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: <num, String>{},
+        tickDrawStrategy: drawStrategy,
+        orientation: null);
+
+    final tickValues = ticks.map((tick) => tick.value).toList();
+
+    // We expect to see a range of ticks that crosses zero.
+    expect(tickValues,
+        equals([-60.0, -30.0, 0.0, 30.0, 60.0, 90.0, 120.0, 150.0]));
+  });
+
   test('dataIsWholeNumbers_returnsWholeNumberTicks', () {
     tickProvider
       ..zeroBound = false

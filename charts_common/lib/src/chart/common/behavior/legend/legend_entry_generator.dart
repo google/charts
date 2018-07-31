@@ -15,6 +15,7 @@
 
 import 'legend_entry.dart';
 import '../../selection_model/selection_model.dart';
+import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
 
 /// A strategy for generating a list of [LegendEntry] based on the series drawn.
@@ -33,4 +34,10 @@ abstract class LegendEntryGenerator<D> {
   /// [selectionModel] Selection model to query selected state.
   void updateLegendEntries(
       List<LegendEntry<D>> legendEntries, SelectionModel<D> selectionModel);
+
+  MeasureFormatter get measureFormatter;
+  set measureFormatter(MeasureFormatter formatter);
+
+  MeasureFormatter get secondaryMeasureFormatter;
+  set secondaryMeasureFormatter(MeasureFormatter formatter);
 }

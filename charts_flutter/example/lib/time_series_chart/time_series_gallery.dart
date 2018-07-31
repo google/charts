@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'range_annotation.dart';
 import 'simple.dart';
+import 'symbol_annotation.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -31,6 +32,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Range Annotation Time Series Chart',
       subtitle: 'Time series chart with future range annotation',
       childBuilder: () => new TimeSeriesRangeAnnotationChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Symbol Annotation Time Series Chart',
+      subtitle: 'Time series chart with annotation data below the draw area',
+      childBuilder: () => new TimeSeriesSymbolAnnotationChart.withRandomData(),
     ),
   ];
 }

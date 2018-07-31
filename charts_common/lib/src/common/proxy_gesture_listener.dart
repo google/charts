@@ -19,40 +19,35 @@ import 'gesture_listener.dart' show GestureListener;
 
 /// Listens to all gestures and proxies to child listeners.
 class ProxyGestureListener {
-  final listeners = <GestureListener>[];
-  var activeListeners = <GestureListener>[];
+  final _listeners = <GestureListener>[];
+  var _activeListeners = <GestureListener>[];
+
+  void add(GestureListener listener) {
+    _listeners.add(listener);
+    _activeListeners.clear();
+  }
+
+  void remove(GestureListener listener) {
+    _listeners.remove(listener);
+    _activeListeners.clear();
+  }
 
   bool onTapTest(Point<double> localPosition) {
-    var localListeners = new List<GestureListener>.from(listeners);
-
-    activeListeners.clear();
-
-    var previouslyClaimed = false;
-    localListeners.forEach((GestureListener listener) {
-      var claimed = listener.onTapTest(localPosition);
-      if (claimed && !previouslyClaimed) {
-        // Cancel any already added non-claiming listeners now that someone is
-        // claiming it.
-        activeListeners = _cancel(all: activeListeners, keep: [listener]);
-        previouslyClaimed = true;
-      } else if (claimed || !previouslyClaimed) {
-        activeListeners.add(listener);
-      }
-    });
-
-    return previouslyClaimed;
+    _activeListeners.clear();
+    return _populateActiveListeners(localPosition);
   }
 
   bool onLongPress(Point<double> localPosition) {
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = activeListeners.firstWhere(
+    final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
             listener.onLongPress != null && listener.onLongPress(localPosition),
         orElse: () => null);
 
     // If someone claims the long press, then cancel everyone else.
     if (claimingListener != null) {
-      activeListeners = _cancel(all: activeListeners, keep: [claimingListener]);
+      _activeListeners =
+          _cancel(all: _activeListeners, keep: [claimingListener]);
       return true;
     }
     return false;
@@ -60,7 +55,7 @@ class ProxyGestureListener {
 
   bool onTap(Point<double> localPosition) {
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = activeListeners.firstWhere(
+    final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
             listener.onTap != null && listener.onTap(localPosition),
         orElse: () => null);
@@ -68,7 +63,8 @@ class ProxyGestureListener {
     // If someone claims the tap, then cancel everyone else.
     // This should hopefully be rare, like for drilling.
     if (claimingListener != null) {
-      activeListeners = _cancel(all: activeListeners, keep: [claimingListener]);
+      _activeListeners =
+          _cancel(all: _activeListeners, keep: [claimingListener]);
       return true;
     }
     return false;
@@ -76,35 +72,44 @@ class ProxyGestureListener {
 
   bool onHover(Point<double> localPosition) {
     // Cancel any previously active long lived gestures.
-    activeListeners = <GestureListener>[];
+    _activeListeners = <GestureListener>[];
 
     // Walk through listeners stopping at the first handled listener.
-    return listeners.any((GestureListener listener) =>
+    return _listeners.any((GestureListener listener) =>
         listener.onHover != null && listener.onHover(localPosition));
   }
 
   bool onDragStart(Point<double> localPosition) {
+    // In Flutter, a tap test may not be triggered because a tap down event
+    // may not be registered if the the drag gesture happens without any pause.
+    if (_activeListeners.isEmpty) {
+      _populateActiveListeners(localPosition);
+    }
+
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = activeListeners.firstWhere(
+    final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
             listener.onDragStart != null && listener.onDragStart(localPosition),
         orElse: () => null);
 
     if (claimingListener != null) {
-      activeListeners = _cancel(all: activeListeners, keep: [claimingListener]);
+      _activeListeners =
+          _cancel(all: _activeListeners, keep: [claimingListener]);
       return true;
     }
     return false;
   }
 
   bool onDragUpdate(Point<double> localPosition, double scale) {
-    return activeListeners.any((GestureListener listener) =>
+    return _activeListeners.any((GestureListener listener) =>
+        listener.onDragUpdate != null &&
         listener.onDragUpdate(localPosition, scale));
   }
 
   bool onDragEnd(
       Point<double> localPosition, double scale, double pixelsPerSecond) {
-    return activeListeners.any((GestureListener listener) =>
+    return _activeListeners.any((GestureListener listener) =>
+        listener.onDragEnd != null &&
         listener.onDragEnd(localPosition, scale, pixelsPerSecond));
   }
 
@@ -116,5 +121,24 @@ class ProxyGestureListener {
       }
     });
     return keep;
+  }
+
+  bool _populateActiveListeners(Point<double> localPosition) {
+    var localListeners = new List<GestureListener>.from(_listeners);
+
+    var previouslyClaimed = false;
+    localListeners.forEach((GestureListener listener) {
+      var claimed = listener.onTapTest(localPosition);
+      if (claimed && !previouslyClaimed) {
+        // Cancel any already added non-claiming listeners now that someone is
+        // claiming it.
+        _activeListeners = _cancel(all: _activeListeners, keep: [listener]);
+        previouslyClaimed = true;
+      } else if (claimed || !previouslyClaimed) {
+        _activeListeners.add(listener);
+      }
+    });
+
+    return previouslyClaimed;
   }
 }

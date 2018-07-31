@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show Point;
 import 'package:meta/meta.dart' show protected;
 
 import 'axis/axis.dart'
@@ -37,6 +38,7 @@ import '../common/processed_series.dart' show MutableSeries;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../common/selection_model/selection_model.dart' show SelectionModelType;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/rtl_spec.dart' show AxisPosition;
 import '../../data/series.dart' show Series;
@@ -44,9 +46,18 @@ import '../../data/series.dart' show Series;
 class NumericCartesianChart extends CartesianChart<num> {
   final NumericAxis _domainAxis;
 
-  NumericCartesianChart({bool vertical, LayoutConfig layoutConfig})
-      : _domainAxis = new NumericAxis(),
-        super(vertical: vertical, layoutConfig: layoutConfig);
+  NumericCartesianChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
+      : _domainAxis = new NumericAxis()
+          ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
+        super(
+            vertical: vertical,
+            layoutConfig: layoutConfig,
+            primaryMeasureAxis: primaryMeasureAxis,
+            secondaryMeasureAxis: secondaryMeasureAxis);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);
@@ -68,9 +79,18 @@ class NumericCartesianChart extends CartesianChart<num> {
 class OrdinalCartesianChart extends CartesianChart<String> {
   final OrdinalAxis _domainAxis;
 
-  OrdinalCartesianChart({bool vertical, LayoutConfig layoutConfig})
-      : _domainAxis = new OrdinalAxis(),
-        super(vertical: vertical, layoutConfig: layoutConfig);
+  OrdinalCartesianChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
+      : _domainAxis = new OrdinalAxis()
+          ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
+        super(
+            vertical: vertical,
+            layoutConfig: layoutConfig,
+            primaryMeasureAxis: primaryMeasureAxis,
+            secondaryMeasureAxis: secondaryMeasureAxis);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);
@@ -93,15 +113,26 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   );
 
   bool vertical;
-  final _primaryMeasureAxis = new NumericAxis();
-  final _secondaryMeasureAxis = new NumericAxis();
+  final Axis<num> _primaryMeasureAxis;
+  final Axis<num> _secondaryMeasureAxis;
 
   bool _usePrimaryMeasureAxis = false;
   bool _useSecondaryMeasureAxis = false;
 
-  CartesianChart({bool vertical, LayoutConfig layoutConfig})
+  CartesianChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
       : vertical = vertical ?? true,
-        super(layoutConfig: layoutConfig ?? _defaultLayoutConfig);
+        _primaryMeasureAxis = primaryMeasureAxis ?? new NumericAxis(),
+        _secondaryMeasureAxis = secondaryMeasureAxis ?? new NumericAxis(),
+        super(layoutConfig: layoutConfig ?? _defaultLayoutConfig) {
+    // As a convenience for chart configuration, set the paint order on any axis
+    // that is missing one.
+    _primaryMeasureAxis.layoutPaintOrder ??= LayoutViewPaintOrder.measureAxis;
+    _secondaryMeasureAxis.layoutPaintOrder ??= LayoutViewPaintOrder.measureAxis;
+  }
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);
@@ -249,19 +280,21 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
       final domain = series.domainFn(datumIndex);
       final measure = series.measureFn(datumIndex);
+      final rawMeasure = series.rawMeasureFn(datumIndex);
       final color = series.colorFn(datumIndex);
 
-      final x = series.getAttr(domainAxisKey).getLocation(domain);
-      final y = series.getAttr(measureAxisKey).getLocation(measure);
+      final chartPosition = new Point<double>(
+          series.getAttr(domainAxisKey).getLocation(domain),
+          series.getAttr(measureAxisKey).getLocation(measure));
 
       entries.add(new DatumDetails(
           datum: datum,
           domain: domain,
           measure: measure,
+          rawMeasure: rawMeasure,
           series: series,
           color: color,
-          chartX: x,
-          chartY: y));
+          chartPosition: chartPosition));
     });
 
     return entries;

@@ -103,7 +103,11 @@ class CanvasPie {
   Point center;
   double radius;
   double innerRadius;
+
+  /// Color of separator lines between arcs.
   final Color stroke;
+
+  /// Stroke width of separator lines between arcs.
   double strokeWidthPx;
 
   CanvasPie(this.slices, this.center, this.radius, this.innerRadius,

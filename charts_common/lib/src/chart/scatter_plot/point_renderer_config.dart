@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import '../../common/symbol_renderer.dart';
-import '../layout/layout_view.dart' show LayoutViewConfig;
+import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import 'point_renderer.dart' show PointRenderer, pointSymbolRendererIdKey;
@@ -24,6 +24,9 @@ import 'point_renderer_decorator.dart' show PointRendererDecorator;
 class PointRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
   final String customRendererId;
+
+  /// The order to paint this renderer on the canvas.
+  final int layoutPaintOrder;
 
   /// List of decorators applied to rendered points.
   final List<PointRendererDecorator> pointRendererDecorators;
@@ -41,13 +44,28 @@ class PointRendererConfig<D> extends LayoutViewConfig
 
   final rendererAttributes = new RendererAttributes();
 
-  /// Default radius of the points.
+  /// Default radius of the points, used if a series does not define a radiusPx
+  /// accessor function.
   final double radiusPx;
+
+  /// Optional default radius of data bounds lines, used if a series does not
+  /// define a boundsLineRadiusPx accessor function.
+  ///
+  /// If the series does not define a boundsLineRadiusPx accessor function, then
+  /// each datum's boundsLineRadiusPx value will be filled in by using the
+  /// following values, in order of what is defined:
+  ///
+  /// 1) boundsLineRadiusPx property defined on the series.
+  /// 2) boundsLineRadiusPx property defined on this renderer config.
+  /// 3) Final fallback is to use the point radiusPx for the datum.
+  final double boundsLineRadiusPx;
 
   PointRendererConfig(
       {this.customRendererId,
+      this.layoutPaintOrder = LayoutViewPaintOrder.point,
       this.pointRendererDecorators = const [],
       this.radiusPx = 3.5,
+      this.boundsLineRadiusPx,
       this.symbolRenderer,
       this.customSymbolRenderers});
 

@@ -59,12 +59,21 @@ abstract class Style {
   LineStyle createGridlineStyle(
       GraphicsFactory graphicsFactory, LineStyleSpec spec);
 
-  /// Default color for [RangeAnnotation].
-  Color get rangeAnnotationColor;
+  /// Default color for outside label leader lines for [ArcLabelDecorator].
+  Color get arcLabelOutsideLeaderLine;
 
   /// Default color for [LinePointHighlighter].
   Color get linePointHighlighterColor;
 
   /// Default color for "no data" states on charts.
   Color get noDataColor;
+
+  /// Default color for [RangeAnnotation].
+  Color get rangeAnnotationColor;
+
+  /// Default fill color for [Slider].
+  Color get sliderFillColor;
+
+  /// Default stroke color for [Slider].
+  Color get sliderStrokeColor;
 }

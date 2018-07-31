@@ -143,16 +143,30 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         // Calculate the start position of label based on [labelAnchor].
         int labelX;
         if (calculatedLabelPosition == BarLabelPosition.inside) {
-          final alignLeft = rtl
-              ? (labelAnchor == BarLabelAnchor.end)
-              : (labelAnchor == BarLabelAnchor.start);
+          switch (labelAnchor) {
+            case BarLabelAnchor.middle:
+              labelX = (bounds.left +
+                      bounds.width / 2 -
+                      labelElement.measurement.horizontalSliceWidth / 2)
+                  .round();
+              labelElement.textDirection =
+                  rtl ? TextDirection.rtl : TextDirection.ltr;
+              break;
 
-          if (alignLeft) {
-            labelX = bounds.left + labelPadding;
-            labelElement.textDirection = TextDirection.ltr;
-          } else {
-            labelX = bounds.right - labelPadding;
-            labelElement.textDirection = TextDirection.rtl;
+            case BarLabelAnchor.end:
+            case BarLabelAnchor.start:
+              final alignLeft = rtl
+                  ? (labelAnchor == BarLabelAnchor.end)
+                  : (labelAnchor == BarLabelAnchor.start);
+
+              if (alignLeft) {
+                labelX = bounds.left + labelPadding;
+                labelElement.textDirection = TextDirection.ltr;
+              } else {
+                labelX = bounds.right - labelPadding;
+                labelElement.textDirection = TextDirection.rtl;
+              }
+              break;
           }
         } else {
           // calculatedLabelPosition == LabelPosition.outside
@@ -209,6 +223,9 @@ enum BarLabelPosition {
 enum BarLabelAnchor {
   /// Anchor to the measure start.
   start,
+
+  /// Anchor to the middle of the measure range.
+  middle,
 
   /// Anchor to the measure end.
   end,

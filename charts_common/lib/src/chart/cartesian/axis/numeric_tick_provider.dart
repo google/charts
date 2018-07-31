@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show log, LOG10E, max, min, pow;
+import 'dart:math' show log, log10e, max, min, pow;
 import 'package:meta/meta.dart' show required;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
@@ -247,7 +247,6 @@ class NumericTickProvider extends BaseTickProvider<num> {
     List<Tick<num>> ticks;
 
     _rangeWidth = scale.rangeWidth;
-    _updateTickCounts();
     _updateDomainExtents(scale.viewportDomain);
 
     // Bypass searching for a tick range since we are getting ticks using
@@ -265,11 +264,14 @@ class NumericTickProvider extends BaseTickProvider<num> {
     }
 
     if (_hasTickParametersChanged() || ticks == null) {
-      var selectedTicksRange = double.MAX_FINITE;
+      var selectedTicksRange = double.maxFinite;
       var foundPreferredTicks = false;
       var viewportDomain = scale.viewportDomain;
       final axisUnitsHigh = dataToAxisUnitConverter.convert(_high);
       final axisUnitsLow = dataToAxisUnitConverter.convert(_low);
+
+      _updateTickCounts(axisUnitsHigh, axisUnitsLow);
+
       // Only create a copy of the scale if [viewportExtensionEnabled].
       NumericScale mutableScale =
           viewportExtensionEnabled ? scale.copy() : null;
@@ -420,6 +422,20 @@ class NumericTickProvider extends BaseTickProvider<num> {
         negativeRegionCount++;
       }
 
+      // If we have positive and negative values, ensure that we have ticks in
+      // both regions.
+      //
+      // This should not happen unless the axis is manually configured with a
+      // tick count. [_updateTickCounts] should ensure that we have do not try
+      // to generate fewer than three.
+      assert(
+          !(low < 0 &&
+              high > 0 &&
+              (negativeRegionCount == 0 || positiveRegionCount == 0)),
+          'Numeric tick provider cannot generate ${tickCount} ' +
+              'ticks when the axis range contains both positive and negative ' +
+              'values. A minimum of three ticks are required to include zero.');
+
       // Determine the "favored" axis direction (the one which will control the
       // ticks based on having a greater value / regions).
       //
@@ -488,18 +504,24 @@ class NumericTickProvider extends BaseTickProvider<num> {
   }
 
   /// Given the axisDimensions update the tick counts given they are not fixed.
-  void _updateTickCounts() {
+  void _updateTickCounts(num high, num low) {
     int tmpMaxNumMajorTicks;
     int tmpMinNumMajorTicks;
 
+    // If the domain range contains both positive and negative values, then we
+    // need a minimum of three ticks to include zero as a tick. Otherwise, we
+    // only need an upper and lower tick.
+    final absoluteMinTicks = (low < 0 && 0 < high) ? 3 : 2;
+
     // If there is a desired tick range use it, if not calculate one.
     if (_desiredMaxTickCount != null) {
-      tmpMinNumMajorTicks = max(_desiredMinTickCount, 2);
+      tmpMinNumMajorTicks = max(_desiredMinTickCount, absoluteMinTicks);
       tmpMaxNumMajorTicks = max(_desiredMaxTickCount, tmpMinNumMajorTicks);
     } else {
       double minPixelsPerTick = MIN_DIPS_BETWEEN_TICKS.toDouble();
-      tmpMinNumMajorTicks = 2;
-      tmpMaxNumMajorTicks = max(2, (_rangeWidth / minPixelsPerTick).floor());
+      tmpMinNumMajorTicks = absoluteMinTicks;
+      tmpMaxNumMajorTicks =
+          max(absoluteMinTicks, (_rangeWidth / minPixelsPerTick).floor());
     }
 
     // Don't blow away the previous array if it hasn't changed.
@@ -522,7 +544,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       return 1.0;
     }
 
-    return pow(10, (LOG10E * log(number.abs())).ceil()) *
+    return pow(10, (log10e * log(number.abs())).ceil()) *
         (number < 0.0 ? -1.0 : 1.0);
   }
 

@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Point;
+import 'dart:math' show Point, Rectangle;
 import 'package:flutter/material.dart';
 import 'package:charts_common/common.dart' as common show Color;
 
@@ -34,11 +34,23 @@ class PolygonPainter {
       {Canvas canvas,
       Paint paint,
       List<Point> points,
+      Rectangle<num> clipBounds,
       common.Color fill,
       common.Color stroke,
       double strokeWidthPx}) {
     if (points.isEmpty) {
       return;
+    }
+
+    // Apply clip bounds as a clip region.
+    if (clipBounds != null) {
+      canvas
+        ..save()
+        ..clipRect(new Rect.fromLTWH(
+            clipBounds.left.toDouble(),
+            clipBounds.top.toDouble(),
+            clipBounds.width.toDouble(),
+            clipBounds.height.toDouble()));
     }
 
     final strokeColor = stroke != null
@@ -75,6 +87,10 @@ class PolygonPainter {
       }
 
       canvas.drawPath(path, paint);
+    }
+
+    if (clipBounds != null) {
+      canvas.restore();
     }
   }
 }

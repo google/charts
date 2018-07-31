@@ -28,7 +28,8 @@ import 'package:test/test.dart';
 /// For testing viewport start / end.
 class FakeCartesianRenderer extends BaseCartesianRenderer {
   @override
-  List<DatumDetails> getNearestDatumDetailPerSeries(Point<double> chartPoint) =>
+  List<DatumDetails> getNearestDatumDetailPerSeries(Point<double> chartPoint,
+          bool byDomain, Rectangle<int> boundsOverride) =>
       null;
 
   @override
@@ -39,6 +40,11 @@ class FakeCartesianRenderer extends BaseCartesianRenderer {
 
   @override
   SymbolRenderer get symbolRenderer => null;
+
+  DatumDetails addPositionToDetailsForSeriesDatum(
+      DatumDetails details, SeriesDatum seriesDatum) {
+    return details;
+  }
 }
 
 class MockAxis extends Mock implements Axis {}
@@ -146,7 +152,7 @@ void main() {
       final data = [0, 1, 2, 3];
       final domainFn = (int index) => data[index];
       final axis = new MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
+      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -160,7 +166,7 @@ void main() {
       final data = [0, 1, 2, 3];
       final domainFn = (int index) => data[index];
       final axis = new MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
+      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
 
       final start = renderer.findNearestViewportStart(axis, domainFn, data);
 
@@ -264,7 +270,7 @@ void main() {
       final data = [0, 1, 2, 3];
       final domainFn = (int index) => data[index];
       final axis = new MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
+      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 
@@ -278,7 +284,7 @@ void main() {
       final data = [0, 1, 2, 3];
       final domainFn = (int index) => data[index];
       final axis = new MockAxis();
-      when(axis.compareDomainValueToViewport(any)).thenReturn(1);
+      when(axis.compareDomainValueToViewport(any)).thenReturn(-1);
 
       final start = renderer.findNearestViewportEnd(axis, domainFn, data);
 

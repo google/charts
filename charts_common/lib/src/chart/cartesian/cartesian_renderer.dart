@@ -34,11 +34,11 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
   BaseCartesianRenderer(
       {@required String rendererId,
-      @required int layoutPositionOrder,
+      @required int layoutPaintOrder,
       SymbolRenderer symbolRenderer})
       : super(
             rendererId: rendererId,
-            layoutPositionOrder: layoutPositionOrder,
+            layoutPaintOrder: layoutPaintOrder,
             symbolRenderer: symbolRenderer);
 
   @override
@@ -66,8 +66,12 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
           domainAxis.addDomainValue(domainFn(i));
 
           if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
-            domainAxis.addDomainValue(domainLowerBoundFn(i));
-            domainAxis.addDomainValue(domainUpperBoundFn(i));
+            final domainLowerBound = domainLowerBoundFn(i);
+            final domainUpperBound = domainUpperBoundFn(i);
+            if (domainLowerBound != null && domainUpperBound != null) {
+              domainAxis.addDomainValue(domainLowerBound);
+              domainAxis.addDomainValue(domainUpperBound);
+            }
           }
         }
       } else {
@@ -77,8 +81,12 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
           domainAxis.addDomainValue(domainFn(i));
 
           if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
-            domainAxis.addDomainValue(domainLowerBoundFn(i));
-            domainAxis.addDomainValue(domainUpperBoundFn(i));
+            final domainLowerBound = domainLowerBoundFn(i);
+            final domainUpperBound = domainUpperBoundFn(i);
+            if (domainLowerBound != null && domainUpperBound != null) {
+              domainAxis.addDomainValue(domainLowerBound);
+              domainAxis.addDomainValue(domainUpperBound);
+            }
           }
         }
       }
@@ -119,9 +127,9 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
     for (int i = startIndex; i <= endIndex; i++) {
       final measure = measureFn(i);
+      final measureOffset = measureOffsetFn(i);
 
-      if (measure != null) {
-        final measureOffset = measureOffsetFn(i);
+      if (measure != null && measureOffset != null) {
         measureAxis.addDomainValue(measure + measureOffset);
 
         if (measureLowerBoundFn != null && measureUpperBoundFn != null) {
@@ -179,9 +187,9 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     // nearest viewport start.
     // If domain is after the domain viewport, return the last index as the
     // nearest viewport start.
-    var lastComparison =
+    final lastComparison =
         domainAxis.compareDomainValueToViewport(domainFn(data.length - 1));
-    return lastComparison == -1 ? (data.length - 1) : 0;
+    return lastComparison == 1 ? (data.length - 1) : 0;
   }
 
   @visibleForTesting
@@ -232,8 +240,8 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     // nearest viewport end.
     // If domain is after the domain viewport, return the last index as the
     // nearest viewport end.
-    var lastComparison =
+    final lastComparison =
         domainAxis.compareDomainValueToViewport(domainFn(data.length - 1));
-    return lastComparison == -1 ? (data.length - 1) : 0;
+    return lastComparison == 1 ? (data.length - 1) : 0;
   }
 }

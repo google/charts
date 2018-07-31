@@ -23,7 +23,7 @@ import 'package:charts_common/common.dart' as common
         Series,
         SeriesRendererConfig,
         SelectionModelType,
-        SelectNearestTrigger;
+        SelectionTrigger;
 import 'behaviors/select_nearest.dart' show SelectNearest;
 import 'package:meta/meta.dart' show immutable, required;
 import 'behaviors/chart_behavior.dart'
@@ -93,6 +93,7 @@ abstract class BaseChart<D> extends StatefulWidget {
     if (defaultRenderer != null &&
         defaultRenderer != oldWidget?.defaultRenderer) {
       chart.defaultRenderer = defaultRenderer.build();
+      chartState.markChartDirty();
     }
 
     // Add custom series renderers if any were provided.
@@ -105,6 +106,7 @@ abstract class BaseChart<D> extends StatefulWidget {
                 i > oldWidget.customSeriesRenderers.length) ||
             customSeriesRenderers[i] != oldWidget.customSeriesRenderers[i]) {
           chart.addSeriesRenderer(customSeriesRenderers[i].build());
+          chartState.markChartDirty();
         }
       }
     }
@@ -116,7 +118,7 @@ abstract class BaseChart<D> extends StatefulWidget {
 
     _updateSelectionModel(chart, chartState);
 
-    chart.transition = animate ? animationDuration : Duration.ZERO;
+    chart.transition = animate ? animationDuration : Duration.zero;
   }
 
   void _updateBehaviors(common.BaseChart chart, BaseChartState chartState) {
@@ -149,6 +151,7 @@ abstract class BaseChart<D> extends StatefulWidget {
         chartState.addedBehaviorWidgets.remove(addedBehavior);
         chartState.addedCommonBehaviorsByRole.remove(role);
         chart.removeBehavior(chartState.addedCommonBehaviorsByRole[role]);
+        chartState.markChartDirty();
       }
     }
 
@@ -166,6 +169,7 @@ abstract class BaseChart<D> extends StatefulWidget {
       chartState.addedBehaviorWidgets.add(behaviorWidget);
       chartState.addedCommonBehaviorsByRole[behaviorWidget.role] =
           commonBehavior;
+      chartState.markChartDirty();
     });
   }
 
@@ -173,7 +177,7 @@ abstract class BaseChart<D> extends StatefulWidget {
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
     // Update selection model
     behaviors.add(new SelectNearest(
-        eventTrigger: common.SelectNearestTrigger.tap,
+        eventTrigger: common.SelectionTrigger.tap,
         selectionModelType: common.SelectionModelType.info,
         expandToDomain: true,
         selectClosestSeries: true));

@@ -44,7 +44,7 @@ class BarChart extends CartesianChart<String> {
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
     common.BarGroupingType barGroupingType,
-    common.BarRendererConfig defaultRenderer,
+    common.BarRendererConfig<String> defaultRenderer,
     List<common.SeriesRendererConfig<String>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig<String>> selectionModels,
@@ -61,7 +61,7 @@ class BarChart extends CartesianChart<String> {
           primaryMeasureAxis: primaryMeasureAxis,
           secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer ??
-              new common.BarRendererConfig(
+              new common.BarRendererConfig<String>(
                   groupingType: barGroupingType,
                   barRendererDecorator: barRendererDecorator),
           customSeriesRenderers: customSeriesRenderers,
@@ -73,9 +73,16 @@ class BarChart extends CartesianChart<String> {
         );
 
   @override
-  common.BarChart createCommonChart(BaseChartState chartState) =>
-      new common.BarChart(
-          vertical: vertical, layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.BarChart createCommonChart(BaseChartState chartState) {
+    // Optionally create primary and secondary measure axes if the chart was
+    // configured with them. If no axes were configured, then the chart will
+    // use its default types (usually a numeric axis).
+    return new common.BarChart(
+        vertical: vertical,
+        layoutConfig: layoutConfig?.commonLayoutConfig,
+        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis());
+  }
 
   @override
   void addDefaultInteractions(List<ChartBehavior> behaviors) {

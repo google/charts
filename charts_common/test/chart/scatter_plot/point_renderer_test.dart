@@ -29,9 +29,10 @@ class MyRow {
   final int campaign;
   final int clickCount;
   final double radius;
+  final double boundsRadius;
   final String shape;
   MyRow(this.campaignString, this.campaign, this.clickCount, this.radius,
-      this.shape);
+      this.boundsRadius, this.shape);
 }
 
 void main() {
@@ -40,11 +41,12 @@ void main() {
 
   setUp(() {
     var myFakeDesktopData = [
-      new MyRow('MyCampaign1', 0, 5, 3.0, null),
-      new MyRow('MyCampaign2', 10, 25, 5.0, 'shape 1'),
-      new MyRow('MyCampaign3', 12, 75, 4.0, 'shape 2'),
-      // This datum should always get a default radiusPx value.
-      new MyRow('MyCampaign4', 13, 225, null, null),
+      // This datum should get a default bounds line radius value.
+      new MyRow('MyCampaign1', 0, 5, 3.0, null, null),
+      new MyRow('MyCampaign2', 10, 25, 5.0, 4.0, 'shape 1'),
+      new MyRow('MyCampaign3', 12, 75, 4.0, 4.0, 'shape 2'),
+      // This datum should always get default radius values.
+      new MyRow('MyCampaign4', 13, 225, null, null, null),
     ];
 
     final maxMeasure = 300;
@@ -68,13 +70,16 @@ void main() {
           measureFn: (MyRow row, _) => row.clickCount,
           measureOffsetFn: (MyRow row, _) => 0,
           radiusPxFn: (MyRow row, _) => row.radius,
-          data: myFakeDesktopData))
+          data: myFakeDesktopData)
+        // Define a bounds line radius function.
+        ..setAttribute(boundsLineRadiusPxFnKey,
+            (int index) => myFakeDesktopData[index].boundsRadius))
     ];
   });
 
   group('preprocess', () {
     test('with numeric data and simple points', () {
-      renderer = new PointRenderer<num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<int>(config: new PointRendererConfig());
 
       renderer.preprocessSeries(numericSeriesList);
 
@@ -91,6 +96,11 @@ void main() {
       expect(elementsList[2].radiusPx, equals(4.0));
       expect(elementsList[3].radiusPx, equals(3.5));
 
+      expect(elementsList[0].boundsLineRadiusPx, equals(3.0));
+      expect(elementsList[1].boundsLineRadiusPx, equals(4.0));
+      expect(elementsList[2].boundsLineRadiusPx, equals(4.0));
+      expect(elementsList[3].boundsLineRadiusPx, equals(3.5));
+
       expect(elementsList[0].symbolRendererId, equals(defaultSymbolRendererId));
       expect(elementsList[1].symbolRendererId, equals(defaultSymbolRendererId));
       expect(elementsList[2].symbolRendererId, equals(defaultSymbolRendererId));
@@ -98,11 +108,13 @@ void main() {
     });
 
     test('with numeric data and missing radiusPxFn', () {
-      renderer = new PointRenderer<num>(
-          config: new PointRendererConfig(radiusPx: 2.0));
+      renderer = new PointRenderer<int>(
+          config:
+              new PointRendererConfig(radiusPx: 2.0, boundsLineRadiusPx: 1.5));
 
-      // Remove the radiusPxFn to test configured defaults.
+      // Remove the radius functions to test configured defaults.
       numericSeriesList[0].radiusPxFn = null;
+      numericSeriesList[0].setAttr(boundsLineRadiusPxFnKey, null);
 
       renderer.preprocessSeries(numericSeriesList);
 
@@ -118,10 +130,15 @@ void main() {
       expect(elementsList[1].radiusPx, equals(2.0));
       expect(elementsList[2].radiusPx, equals(2.0));
       expect(elementsList[3].radiusPx, equals(2.0));
+
+      expect(elementsList[0].boundsLineRadiusPx, equals(1.5));
+      expect(elementsList[1].boundsLineRadiusPx, equals(1.5));
+      expect(elementsList[2].boundsLineRadiusPx, equals(1.5));
+      expect(elementsList[3].boundsLineRadiusPx, equals(1.5));
     });
 
     test('with custom symbol renderer ID in data', () {
-      renderer = new PointRenderer<num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<int>(config: new PointRendererConfig());
 
       numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
           (int index) => numericSeriesList[0].data[index].shape as String);
@@ -143,7 +160,7 @@ void main() {
     });
 
     test('with custom symbol renderer ID in series and data', () {
-      renderer = new PointRenderer<num>(config: new PointRendererConfig());
+      renderer = new PointRenderer<int>(config: new PointRendererConfig());
 
       numericSeriesList[0].setAttr(pointSymbolRendererFnKey,
           (int index) => numericSeriesList[0].data[index].shape as String);

@@ -20,6 +20,7 @@ import 'grouped.dart';
 import 'grouped_fill_color.dart';
 import 'grouped_single_target_line.dart';
 import 'grouped_stacked.dart';
+import 'grouped_stacked_weight_pattern.dart';
 import 'grouped_target_line.dart';
 import 'horizontal.dart';
 import 'horizontal_bar_label.dart';
@@ -137,6 +138,13 @@ List<GalleryScaffold> buildGallery() {
       subtitle: 'Horizontal Pattern Forward Hatch Bar Chart',
       childBuilder: () =>
           new HorizontalPatternForwardHatchBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Weight Pattern Bar Chart',
+      subtitle: 'Grouped and stacked bar chart with a weight pattern',
+      childBuilder: () =>
+          new GroupedStackedWeightPatternBarChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.insert_chart),

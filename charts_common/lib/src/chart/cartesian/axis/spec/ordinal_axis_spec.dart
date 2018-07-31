@@ -66,10 +66,20 @@ class OrdinalAxisSpec extends AxisSpec<String> {
   }
 
   @override
+  OrdinalAxis createAxis() => new OrdinalAxis();
+
+  @override
   bool operator ==(Object other) {
     return other is OrdinalAxisSpec &&
         viewport == other.viewport &&
         super == (other);
+  }
+
+  @override
+  int get hashCode {
+    int hashcode = super.hashCode;
+    hashcode = (hashcode * 37) + viewport.hashCode;
+    return hashcode;
   }
 }
 

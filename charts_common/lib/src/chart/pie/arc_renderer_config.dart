@@ -13,20 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show PI;
+import 'dart:math' show pi;
 
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/symbol_renderer.dart';
 import '../../common/color.dart' show Color;
-import '../layout/layout_view.dart' show LayoutViewConfig;
+import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import 'arc_renderer.dart' show ArcRenderer;
+import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
 /// Configuration for an [ArcRenderer].
 class ArcRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
   final String customRendererId;
+
+  /// List of decorators applied to rendered arcs.
+  final List<ArcRendererDecorator> arcRendererDecorators;
 
   final SymbolRenderer symbolRenderer;
 
@@ -39,6 +43,13 @@ class ArcRendererConfig<D> extends LayoutViewConfig
   ///
   /// If arcRatio is set, this value will be ignored.
   final int arcWidth;
+
+  /// The order to paint this renderer on the canvas.
+  final int layoutPaintOrder;
+
+  /// Minimum radius in pixels of the hole in a donut chart for center content
+  /// to appear.
+  final int minHoleWidthForCenterContent;
 
   /// Start angle for pie slices, in radians.
   ///
@@ -58,9 +69,12 @@ class ArcRendererConfig<D> extends LayoutViewConfig
 
   ArcRendererConfig(
       {this.customRendererId,
+      this.arcRendererDecorators = const [],
       this.arcRatio,
       this.arcWidth,
-      this.startAngle = -PI / 2,
+      this.layoutPaintOrder = LayoutViewPaintOrder.arc,
+      this.minHoleWidthForCenterContent = 30,
+      this.startAngle = -pi / 2,
       this.strokeWidthPx = 2.0,
       this.symbolRenderer})
       : this.stroke = StyleFactory.style.white,

@@ -17,11 +17,18 @@ import 'dart:math' show Rectangle, min, max;
 import 'package:meta/meta.dart' show protected;
 
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../common/text_element.dart' show TextElement;
 import '../../../data/series.dart' show AttributeKey;
 import '../../common/chart_canvas.dart' show ChartCanvas;
 import '../../common/chart_context.dart' show ChartContext;
 import '../../layout/layout_view.dart'
-    show LayoutView, LayoutPosition, LayoutViewConfig, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
+        LayoutViewPaintOrder,
+        LayoutViewPositionOrder,
+        ViewMeasuredSizes;
 import 'axis_tick.dart' show AxisTicks;
 import 'linear/linear_scale.dart' show LinearScale;
 import 'ordinal_tick_provider.dart' show OrdinalTickProvider;
@@ -62,29 +69,48 @@ abstract class ImmutableAxis<D> {
 
   /// Step size for this axis.
   double get stepSize;
+
+  /// Output range for this axis.
+  ScaleOutputExtent get range;
 }
 
 abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   static const primaryMeasureAxisId = 'primaryMeasureAxisId';
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
 
-  /// [Scale] of this axis.
   final MutableScale<D> _scale;
+
+  /// [Scale] of this axis.
+  @protected
+  MutableScale<D> get scale => _scale;
 
   /// Previous [Scale] of this axis, used to calculate tick animation.
   MutableScale<D> _previousScale;
 
+  TickProvider<D> _tickProvider;
+
   /// [TickProvider] for this axis.
-  TickProvider<D> tickProvider;
+  TickProvider<D> get tickProvider => _tickProvider;
+  set tickProvider(TickProvider<D> tickProvider) {
+    _tickProvider = tickProvider;
+  }
 
   /// [TickFormatter] for this axis.
-  TickFormatter<D> tickFormatter;
+  TickFormatter<D> _tickFormatter;
+  set tickFormatter(TickFormatter<D> formatter) {
+    if (_tickFormatter != formatter) {
+      _tickFormatter = formatter;
+      _formatterValueCache.clear();
+    }
+  }
+
+  TickFormatter<D> get tickFormatter => _tickFormatter;
   final _formatterValueCache = <D, String>{};
 
   /// [TickDrawStrategy] for this axis.
   TickDrawStrategy<D> tickDrawStrategy;
 
-  /// [AxisOrienation] for this axis.
+  /// [AxisOrientation] for this axis.
   AxisOrientation axisOrientation;
 
   ChartContext context;
@@ -115,8 +141,19 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   Rectangle<int> _drawAreaBounds;
   GraphicsFactory _graphicsFactory;
 
-  Axis({this.tickProvider, this.tickFormatter, MutableScale<D> scale})
-      : this._scale = scale;
+  /// Order for chart layout painting.
+  ///
+  /// In general, domain axes should be drawn on top of measure axes to ensure
+  /// that the domain axis line appears on top of any measure axis grid lines.
+  int layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
+
+  Axis(
+      {TickProvider<D> tickProvider,
+      TickFormatter<D> tickFormatter,
+      MutableScale<D> scale})
+      : this._scale = scale,
+        this._tickProvider = tickProvider,
+        this._tickFormatter = tickFormatter;
 
   @protected
   MutableScale<D> get mutableScale => _scale;
@@ -127,6 +164,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
   @override
   double get stepSize => _scale.stepSize;
+
+  @override
+  ScaleOutputExtent get range => _scale.range;
 
   /// Configures whether the viewport should be reset back to default values
   /// when the domain is reset.
@@ -152,6 +192,25 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       return;
     }
 
+    // If the series list changes, clear the cache.
+    //
+    // There are cases where tick formatter has not "changed", but if measure
+    // formatter provided to the tick formatter uses a closure value, the
+    // formatter cache needs to be cleared.
+    //
+    // This type of use case for the measure formatter surfaced where the series
+    // list also changes. So this is a round about way to also clear the
+    // tick formatter cache.
+    //
+    // TODO: Measure formatter should be changed from a typedef to
+    // a concrete class to force users to create a new tick formatter when
+    // formatting is different, so we can recognize when the tick formatter is
+    // changed and then clear cache accordingly.
+    //
+    // Remove this when bug above is fixed, and verify it did not cause
+    // regression for b/110371453.
+    _formatterValueCache.clear();
+
     _scale.resetDomain();
     reverseOutputRange = false;
 
@@ -165,7 +224,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
-  double getLocation(D domain) => _scale[domain];
+  double getLocation(D domain) => domain != null ? _scale[domain] : null;
 
   @override
   D getDomain(double location) => _scale.reverse(location);
@@ -218,6 +277,12 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
           orElse: () => null);
 
       if (tick != null) {
+        // Swap out the text element only if the settings are different.
+        // This prevents a costly new TextPainter in Flutter.
+        if (!TextElement.elementSettingsSame(
+            animatedTick.textElement, tick.textElement)) {
+          animatedTick.textElement = tick.textElement;
+        }
         // Update target for all existing ticks
         animatedTick.setNewTarget(_scale[tick.value]);
         providedTicks.remove(tick);
@@ -311,8 +376,10 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
-  LayoutViewConfig get layoutConfig =>
-      new LayoutViewConfig(position: _layoutPosition, positionOrder: 0);
+  LayoutViewConfig get layoutConfig => new LayoutViewConfig(
+      paintOrder: layoutPaintOrder,
+      position: _layoutPosition,
+      positionOrder: LayoutViewPositionOrder.axis);
 
   /// Get layout position from axis orientation.
   LayoutPosition get _layoutPosition {
@@ -394,6 +461,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
+  bool get isSeriesRenderer => false;
+
+  @override
   Rectangle<int> get componentBounds => this._componentBounds;
 
   bool get drawAxisLine {
@@ -425,9 +495,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 }
 
 class NumericAxis extends Axis<num> {
-  NumericAxis()
+  NumericAxis({NumericTickProvider tickProvider})
       : super(
-          tickProvider: new NumericTickProvider(),
+          tickProvider: tickProvider ?? new NumericTickProvider(),
           tickFormatter: new NumericTickFormatter(),
           scale: new LinearScale(),
         );
@@ -481,4 +551,18 @@ class OrdinalViewport {
   final int dataSize;
 
   OrdinalViewport(this.startingDomain, this.dataSize);
+
+  @override
+  bool operator ==(Object other) {
+    return other is OrdinalViewport &&
+        startingDomain == other.startingDomain &&
+        dataSize == other.dataSize;
+  }
+
+  @override
+  int get hashCode {
+    int hashcode = startingDomain.hashCode;
+    hashcode = (hashcode * 37) + dataSize;
+    return hashcode;
+  }
 }

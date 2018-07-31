@@ -60,6 +60,13 @@ class PanBehavior<D> implements ChartBehavior<D> {
   @protected
   Point<double> get lastPosition => _lastPosition;
 
+  /// Optional callback that is invoked at the end of panning ([onPanEnd]).
+  PanningCompletedCallback _panningCompletedCallback;
+
+  set panningCompletedCallback(PanningCompletedCallback callback) {
+    _panningCompletedCallback = callback;
+  }
+
   PanBehavior() {
     _listener = new GestureListener(
         onTapTest: onTapTest,
@@ -197,6 +204,10 @@ class PanBehavior<D> implements ChartBehavior<D> {
     _chart.getMeasureAxis(null).lockAxis = false;
     _chart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis = false;
     _chart.redraw();
+
+    if (_panningCompletedCallback != null) {
+      _panningCompletedCallback();
+    }
   }
 
   /// Cancels the handling of any current panning event.
@@ -204,3 +215,6 @@ class PanBehavior<D> implements ChartBehavior<D> {
     _isPanning = false;
   }
 }
+
+/// Callback for when panning is completed.
+typedef void PanningCompletedCallback();

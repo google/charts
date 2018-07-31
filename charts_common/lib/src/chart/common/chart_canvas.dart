@@ -49,6 +49,7 @@ abstract class ChartCanvas {
   /// equivalent to "1,2,3,1,2,3."
   void drawLine(
       {List<Point> points,
+      Rectangle<num> clipBounds,
       Color fill,
       Color stroke,
       bool roundEndCaps,
@@ -72,7 +73,11 @@ abstract class ChartCanvas {
   /// [stroke] and [strokeWidthPx] configure the color and thickness of the
   /// edges of the polygon. Both must be provided together for a line to appear.
   void drawPolygon(
-      {List<Point> points, Color fill, Color stroke, double strokeWidthPx});
+      {List<Point> points,
+      Rectangle<num> clipBounds,
+      Color fill,
+      Color stroke,
+      double strokeWidthPx});
 
   /// Renders a simple rectangle.
   void drawRect(Rectangle<num> bounds,

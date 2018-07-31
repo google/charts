@@ -100,6 +100,6 @@ class NumericExtents implements Extents<num> {
   String toString() => "Extent($min, $max)";
 
   static const NumericExtents unbounded =
-      const NumericExtents(double.NEGATIVE_INFINITY, double.INFINITY);
+      const NumericExtents(double.negativeInfinity, double.infinity);
   static const NumericExtents empty = const NumericExtents(0.0, 0.0);
 }

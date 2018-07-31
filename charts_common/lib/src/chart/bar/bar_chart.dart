@@ -14,13 +14,22 @@
 // limitations under the License.
 
 import '../bar/bar_renderer.dart' show BarRenderer;
+import '../cartesian/axis/axis.dart' show NumericAxis;
 import '../cartesian/cartesian_chart.dart' show OrdinalCartesianChart;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
 
 class BarChart extends OrdinalCartesianChart {
-  BarChart({bool vertical, LayoutConfig layoutConfig})
-      : super(vertical: vertical, layoutConfig: layoutConfig);
+  BarChart(
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis})
+      : super(
+            vertical: vertical,
+            layoutConfig: layoutConfig,
+            primaryMeasureAxis: primaryMeasureAxis,
+            secondaryMeasureAxis: secondaryMeasureAxis);
 
   @override
   SeriesRenderer<String> makeDefaultRenderer() {

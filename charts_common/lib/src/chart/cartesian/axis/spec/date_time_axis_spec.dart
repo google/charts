@@ -15,6 +15,7 @@
 
 import 'package:meta/meta.dart' show immutable;
 
+import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis;
@@ -76,11 +77,27 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
     }
   }
 
+  Axis<DateTime> createAxis() {
+    assert(false, 'Call createDateTimeAxis() to create a DateTimeAxis.');
+    return null;
+  }
+
+  /// Creates a [DateTimeAxis]. This should be called in place of createAxis.
+  DateTimeAxis createDateTimeAxis(DateTimeFactory dateTimeFactory) =>
+      new DateTimeAxis(dateTimeFactory);
+
   @override
   bool operator ==(Object other) =>
       other is DateTimeAxisSpec &&
       viewport == other.viewport &&
       super == (other);
+
+  @override
+  int get hashCode {
+    int hashcode = super.hashCode;
+    hashcode = (hashcode * 37) + viewport.hashCode;
+    return hashcode;
+  }
 }
 
 abstract class DateTimeTickProviderSpec extends TickProviderSpec<DateTime> {}
@@ -191,7 +208,7 @@ class TimeFormatterSpec {
     int hashcode = format?.hashCode ?? 0;
     hashcode = (hashcode * 37) + transitionFormat?.hashCode ?? 0;
     hashcode = (hashcode * 37) + noonFormat?.hashCode ?? 0;
-    return hashCode;
+    return hashcode;
   }
 }
 
@@ -277,6 +294,6 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
     hashcode = (hashcode * 37) + day?.hashCode ?? 0;
     hashcode = (hashcode * 37) + month?.hashCode ?? 0;
     hashcode = (hashcode * 37) + year?.hashCode ?? 0;
-    return hashCode;
+    return hashcode;
   }
 }

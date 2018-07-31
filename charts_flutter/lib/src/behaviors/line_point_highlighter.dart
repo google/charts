@@ -13,8 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:collection/collection.dart' show ListEquality;
 import 'package:charts_common/common.dart' as common
-    show LinePointHighlighter, SelectionModelType;
+    show
+        LinePointHighlighter,
+        LinePointHighlighterFollowLineType,
+        SelectionModelType;
 import 'package:flutter/widgets.dart' show hashValues;
 import 'package:meta/meta.dart' show immutable;
 
@@ -45,25 +49,34 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
   /// defined.
   final double radiusPaddingPx;
 
-  final bool showHorizontalFollowLine;
+  final common.LinePointHighlighterFollowLineType showHorizontalFollowLine;
 
-  final bool showVerticalFollowLine;
+  final common.LinePointHighlighterFollowLineType showVerticalFollowLine;
+
+  /// The dash pattern to be used for drawing the line.
+  ///
+  /// To disable dash pattern (to draw a solid line), pass in an empty list.
+  /// This is because if dashPattern is null or not set, it defaults to [1,3].
+  final List<int> dashPattern;
 
   LinePointHighlighter(
-      {this.selectionModelType = common.SelectionModelType.info,
-      this.defaultRadiusPx = 4.0,
-      this.radiusPaddingPx = 0.5,
-      this.showHorizontalFollowLine = false,
-      this.showVerticalFollowLine = true});
+      {this.selectionModelType,
+      this.defaultRadiusPx,
+      this.radiusPaddingPx,
+      this.showHorizontalFollowLine,
+      this.showVerticalFollowLine,
+      this.dashPattern});
 
   @override
   common.LinePointHighlighter<D> createCommonBehavior<D>() =>
       new common.LinePointHighlighter<D>(
-          selectionModelType: selectionModelType,
-          defaultRadiusPx: defaultRadiusPx,
-          radiusPaddingPx: radiusPaddingPx,
-          showHorizontalFollowLine: showHorizontalFollowLine,
-          showVerticalFollowLine: showVerticalFollowLine);
+        selectionModelType: selectionModelType,
+        defaultRadiusPx: defaultRadiusPx,
+        radiusPaddingPx: radiusPaddingPx,
+        showHorizontalFollowLine: showHorizontalFollowLine,
+        showVerticalFollowLine: showVerticalFollowLine,
+        dashPattern: dashPattern,
+      );
 
   @override
   void updateCommonBehavior(common.LinePointHighlighter commonBehavior) {}
@@ -78,12 +91,19 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
         radiusPaddingPx == o.radiusPaddingPx &&
         showHorizontalFollowLine == o.showHorizontalFollowLine &&
         showVerticalFollowLine == o.showVerticalFollowLine &&
-        selectionModelType == o.selectionModelType;
+        selectionModelType == o.selectionModelType &&
+        new ListEquality().equals(dashPattern, o.dashPattern);
   }
 
   @override
   int get hashCode {
-    return hashValues(selectionModelType, defaultRadiusPx, radiusPaddingPx,
-        showHorizontalFollowLine, showVerticalFollowLine);
+    return hashValues(
+      selectionModelType,
+      defaultRadiusPx,
+      radiusPaddingPx,
+      showHorizontalFollowLine,
+      showVerticalFollowLine,
+      dashPattern,
+    );
   }
 }
