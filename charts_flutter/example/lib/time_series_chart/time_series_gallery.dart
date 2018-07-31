@@ -18,6 +18,7 @@ import '../gallery_scaffold.dart';
 import 'range_annotation.dart';
 import 'simple.dart';
 import 'symbol_annotation.dart';
+import 'with_bar_renderer.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -38,6 +39,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Symbol Annotation Time Series Chart',
       subtitle: 'Time series chart with annotation data below the draw area',
       childBuilder: () => new TimeSeriesSymbolAnnotationChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Time Series Chart with Bars',
+      subtitle: 'Time series chart using the bar renderer',
+      childBuilder: () => new TimeSeriesBar.withRandomData(),
     ),
   ];
 }

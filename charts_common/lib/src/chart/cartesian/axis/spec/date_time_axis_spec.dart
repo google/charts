@@ -19,6 +19,7 @@ import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis;
+import '../scale.dart' show RangeBandConfig;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../time/auto_adjusting_date_time_tick_provider.dart'
     show AutoAdjustingDateTimeTickProvider;
@@ -44,6 +45,12 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// If pan / zoom behaviors are set, this is the initial viewport.
   final DateTimeExtents viewport;
 
+  /// If set, modifies the scale's range band on [configure].
+  ///
+  /// When using the date time axis with a bar renderer, the range band has to
+  /// be modified to styleAssignedPercent.
+  final RangeBandConfig rangeBandConfig;
+
   /// Creates a [AxisSpec] that specialized for timeseries charts.
   ///
   /// [renderSpec] spec used to configure how the ticks and labels
@@ -61,7 +68,11 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
     DateTimeTickFormatterSpec tickFormatterSpec,
     bool showAxisLine,
     this.viewport,
-  }) : super(
+    bool usingBarRenderer = false,
+  })  : rangeBandConfig = usingBarRenderer
+            ? new RangeBandConfig.styleAssignedPercent()
+            : null,
+        super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec,
             tickFormatterSpec: tickFormatterSpec,
@@ -72,8 +83,13 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
       GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 
-    if (axis is DateTimeAxis && viewport != null) {
-      axis.setScaleViewport(viewport);
+    if (axis is DateTimeAxis) {
+      if (viewport != null) {
+        axis.setScaleViewport(viewport);
+      }
+      if (rangeBandConfig != null) {
+        axis.setRangeBandConfig(rangeBandConfig);
+      }
     }
   }
 

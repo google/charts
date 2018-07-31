@@ -17,7 +17,6 @@ import 'package:charts_common/common.dart' as common
     show
         AxisSpec,
         DateTimeFactory,
-        LineRendererConfig,
         Series,
         SeriesRendererConfig,
         TimeSeriesChart;
@@ -42,7 +41,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
     common.AxisSpec domainAxis,
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
-    common.LineRendererConfig<DateTime> defaultRenderer,
+    common.SeriesRendererConfig<DateTime> defaultRenderer,
     List<common.SeriesRendererConfig<DateTime>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig<DateTime>> selectionModels,

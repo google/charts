@@ -22,7 +22,7 @@ import 'base_bar_renderer_element.dart'
     show BaseAnimatedBar, BaseBarRendererElement;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
 import '../cartesian/axis/axis.dart'
-    show ImmutableAxis, domainAxisKey, measureAxisKey;
+    show ImmutableAxis, domainAxisKey, measureAxisKey, OrdinalAxis;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
@@ -554,17 +554,52 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       return nearest;
     }
 
-    final domainValue = _prevDomainAxis
-        .getDomain(renderingVertically ? chartPoint.x : chartPoint.y);
+    if (_prevDomainAxis is OrdinalAxis) {
+      final domainValue = _prevDomainAxis
+          .getDomain(renderingVertically ? chartPoint.x : chartPoint.y);
 
-    // If we have a domainValue for the event point, then find all segments
-    // that match it.
-    if (domainValue != null) {
-      if (renderingVertically) {
-        nearest = _getVerticalDetailsForDomainValue(domainValue, chartPoint);
-      } else {
-        nearest = _getHorizontalDetailsForDomainValue(domainValue, chartPoint);
+      // If we have a domainValue for the event point, then find all segments
+      // that match it.
+      if (domainValue != null) {
+        if (renderingVertically) {
+          nearest = _getVerticalDetailsForDomainValue(domainValue, chartPoint);
+        } else {
+          nearest =
+              _getHorizontalDetailsForDomainValue(domainValue, chartPoint);
+        }
       }
+    } else {
+      if (renderingVertically) {
+        nearest = _getVerticalDetailsForDomainValue(null, chartPoint);
+      } else {
+        nearest = _getHorizontalDetailsForDomainValue(null, chartPoint);
+      }
+
+      // Find the closest domain and only keep values that match the domain.
+      var minRelativeDistance = double.maxFinite;
+      var minDomainDistance = double.maxFinite;
+      var minMeasureDistance = double.maxFinite;
+      D nearestDomain;
+
+      // TODO: Optimize this with a binary search based on chartX.
+      for (DatumDetails<D> detail in nearest) {
+        if (byDomain) {
+          if (detail.domainDistance < minDomainDistance ||
+              (detail.domainDistance == minDomainDistance &&
+                  detail.measureDistance < minMeasureDistance)) {
+            minDomainDistance = detail.domainDistance;
+            minMeasureDistance = detail.measureDistance;
+            nearestDomain = detail.domain;
+          }
+        } else {
+          if (detail.relativeDistance < minRelativeDistance) {
+            minRelativeDistance = detail.relativeDistance;
+            nearestDomain = detail.domain;
+          }
+        }
+      }
+
+      nearest.retainWhere((d) => d.domain == nearestDomain);
     }
 
     // If we didn't find anything, then keep an empty list.
@@ -572,7 +607,6 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
     // Note: the details are already sorted by domain & measure distance in
     // base chart.
-
     return nearest;
   }
 
@@ -583,7 +617,15 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       {bool where(BaseAnimatedBar<D, R> bar)}) {
     final matchingSegments = <BaseAnimatedBar<D, R>>[];
 
-    final stackKeys = _currentGroupsStackKeys[domainValue];
+    // [domainValue] is null only when the bar renderer is being used with in
+    // a non ordinal axis (ex. date time axis).
+    //
+    // In the case of null [domainValue] return all values to be compared, since
+    // we can't use the optimized comparison for [OrdinalAxis].
+    final stackKeys = (domainValue != null)
+        ? _currentGroupsStackKeys[domainValue]
+        : _currentGroupsStackKeys.values
+            .reduce((allKeys, keys) => allKeys..addAll(keys));
     stackKeys?.forEach((String stackKey) {
       if (where != null) {
         matchingSegments.addAll(_barStackMap[stackKey].where(where));
@@ -595,6 +637,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     return matchingSegments;
   }
 
+  // In the case of null [domainValue] return all values to be compared, since
+  // we can't use the optimized comparison for [OrdinalAxis].
   List<DatumDetails<D>> _getVerticalDetailsForDomainValue(
       D domainValue, Point<double> chartPoint) {
     return new List<DatumDetails<D>>.from(_getSegmentsForDomainValue(
