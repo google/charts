@@ -49,7 +49,8 @@ class StaticTickProvider<D> extends TickProvider<D> {
 
     // Use the formatter's label if the tick spec does not provide one.
     final formattedValues = formatter.format(
-        tickSpec.map((spec) => spec.value).toList(), formatterValueCache);
+        tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
+        stepSize: scale.domainStepSize);
 
     for (var i = 0; i < tickSpec.length; i++) {
       final spec = tickSpec[i];

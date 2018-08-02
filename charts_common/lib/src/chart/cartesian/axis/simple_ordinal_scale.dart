@@ -75,6 +75,9 @@ class SimpleOrdinalScale implements OrdinalScale {
   }
 
   @override
+  double get domainStepSize => 1.0;
+
+  @override
   set rangeBandConfig(RangeBandConfig barGroupWidthConfig) {
     if (barGroupWidthConfig == null) {
       throw new ArgumentError.notNull('RangeBandConfig must not be null.');
