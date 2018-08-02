@@ -20,4 +20,6 @@ class LineStyle implements common.LineStyle {
   common.Color color;
   @override
   int strokeWidth;
+  @override
+  List<int> dashPattern;
 }
