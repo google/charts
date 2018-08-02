@@ -48,6 +48,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
     LayoutConfig layoutConfig,
     this.dateTimeFactory,
     bool defaultInteractions: true,
+    bool flipVerticalAxis,
   }) : super(
           seriesList,
           animate: animate,
@@ -61,6 +62,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
           selectionModels: selectionModels,
           layoutConfig: layoutConfig,
           defaultInteractions: defaultInteractions,
+          flipVerticalAxis: flipVerticalAxis,
         );
 
   @override

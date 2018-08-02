@@ -116,6 +116,10 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   final Axis<num> _primaryMeasureAxis;
   final Axis<num> _secondaryMeasureAxis;
 
+  /// If set to true, the vertical axis will render the opposite of the default
+  /// direction.
+  bool flipVerticalAxisOutput = false;
+
   bool _usePrimaryMeasureAxis = false;
   bool _useSecondaryMeasureAxis = false;
 
@@ -220,13 +224,19 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       domainAxis
         ..axisOrientation = AxisOrientation.bottom
         ..reverseOutputRange = reverseAxisPosition;
-      _primaryMeasureAxis.axisOrientation =
-          reverseAxisPosition ? AxisOrientation.right : AxisOrientation.left;
-      _secondaryMeasureAxis.axisOrientation =
-          reverseAxisPosition ? AxisOrientation.left : AxisOrientation.right;
+      _primaryMeasureAxis
+        ..axisOrientation =
+            (reverseAxisPosition ? AxisOrientation.right : AxisOrientation.left)
+        ..reverseOutputRange = flipVerticalAxisOutput;
+      _secondaryMeasureAxis
+        ..axisOrientation =
+            (reverseAxisPosition ? AxisOrientation.left : AxisOrientation.right)
+        ..reverseOutputRange = flipVerticalAxisOutput;
     } else {
-      domainAxis.axisOrientation =
-          reverseAxisPosition ? AxisOrientation.right : AxisOrientation.left;
+      domainAxis
+        ..axisOrientation =
+            (reverseAxisPosition ? AxisOrientation.right : AxisOrientation.left)
+        ..reverseOutputRange = flipVerticalAxisOutput;
       _primaryMeasureAxis
         ..axisOrientation = AxisOrientation.bottom
         ..reverseOutputRange = reverseAxisPosition;

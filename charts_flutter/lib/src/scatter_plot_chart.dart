@@ -42,6 +42,7 @@ class ScatterPlotChart extends CartesianChart<num> {
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
     bool defaultInteractions: true,
+    bool flipVerticalAxis,
   }) : super(
           seriesList,
           animate: animate,
@@ -56,6 +57,7 @@ class ScatterPlotChart extends CartesianChart<num> {
           rtlSpec: rtlSpec,
           layoutConfig: layoutConfig,
           defaultInteractions: defaultInteractions,
+          flipVerticalAxis: flipVerticalAxis,
         );
 
   @override
