@@ -20,8 +20,11 @@ import 'area_and_line.dart';
 import 'dash_pattern.dart';
 import 'points.dart';
 import 'range_annotation.dart';
+import 'segments.dart';
 import 'simple.dart';
+import 'simple_nulls.dart';
 import 'stacked_area.dart';
+import 'stacked_area_nulls.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -51,9 +54,27 @@ List<GalleryScaffold> buildGallery() {
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
+      title: 'Null Data Line Chart',
+      subtitle: 'With a single series and null measure values',
+      childBuilder: () => new SimpleNullsLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Stacked Area with Nulls Chart',
+      subtitle: 'Stacked area chart with three series and null measure values',
+      childBuilder: () => new StackedAreaNullsLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
       title: 'Dash Pattern Line Chart',
-      subtitle: 'With three series and default line point highlighter',
+      subtitle: 'Line chart with dash patterns',
       childBuilder: () => new DashPatternLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Segments Line Chart',
+      subtitle: 'Line chart with changes of style for each line',
+      childBuilder: () => new SegmentsLineChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),

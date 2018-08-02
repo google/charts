@@ -19,6 +19,7 @@ import 'package:charts_common/common.dart' as common
         InsideJustification,
         LegendEntry,
         LegendTapHandling,
+        MeasureFormatter,
         OutsideJustification,
         SeriesLegend,
         SelectionModelType;
@@ -37,6 +38,11 @@ import 'legend_layout.dart' show TabularLegendLayout;
 /// Series legend behavior for charts.
 @immutable
 class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
+  static const defaultBehaviorPosition = common.BehaviorPosition.top;
+  static const defaultOutsideJustification =
+      common.OutsideJustification.startDrawArea;
+  static const defaultInsideJustification = common.InsideJustification.topStart;
+
   final desiredGestures = new Set<GestureType>();
 
   final common.SelectionModelType selectionModelType;
@@ -50,6 +56,22 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// Justification of the legend relative to the chart
   final common.OutsideJustification outsideJustification;
   final common.InsideJustification insideJustification;
+
+  /// Optionally set to true to show measure values in series legend when a
+  /// datum is selected.
+  ///
+  /// Defaults to false, where measure values are not shown.
+  ///
+  /// This flag is used by the [contentBuilder], so a custom content builder
+  /// has to choose if it wants to use this flag.
+  final bool showMeasures;
+
+  /// Formatter for measure value(s) if the measures are shown on the legend.
+  final common.MeasureFormatter measureFormatter;
+
+  /// Formatter for secondary measure value(s) if the measures are shown on the
+  /// legend and the series uses the secondary axis.
+  final common.MeasureFormatter secondaryMeasureFormatter;
 
   static const defaultCellPadding = const EdgeInsets.all(8.0);
 
@@ -85,6 +107,13 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   ///
   /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
   /// first chart draw.
+  ///
+  /// [showMeasures] show measure values for each series when datum is selected.
+  ///
+  /// [measureFormatter] formats measure value if measures are shown.
+  ///
+  /// [secondaryMeasureFormatter] formats measures if measures are shown for the
+  /// series that uses secondary measure axis.
   factory SeriesLegend({
     common.BehaviorPosition position,
     common.OutsideJustification outsideJustification,
@@ -94,11 +123,14 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     int desiredMaxColumns,
     EdgeInsets cellPadding,
     List<String> defaultHiddenSeries,
+    bool showMeasures,
+    common.MeasureFormatter measureFormatter,
+    common.MeasureFormatter secondaryMeasureFormatter,
   }) {
     // Set defaults if empty.
-    position ??= common.BehaviorPosition.top;
-    outsideJustification ??= common.OutsideJustification.startDrawArea;
-    insideJustification ??= common.InsideJustification.topStart;
+    position ??= defaultBehaviorPosition;
+    outsideJustification ??= defaultOutsideJustification;
+    insideJustification ??= defaultInsideJustification;
     cellPadding ??= defaultCellPadding;
 
     // Set the tabular layout settings to match the position if it is not
@@ -119,16 +151,78 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         position: position,
         outsideJustification: outsideJustification,
         insideJustification: insideJustification,
-        defaultHiddenSeries: defaultHiddenSeries);
+        defaultHiddenSeries: defaultHiddenSeries,
+        showMeasures: showMeasures ?? false,
+        measureFormatter: measureFormatter,
+        secondaryMeasureFormatter: secondaryMeasureFormatter);
   }
 
-  SeriesLegend._internal(
-      {this.contentBuilder,
-      this.selectionModelType,
-      this.position,
-      this.outsideJustification,
-      this.insideJustification,
-      this.defaultHiddenSeries});
+  /// Create a legend with custom layout.
+  ///
+  /// By default, the legend is place above the chart and horizontally aligned
+  /// to the start of the draw area.
+  ///
+  /// [contentBuilder] builder for the custom layout.
+  ///
+  /// [position] the legend will be positioned relative to the chart. Default
+  /// position is top.
+  ///
+  /// [outsideJustification] justification of the legend relative to the chart
+  /// if the position is top, bottom, left, right. Default to start of the draw
+  /// area.
+  ///
+  /// [insideJustification] justification of the legend relative to the chart if
+  /// the position is inside. Default to top of the chart, start of draw area.
+  /// Start of draw area means left for LTR directionality, and right for RTL.
+  ///
+  /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
+  /// first chart draw.
+  ///
+  /// [showMeasures] show measure values for each series when datum is selected.
+  ///
+  /// [measureFormatter] formats measure value if measures are shown.
+  ///
+  /// [secondaryMeasureFormatter] formats measures if measures are shown for the
+  /// series that uses secondary measure axis.
+  factory SeriesLegend.customLayout(
+    LegendContentBuilder contentBuilder, {
+    common.BehaviorPosition position,
+    common.OutsideJustification outsideJustification,
+    common.InsideJustification insideJustification,
+    List<String> defaultHiddenSeries,
+    bool showMeasures,
+    common.MeasureFormatter measureFormatter,
+    common.MeasureFormatter secondaryMeasureFormatter,
+  }) {
+    // Set defaults if empty.
+    position ??= defaultBehaviorPosition;
+    outsideJustification ??= defaultOutsideJustification;
+    insideJustification ??= defaultInsideJustification;
+
+    return new SeriesLegend._internal(
+      contentBuilder: contentBuilder,
+      selectionModelType: common.SelectionModelType.info,
+      position: position,
+      outsideJustification: outsideJustification,
+      insideJustification: insideJustification,
+      defaultHiddenSeries: defaultHiddenSeries,
+      showMeasures: showMeasures ?? false,
+      measureFormatter: measureFormatter,
+      secondaryMeasureFormatter: secondaryMeasureFormatter,
+    );
+  }
+
+  SeriesLegend._internal({
+    this.contentBuilder,
+    this.selectionModelType,
+    this.position,
+    this.outsideJustification,
+    this.insideJustification,
+    this.defaultHiddenSeries,
+    this.showMeasures,
+    this.measureFormatter,
+    this.secondaryMeasureFormatter,
+  });
 
   @override
   common.SeriesLegend<D> createCommonBehavior<D>() =>
@@ -166,7 +260,10 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
   SeriesLegend config;
 
   _FlutterSeriesLegend(this.config)
-      : super(selectionModelType: config.selectionModelType) {
+      : super(
+            selectionModelType: config.selectionModelType,
+            measureFormatter: config.measureFormatter,
+            secondaryMeasureFormatter: config.secondaryMeasureFormatter) {
     super.defaultHiddenSeries = config.defaultHiddenSeries;
   }
 
@@ -187,8 +284,8 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
       config.insideJustification;
 
   @override
-  Widget build(BuildContext context) =>
-      config.contentBuilder.build(context, legendState, this);
+  Widget build(BuildContext context) => config.contentBuilder
+      .build(context, legendState, this, showMeasures: config.showMeasures);
 
   @override
   onLegendEntryTapUp(common.LegendEntry detail) {

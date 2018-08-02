@@ -18,4 +18,19 @@ abstract class ChartState {
 
   /// Request to the native platform to rebuild the chart.
   void requestRebuild();
+
+  /// Informs the chart that the configuration has changed.
+  ///
+  /// This flag is set by checks that detect if a configuration has changed,
+  /// such as behaviors, axis, and renderers.
+  ///
+  /// This flag is read on chart rebuild, if chart is marked as dirty, then the
+  /// chart will call a base chart draw.
+  void markChartDirty();
+
+  /// Reset the chart dirty flag.
+  void resetChartDirtyFlag();
+
+  /// Gets if the chart is dirty.
+  bool get chartIsDirty;
 }

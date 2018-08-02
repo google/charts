@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import '../../common/symbol_renderer.dart';
-import '../layout/layout_view.dart' show LayoutViewConfig;
+import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import 'line_renderer.dart' show LineRenderer;
@@ -61,6 +61,9 @@ class LineRendererConfig<D> extends LayoutViewConfig
   /// domain axis.
   final bool includeArea;
 
+  /// The order to paint this renderer on the canvas.
+  final int layoutPaintOrder;
+
   /// Configures the opacity of the area skirt on the chart.
   final double areaOpacity;
 
@@ -73,6 +76,7 @@ class LineRendererConfig<D> extends LayoutViewConfig
       this.includeLine = true,
       this.includePoints = false,
       this.includeArea = false,
+      this.layoutPaintOrder = LayoutViewPaintOrder.line,
       this.areaOpacity = 0.1,
       SymbolRenderer symbolRenderer})
       : this.strokeWidthPx = strokeWidthPx,

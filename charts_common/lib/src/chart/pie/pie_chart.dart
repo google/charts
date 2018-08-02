@@ -13,11 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show Rectangle;
+
 import 'arc_renderer.dart' show ArcRenderer;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show MutableSeries;
-import '../common/series_renderer.dart' show SeriesRenderer;
+import '../common/series_renderer.dart' show rendererIdKey, SeriesRenderer;
 import '../common/selection_model/selection_model.dart' show SelectionModelType;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
 
@@ -47,6 +49,36 @@ class PieChart<D> extends BaseChart<D> {
     return new ArcRenderer<D>()..rendererId = SeriesRenderer.defaultRendererId;
   }
 
+  /// Returns a list of datum details from selection model of [type].
   @override
-  List<DatumDetails<D>> getDatumDetails(SelectionModelType type) => [];
+  List<DatumDetails<D>> getDatumDetails(SelectionModelType type) {
+    final entries = <DatumDetails<D>>[];
+
+    getSelectionModel(type).selectedDatum.forEach((seriesDatum) {
+      final rendererId = seriesDatum.series.getAttr(rendererIdKey);
+      final renderer = getSeriesRenderer(rendererId);
+
+      // This should never happen.
+      if (!(renderer is ArcRenderer)) {
+        return;
+      }
+
+      final details =
+          (renderer as ArcRenderer).getExpandedDatumDetails(seriesDatum);
+
+      if (details != null) {
+        entries.add(details);
+      }
+    });
+
+    return entries;
+  }
+
+  Rectangle<int> get centerContentBounds {
+    if (defaultRenderer is ArcRenderer<D>) {
+      return (defaultRenderer as ArcRenderer<D>).centerContentBounds;
+    } else {
+      return null;
+    }
+  }
 }

@@ -16,7 +16,9 @@
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'donut.dart';
+import 'auto_label.dart';
 import 'simple.dart';
+import 'outside_label.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -28,9 +30,22 @@ List<GalleryScaffold> buildGallery() {
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.pie_chart),
+      title: 'Outside Label Pie Chart',
+      subtitle: 'With a single series and labels outside the arcs',
+      childBuilder: () => new PieOutsideLabelChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart),
       title: 'Simple Donut Chart',
       subtitle: 'With a single series and a hole in the middle',
       childBuilder: () => new DonutPieChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart),
+      title: 'Auto Label Donut Chart',
+      subtitle:
+          'With a single series, a hole in the middle, and auto-positioned labels',
+      childBuilder: () => new DonutAutoLabelChart.withRandomData(),
     ),
   ];
 }

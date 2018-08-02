@@ -14,8 +14,6 @@
 // limitations under the License.
 
 /// Donut chart example. This is a simple pie chart with a hole in the middle.
-///
-/// Animation is not currently supported.
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END

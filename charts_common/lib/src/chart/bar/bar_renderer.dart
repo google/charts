@@ -13,24 +13,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show max, min, Rectangle;
-import 'package:meta/meta.dart' show required;
+import 'dart:math' show max, min, Point, Rectangle;
+import 'package:meta/meta.dart' show protected, required;
 
 import 'bar_renderer_config.dart' show BarRendererConfig, CornerStrategy;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
-import 'base_bar_renderer.dart' show BaseBarRenderer;
+import 'base_bar_renderer.dart'
+    show
+        BaseBarRenderer,
+        barGroupCountKey,
+        barGroupIndexKey,
+        previousBarGroupWeightKey,
+        barGroupWeightKey;
 import 'base_bar_renderer_element.dart'
     show BaseAnimatedBar, BaseBarRendererElement;
-import '../cartesian/axis/axis.dart' show ImmutableAxis;
-import '../common/base_chart.dart' show BaseChart;
+import '../cartesian/axis/axis.dart'
+    show ImmutableAxis, domainAxisKey, measureAxisKey;
 import '../common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
-import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../common/datum_details.dart' show DatumDetails;
+import '../common/processed_series.dart'
+    show ImmutableSeries, MutableSeries, SeriesDatum;
 import '../../common/color.dart' show Color;
 
 /// Renders series data as a series of bars.
 class BarRenderer<D>
-    extends BaseBarRenderer<D, _BarRendererElement<D>, _AnimatedBar<D>> {
+    extends BaseBarRenderer<D, BarRendererElement<D>, AnimatedBar<D>> {
   /// If we are grouped, use this spacing between the bars in a group.
   final _barGroupInnerPadding = 2;
 
@@ -39,19 +47,23 @@ class BarRenderer<D>
   /// The padding comes out of the bottom of the bar.
   final _stackedBarPadding = 1;
 
-  BaseChart<D> _chart;
-
   final BarRendererDecorator barRendererDecorator;
 
   factory BarRenderer({BarRendererConfig config, String rendererId}) {
     rendererId ??= 'bar';
     config ??= new BarRendererConfig();
-    return new BarRenderer._internal(config: config, rendererId: rendererId);
+    return new BarRenderer.internal(config: config, rendererId: rendererId);
   }
 
-  BarRenderer._internal({BarRendererConfig config, String rendererId})
+  /// This constructor is protected because it is used by child classes, which
+  /// cannot call the factory in their own constructors.
+  @protected
+  BarRenderer.internal({BarRendererConfig config, String rendererId})
       : barRendererDecorator = config.barRendererDecorator,
-        super(config: config, rendererId: rendererId, layoutPositionOrder: 10);
+        super(
+            config: config,
+            rendererId: rendererId,
+            layoutPaintOrder: config.layoutPaintOrder);
 
   @override
   void configureSeries(List<MutableSeries<D>> seriesList) {
@@ -59,27 +71,63 @@ class BarRenderer<D>
         emptyCategoryUsesSinglePalette: true);
   }
 
-  @override
-  _BarRendererElement<D> getBaseDetails(dynamic datum, int index) {
-    return new _BarRendererElement<D>();
+  DatumDetails<D> addPositionToDetailsForSeriesDatum(
+      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
+    final series = details.series;
+
+    final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
+    final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+
+    final barGroupIndex = series.getAttr(barGroupIndexKey);
+    final previousBarGroupWeight = series.getAttr(previousBarGroupWeightKey);
+    final barGroupWeight = series.getAttr(barGroupWeightKey);
+    final numBarGroups = series.getAttr(barGroupCountKey);
+
+    final bounds = _getBarBounds(
+        details.domain,
+        domainAxis,
+        domainAxis.rangeBand.round(),
+        details.measure,
+        details.measureOffset,
+        measureAxis,
+        barGroupIndex,
+        previousBarGroupWeight,
+        barGroupWeight,
+        numBarGroups);
+
+    var chartPosition;
+
+    if (renderingVertically) {
+      chartPosition = new Point<double>(
+          (bounds.left + (bounds.width / 2)).toDouble(), bounds.top.toDouble());
+    } else {
+      chartPosition = new Point<double>(
+          rtl ? bounds.left.toDouble() : bounds.right.toDouble(),
+          (bounds.top + (bounds.height / 2)).toDouble());
+    }
+
+    return new DatumDetails.from(details, chartPosition: chartPosition);
   }
 
-  bool get rtl => _chart.context.rtl;
+  @override
+  BarRendererElement<D> getBaseDetails(dynamic datum, int index) {
+    return new BarRendererElement<D>();
+  }
 
   CornerStrategy get cornerStrategy {
     return (config as BarRendererConfig).cornerStrategy;
   }
 
-  /// Generates an [_AnimatedBar] to represent the previous and current state
+  /// Generates an [AnimatedBar] to represent the previous and current state
   /// of one bar on the chart.
   @override
-  _AnimatedBar<D> makeAnimatedBar(
+  AnimatedBar<D> makeAnimatedBar(
       {String key,
       ImmutableSeries<D> series,
       List<int> dashPattern,
       dynamic datum,
       Color color,
-      _BarRendererElement<D> details,
+      BarRendererElement<D> details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
       int domainWidth,
@@ -91,8 +139,10 @@ class BarRenderer<D>
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
+      double previousBarGroupWeight,
+      double barGroupWeight,
       int numBarGroups}) {
-    return new _AnimatedBar<D>(
+    return new AnimatedBar<D>(
         key: key, datum: datum, series: series, domainValue: domainValue)
       ..setNewTarget(makeBarRendererElement(
           color: color,
@@ -109,16 +159,18 @@ class BarRenderer<D>
           fillPattern: fillPattern,
           strokeWidthPx: strokeWidthPx,
           barGroupIndex: barGroupIndex,
+          previousBarGroupWeight: previousBarGroupWeight,
+          barGroupWeight: barGroupWeight,
           numBarGroups: numBarGroups));
   }
 
-  /// Generates a [_BarRendererElement] to represent the rendering data for one
+  /// Generates a [BarRendererElement] to represent the rendering data for one
   /// bar on the chart.
   @override
-  _BarRendererElement<D> makeBarRendererElement(
+  BarRendererElement<D> makeBarRendererElement(
       {Color color,
       List<int> dashPattern,
-      _BarRendererElement<D> details,
+      BarRendererElement<D> details,
       D domainValue,
       ImmutableAxis<D> domainAxis,
       int domainWidth,
@@ -130,8 +182,10 @@ class BarRenderer<D>
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
+      double previousBarGroupWeight,
+      double barGroupWeight,
       int numBarGroups}) {
-    return new _BarRendererElement<D>()
+    return new BarRendererElement<D>()
       ..color = color
       ..dashPattern = dashPattern
       ..fillColor = fillColor
@@ -147,21 +201,14 @@ class BarRenderer<D>
           measureOffsetValue,
           measureAxis,
           barGroupIndex,
+          previousBarGroupWeight,
+          barGroupWeight,
           numBarGroups);
   }
 
   @override
-  void onAttach(BaseChart<D> chart) {
-    super.onAttach(chart);
-    // We only need the chart.context.rtl setting, but context is not yet
-    // available when the default renderer is attached to the chart on chart
-    // creation time, since chart onInit is called after the chart is created.
-    _chart = chart;
-  }
-
-  @override
   void paintBar(ChartCanvas canvas, double animationPercent,
-      Iterable<_BarRendererElement<D>> barElements) {
+      Iterable<BarRendererElement<D>> barElements) {
     final bars = <CanvasRect>[];
 
     // When adjusting bars for stacked bar padding, do not modify the first bar
@@ -170,7 +217,7 @@ class BarRenderer<D>
     final unmodifiedBar =
         renderingVertically ? barElements.first : barElements.last;
 
-    // Find the max bar width from each segement to calculate corner radius.
+    // Find the max bar width from each segment to calculate corner radius.
     int maxBarWidth = 0;
 
     for (var bar in barElements) {
@@ -293,12 +340,20 @@ class BarRenderer<D>
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       int barGroupIndex,
+      double previousBarGroupWeight,
+      double barGroupWeight,
       int numBarGroups) {
+    // If no weights were passed in, default to equal weight per bar.
+    if (barGroupWeight == null) {
+      barGroupWeight = 1 / numBarGroups;
+      previousBarGroupWeight = barGroupIndex * barGroupWeight;
+    }
+
     // Calculate how wide each bar should be within the group of bars. If we
     // only have one series, or are stacked, then barWidth should equal
     // domainWidth.
     int spacingLoss = (_barGroupInnerPadding * (numBarGroups - 1));
-    int barWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
+    int barWidth = ((domainWidth - spacingLoss) * barGroupWeight).round();
 
     // Flip bar group index for calculating location on the domain axis if RTL.
     final adjustedBarGroupIndex =
@@ -306,9 +361,16 @@ class BarRenderer<D>
 
     // Calculate the start and end of the bar, taking into account accumulated
     // padding for grouped bars.
+    int previousAverageWidth = adjustedBarGroupIndex > 0
+        ? ((domainWidth - spacingLoss) *
+                (previousBarGroupWeight / adjustedBarGroupIndex))
+            .round()
+        : 0;
+
     int domainStart = (domainAxis.getLocation(domainValue) -
             (domainWidth / 2) +
-            (barWidth + _barGroupInnerPadding) * adjustedBarGroupIndex)
+            (previousAverageWidth + _barGroupInnerPadding) *
+                adjustedBarGroupIndex)
         .round();
 
     int domainEnd = domainStart + barWidth;
@@ -333,7 +395,7 @@ class BarRenderer<D>
   }
 
   @override
-  Rectangle<int> getBoundsForBar(_BarRendererElement bar) => bar.bounds;
+  Rectangle<int> getBoundsForBar(BarRendererElement bar) => bar.bounds;
 }
 
 abstract class ImmutableBarRendererElement<D> {
@@ -343,7 +405,7 @@ abstract class ImmutableBarRendererElement<D> {
   Rectangle<int> get bounds;
 }
 
-class _BarRendererElement<D> extends BaseBarRendererElement
+class BarRendererElement<D> extends BaseBarRendererElement
     implements ImmutableBarRendererElement<D> {
   ImmutableSeries<D> series;
   Rectangle<int> bounds;
@@ -355,12 +417,12 @@ class _BarRendererElement<D> extends BaseBarRendererElement
 
   set datum(dynamic datum) {
     _datum = datum;
-    index = series.data.indexOf(datum);
+    index = series?.data?.indexOf(datum);
   }
 
-  _BarRendererElement();
+  BarRendererElement();
 
-  _BarRendererElement.clone(_BarRendererElement other) : super.clone(other) {
+  BarRendererElement.clone(BarRendererElement other) : super.clone(other) {
     series = other.series;
     bounds = other.bounds;
     roundPx = other.roundPx;
@@ -371,8 +433,8 @@ class _BarRendererElement<D> extends BaseBarRendererElement
   @override
   void updateAnimationPercent(BaseBarRendererElement previous,
       BaseBarRendererElement target, double animationPercent) {
-    final _BarRendererElement localPrevious = previous;
-    final _BarRendererElement localTarget = target;
+    final BarRendererElement localPrevious = previous;
+    final BarRendererElement localTarget = target;
 
     final previousBounds = localPrevious.bounds;
     final targetBounds = localTarget.bounds;
@@ -397,8 +459,8 @@ class _BarRendererElement<D> extends BaseBarRendererElement
   }
 }
 
-class _AnimatedBar<D> extends BaseAnimatedBar<D, _BarRendererElement<D>> {
-  _AnimatedBar(
+class AnimatedBar<D> extends BaseAnimatedBar<D, BarRendererElement<D>> {
+  AnimatedBar(
       {@required String key,
       @required dynamic datum,
       @required ImmutableSeries<D> series,
@@ -407,7 +469,7 @@ class _AnimatedBar<D> extends BaseAnimatedBar<D, _BarRendererElement<D>> {
 
   @override
   animateElementToMeasureAxisPosition(BaseBarRendererElement target) {
-    final _BarRendererElement localTarget = target;
+    final BarRendererElement localTarget = target;
 
     // TODO: Animate out bars in the middle of a stack.
     localTarget.bounds = new Rectangle<int>(
@@ -417,8 +479,8 @@ class _AnimatedBar<D> extends BaseAnimatedBar<D, _BarRendererElement<D>> {
         0);
   }
 
-  _BarRendererElement<D> getCurrentBar(double animationPercent) {
-    final _BarRendererElement<D> bar = super.getCurrentBar(animationPercent);
+  BarRendererElement<D> getCurrentBar(double animationPercent) {
+    final BarRendererElement<D> bar = super.getCurrentBar(animationPercent);
 
     // Update with series and datum information to pass to bar decorator.
     bar.series = series;
@@ -428,6 +490,6 @@ class _AnimatedBar<D> extends BaseAnimatedBar<D, _BarRendererElement<D>> {
   }
 
   @override
-  _BarRendererElement<D> clone(_BarRendererElement other) =>
-      new _BarRendererElement<D>.clone(other);
+  BarRendererElement<D> clone(BarRendererElement other) =>
+      new BarRendererElement<D>.clone(other);
 }

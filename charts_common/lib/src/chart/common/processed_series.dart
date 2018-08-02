@@ -27,6 +27,9 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   bool overlaySeries;
   int seriesIndex;
 
+  /// Sum of the measure values for the series.
+  num seriesMeasureTotal;
+
   List data;
 
   AccessorFn<D> domainFn;
@@ -36,7 +39,12 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<num> measureLowerBoundFn;
   AccessorFn<num> measureUpperBoundFn;
   AccessorFn<num> measureOffsetFn;
+  AccessorFn<num> rawMeasureFn;
+  AccessorFn<num> rawMeasureLowerBoundFn;
+  AccessorFn<num> rawMeasureUpperBoundFn;
+
   AccessorFn<Color> colorFn;
+  AccessorFn<List<int>> dashPatternFn;
   AccessorFn<Color> fillColorFn;
   AccessorFn<FillPatternType> fillPatternFn;
   AccessorFn<num> radiusPxFn;
@@ -44,8 +52,6 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<String> labelAccessorFn;
   AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;
   AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
-
-  List<int> dashPattern;
 
   final _attrs = new SeriesAttributes();
 
@@ -67,7 +73,22 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     measureUpperBoundFn = series.measureUpperBoundFn;
     measureOffsetFn = series.measureOffsetFn;
 
+    // Save the original measure functions in case they get replaced later.
+    rawMeasureFn = series.measureFn;
+    rawMeasureLowerBoundFn = series.measureLowerBoundFn;
+    rawMeasureUpperBoundFn = series.measureUpperBoundFn;
+
+    // Pre-compute the sum of the measure values to make it available on demand.
+    seriesMeasureTotal = 0;
+    for (int i = 0; i < data.length; i++) {
+      final measure = measureFn(i);
+      if (measure != null) {
+        seriesMeasureTotal += measure;
+      }
+    }
+
     colorFn = series.colorFn;
+    dashPatternFn = series.dashPatternFn;
     fillColorFn = series.fillColorFn;
     fillPatternFn = series.fillPatternFn;
     labelAccessorFn = series.labelAccessorFn ?? (i) => domainFn(i).toString();
@@ -76,8 +97,6 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
     radiusPxFn = series.radiusPxFn;
     strokeWidthPxFn = series.strokeWidthPxFn;
-
-    dashPattern = series.dashPattern;
 
     _attrs.mergeFrom(series.attributes);
   }
@@ -98,7 +117,14 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     measureUpperBoundFn = other.measureUpperBoundFn;
     measureOffsetFn = other.measureOffsetFn;
 
+    rawMeasureFn = other.rawMeasureFn;
+    rawMeasureLowerBoundFn = other.rawMeasureLowerBoundFn;
+    rawMeasureUpperBoundFn = other.rawMeasureUpperBoundFn;
+
+    seriesMeasureTotal = other.seriesMeasureTotal;
+
     colorFn = other.colorFn;
+    dashPatternFn = other.dashPatternFn;
     fillColorFn = other.fillColorFn;
     fillPatternFn = other.fillPatternFn;
     labelAccessorFn = other.labelAccessorFn;
@@ -106,8 +132,6 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     outsideLabelStyleAccessorFn = other.outsideLabelStyleAccessorFn;
     radiusPxFn = other.radiusPxFn;
     strokeWidthPxFn = other.strokeWidthPxFn;
-
-    dashPattern = other.dashPattern;
 
     _attrs.mergeFrom(other._attrs);
     measureAxis = other.measureAxis;
@@ -136,6 +160,9 @@ abstract class ImmutableSeries<D> {
   bool get overlaySeries;
   int get seriesIndex;
 
+  /// Sum of the measure values for the series.
+  num get seriesMeasureTotal;
+
   List get data;
 
   AccessorFn<D> get domainFn;
@@ -145,7 +172,12 @@ abstract class ImmutableSeries<D> {
   AccessorFn<num> get measureLowerBoundFn;
   AccessorFn<num> get measureUpperBoundFn;
   AccessorFn<num> get measureOffsetFn;
+  AccessorFn<num> get rawMeasureFn;
+  AccessorFn<num> get rawMeasureLowerBoundFn;
+  AccessorFn<num> get rawMeasureUpperBoundFn;
+
   AccessorFn<Color> get colorFn;
+  AccessorFn<List<int>> get dashPatternFn;
   AccessorFn<Color> get fillColorFn;
   AccessorFn<FillPatternType> get fillPatternFn;
   AccessorFn<String> get labelAccessorFn;
@@ -153,8 +185,6 @@ abstract class ImmutableSeries<D> {
   AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
   AccessorFn<num> get radiusPxFn;
   AccessorFn<num> get strokeWidthPxFn;
-
-  List<int> get dashPattern;
 
   void setAttr<R>(AttributeKey<R> key, R value);
   R getAttr<R>(AttributeKey<R> key);

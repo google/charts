@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'rtl_bar_chart.dart';
 import 'rtl_line_chart.dart';
+import 'rtl_line_segments.dart';
 import 'rtl_series_legend.dart';
 
 List<GalleryScaffold> buildGallery() {
@@ -32,6 +33,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'RTL Line Chart',
       subtitle: 'Simple line chart in RTL',
       childBuilder: () => new RTLLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.flag),
+      title: 'RTL Line Segments',
+      subtitle: 'Stacked area chart with style segments in RTL',
+      childBuilder: () => new RTLLineSegments.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.flag),

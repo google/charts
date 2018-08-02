@@ -28,12 +28,27 @@ class CustomAxisTickFormatters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Formatter for numeric ticks using [NumberFormat] to format into currency
+    ///
+    /// This is what is used in the [NumericAxisSpec] below.
+    final simpleCurrencyFormatter =
+        new charts.BasicNumericTickFormatterSpec.fromNumberFormat(
+            new NumberFormat.compactSimpleCurrency());
+
+    /// Formatter for numeric ticks that uses the callback provided.
+    ///
+    /// Use this formatter if you need to format values that [NumberFormat]
+    /// cannot provide.
+    ///
+    /// To see this formatter, change [NumericAxisSpec] to use this formatter.
+    // final customTickFormatter =
+    //   charts.BasicNumericTickFormatterSpec((num value) => 'MyValue: $value');
+
     return new charts.TimeSeriesChart(seriesList,
         animate: animate,
         // Sets up a currency formatter for the measure axis.
         primaryMeasureAxis: new charts.NumericAxisSpec(
-            tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(
-                new NumberFormat.compactSimpleCurrency())),
+            tickFormatterSpec: simpleCurrencyFormatter),
 
         /// Customizes the date tick formatter. It will print the day of month
         /// as the default format, but include the month and year if it

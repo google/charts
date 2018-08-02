@@ -18,37 +18,54 @@ import 'package:meta/meta.dart';
 import 'base_chart.dart' show BaseChart;
 import 'chart_canvas.dart' show ChartCanvas;
 import 'datum_details.dart' show DatumDetails;
-import 'processed_series.dart' show ImmutableSeries, MutableSeries;
+import 'processed_series.dart' show ImmutableSeries, MutableSeries, SeriesDatum;
 import '../layout/layout_view.dart'
-    show LayoutView, LayoutPosition, LayoutViewConfig, ViewMeasuredSizes;
+    show
+        LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
+        LayoutViewPositionOrder,
+        ViewMeasuredSizes;
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../data/series.dart' show AttributeKey;
 
+/// Unique identifier used to associate custom series renderers on a chart with
+/// one or more series of data.
+///
+/// [rendererIdKey] can be added as an attribute to user-defined [Series]
+/// objects.
 const AttributeKey<String> rendererIdKey =
     const AttributeKey<String>('SeriesRenderer.rendererId');
 
 const AttributeKey<SeriesRenderer> rendererKey =
     const AttributeKey<SeriesRenderer>('SeriesRenderer.renderer');
 
+/// A series renderer draws one or more series of data onto a chart canvas.
 abstract class SeriesRenderer<D> extends LayoutView {
   static const defaultRendererId = 'default';
-
-  SymbolRenderer get symbolRenderer;
-  set symbolRenderer(SymbolRenderer symbolRenderer);
 
   /// Symbol renderer for this renderer.
   ///
   /// The default is set natively by the platform. This is because in Flutter,
   /// the [SymbolRenderer] has to be a Flutter wrapped version to support
   /// building widget based symbols.
+  SymbolRenderer get symbolRenderer;
+  set symbolRenderer(SymbolRenderer symbolRenderer);
+
+  /// Unique identifier for this renderer. Any [Series] on a chart with a
+  /// matching  [rendererIdKey] will be drawn by this renderer.
   String get rendererId;
   set rendererId(String rendererId);
 
+  /// Handles any setup of the renderer that needs to be deferred until it is
+  /// attached to a chart.
   void onAttach(BaseChart<D> chart);
 
+  /// Handles any clean-up of the renderer that needs to be performed when it is
+  /// detached from a chart.
   void onDetach(BaseChart<D> chart);
 
   /// Performs basic configuration for the series, before it is pre-processed.
@@ -61,18 +78,54 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// during the drawing phase.
   void preprocessSeries(List<MutableSeries<D>> seriesList);
 
+  /// Adds the domain values for the given series to the chart's domain axis.
   void configureDomainAxes(List<MutableSeries<D>> seriesList);
 
+  /// Adds the measure values for the given series to the chart's measure axes.
   void configureMeasureAxes(List<MutableSeries<D>> seriesList);
 
+  /// Generates rendering data needed to paint the data on the chart.
+  ///
+  /// This is called during the post layout phase of the chart draw cycle.
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimating);
 
+  /// Renders the series data on the canvas, using the data generated during the
+  /// [update] call.
   void paint(ChartCanvas canvas, double animationPercent);
 
+  /// Gets a list the data from each series that is closest to a given point.
+  ///
+  /// [chartPoint] represents a point in the chart, such as a point that was
+  /// clicked/tapped on by a user.
+  ///
+  /// [byDomain] specifies whether the nearest data should be defined by domain
+  /// distance, or relative Cartesian distance.
+  ///
+  /// [boundsOverride] optionally specifies a bounding box for the selection
+  /// event. If specified, then no data should be returned if [chartPoint] lies
+  /// outside the box. If not specified, then each series renderer on the chart
+  /// will use its own component bounds for filtering out selection events
+  /// (usually the chart draw area).
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint);
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride);
+
+  /// Get an expanded set of processed [DatumDetails] for a given [SeriesDatum].
+  ///
+  /// This is typically called by chart behaviors that need to get full details
+  /// on selected data.
+  DatumDetails<D> getDetailsForSeriesDatum(SeriesDatum<D> seriesDatum);
+
+  /// Adds chart position data to [details].
+  ///
+  /// This is a helper function intended to be called from
+  /// [getDetailsForSeriesDatum]. Every concrete [SeriesRenderer] needs to
+  /// implement custom logic for setting location data.
+  DatumDetails<D> addPositionToDetailsForSeriesDatum(
+      DatumDetails<D> details, SeriesDatum<D> seriesDatum);
 }
 
+/// Concrete base class for [SeriesRenderer]s that implements common
+/// functionality.
 abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   final LayoutViewConfig layoutConfig;
 
@@ -87,11 +140,12 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
 
   BaseSeriesRenderer({
     @required this.rendererId,
-    @required int layoutPositionOrder,
+    @required int layoutPaintOrder,
     this.symbolRenderer,
   }) : this.layoutConfig = new LayoutViewConfig(
+            paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
-            positionOrder: layoutPositionOrder);
+            positionOrder: LayoutViewPositionOrder.drawArea);
 
   @override
   GraphicsFactory get graphicsFactory => _graphicsFactory;
@@ -213,6 +267,9 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   Rectangle<int> get componentBounds => this._drawAreaBounds;
 
   @override
+  bool get isSeriesRenderer => true;
+
+  @override
   void configureSeries(List<MutableSeries<D>> seriesList) {}
 
   @override
@@ -223,4 +280,90 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
 
   @override
   void configureMeasureAxes(List<MutableSeries<D>> seriesList) {}
+
+  @override
+  DatumDetails<D> getDetailsForSeriesDatum(SeriesDatum<D> seriesDatum) {
+    // Generate details relevant to every type of series renderer. Position
+    // details are left as an exercise for every renderer that extends this
+    // class.
+    final series = seriesDatum.series;
+    final index = seriesDatum.index;
+    final domainFn = series.domainFn;
+    final domainLowerBoundFn = series.domainLowerBoundFn;
+    final domainUpperBoundFn = series.domainUpperBoundFn;
+    final measureFn = series.measureFn;
+    final measureLowerBoundFn = series.measureLowerBoundFn;
+    final measureUpperBoundFn = series.measureUpperBoundFn;
+    final measureOffsetFn = series.measureOffsetFn;
+    final rawMeasureFn = series.rawMeasureFn;
+    final rawMeasureLowerBoundFn = series.rawMeasureLowerBoundFn;
+    final rawMeasureUpperBoundFn = series.rawMeasureUpperBoundFn;
+    final colorFn = series.colorFn;
+    final radiusPxFn = series.radiusPxFn;
+
+    final domainValue = domainFn(index);
+    final domainLowerBoundValue =
+        domainLowerBoundFn != null ? domainLowerBoundFn(index) : null;
+    final domainUpperBoundValue =
+        domainUpperBoundFn != null ? domainUpperBoundFn(index) : null;
+
+    final measureValue = measureFn(index);
+    final measureLowerBoundValue =
+        measureLowerBoundFn != null ? measureLowerBoundFn(index) : null;
+    final measureUpperBoundValue =
+        measureUpperBoundFn != null ? measureUpperBoundFn(index) : null;
+    final measureOffsetValue =
+        measureOffsetFn != null ? measureOffsetFn(index) : null;
+
+    final rawMeasureValue = rawMeasureFn(index);
+    final rawMeasureLowerBoundValue =
+        rawMeasureLowerBoundFn != null ? rawMeasureLowerBoundFn(index) : null;
+    final rawMeasureUpperBoundValue =
+        rawMeasureUpperBoundFn != null ? rawMeasureUpperBoundFn(index) : null;
+
+    final color = colorFn(index);
+    final radiusPx = radiusPxFn != null ? radiusPxFn(index).toDouble() : null;
+
+    final details = new DatumDetails<D>(
+        datum: seriesDatum.datum,
+        index: seriesDatum.index,
+        domain: domainValue,
+        domainLowerBound: domainLowerBoundValue,
+        domainUpperBound: domainUpperBoundValue,
+        measure: measureValue,
+        measureLowerBound: measureLowerBoundValue,
+        measureUpperBound: measureUpperBoundValue,
+        measureOffset: measureOffsetValue,
+        rawMeasure: rawMeasureValue,
+        rawMeasureLowerBound: rawMeasureLowerBoundValue,
+        rawMeasureUpperBound: rawMeasureUpperBoundValue,
+        series: series,
+        color: color,
+        radiusPx: radiusPx);
+
+    // chartPosition depends on the shape of the rendered elements, and must be
+    // added by concrete [SeriesRenderer] classes.
+    return addPositionToDetailsForSeriesDatum(details, seriesDatum);
+  }
+
+  /// Returns true of [chartPoint] is within the component bounds for this
+  /// renderer.
+  ///
+  /// [chartPoint] a point to test.
+  ///
+  /// [bounds] optional override for component bounds. If this is passed, then
+  /// we will check whether the point is within these bounds instead of the
+  /// component bounds.
+  bool isPointWithinBounds(Point<double> chartPoint, Rectangle<int> bounds) {
+    // Was it even in the drawArea?
+    if (bounds != null) {
+      if (!bounds.containsPoint(chartPoint)) {
+        return false;
+      }
+    } else if (!componentBounds.containsPoint(chartPoint)) {
+      return false;
+    }
+
+    return true;
+  }
 }

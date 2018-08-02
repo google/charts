@@ -22,7 +22,7 @@ import 'chart_canvas.dart' show ChartCanvas;
 import 'chart_context.dart' show ChartContext;
 import 'datum_details.dart' show DatumDetails;
 import 'series_renderer.dart' show SeriesRenderer, rendererIdKey, rendererKey;
-import 'processed_series.dart' show MutableSeries;
+import 'processed_series.dart' show MutableSeries, SeriesDatum;
 import '../layout/layout_view.dart' show LayoutView;
 import '../layout/layout_config.dart' show LayoutConfig;
 import '../layout/layout_manager.dart' show LayoutManager;
@@ -52,7 +52,19 @@ abstract class BaseChart<D> {
 
   bool _animationsTemporarilyDisabled = false;
 
+  /// List of series that were passed into the previous draw call.
+  ///
+  /// This list will be used when redraw is called, to reset the state of all
+  /// behaviors to the original list.
+  List<MutableSeries<D>> _originalSeriesList;
+
+  /// List of series that are currently drawn on the chart.
+  ///
+  /// This list should be used by interactive behaviors between chart draw
+  /// cycles. It may be filtered or modified by some behaviors during the
+  /// initial draw cycle (e.g. a [Legend] may hide some series).
   List<MutableSeries<D>> _currentSeriesList;
+
   Set<String> _usingRenderers = new Set<String>();
   Map<String, List<MutableSeries<D>>> _rendererToSeriesList;
 
@@ -65,6 +77,15 @@ abstract class BaseChart<D> {
   final _gestureProxy = new ProxyGestureListener();
 
   final _selectionModels = <SelectionModelType, SelectionModel<D>>{};
+
+  /// Whether data should be selected by nearest domain distance, or by relative
+  /// distance.
+  ///
+  /// This should generally be true for chart types that are intended to be
+  /// aggregated by domain, and false for charts that plot arbitrary x,y data.
+  /// Scatter plots, for example, may have many overlapping data with the same
+  /// domain value.
+  bool get selectNearestByDomain => true;
 
   final _lifecycleListeners = <LifecycleListener<D>>[];
 
@@ -95,13 +116,13 @@ abstract class BaseChart<D> {
 
   /// Add a [GestureListener] to this chart.
   GestureListener addGestureListener(GestureListener listener) {
-    _gestureProxy.listeners.add(listener);
+    _gestureProxy.add(listener);
     return listener;
   }
 
   /// Remove a [GestureListener] from this chart.
   void removeGestureListener(GestureListener listener) {
-    _gestureProxy.listeners.remove(listener);
+    _gestureProxy.remove(listener);
   }
 
   LifecycleListener addLifecycleListener(LifecycleListener<D> listener) {
@@ -172,23 +193,69 @@ abstract class BaseChart<D> {
             .containsPoint(chartPosition));
   }
 
+  /// Retrieves the datum details that are nearest to the given [drawAreaPoint].
+  ///
+  /// [drawAreaPoint] represents a point in the chart, such as a point that was
+  /// clicked/tapped on by a user.
+  ///
+  /// [selectAcrossAllDrawAreaComponents] specifies whether nearest data
+  /// selection should be done across the combined draw area of all components
+  /// with series draw areas, or just the chart's primary draw area bounds.
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> drawAreaPoint) {
+      Point<double> drawAreaPoint, bool selectAcrossAllDrawAreaComponents) {
+    // Optionally grab the combined draw area bounds of all components. If this
+    // is disabled, then we expect each series renderer to filter out the event
+    // if [chartPoint] is located outside of its own component bounds.
+    final boundsOverride =
+        selectAcrossAllDrawAreaComponents ? drawableLayoutAreaBounds : null;
+
     final details = <DatumDetails<D>>[];
     _usingRenderers.forEach((String rendererId) {
       details.addAll(getSeriesRenderer(rendererId)
-          .getNearestDatumDetailPerSeries(drawAreaPoint));
+          .getNearestDatumDetailPerSeries(
+              drawAreaPoint, selectNearestByDomain, boundsOverride));
     });
 
-    // Sort so that the nearest one is first.
-    // Special sort, sort by domain distance first, then by measure distance.
     details.sort((DatumDetails<D> a, DatumDetails<D> b) {
-      int domainDiff = a.domainDistance.compareTo(b.domainDistance);
-      if (domainDiff == 0) {
-        return a.measureDistance.compareTo(b.measureDistance);
+      // Sort so that the nearest one is first.
+      // Special sort, sort by domain distance first, then by measure distance.
+      if (selectNearestByDomain) {
+        int domainDiff = a.domainDistance.compareTo(b.domainDistance);
+        if (domainDiff == 0) {
+          return a.measureDistance.compareTo(b.measureDistance);
+        }
+        return domainDiff;
+      } else {
+        return a.relativeDistance.compareTo(b.relativeDistance);
       }
-      return domainDiff;
     });
+
+    return details;
+  }
+
+  /// Retrieves the datum details for the current chart selection.
+  ///
+  /// [selectionModelType] specifies the type of the selection model to use.
+  List<DatumDetails<D>> getSelectedDatumDetails(
+      SelectionModelType selectionModelType) {
+    final details = <DatumDetails<D>>[];
+
+    if (_currentSeriesList == null) {
+      return details;
+    }
+
+    SelectionModel selectionModel = getSelectionModel(selectionModelType);
+    if (selectionModel == null || !selectionModel.hasDatumSelection) {
+      return details;
+    }
+
+    // Pass each selected datum to the appropriate series renderer to get full
+    // details appropriate to its series type.
+    for (SeriesDatum<D> seriesDatum in selectionModel.selectedDatum) {
+      final rendererId = seriesDatum.series.getAttr(rendererIdKey);
+      details.add(
+          getSeriesRenderer(rendererId).getDetailsForSeriesDatum(seriesDatum));
+    }
 
     return details;
   }
@@ -244,6 +311,9 @@ abstract class BaseChart<D> {
     return wasAttached;
   }
 
+  /// Returns a list of behaviors that have been added.
+  List<ChartBehavior<D>> get behaviors => new List.unmodifiable(_behaviorStack);
+
   //
   // Layout methods
   //
@@ -286,10 +356,20 @@ abstract class BaseChart<D> {
   /// Returns the bounds of the chart draw area.
   Rectangle<int> get drawAreaBounds => _layoutManager.drawAreaBounds;
 
+  /// Returns the combined bounds of the chart draw area and all layout
+  /// components that draw series data.
+  Rectangle<int> get drawableLayoutAreaBounds =>
+      _layoutManager.drawableLayoutAreaBounds;
+
   //
   // Draw methods
   //
   void draw(List<Series<dynamic, D>> seriesList) {
+    // Clear the selection model when [seriesList] changes.
+    for (final selectionModel in _selectionModels.values) {
+      selectionModel.clearSelection(notifyListeners: false);
+    }
+
     var processedSeriesList = new List<MutableSeries<D>>.from(
         seriesList.map((Series<dynamic, D> series) => makeSeries(series)));
 
@@ -302,7 +382,15 @@ abstract class BaseChart<D> {
     int seriesIndex = 0;
     processedSeriesList.forEach((series) => series.seriesIndex = seriesIndex++);
 
+    // Initially save a reference to processedSeriesList. After drawInternal
+    // finishes, we expect _currentSeriesList to contain a new, possibly
+    // modified list.
     _currentSeriesList = processedSeriesList;
+
+    // Store off processedSeriesList for use later during redraw calls. This
+    // list will not reflect any modifications that were made to
+    // _currentSeriesList by behaviors during the draw cycle.
+    _originalSeriesList = processedSeriesList;
 
     drawInternal(processedSeriesList, skipAnimation: false, skipLayout: false);
   }
@@ -310,7 +398,7 @@ abstract class BaseChart<D> {
   /// Redraws and re-lays-out the chart using the previously rendered layout
   /// dimensions.
   void redraw({bool skipAnimation = false, bool skipLayout = false}) {
-    drawInternal(_currentSeriesList,
+    drawInternal(_originalSeriesList,
         skipAnimation: skipAnimation, skipLayout: skipLayout);
 
     // Trigger layout and actually redraw the chart.
@@ -340,7 +428,11 @@ abstract class BaseChart<D> {
 
     // Allow listeners to manipulate the processed seriesList.
     fireOnPostprocess(seriesList);
+
+    _currentSeriesList = seriesList;
   }
+
+  List<MutableSeries<D>> get currentSeriesList => _currentSeriesList;
 
   MutableSeries<D> makeSeries(Series<dynamic, D> series) {
     final s = new MutableSeries<D>(series);

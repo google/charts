@@ -80,7 +80,7 @@ class DashPatternLineChart extends StatelessWidget {
       new charts.Series<LinearSales, int>(
         id: 'Tablet',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        dashPattern: [2, 2],
+        dashPatternFn: (_, __) => [2, 2],
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: myFakeTabletData,
@@ -88,7 +88,7 @@ class DashPatternLineChart extends StatelessWidget {
       new charts.Series<LinearSales, int>(
         id: 'Mobile',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        dashPattern: [8, 3, 2, 3],
+        dashPatternFn: (_, __) => [8, 3, 2, 3],
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: myFakeMobileData,
@@ -136,7 +136,7 @@ class DashPatternLineChart extends StatelessWidget {
       new charts.Series<LinearSales, int>(
         id: 'Tablet',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        dashPattern: [2, 2],
+        dashPatternFn: (_, __) => [2, 2],
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: myFakeTabletData,
@@ -144,7 +144,7 @@ class DashPatternLineChart extends StatelessWidget {
       new charts.Series<LinearSales, int>(
         id: 'Mobile',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        dashPattern: [8, 3, 2, 3],
+        dashPatternFn: (_, __) => [8, 3, 2, 3],
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: myFakeMobileData,

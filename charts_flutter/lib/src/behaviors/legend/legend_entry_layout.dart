@@ -24,7 +24,8 @@ import 'legend.dart' show TappableLegend;
 /// Strategy for building one widget from one [common.LegendEntry].
 abstract class LegendEntryLayout {
   Widget build(BuildContext context, common.LegendEntry legendEntry,
-      TappableLegend legend, bool isHidden);
+      TappableLegend legend, bool isHidden,
+      {bool showMeasures});
 }
 
 /// Builds one legend entry as a row with symbol and label from the series.
@@ -62,33 +63,45 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
 
   Widget createLabel(BuildContext context, common.LegendEntry legendEntry,
       TappableLegend legend, bool isHidden) {
-    TextStyle style;
-
-    // Make the entry text 26% opaque if the entry is hidden.
-    if (isHidden) {
-      // Use the color from the body 1 theme, but create a new style that only
-      // specifies a color. This should keep anything else that this [Text] is
-      // inheriting intact.
-      final body1 = Theme.of(context).textTheme.body1;
-      final color = body1.color.withOpacity(0.26);
-      style = new TextStyle(inherit: true, color: color);
-    }
+    final TextStyle style = isHidden ? _getHiddenTextStyle(context) : null;
 
     return new GestureDetector(
         child: new Text(legendEntry.label, style: style),
         onTapUp: makeTapUpCallback(context, legendEntry, legend));
   }
 
+  Widget createMeasureValue(BuildContext context,
+      common.LegendEntry legendEntry, TappableLegend legend, bool isHidden) {
+    return new GestureDetector(
+        child: new Text(legendEntry.formattedValue),
+        onTapUp: makeTapUpCallback(context, legendEntry, legend));
+  }
+
   @override
   Widget build(BuildContext context, common.LegendEntry legendEntry,
-      TappableLegend legend, bool isHidden) {
+      TappableLegend legend, bool isHidden,
+      {bool showMeasures}) {
+    final rowChildren = <Widget>[];
+
     // TODO: Allow setting to configure the padding.
     final padding = new EdgeInsets.only(right: 8.0); // Material default.
     final symbol = createSymbol(context, legendEntry, legend, isHidden);
     final label = createLabel(context, legendEntry, legend, isHidden);
 
+    final measure = showMeasures
+        ? createMeasureValue(context, legendEntry, legend, isHidden)
+        : null;
+
+    rowChildren.add(symbol);
+    rowChildren.add(new Container(padding: padding));
+    rowChildren.add(label);
+    if (measure != null) {
+      rowChildren.add(new Container(padding: padding));
+      rowChildren.add(measure);
+    }
+
     // Row automatically reverses the content if Directionality is rtl.
-    return new Row(children: [symbol, new Container(padding: padding), label]);
+    return new Row(children: rowChildren);
   }
 
   GestureTapUpCallback makeTapUpCallback(BuildContext context,
@@ -102,5 +115,16 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
 
   int get hashCode {
     return this.runtimeType.hashCode;
+  }
+
+  /// Get style that is 26% opaque if the entry is hidden.
+  ///
+  /// Use the color from the body 1 theme, but create a new style that only
+  /// specifies a color. This should keep anything else that this [Text] is
+  /// inheriting intact.
+  TextStyle _getHiddenTextStyle(BuildContext context) {
+    final body1 = Theme.of(context).textTheme.body1;
+    final color = body1.color.withOpacity(0.26);
+    return new TextStyle(inherit: true, color: color);
   }
 }

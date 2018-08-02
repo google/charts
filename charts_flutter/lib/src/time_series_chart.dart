@@ -14,7 +14,13 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show AxisSpec, DateTimeFactory, LineRendererConfig, Series, TimeSeriesChart;
+    show
+        AxisSpec,
+        DateTimeFactory,
+        LineRendererConfig,
+        Series,
+        SeriesRendererConfig,
+        TimeSeriesChart;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'cartesian_chart.dart' show CartesianChart;
@@ -37,6 +43,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
     common.LineRendererConfig<DateTime> defaultRenderer,
+    List<common.SeriesRendererConfig<DateTime>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig<DateTime>> selectionModels,
     LayoutConfig layoutConfig,
@@ -50,6 +57,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
           primaryMeasureAxis: primaryMeasureAxis,
           secondaryMeasureAxis: secondaryMeasureAxis,
           defaultRenderer: defaultRenderer,
+          customSeriesRenderers: customSeriesRenderers,
           behaviors: behaviors,
           selectionModels: selectionModels,
           layoutConfig: layoutConfig,
@@ -57,9 +65,15 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
         );
 
   @override
-  common.TimeSeriesChart createCommonChart(BaseChartState chartState) =>
-      new common.TimeSeriesChart(
-          layoutConfig: layoutConfig?.commonLayoutConfig);
+  common.TimeSeriesChart createCommonChart(BaseChartState chartState) {
+    // Optionally create primary and secondary measure axes if the chart was
+    // configured with them. If no axes were configured, then the chart will
+    // use its default types (usually a numeric axis).
+    return new common.TimeSeriesChart(
+        layoutConfig: layoutConfig?.commonLayoutConfig,
+        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis());
+  }
 
   @override
   void addDefaultInteractions(List<ChartBehavior> behaviors) {

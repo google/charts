@@ -316,6 +316,8 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     int x = 0;
     int y = 0;
 
+    final labelOffsetPx = tick.labelOffsetPx ?? 0;
+
     if (orientation == AxisOrientation.bottom ||
         orientation == AxisOrientation.top) {
       y = orientation == AxisOrientation.bottom
@@ -330,14 +332,14 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
 
       switch (direction) {
         case TextDirection.rtl:
-          x = (locationPx + labelOffsetFromTickPx).toInt();
+          x = (locationPx + labelOffsetFromTickPx + labelOffsetPx).toInt();
           break;
         case TextDirection.ltr:
-          x = (locationPx - labelOffsetFromTickPx).toInt();
+          x = (locationPx - labelOffsetFromTickPx - labelOffsetPx).toInt();
           break;
         case TextDirection.center:
         default:
-          x = locationPx.toInt();
+          x = (locationPx - labelOffsetPx).toInt();
           break;
       }
     } else {
@@ -364,15 +366,17 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
         case _PixelVerticalDirection.over:
           y = (locationPx -
                   measurement.verticalSliceWidth -
-                  labelOffsetFromTickPx)
+                  labelOffsetFromTickPx -
+                  labelOffsetPx)
               .toInt();
           break;
         case _PixelVerticalDirection.under:
-          y = (locationPx + labelOffsetFromTickPx).toInt();
+          y = (locationPx + labelOffsetFromTickPx + labelOffsetPx).toInt();
           break;
         case _PixelVerticalDirection.center:
         default:
-          y = (locationPx - measurement.verticalSliceWidth / 2).toInt();
+          y = (locationPx - measurement.verticalSliceWidth / 2 + labelOffsetPx)
+              .toInt();
           break;
       }
     }

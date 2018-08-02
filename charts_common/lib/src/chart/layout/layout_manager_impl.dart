@@ -29,13 +29,25 @@ class LayoutManagerImpl implements LayoutManager {
   // a new copy of [DefaultLayoutManager] to be created.
   LayoutConfig config;
 
+  /// Unordered list of views in the layout.
   final _views = <LayoutView>[];
+
+  /// List of views in the order they should be drawn on the canvas.
+  ///
+  /// First element is painted first.
+  List<LayoutView> _paintOrderedViews;
+
+  /// List of vies in the order they should be positioned in a chart margin.
+  ///
+  /// First element is closest to the draw area.
+  List<LayoutView> _positionOrderedViews;
 
   _MeasuredSizes _measurements;
 
   Rectangle<int> _drawAreaBounds;
   bool _drawAreaBoundsOutdated = true;
-  bool _viewsNeedSort = true;
+  bool _viewsNeedPaintSort = true;
+  bool _viewsNeedPositionSort = true;
 
   /// Create a new [LayoutManager].
   LayoutManagerImpl({LayoutConfig config})
@@ -45,37 +57,71 @@ class LayoutManagerImpl implements LayoutManager {
   void addView(LayoutView view) {
     _views.add(view);
     _drawAreaBoundsOutdated = true;
-    _viewsNeedSort = true;
+    _viewsNeedPositionSort = true;
+    _viewsNeedPaintSort = true;
   }
 
   /// Remove one [LayoutView].
   void removeView(LayoutView view) {
     if (_views.remove(view)) {
       _drawAreaBoundsOutdated = true;
-      _viewsNeedSort = true;
+      _viewsNeedPositionSort = true;
+      _viewsNeedPaintSort = true;
     }
   }
 
   /// Returns true if [view] is already attached.
   bool isAttached(LayoutView view) => _views.contains(view);
 
-  /// Get all layout components in the order to be visited/drawn.
+  /// Get all layout components in the order to be drawn.
   @override
   List<LayoutView> get paintOrderedViews {
-    if (_viewsNeedSort) {
-      // In place sort the views.
-      _views.sort((LayoutView v1, LayoutView v2) => v1
+    if (_viewsNeedPaintSort) {
+      _paintOrderedViews = new List<LayoutView>.from(_views);
+
+      _paintOrderedViews.sort((LayoutView v1, LayoutView v2) =>
+          v1.layoutConfig.paintOrder.compareTo(v2.layoutConfig.paintOrder));
+
+      _viewsNeedPaintSort = false;
+    }
+    return _paintOrderedViews;
+  }
+
+  /// Get all layout components in the order to be visited.
+  @override
+  List<LayoutView> get positionOrderedViews {
+    if (_viewsNeedPositionSort) {
+      _positionOrderedViews = new List<LayoutView>.from(_views);
+
+      _positionOrderedViews.sort((LayoutView v1, LayoutView v2) => v1
           .layoutConfig.positionOrder
           .compareTo(v2.layoutConfig.positionOrder));
-      _viewsNeedSort = false;
+
+      _viewsNeedPositionSort = false;
     }
-    return _views;
+    return _positionOrderedViews;
   }
 
   @override
   Rectangle<int> get drawAreaBounds {
     assert(_drawAreaBoundsOutdated == false);
     return _drawAreaBounds;
+  }
+
+  @override
+  Rectangle<int> get drawableLayoutAreaBounds {
+    assert(_drawAreaBoundsOutdated == false);
+
+    final drawableViews =
+        _views.where((LayoutView view) => view.isSeriesRenderer);
+
+    var componentBounds = drawableViews.first.componentBounds;
+
+    for (LayoutView view in drawableViews.skip(1)) {
+      componentBounds = componentBounds.boundingBox(view.componentBounds);
+    }
+
+    return componentBounds;
   }
 
   @override
@@ -184,7 +230,7 @@ class LayoutManagerImpl implements LayoutManager {
 
   Iterable<LayoutView> _viewsForPositions(LayoutPosition p1,
       [LayoutPosition p2]) {
-    return paintOrderedViews.where((LayoutView view) =>
+    return positionOrderedViews.where((LayoutView view) =>
         (view.layoutConfig.position == p1 ||
             (p2 != null && view.layoutConfig.position == p2)));
   }

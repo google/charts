@@ -16,6 +16,7 @@
 import 'base_bar_renderer_config.dart'
     show BarGroupingType, BaseBarRendererConfig;
 import 'bar_target_line_renderer.dart' show BarTargetLineRenderer;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/symbol_renderer.dart'
     show SymbolRenderer, LineSymbolRenderer;
 
@@ -39,23 +40,26 @@ class BarTargetLineRendererConfig extends BaseBarRendererConfig<String> {
 
   BarTargetLineRendererConfig(
       {String customRendererId,
-      List<int> barWeights,
       List<int> dashPattern,
       groupingType = BarGroupingType.grouped,
+      int layoutPaintOrder = LayoutViewPaintOrder.barTargetLine,
       int minBarLengthPx = 0,
       this.overDrawOuterPx,
       this.overDrawPx = 0,
       this.roundEndCaps = true,
       double strokeWidthPx = 3.0,
-      SymbolRenderer symbolRenderer})
+      SymbolRenderer symbolRenderer,
+      List<int> weightPattern})
       : super(
-            customRendererId: customRendererId,
-            barWeights: barWeights,
-            dashPattern: dashPattern,
-            groupingType: groupingType,
-            minBarLengthPx: minBarLengthPx,
-            strokeWidthPx: strokeWidthPx,
-            symbolRenderer: symbolRenderer ?? new LineSymbolRenderer());
+          customRendererId: customRendererId,
+          dashPattern: dashPattern,
+          groupingType: groupingType,
+          layoutPaintOrder: layoutPaintOrder,
+          minBarLengthPx: minBarLengthPx,
+          strokeWidthPx: strokeWidthPx,
+          symbolRenderer: symbolRenderer ?? new LineSymbolRenderer(),
+          weightPattern: weightPattern,
+        );
 
   @override
   BarTargetLineRenderer<String> build() {

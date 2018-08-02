@@ -41,7 +41,8 @@ class AxisTicks<D> extends Tick<D> {
       : super(
             value: tick.value,
             textElement: tick.textElement,
-            locationPx: tick.locationPx) {
+            locationPx: tick.locationPx,
+            labelOffsetPx: tick.labelOffsetPx) {
     /// Set the initial target for a new animated tick.
     _markedForRemoval = false;
     _targetLocation = tick.locationPx;

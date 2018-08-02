@@ -18,10 +18,11 @@ import 'base_bar_renderer_config.dart'
 import 'bar_renderer.dart' show BarRenderer;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import '../common/chart_canvas.dart' show FillPatternType;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/symbol_renderer.dart';
 
 /// Configuration for a bar renderer.
-class BarRendererConfig extends BaseBarRendererConfig<String> {
+class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   /// Strategy for determining the corner radius of a bar.
   final CornerStrategy cornerStrategy;
 
@@ -30,29 +31,32 @@ class BarRendererConfig extends BaseBarRendererConfig<String> {
 
   BarRendererConfig({
     String customRendererId,
-    List<int> barWeights,
     CornerStrategy cornerStrategy,
     FillPatternType fillPattern,
     BarGroupingType groupingType,
+    int layoutPaintOrder = LayoutViewPaintOrder.bar,
     int minBarLengthPx = 0,
     double stackHorizontalSeparator,
     double strokeWidthPx = 0.0,
     this.barRendererDecorator,
     SymbolRenderer symbolRenderer,
+    List<int> weightPattern,
   })  : cornerStrategy = cornerStrategy ?? const ConstCornerStrategy(2),
         super(
-            customRendererId: customRendererId,
-            barWeights: barWeights,
-            groupingType: groupingType ?? BarGroupingType.grouped,
-            minBarLengthPx: minBarLengthPx,
-            fillPattern: fillPattern,
-            stackHorizontalSeparator: stackHorizontalSeparator,
-            strokeWidthPx: strokeWidthPx,
-            symbolRenderer: symbolRenderer);
+          customRendererId: customRendererId,
+          groupingType: groupingType ?? BarGroupingType.grouped,
+          layoutPaintOrder: layoutPaintOrder,
+          minBarLengthPx: minBarLengthPx,
+          fillPattern: fillPattern,
+          stackHorizontalSeparator: stackHorizontalSeparator,
+          strokeWidthPx: strokeWidthPx,
+          symbolRenderer: symbolRenderer,
+          weightPattern: weightPattern,
+        );
 
   @override
-  BarRenderer<String> build() {
-    return new BarRenderer<String>(config: this, rendererId: customRendererId);
+  BarRenderer<D> build() {
+    return new BarRenderer<D>(config: this, rendererId: customRendererId);
   }
 
   @override

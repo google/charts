@@ -6,8 +6,6 @@ Example:
 
 ```
 /// Simple pie chart example.
-///
-/// Animation is not currently supported.
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 

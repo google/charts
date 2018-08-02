@@ -37,6 +37,11 @@ class SelectionModel<D> {
   /// When set to true, prevents the model from being updated.
   bool locked = false;
 
+  /// Clears the selection state.
+  bool clearSelection({bool notifyListeners = true}) {
+    return updateSelection([], [], notifyListeners: notifyListeners);
+  }
+
   /// Updates the selection state. If mouse driven, [datumSelection] should be
   /// ordered by distance from mouse, closest first.
   bool updateSelection(
@@ -81,6 +86,10 @@ class SelectionModel<D> {
   ///
   /// This is empty by default.
   List<ImmutableSeries<D>> get selectedSeries => _selectedSeries;
+
+  /// Returns true if this [SelectionModel] has a selected datum or series.
+  bool get hasAnySelection =>
+      _selectedDatum.isNotEmpty || selectedSeries.isNotEmpty;
 
   /// Add a listener to be notified when this [SelectionModel] changes.
   ///
