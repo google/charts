@@ -33,6 +33,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   final common.AxisSpec domainAxis;
   final common.AxisSpec primaryMeasureAxis;
   final common.AxisSpec secondaryMeasureAxis;
+  final bool flipVerticalAxis;
 
   CartesianChart(
     List<common.Series<dynamic, D>> seriesList, {
@@ -48,6 +49,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     common.RTLSpec rtlSpec,
     bool defaultInteractions: true,
     LayoutConfig layoutConfig,
+    this.flipVerticalAxis,
   }) : super(
           seriesList,
           animate: animate,
@@ -68,6 +70,10 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
     final prev = oldWidget as CartesianChart;
     final chart = baseChart as common.CartesianChart;
+
+    if (flipVerticalAxis != null) {
+      chart.flipVerticalAxisOutput = flipVerticalAxis;
+    }
 
     if (domainAxis != null && domainAxis != prev?.domainAxis) {
       chart.domainAxisSpec = domainAxis;

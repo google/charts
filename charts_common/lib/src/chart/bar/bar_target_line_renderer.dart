@@ -47,15 +47,15 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   final _color = new Color(r: 0, g: 0, b: 0, a: 153);
 
   factory BarTargetLineRenderer(
-      {BarTargetLineRendererConfig config,
+      {BarTargetLineRendererConfig<D> config,
       String rendererId = 'barTargetLine'}) {
-    config ??= new BarTargetLineRendererConfig();
+    config ??= new BarTargetLineRendererConfig<D>();
     return new BarTargetLineRenderer._internal(
         config: config, rendererId: rendererId);
   }
 
   BarTargetLineRenderer._internal(
-      {BarTargetLineRendererConfig config, String rendererId})
+      {BarTargetLineRendererConfig<D> config, String rendererId})
       : super(
             config: config,
             rendererId: rendererId,
@@ -109,7 +109,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
 
   @override
   _BarTargetLineRendererElement getBaseDetails(dynamic datum, int index) {
-    final BarTargetLineRendererConfig localConfig = config;
+    final BarTargetLineRendererConfig<D> localConfig = config;
     return new _BarTargetLineRendererElement()
       ..roundEndCaps = localConfig.roundEndCaps;
   }
@@ -238,7 +238,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       previousBarGroupWeight = barGroupIndex * barGroupWeight;
     }
 
-    final BarTargetLineRendererConfig localConfig = config;
+    final BarTargetLineRendererConfig<D> localConfig = config;
 
     // Calculate how wide each bar target line should be within the group of
     // bar target lines. If we only have one series, or are stacked, then

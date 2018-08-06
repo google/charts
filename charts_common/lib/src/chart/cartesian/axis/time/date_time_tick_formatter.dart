@@ -117,15 +117,9 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
   /// Only use this formatter for data with fixed intervals, otherwise use the
   /// default, or build from scratch.
   ///
-  /// [pattern] The format for all ticks.
-  factory DateTimeTickFormatter.uniform(
-      DateTimeFactory dateTimeFactory, String pattern) {
-    return new DateTimeTickFormatter._internal({
-      ANY: new TimeTickFormatterImpl(
-          dateTimeFactory: dateTimeFactory,
-          simpleFormat: pattern,
-          transitionFormat: pattern),
-    });
+  /// [formatter] The format for all ticks.
+  factory DateTimeTickFormatter.uniform(TimeTickFormatter formatter) {
+    return new DateTimeTickFormatter._internal({ANY: formatter});
   }
 
   /// Creates a [DateTimeTickFormatter] that formats ticks with [formatters].
@@ -142,6 +136,10 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
   }
 
   DateTimeTickFormatter._internal(this._timeFormatters) {
+    // If there is only one formatter, just use this one and skip this check.
+    if (_timeFormatters.length == 1) {
+      return;
+    }
     _checkPositiveAndSorted(_timeFormatters.keys);
   }
 

@@ -198,6 +198,9 @@ class LinearScale implements NumericScale {
   }
 
   @override
+  double get domainStepSize => _domainInfo.minimumDetectedDomainStep.toDouble();
+
+  @override
   int get rangeWidth => (range.end - range.start).abs().toInt();
 
   @override
