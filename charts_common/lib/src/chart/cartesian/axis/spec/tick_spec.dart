@@ -23,6 +23,10 @@ class TickSpec<D> {
   final String label;
   final TextStyleSpec style;
 
-  TickSpec(this.value, {String label, this.style})
-      : label = label ?? value.toString();
+  /// [value] the value of this tick
+  /// [label] optional label for this tick. If not set, uses the tick formatter
+  /// of the axis.
+  /// [style] optional style for this tick. If not set, uses the style of the
+  /// axis.
+  TickSpec(this.value, {this.label, this.style});
 }

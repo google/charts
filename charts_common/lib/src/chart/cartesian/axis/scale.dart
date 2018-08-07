@@ -68,6 +68,9 @@ abstract class Scale<D> {
   /// The step size is determined using the [StepSizeConfig].
   double get stepSize;
 
+  /// Returns the stepSize domain value.
+  double get domainStepSize;
+
   /// Tests whether the given [domainValue] is within the axis' range.
   ///
   /// Returns < 0 if the [domainValue] would plot before the viewport, 0 if it

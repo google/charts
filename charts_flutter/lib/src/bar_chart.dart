@@ -53,6 +53,7 @@ class BarChart extends CartesianChart<String> {
     bool defaultInteractions: true,
     LayoutConfig layoutConfig,
     this.barRendererDecorator,
+    bool flipVerticalAxis,
   }) : super(
           seriesList,
           animate: animate,
@@ -70,6 +71,7 @@ class BarChart extends CartesianChart<String> {
           rtlSpec: rtlSpec,
           defaultInteractions: defaultInteractions,
           layoutConfig: layoutConfig,
+          flipVerticalAxis: flipVerticalAxis,
         );
 
   @override

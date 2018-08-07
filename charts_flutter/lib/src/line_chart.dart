@@ -43,6 +43,7 @@ class LineChart extends CartesianChart<num> {
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
     bool defaultInteractions: true,
+    bool flipVerticalAxis,
   }) : super(
           seriesList,
           animate: animate,
@@ -57,6 +58,7 @@ class LineChart extends CartesianChart<num> {
           rtlSpec: rtlSpec,
           layoutConfig: layoutConfig,
           defaultInteractions: defaultInteractions,
+          flipVerticalAxis: flipVerticalAxis,
         );
 
   @override

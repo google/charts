@@ -119,6 +119,9 @@ class DateTimeScale extends MutableScale<DateTime> {
   double get stepSize => _linearScale.stepSize;
 
   @override
+  double get domainStepSize => _linearScale.domainStepSize;
+
+  @override
   RangeBandConfig get rangeBandConfig => _linearScale.rangeBandConfig;
 
   @override

@@ -21,7 +21,7 @@ import '../../common/symbol_renderer.dart'
     show SymbolRenderer, LineSymbolRenderer;
 
 /// Configuration for a bar target line renderer.
-class BarTargetLineRendererConfig extends BaseBarRendererConfig<String> {
+class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   /// The number of pixels that the line will extend beyond the bandwidth at the
   /// edges of the bar group.
   ///
@@ -62,8 +62,8 @@ class BarTargetLineRendererConfig extends BaseBarRendererConfig<String> {
         );
 
   @override
-  BarTargetLineRenderer<String> build() {
-    return new BarTargetLineRenderer<String>(
+  BarTargetLineRenderer<D> build() {
+    return new BarTargetLineRenderer<D>(
         config: this, rendererId: customRendererId);
   }
 

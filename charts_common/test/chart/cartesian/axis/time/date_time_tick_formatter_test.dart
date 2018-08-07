@@ -210,11 +210,10 @@ void main() {
 
   group('check custom time tick formatters', () {
     test('throws arugment error if time resolution key is not positive', () {
+      // -1 is reserved for any, if there is only one formatter, -1 is allowed.
       expect(
-          () => new DateTimeTickFormatter.withFormatters({0: timeFormatter1}),
-          throwsArgumentError);
-      expect(
-          () => new DateTimeTickFormatter.withFormatters({-1: timeFormatter1}),
+          () => new DateTimeTickFormatter.withFormatters(
+              {-1: timeFormatter1, 2: timeFormatter2}),
           throwsArgumentError);
     });
 

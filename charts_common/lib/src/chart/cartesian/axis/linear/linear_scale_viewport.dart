@@ -84,7 +84,7 @@ class LinearScaleViewportSettings {
     // If we are loading from the viewport, then update the scalingFactor given
     // the viewport size compared to the data size.
     if (_manualDomainExtent) {
-      double viewportDomainDiff = _domainExtent?.width;
+      double viewportDomainDiff = _domainExtent?.width?.toDouble();
       if (domainInfo.domainDiff != 0.0) {
         scalingFactor = domainInfo.domainDiff / viewportDomainDiff;
       } else {
