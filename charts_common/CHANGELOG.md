@@ -1,3 +1,10 @@
+# 0.4.0
+* Declare compatibility with Dart 2.
+* BasicNumericTickFormatterSpec now takes in a callback instead of NumberFormat as the default constructor. Use named constructor withNumberFormat instead. This is a breaking change.
+* BarRendererConfig is no longer default of type String, please change current usage to BarRendererConfig<String>. This is a breaking change.
+* BarTargetLineRendererConfig is no longer default of type String, please change current usage to BarTargetLineRendererConfig<String>. This is a breaking change.
+
+
 # 0.3.0
 * Simplified API by removing the requirement for specifying the datum type when creating a chart.
 For example, previously to construct a bar chart the syntax was 'new BarChart<MyDatumType>()'.
