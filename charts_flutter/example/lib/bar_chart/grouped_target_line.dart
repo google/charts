@@ -141,7 +141,7 @@ class GroupedBarTargetLineChart extends StatelessWidget {
         animate: animate,
         barGroupingType: charts.BarGroupingType.grouped,
         customSeriesRenderers: [
-          new charts.BarTargetLineRendererConfig(
+          new charts.BarTargetLineRendererConfig<String>(
               // ID used to link series to this renderer.
               customRendererId: 'customTargetLine',
               groupingType: charts.BarGroupingType.grouped)

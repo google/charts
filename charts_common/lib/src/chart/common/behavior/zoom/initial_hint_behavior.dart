@@ -19,7 +19,7 @@ import 'package:meta/meta.dart' show protected;
 
 import '../../../../common/gesture_listener.dart' show GestureListener;
 import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
-import '../../../cartesian/axis/axis.dart' show Axis, OrdinalAxis;
+import '../../../cartesian/axis/axis.dart' show Axis;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../chart_behavior.dart' show ChartBehavior;
 
@@ -120,9 +120,6 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
 
     _chart = chart;
 
-    // TODO: Translation animation only works for ordinal axis.
-    assert(_chart.domainAxis is OrdinalAxis);
-
     _chart.addGestureListener(_listener);
     _chart.addLifecycleListener(_lifecycleListener);
   }
@@ -163,12 +160,16 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
 
       final domainAxis = chart.domainAxis;
 
+      // TODO: Translation animation only works for axis with a
+      // rangeband type that returns a non zero step size. If two rows have
+      // the same domain value, step size could also equal 0.
+      assert(domainAxis.stepSize != 0.0);
+
       // Save the target viewport and scale factor from axis, because the
       // viewport can be set by the user using AxisSpec.
       _targetViewportTranslatePx = domainAxis.viewportTranslatePx;
       _targetViewportScalingFactor = domainAxis.viewportScalingFactor;
 
-      // TODO: Translation animation only works for ordinal axis.
       // Calculate the amount to translate from the target viewport.
       final translateAmount = domainAxis.stepSize * maxHintTranslate;
 

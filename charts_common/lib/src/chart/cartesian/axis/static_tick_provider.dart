@@ -47,11 +47,19 @@ class StaticTickProvider<D> extends TickProvider<D> {
   }) {
     final ticks = <Tick<D>>[];
 
-    for (TickSpec<D> spec in tickSpec) {
+    // Use the formatter's label if the tick spec does not provide one.
+    final formattedValues = formatter.format(
+        tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
+        stepSize: scale.domainStepSize);
+
+    for (var i = 0; i < tickSpec.length; i++) {
+      final spec = tickSpec[i];
+
       if (scale.compareDomainValueToViewport(spec.value) == 0) {
         final tick = new Tick<D>(
             value: spec.value,
-            textElement: graphicsFactory.createTextElement(spec.label),
+            textElement: graphicsFactory
+                .createTextElement(spec.label ?? formattedValues[i]),
             locationPx: scale[spec.value]);
         if (spec.style != null) {
           tick.textElement.textStyle = graphicsFactory.createTextPaint()
