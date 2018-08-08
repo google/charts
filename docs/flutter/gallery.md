@@ -18,7 +18,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/time_series_charts/simple_thumb.png)](example/time_series_charts/simple) | Range Annotation<br>[![](example/time_series_charts/range_annotation_thumb.png)](example/time_series_charts/range_annotation) | Symbol Annotation<br>[![](example/time_series_charts/symbol_annotation_thumb.png)](example/time_series_charts/symbol_annotation) | With Bar Renderer<br>[![](example/time_series_charts/with_bar_renderer_thumb.png)](example/time_series_charts/with_bar_renderer) |
+| Simple<br>[![](example/time_series_charts/simple_thumb.png)](example/time_series_charts/simple) | Confidence Interval<br>[![](example/time_series_charts/confidence_interval_thumb.png)](example/time_series_charts/confidence_interval) | Range Annotation<br>[![](example/time_series_charts/range_annotation_thumb.png)](example/time_series_charts/range_annotation) | Symbol Annotation<br>[![](example/time_series_charts/symbol_annotation_thumb.png)](example/time_series_charts/symbol_annotation) |
+| With Bar Renderer<br>[![](example/time_series_charts/with_bar_renderer_thumb.png)](example/time_series_charts/with_bar_renderer) | | | |
 
 
 ### Line Charts

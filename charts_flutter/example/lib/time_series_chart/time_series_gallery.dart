@@ -15,6 +15,7 @@
 
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
+import 'confidence_interval.dart';
 import 'range_annotation.dart';
 import 'simple.dart';
 import 'symbol_annotation.dart';
@@ -45,6 +46,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Time Series Chart with Bars',
       subtitle: 'Time series chart using the bar renderer',
       childBuilder: () => new TimeSeriesBar.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Time Series Chart with Confidence Interval',
+      subtitle: 'Draws area around the confidence interval',
+      childBuilder: () => new TimeSeriesConfidenceInterval.withRandomData(),
     ),
   ];
 }
