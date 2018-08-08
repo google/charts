@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
-import 'dart:math' show Point, Rectangle;
+import 'dart:math' show max, min, Point, Rectangle;
 import 'package:meta/meta.dart';
 
 import '../../cartesian/axis/axis.dart'
@@ -82,6 +82,14 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   /// This is because if dashPattern is null or not set, it defaults to [1,3].
   final List<int> dashPattern;
 
+  /// Whether or not follow lines should be drawn across the entire chart draw
+  /// area, or just from the axis to the point.
+  ///
+  /// When disabled, measure follow lines will be drawn from the primary measure
+  /// axis to the point. In RTL mode, this means from the right-hand axis. In
+  /// LTR mode, from the left-hand axis.
+  final bool drawFollowLinesAcrossChart;
+
   BaseChart<D> _chart;
 
   _LinePointLayoutView _view;
@@ -107,7 +115,8 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
       double radiusPaddingPx,
       LinePointHighlighterFollowLineType showHorizontalFollowLine,
       LinePointHighlighterFollowLineType showVerticalFollowLine,
-      List<int> dashPattern})
+      List<int> dashPattern,
+      bool drawFollowLinesAcrossChart})
       : selectionModelType = selectionModelType ?? SelectionModelType.info,
         defaultRadiusPx = defaultRadiusPx ?? 4.0,
         radiusPaddingPx = radiusPaddingPx ?? 0.5,
@@ -115,7 +124,8 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
             showHorizontalFollowLine ?? LinePointHighlighterFollowLineType.none,
         showVerticalFollowLine = showVerticalFollowLine ??
             LinePointHighlighterFollowLineType.nearest,
-        dashPattern = dashPattern ?? [1, 3] {
+        dashPattern = dashPattern ?? [1, 3],
+        drawFollowLinesAcrossChart = drawFollowLinesAcrossChart ?? true {
     _lifecycleListener =
         new LifecycleListener<D>(onAxisConfigured: _updateViewData);
   }
@@ -129,7 +139,8 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
         layoutPaintOrder: LayoutViewPaintOrder.linePointHighlighter,
         showHorizontalFollowLine: showHorizontalFollowLine,
         showVerticalFollowLine: showVerticalFollowLine,
-        dashPattern: dashPattern);
+        dashPattern: dashPattern,
+        drawFollowLinesAcrossChart: drawFollowLinesAcrossChart);
 
     if (chart is CartesianChart) {
       // Only vertical rendering is supported by this behavior.
@@ -262,6 +273,8 @@ class _LinePointLayoutView<D> extends LayoutView {
   Rectangle<int> _drawAreaBounds;
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
+  final bool drawFollowLinesAcrossChart;
+
   GraphicsFactory _graphicsFactory;
 
   /// Store a map of series drawn on the chart, mapped by series name.
@@ -276,6 +289,7 @@ class _LinePointLayoutView<D> extends LayoutView {
     @required this.showHorizontalFollowLine,
     @required this.showVerticalFollowLine,
     this.dashPattern,
+    this.drawFollowLinesAcrossChart,
   }) : this.layoutConfig = new LayoutViewConfig(
             paintOrder: LayoutViewPaintOrder.linePointHighlighter,
             position: LayoutPosition.DrawArea,
@@ -327,6 +341,49 @@ class _LinePointLayoutView<D> extends LayoutView {
       points.add(point.getCurrentPoint(animationPercent));
     });
 
+    // Build maps of the position where the follow lines should stop for each
+    // selected data point.
+    final endPointPerValueVertical = <int, int>{};
+    final endPointPerValueHorizontal = <int, int>{};
+
+    for (_PointRendererElement<D> pointElement in points) {
+      if (pointElement.point.x == null || pointElement.point.y == null) {
+        continue;
+      }
+
+      final roundedX = pointElement.point.x.round();
+      final roundedY = pointElement.point.y.round();
+
+      // Get the Y value closest to the top of the chart for this X position.
+      if (endPointPerValueVertical[roundedX] == null) {
+        endPointPerValueVertical[roundedX] = roundedY;
+      } else {
+        // In the nearest case, we rely on the selected data always starting
+        // with the nearest point. In this case, we don't care about the rest of
+        // the selected data positions.
+        if (showVerticalFollowLine !=
+            LinePointHighlighterFollowLineType.nearest) {
+          endPointPerValueVertical[roundedX] =
+              min(endPointPerValueVertical[roundedX], roundedY);
+        }
+      }
+
+      // Get the X value closest to the "end" side of the chart for this Y
+      // position.
+      if (endPointPerValueHorizontal[roundedY] == null) {
+        endPointPerValueHorizontal[roundedY] = roundedX;
+      } else {
+        // In the nearest case, we rely on the selected data always starting
+        // with the nearest point. In this case, we don't care about the rest of
+        // the selected data positions.
+        if (showHorizontalFollowLine !=
+            LinePointHighlighterFollowLineType.nearest) {
+          endPointPerValueHorizontal[roundedY] =
+              max(endPointPerValueHorizontal[roundedY], roundedX);
+        }
+      }
+    }
+
     var shouldShowHorizontalFollowLine = showHorizontalFollowLine ==
             LinePointHighlighterFollowLineType.all ||
         showHorizontalFollowLine == LinePointHighlighterFollowLineType.nearest;
@@ -341,6 +398,8 @@ class _LinePointLayoutView<D> extends LayoutView {
 
     final drawBounds = chart.drawableLayoutAreaBounds;
 
+    final rtl = chart.context.rtl;
+
     // Draw the follow lines first, below all of the highlight shapes.
     for (_PointRendererElement<D> pointElement in points) {
       if (pointElement.point.x == null || pointElement.point.y == null) {
@@ -353,11 +412,26 @@ class _LinePointLayoutView<D> extends LayoutView {
       // Draw the horizontal follow line.
       if (shouldShowHorizontalFollowLine &&
           !paintedHorizontalLinePositions.contains(roundedY)) {
+        var leftBound;
+        var rightBound;
+
+        if (drawFollowLinesAcrossChart) {
+          // RTL and LTR both go across the whole draw area.
+          leftBound = drawBounds.left;
+          rightBound = drawBounds.left + drawBounds.width;
+        } else {
+          final x = endPointPerValueHorizontal[roundedY];
+
+          // RTL goes from the point to the right edge. LTR goes from the left
+          // edge to the point.
+          leftBound = rtl ? x : drawBounds.left;
+          rightBound = rtl ? drawBounds.left + drawBounds.width : x;
+        }
+
         canvas.drawLine(
             points: [
-              new Point<num>(drawBounds.left, pointElement.point.y),
-              new Point<num>(
-                  drawBounds.left + drawBounds.width, pointElement.point.y),
+              new Point<num>(leftBound, pointElement.point.y),
+              new Point<num>(rightBound, pointElement.point.y),
             ],
             stroke: StyleFactory.style.linePointHighlighterColor,
             strokeWidthPx: 1.0,
@@ -374,9 +448,13 @@ class _LinePointLayoutView<D> extends LayoutView {
       // Draw the vertical follow line.
       if (shouldShowVerticalFollowLine &&
           !paintedVerticalLinePositions.contains(roundedX)) {
+        final topBound = drawFollowLinesAcrossChart
+            ? drawBounds.top
+            : endPointPerValueVertical[roundedX];
+
         canvas.drawLine(
             points: [
-              new Point<num>(pointElement.point.x, drawBounds.top),
+              new Point<num>(pointElement.point.x, topBound),
               new Point<num>(
                   pointElement.point.x, drawBounds.top + drawBounds.height),
             ],
