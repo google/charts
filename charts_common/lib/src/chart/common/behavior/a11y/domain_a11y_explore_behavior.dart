@@ -41,7 +41,7 @@ String domainVocalization<D>(List<SeriesDatum<D>> seriesDatums) {
 class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
   final VocalizationCallback _vocalizationCallback;
   LifecycleListener<D> _lifecycleListener;
-  CartesianChart _chart;
+  CartesianChart<D> _chart;
   List<MutableSeries<D>> _seriesList;
 
   DomainA11yExploreBehavior(
@@ -75,7 +75,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
         D domain = series.domainFn(index);
 
         domainSeriesDatum[domain] ??= new List<SeriesDatum<D>>();
-        domainSeriesDatum[domain].add(new SeriesDatum(series, datum));
+        domainSeriesDatum[domain].add(new SeriesDatum<D>(series, datum));
       }
     }
 
