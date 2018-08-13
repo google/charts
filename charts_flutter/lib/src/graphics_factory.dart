@@ -15,12 +15,17 @@
 
 import 'package:charts_common/common.dart' as common
     show GraphicsFactory, LineStyle, TextElement, TextStyle;
+import 'package:flutter/widgets.dart' show BuildContext, MediaQuery;
 import 'line_style.dart' show LineStyle;
 import 'text_element.dart' show TextElement;
 import 'text_style.dart' show TextStyle;
 
 class GraphicsFactory implements common.GraphicsFactory {
-  const GraphicsFactory();
+  final double textScaleFactor;
+
+  GraphicsFactory(BuildContext context,
+      {GraphicsFactoryHelper helper = const GraphicsFactoryHelper()})
+      : textScaleFactor = helper.getTextScaleFactorOf(context);
 
   /// Returns a [TextStyle] object.
   @override
@@ -29,9 +34,17 @@ class GraphicsFactory implements common.GraphicsFactory {
   /// Returns a text element from [text] and [style].
   @override
   common.TextElement createTextElement(String text) {
-    return new TextElement(text);
+    return new TextElement(text, textScaleFactor: textScaleFactor);
   }
 
   @override
   common.LineStyle createLinePaint() => new LineStyle();
+}
+
+/// Wraps the MediaQuery function to allow for testing.
+class GraphicsFactoryHelper {
+  const GraphicsFactoryHelper();
+
+  double getTextScaleFactorOf(BuildContext context) =>
+      MediaQuery.textScaleFactorOf(context);
 }
