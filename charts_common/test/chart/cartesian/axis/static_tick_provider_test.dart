@@ -30,6 +30,18 @@ class MockGraphicsFactory extends Mock implements GraphicsFactory {}
 
 class MockNumericTickFormatter extends Mock implements TickFormatter<num> {}
 
+class FakeNumericTickFormatter implements TickFormatter<num> {
+  int calledTimes = 0;
+
+  @override
+  List<String> format(List<num> tickValues, Map<num, String> cache,
+      {num stepSize}) {
+    calledTimes += 1;
+
+    return tickValues.map((value) => value.toString()).toList();
+  }
+}
+
 class MockDrawStrategy extends Mock implements BaseTickDrawStrategy {}
 
 void main() {
@@ -98,6 +110,71 @@ void main() {
 
       expect(scale.dataExtent.min, equals(0));
       expect(scale.dataExtent.max, equals(150));
+    });
+  });
+
+  group('formatter', () {
+    test('is not called when all ticks have labels', () {
+      final tickProvider = new StaticTickProvider<num>([
+        new TickSpec<num>(50, label: '50'),
+        new TickSpec<num>(75, label: '75'),
+        new TickSpec<num>(100, label: '100'),
+      ]);
+
+      final fakeFormatter = new FakeNumericTickFormatter();
+
+      tickProvider.getTicks(
+          context: context,
+          graphicsFactory: graphicsFactory,
+          scale: scale,
+          formatter: fakeFormatter,
+          formatterValueCache: <num, String>{},
+          tickDrawStrategy: drawStrategy,
+          orientation: null);
+
+      expect(fakeFormatter.calledTimes, equals(0));
+    });
+
+    test('is called when one ticks does not have label', () {
+      final tickProvider = new StaticTickProvider<num>([
+        new TickSpec<num>(50, label: '50'),
+        new TickSpec<num>(75),
+        new TickSpec<num>(100, label: '100'),
+      ]);
+
+      final fakeFormatter = new FakeNumericTickFormatter();
+
+      tickProvider.getTicks(
+          context: context,
+          graphicsFactory: graphicsFactory,
+          scale: scale,
+          formatter: fakeFormatter,
+          formatterValueCache: <num, String>{},
+          tickDrawStrategy: drawStrategy,
+          orientation: null);
+
+      expect(fakeFormatter.calledTimes, equals(1));
+    });
+
+    test('is called when all ticks do not have labels', () {
+      final tickProvider = new StaticTickProvider<num>([
+        new TickSpec<num>(50),
+        new TickSpec<num>(75),
+        new TickSpec<num>(100),
+      ]);
+
+      final fakeFormatter = new FakeNumericTickFormatter();
+
+      tickProvider.getTicks(
+          context: context,
+          graphicsFactory: graphicsFactory,
+          scale: scale,
+          formatter: fakeFormatter,
+          formatterValueCache: <num, String>{},
+          tickDrawStrategy: drawStrategy,
+          orientation: null);
+
+      expect(fakeFormatter.calledTimes, equals(1));
     });
   });
 }

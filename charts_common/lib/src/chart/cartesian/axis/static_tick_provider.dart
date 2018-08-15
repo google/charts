@@ -48,18 +48,26 @@ class StaticTickProvider<D> extends TickProvider<D> {
   }) {
     final ticks = <Tick<D>>[];
 
-    // When static ticks are being used with a numeric axis, extend the axis
-    // with the values specified.
-    if (scale is NumericScale) {
-      for (TickSpec<D> spec in tickSpec) {
+    bool allTicksHaveLabels = true;
+
+    for (TickSpec<D> spec in tickSpec) {
+      // When static ticks are being used with a numeric axis, extend the axis
+      // with the values specified.
+      if (scale is NumericScale) {
         scale.addDomain(spec.value);
       }
+
+      // Save off whether all ticks have labels.
+      allTicksHaveLabels = allTicksHaveLabels && (spec.label != null);
     }
 
     // Use the formatter's label if the tick spec does not provide one.
-    final formattedValues = formatter.format(
-        tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
-        stepSize: scale.domainStepSize);
+    List<String> formattedValues;
+    if (allTicksHaveLabels == false) {
+      formattedValues = formatter.format(
+          tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
+          stepSize: scale.domainStepSize);
+    }
 
     for (var i = 0; i < tickSpec.length; i++) {
       final spec = tickSpec[i];
