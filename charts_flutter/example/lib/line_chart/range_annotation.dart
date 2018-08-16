@@ -55,7 +55,9 @@ class LineRangeAnnotationChart extends StatelessWidget {
       new LinearSales(0, random.nextInt(100)),
       new LinearSales(1, random.nextInt(100)),
       new LinearSales(2, random.nextInt(100)),
-      new LinearSales(3, random.nextInt(100)),
+      // Fix one of the points to 100 so that the annotations are consistently
+      // placed.
+      new LinearSales(3, 100),
     ];
 
     return [
@@ -74,10 +76,21 @@ class LineRangeAnnotationChart extends StatelessWidget {
     return new charts.LineChart(seriesList, animate: animate, behaviors: [
       new charts.RangeAnnotation([
         new charts.RangeAnnotationSegment(
-            0.5, 1.0, charts.RangeAnnotationAxisType.domain),
+            0.5, 1.0, charts.RangeAnnotationAxisType.domain,
+            startLabel: 'Domain 1'),
         new charts.RangeAnnotationSegment(
             2, 4, charts.RangeAnnotationAxisType.domain,
-            color: charts.MaterialPalette.gray.shade200),
+            endLabel: 'Domain 2', color: charts.MaterialPalette.gray.shade200),
+        new charts.RangeAnnotationSegment(
+            25, 30, charts.RangeAnnotationAxisType.measure,
+            startLabel: 'Measure 1 Start',
+            endLabel: 'Measure 1 End',
+            color: charts.MaterialPalette.gray.shade300),
+        new charts.RangeAnnotationSegment(
+            50, 80, charts.RangeAnnotationAxisType.measure,
+            startLabel: 'Measure 2 Start',
+            endLabel: 'Measure 2 End',
+            color: charts.MaterialPalette.gray.shade400),
       ]),
     ]);
   }

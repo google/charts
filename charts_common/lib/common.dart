@@ -127,7 +127,13 @@ export 'src/chart/common/behavior/legend/legend_entry_generator.dart'
 export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter, LinePointHighlighterFollowLineType;
 export 'src/chart/common/behavior/range_annotation.dart'
-    show RangeAnnotation, RangeAnnotationAxisType, RangeAnnotationSegment;
+    show
+        AnnotationLabelAnchor,
+        AnnotationLabelDirection,
+        AnnotationLabelPosition,
+        RangeAnnotation,
+        RangeAnnotationAxisType,
+        RangeAnnotationSegment;
 export 'src/chart/common/behavior/sliding_viewport.dart' show SlidingViewport;
 export 'src/chart/common/behavior/selection/lock_selection.dart'
     show LockSelection;
