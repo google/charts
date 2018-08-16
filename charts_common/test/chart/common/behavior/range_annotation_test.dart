@@ -38,14 +38,14 @@ class ConcreteChart extends CartesianChart {
   @override
   addLifecycleListener(LifecycleListener listener) {
     lastListener = listener;
-    super.addLifecycleListener(listener);
+    return super.addLifecycleListener(listener);
   }
 
   @override
   removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
-    super.removeLifecycleListener(listener);
+    return super.removeLifecycleListener(listener);
   }
 
   @override

@@ -32,6 +32,7 @@ class MockChart extends Mock implements BaseChart {
   removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
+    return true;
   }
 }
 
