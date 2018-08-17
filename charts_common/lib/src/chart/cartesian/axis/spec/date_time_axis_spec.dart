@@ -33,11 +33,12 @@ import '../time/hour_tick_formatter.dart' show HourTickFormatter;
 import '../time/time_tick_formatter.dart' show TimeTickFormatter;
 import '../time/time_tick_formatter_impl.dart'
     show CalendarField, TimeTickFormatterImpl;
+import '../end_points_tick_provider.dart' show EndPointsTickProvider;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
 
-/// [AxisSpec] specialized for Timeseries charts.
+/// Generic [AxisSpec] specialized for Timeseries charts.
 @immutable
 class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// Sets viewport for this Axis.
@@ -170,6 +171,30 @@ class DayTickProviderSpec implements DateTimeTickProviderSpec {
           allowedTickIncrements: increments))
     ]);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is DayTickProviderSpec && increments == other.increments;
+
+  @override
+  int get hashCode => increments?.hashCode ?? 0;
+}
+
+/// [TickProviderSpec] that sets up time ticks at the two end points of the axis
+/// range.
+@immutable
+class DateTimeEndPointsTickProviderSpec implements DateTimeTickProviderSpec {
+  DateTimeEndPointsTickProviderSpec();
+
+  /// Creates a [TickProviderSpec] that dynamically chooses time ticks at the
+  /// two end points of the axis range
+  @override
+  EndPointsTickProvider<DateTime> createTickProvider(ChartContext context) {
+    return new EndPointsTickProvider<DateTime>();
+  }
+
+  @override
+  bool operator ==(Object other) => other is DateTimeEndPointsTickProviderSpec;
 }
 
 /// [TickProviderSpec] that allows you to specific the ticks to be used.

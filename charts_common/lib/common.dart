@@ -66,13 +66,17 @@ export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
         DayTickProviderSpec,
         AutoDateTimeTickFormatterSpec,
         AutoDateTimeTickProviderSpec,
+        DateTimeEndPointsTickProviderSpec,
         DateTimeTickFormatterSpec,
         DateTimeTickProviderSpec,
         TimeFormatterSpec,
         StaticDateTimeTickProviderSpec;
+export 'src/chart/cartesian/axis/spec/end_points_time_axis_spec.dart'
+    show EndPointsTimeAxisSpec;
 export 'src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
     show
         NumericAxisSpec,
+        NumericEndPointsTickProviderSpec,
         NumericTickProviderSpec,
         NumericTickFormatterSpec,
         BasicNumericTickFormatterSpec,
