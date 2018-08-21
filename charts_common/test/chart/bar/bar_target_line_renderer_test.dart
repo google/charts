@@ -13,14 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show Point, Rectangle;
 import 'package:charts_common/src/chart/bar/bar_target_line_renderer.dart';
 import 'package:charts_common/src/chart/bar/bar_target_line_renderer_config.dart';
 import 'package:charts_common/src/chart/bar/base_bar_renderer.dart';
 import 'package:charts_common/src/chart/bar/base_bar_renderer_config.dart';
 import 'package:charts_common/src/chart/cartesian/cartesian_chart.dart';
+import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
+import 'package:charts_common/src/chart/common/chart_canvas.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart'
     show MutableSeries;
+import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/data/series.dart' show Series;
 
 import 'package:mockito/mockito.dart';
@@ -31,6 +35,23 @@ class MyRow {
   final String campaign;
   final int clickCount;
   MyRow(this.campaign, this.clickCount);
+}
+
+class MockAxis<D> extends Mock implements Axis<D> {}
+
+class MockCanvas extends Mock implements ChartCanvas {
+  final drawLinePointsList = <List<Point>>[];
+
+  void drawLine(
+      {List<Point> points,
+      Rectangle<num> clipBounds,
+      Color fill,
+      Color stroke,
+      bool roundEndCaps,
+      double strokeWidthPx,
+      List<int> dashPattern}) {
+    drawLinePointsList.add(points);
+  }
 }
 
 class MockContext extends Mock implements ChartContext {}
@@ -537,6 +558,95 @@ void main() {
       expect(element.measureOffsetPlusMeasure, equals(5));
       expect(series.measureOffsetFn(0), equals(0));
       expect(element.strokeWidthPx, equals(3));
+    });
+  });
+
+  group('null measure', () {
+    test('only include null in draw if animating from a non null measure', () {
+      // Helper to create series list for this test only.
+      List<MutableSeries<String>> _createSeriesList(List<MyRow> data) {
+        final domainAxis = new MockAxis<dynamic>();
+        when(domainAxis.rangeBand).thenReturn(100.0);
+        when(domainAxis.getLocation('MyCampaign1')).thenReturn(20.0);
+        when(domainAxis.getLocation('MyCampaign2')).thenReturn(40.0);
+        when(domainAxis.getLocation('MyCampaign3')).thenReturn(60.0);
+        when(domainAxis.getLocation('MyOtherCampaign')).thenReturn(80.0);
+        final measureAxis = new MockAxis<num>();
+        when(measureAxis.getLocation(0)).thenReturn(0.0);
+        when(measureAxis.getLocation(5)).thenReturn(5.0);
+        when(measureAxis.getLocation(75)).thenReturn(75.0);
+        when(measureAxis.getLocation(100)).thenReturn(100.0);
+
+        final color = new Color.fromHex(code: '#000000');
+
+        final series = new MutableSeries<String>(new Series<MyRow, String>(
+            id: 'Desktop',
+            domainFn: (MyRow row, _) => row.campaign,
+            measureFn: (MyRow row, _) => row.clickCount,
+            measureOffsetFn: (_, __) => 0,
+            colorFn: (_, __) => color,
+            fillColorFn: (_, __) => color,
+            dashPatternFn: (_, __) => [1],
+            data: data))
+          ..setAttr(domainAxisKey, domainAxis)
+          ..setAttr(measureAxisKey, measureAxis);
+
+        return [series];
+      }
+
+      final canvas = new MockCanvas();
+
+      final myDataWithNull = [
+        new MyRow('MyCampaign1', 5),
+        new MyRow('MyCampaign2', null),
+        new MyRow('MyCampaign3', 100),
+        new MyRow('MyOtherCampaign', 75),
+      ];
+      final seriesListWithNull = _createSeriesList(myDataWithNull);
+
+      final myDataWithMeasures = [
+        new MyRow('MyCampaign1', 5),
+        new MyRow('MyCampaign2', 0),
+        new MyRow('MyCampaign3', 100),
+        new MyRow('MyOtherCampaign', 75),
+      ];
+      final seriesListWithMeasures = _createSeriesList(myDataWithMeasures);
+
+      renderer = makeRenderer(
+          config: new BarTargetLineRendererConfig(
+              groupingType: BarGroupingType.grouped));
+
+      // Verify that only 3 lines are drawn for an initial draw with null data.
+      renderer.preprocessSeries(seriesListWithNull);
+      renderer.update(seriesListWithNull, true);
+      canvas.drawLinePointsList.clear();
+      renderer.paint(canvas, 0.5);
+      expect(canvas.drawLinePointsList, hasLength(3));
+
+      // On animation complete, verify that only 3 lines are drawn.
+      canvas.drawLinePointsList.clear();
+      renderer.paint(canvas, 1.0);
+      expect(canvas.drawLinePointsList, hasLength(3));
+
+      // Change series list where there are measures on all values, verify all
+      // 4 lines were drawn
+      renderer.preprocessSeries(seriesListWithMeasures);
+      renderer.update(seriesListWithMeasures, true);
+      canvas.drawLinePointsList.clear();
+      renderer.paint(canvas, 0.5);
+      expect(canvas.drawLinePointsList, hasLength(4));
+
+      // Change series to one with null measures, verifies all 4 lines drawn
+      renderer.preprocessSeries(seriesListWithNull);
+      renderer.update(seriesListWithNull, true);
+      canvas.drawLinePointsList.clear();
+      renderer.paint(canvas, 0.5);
+      expect(canvas.drawLinePointsList, hasLength(4));
+
+      // On animation complete, verify that only 3 lines are drawn.
+      canvas.drawLinePointsList.clear();
+      renderer.paint(canvas, 1.0);
+      expect(canvas.drawLinePointsList, hasLength(3));
     });
   });
 }
