@@ -127,7 +127,7 @@ export 'src/chart/common/behavior/legend/legend.dart'
         SeriesLegend;
 export 'src/chart/common/behavior/legend/legend_entry.dart' show LegendEntry;
 export 'src/chart/common/behavior/legend/legend_entry_generator.dart'
-    show LegendEntryGenerator;
+    show LegendEntryGenerator, LegendDefaultMeasure;
 export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter, LinePointHighlighterFollowLineType;
 export 'src/chart/common/behavior/range_annotation.dart'

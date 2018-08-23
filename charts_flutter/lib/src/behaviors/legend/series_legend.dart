@@ -20,6 +20,7 @@ import 'package:charts_common/common.dart' as common
         LegendEntry,
         LegendTapHandling,
         MeasureFormatter,
+        LegendDefaultMeasure,
         OutsideJustification,
         SeriesLegend,
         SelectionModelType;
@@ -57,14 +58,22 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   final common.OutsideJustification outsideJustification;
   final common.InsideJustification insideJustification;
 
-  /// Optionally set to true to show measure values in series legend when a
-  /// datum is selected.
+  /// Whether or not the legend should show measures.
   ///
-  /// Defaults to false, where measure values are not shown.
+  /// By default this is false, measures are not shown. When set to true, the
+  /// default behavior is to show measure only if there is selected data.
+  /// Please set [legendDefaultMeasure] to something other than none to enable
+  /// showing measures when there is no selection.
   ///
   /// This flag is used by the [contentBuilder], so a custom content builder
   /// has to choose if it wants to use this flag.
   final bool showMeasures;
+
+  /// Option to show measures when selection is null.
+  ///
+  /// By default this is set to none, so no measures are shown when there is
+  /// no selection.
+  final common.LegendDefaultMeasure legendDefaultMeasure;
 
   /// Formatter for measure value(s) if the measures are shown on the legend.
   final common.MeasureFormatter measureFormatter;
@@ -108,7 +117,10 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
   /// first chart draw.
   ///
-  /// [showMeasures] show measure values for each series when datum is selected.
+  /// [showMeasures] show measure values for each series.
+  ///
+  /// [legendDefaultMeasure] if measure should show when there is no selection.
+  /// This is set to none by default (only shows measure for selected data).
   ///
   /// [measureFormatter] formats measure value if measures are shown.
   ///
@@ -124,6 +136,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     EdgeInsets cellPadding,
     List<String> defaultHiddenSeries,
     bool showMeasures,
+    common.LegendDefaultMeasure legendDefaultMeasure,
     common.MeasureFormatter measureFormatter,
     common.MeasureFormatter secondaryMeasureFormatter,
   }) {
@@ -153,6 +166,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         insideJustification: insideJustification,
         defaultHiddenSeries: defaultHiddenSeries,
         showMeasures: showMeasures ?? false,
+        legendDefaultMeasure:
+            legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
         measureFormatter: measureFormatter,
         secondaryMeasureFormatter: secondaryMeasureFormatter);
   }
@@ -178,7 +193,10 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
   /// first chart draw.
   ///
-  /// [showMeasures] show measure values for each series when datum is selected.
+  /// [showMeasures] show measure values for each series.
+  ///
+  /// [legendDefaultMeasure] if measure should show when there is no selection.
+  /// This is set to none by default (only shows measure for selected data).
   ///
   /// [measureFormatter] formats measure value if measures are shown.
   ///
@@ -191,6 +209,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     common.InsideJustification insideJustification,
     List<String> defaultHiddenSeries,
     bool showMeasures,
+    common.LegendDefaultMeasure legendDefaultMeasure,
     common.MeasureFormatter measureFormatter,
     common.MeasureFormatter secondaryMeasureFormatter,
   }) {
@@ -207,6 +226,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
       insideJustification: insideJustification,
       defaultHiddenSeries: defaultHiddenSeries,
       showMeasures: showMeasures ?? false,
+      legendDefaultMeasure:
+          legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
       measureFormatter: measureFormatter,
       secondaryMeasureFormatter: secondaryMeasureFormatter,
     );
@@ -220,6 +241,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     this.insideJustification,
     this.defaultHiddenSeries,
     this.showMeasures,
+    this.legendDefaultMeasure,
     this.measureFormatter,
     this.secondaryMeasureFormatter,
   });
@@ -244,13 +266,26 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         position == o.position &&
         outsideJustification == o.outsideJustification &&
         insideJustification == o.insideJustification &&
-        new ListEquality().equals(defaultHiddenSeries, o.defaultHiddenSeries);
+        new ListEquality().equals(defaultHiddenSeries, o.defaultHiddenSeries) &&
+        showMeasures == o.showMeasures &&
+        legendDefaultMeasure == o.legendDefaultMeasure &&
+        measureFormatter == o.measureFormatter &&
+        secondaryMeasureFormatter == o.secondaryMeasureFormatter;
   }
 
   @override
   int get hashCode {
-    return hashValues(selectionModelType, contentBuilder, position,
-        outsideJustification, insideJustification, defaultHiddenSeries);
+    return hashValues(
+        selectionModelType,
+        contentBuilder,
+        position,
+        outsideJustification,
+        insideJustification,
+        defaultHiddenSeries,
+        showMeasures,
+        legendDefaultMeasure,
+        measureFormatter,
+        secondaryMeasureFormatter);
   }
 }
 
@@ -261,9 +296,11 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
 
   _FlutterSeriesLegend(this.config)
       : super(
-            selectionModelType: config.selectionModelType,
-            measureFormatter: config.measureFormatter,
-            secondaryMeasureFormatter: config.secondaryMeasureFormatter) {
+          selectionModelType: config.selectionModelType,
+          measureFormatter: config.measureFormatter,
+          secondaryMeasureFormatter: config.secondaryMeasureFormatter,
+          legendDefaultMeasure: config.legendDefaultMeasure,
+        ) {
     super.defaultHiddenSeries = config.defaultHiddenSeries;
   }
 
@@ -284,8 +321,19 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
       config.insideJustification;
 
   @override
-  Widget build(BuildContext context) => config.contentBuilder
-      .build(context, legendState, this, showMeasures: config.showMeasures);
+  Widget build(BuildContext context) {
+    final hasSelection =
+        legendState.legendEntries.any((entry) => entry.isSelected);
+
+    // Show measures if [showMeasures] is true and there is a selection or if
+    // showing measures when there is no selection.
+    final showMeasures = config.showMeasures &&
+        (hasSelection ||
+            legendDefaultMeasure != common.LegendDefaultMeasure.none);
+
+    return config.contentBuilder
+        .build(context, legendState, this, showMeasures: showMeasures);
+  }
 
   @override
   onLegendEntryTapUp(common.LegendEntry detail) {

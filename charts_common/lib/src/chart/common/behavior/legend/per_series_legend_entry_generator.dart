@@ -29,17 +29,41 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   MeasureFormatter measureFormatter;
   MeasureFormatter secondaryMeasureFormatter;
 
+  /// Option for showing measures when there is no selection.
+  LegendDefaultMeasure legendDefaultMeasure;
+
   @override
   List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList) {
-    return seriesList.map((series) {
-      final color = series.colorFn(0);
+    final legendEntries = seriesList
+        .map((series) => new LegendEntry<D>(series, series.displayName,
+            color: series.colorFn(0)))
+        .toList();
 
-      return new LegendEntry<D>(series, series.displayName, color: color);
-    }).toList();
+    // Update with measures only if showing measure on no selection.
+    if (legendDefaultMeasure != LegendDefaultMeasure.none) {
+      _updateFromSeriesList(legendEntries, seriesList);
+    }
+
+    return legendEntries;
   }
 
   @override
-  void updateLegendEntries(
+  void updateLegendEntries(List<LegendEntry<D>> legendEntries,
+      SelectionModel<D> selectionModel, List<MutableSeries<D>> seriesList) {
+    if (selectionModel.hasAnySelection) {
+      _updateFromSelection(legendEntries, selectionModel);
+    } else {
+      // Update with measures only if showing measure on no selection.
+      if (legendDefaultMeasure != LegendDefaultMeasure.none) {
+        _updateFromSeriesList(legendEntries, seriesList);
+      } else {
+        _resetLegendEntryMeasures(legendEntries);
+      }
+    }
+  }
+
+  /// Update legend entries with measures of the selected datum
+  void _updateFromSelection(
       List<LegendEntry<D>> legendEntries, SelectionModel<D> selectionModel) {
     // Map of series ID to the total selected measure value for that series.
     final seriesAndMeasure = <String, num>{};
@@ -75,17 +99,87 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     }
   }
 
+  void _resetLegendEntryMeasures(List<LegendEntry<D>> legendEntries) {
+    for (LegendEntry<D> entry in legendEntries) {
+      entry.value = null;
+      entry.formattedValue = null;
+      entry.isSelected = false;
+    }
+  }
+
+  /// Update each legend entry by calculating measure values in [seriesList].
+  ///
+  /// This method calculates the legend's measure value to show when there is no
+  /// selection. The type of calculation is based on the [legendDefaultMeasure]
+  /// value.
+  void _updateFromSeriesList(
+      List<LegendEntry<D>> legendEntries, List<MutableSeries<D>> seriesList) {
+    // Helper function to sum up the measure values
+    num getMeasureTotal(MutableSeries<D> series) {
+      var measureTotal = 0.0;
+      for (var i = 0; i < series.data.length; i++) {
+        measureTotal += series.measureFn(i);
+      }
+      return measureTotal;
+    }
+
+    // Map of series ID to the calculated measure for that series.
+    final seriesAndMeasure = <String, double>{};
+    // Map of series ID and the formatted measure for that series.
+    final seriesAndFormattedMeasure = <String, String>{};
+
+    for (MutableSeries<D> series in seriesList) {
+      final seriesId = series.id;
+      num calculatedMeasure;
+
+      switch (legendDefaultMeasure) {
+        case LegendDefaultMeasure.sum:
+          calculatedMeasure = getMeasureTotal(series);
+          break;
+        case LegendDefaultMeasure.average:
+          calculatedMeasure = getMeasureTotal(series) / series.data.length;
+          break;
+        case LegendDefaultMeasure.firstValue:
+          calculatedMeasure = series.measureFn(0);
+          break;
+        case LegendDefaultMeasure.lastValue:
+          calculatedMeasure = series.measureFn(series.data.length - 1);
+          break;
+        case LegendDefaultMeasure.none:
+          // [calculatedMeasure] intentionally left null, since we do not want
+          // to show any measures.
+          break;
+      }
+
+      seriesAndMeasure[seriesId] = calculatedMeasure?.toDouble();
+      seriesAndFormattedMeasure[seriesId] =
+          (series.getAttr(measureAxisIdKey) == Axis.secondaryMeasureAxisId)
+              ? secondaryMeasureFormatter(calculatedMeasure)
+              : measureFormatter(calculatedMeasure);
+    }
+
+    for (var entry in legendEntries) {
+      final seriesId = entry.series.id;
+
+      entry.value = seriesAndMeasure[seriesId];
+      entry.formattedValue = seriesAndFormattedMeasure[seriesId];
+      entry.isSelected = false;
+    }
+  }
+
   @override
   bool operator ==(Object o) {
     return o is PerSeriesLegendEntryGenerator &&
         measureFormatter == o.measureFormatter &&
-        secondaryMeasureFormatter == o.secondaryMeasureFormatter;
+        secondaryMeasureFormatter == o.secondaryMeasureFormatter &&
+        legendDefaultMeasure == o.legendDefaultMeasure;
   }
 
   @override
   int get hashCode {
     int hashcode = measureFormatter?.hashCode ?? 0;
     hashcode = (hashcode * 37) + secondaryMeasureFormatter.hashCode;
+    hashcode = (hashcode * 37) + legendDefaultMeasure.hashCode;
     return hashcode;
   }
 }

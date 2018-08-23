@@ -76,6 +76,7 @@ export 'package:charts_common/common.dart'
         LayoutPosition,
         LayoutViewPaintOrder,
         LayoutViewPositionOrder,
+        LegendDefaultMeasure,
         LegendTapHandling,
         LinePointHighlighterFollowLineType,
         LineRenderer,
