@@ -44,6 +44,9 @@ class ArcRendererConfig<D> extends LayoutViewConfig
   /// If arcRatio is set, this value will be ignored.
   final int arcWidth;
 
+  /// If radar is set, this is a radar arc.
+  final bool radar;
+
   /// The order to paint this renderer on the canvas.
   final int layoutPaintOrder;
 
@@ -72,6 +75,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
       this.arcRendererDecorators = const [],
       this.arcRatio,
       this.arcWidth,
+      this.radar = false,
       this.layoutPaintOrder = LayoutViewPaintOrder.arc,
       this.minHoleWidthForCenterContent = 30,
       this.startAngle = -pi / 2,

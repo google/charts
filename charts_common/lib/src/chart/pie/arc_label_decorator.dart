@@ -24,7 +24,7 @@ import '../../common/text_element.dart'
     show MaxWidthStrategy, TextDirection, TextElement;
 import '../../common/text_style.dart' show TextStyle;
 import '../../data/series.dart' show AccessorFn;
-import 'arc_renderer.dart' show ArcRendererElementList;
+import 'arc_renderer.dart' show ArcRendererElementList, ArcRendererElement;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
 /// Renders labels for arc renderers.
@@ -132,15 +132,15 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       final centerAngle = element.startAngle + (arcAngle / 2);
 
       final centerRadius = arcElements.innerRadius +
-          ((arcElements.radius - arcElements.innerRadius) / 2);
+          ((element.radius - arcElements.innerRadius) / 2);
 
       final innerPoint = new Point<double>(
           arcElements.center.x + arcElements.innerRadius * cos(centerAngle),
           arcElements.center.y + arcElements.innerRadius * sin(centerAngle));
 
       final outerPoint = new Point<double>(
-          arcElements.center.x + arcElements.radius * cos(centerAngle),
-          arcElements.center.y + arcElements.radius * sin(centerAngle));
+          arcElements.center.x + element.radius * cos(centerAngle),
+          arcElements.center.y + element.radius * sin(centerAngle));
 
       //final bounds = element.bounds;
       final bounds = new Rectangle<double>.fromPoints(innerPoint, outerPoint);
@@ -149,7 +149,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       final totalPadding = labelPadding * 2;
       final insideArcWidth = (min(
               (((arcAngle * 180 / pi) / 360) * (2 * pi * centerRadius)).round(),
-              (arcElements.radius - arcElements.innerRadius) - labelPadding)
+              (element.radius - arcElements.innerRadius) - labelPadding)
           .round());
 
       final leaderLineLength = showLeaderLines ? leaderLineStyleSpec.length : 0;
@@ -192,12 +192,13 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       if (labelElement.maxWidth > 0) {
         // Calculate the start position of label based on [labelAnchor].
         if (calculatedLabelPosition == ArcLabelPosition.inside) {
-          _drawInsideLabel(canvas, arcElements, labelElement, centerAngle);
+          _drawInsideLabel(canvas, arcElements, element, labelElement, centerAngle);
         } else {
           final l = _drawOutsideLabel(
               canvas,
               drawBounds,
               arcElements,
+              element,
               labelElement,
               centerAngle,
               previousOutsideLabelY,
@@ -236,11 +237,12 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
   void _drawInsideLabel(
       ChartCanvas canvas,
       ArcRendererElementList<D> arcElements,
+      ArcRendererElement<D> element,
       TextElement labelElement,
       double centerAngle) {
     // Center the label inside the arc.
     final labelRadius = arcElements.innerRadius +
-        (arcElements.radius - arcElements.innerRadius) / 2;
+        (element.radius - arcElements.innerRadius) / 2;
 
     final labelX =
         (arcElements.center.x + labelRadius * cos(centerAngle)).round();
@@ -260,11 +262,12 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       ChartCanvas canvas,
       Rectangle drawBounds,
       ArcRendererElementList<D> arcElements,
+      ArcRendererElement<D> element,
       TextElement labelElement,
       double centerAngle,
       num previousOutsideLabelY,
       bool previousLabelLeftOfChart) {
-    final labelRadius = arcElements.radius + leaderLineStyleSpec.length / 2;
+    final labelRadius = element.radius + leaderLineStyleSpec.length / 2;
 
     final labelPoint = new Point<double>(
         arcElements.center.x + labelRadius * cos(centerAngle),
@@ -293,7 +296,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
 
     if (showLeaderLines) {
       final tailX = _drawLeaderLine(canvas, labelLeftOfChart, labelPoint,
-          arcElements.radius, arcElements.center, centerAngle);
+          element.radius, arcElements.center, centerAngle);
 
       // Shift the label horizontally by the length of the leader line.
       labelX = (labelX + tailX).round();

@@ -27,7 +27,6 @@ class PiePainter {
     _circleSectorPainter ??= new CircleSectorPainter();
 
     final center = canvasPie.center;
-    final radius = canvasPie.radius;
     final innerRadius = canvasPie.innerRadius;
 
     for (var slice in canvasPie.slices) {
@@ -35,7 +34,7 @@ class PiePainter {
           canvas: canvas,
           paint: paint,
           center: center,
-          radius: radius,
+          radius: slice.radius,
           innerRadius: innerRadius,
           startAngle: slice.startAngle,
           endAngle: slice.endAngle,
@@ -64,12 +63,12 @@ class PiePainter {
             innerRadius * sin(slice.endAngle) + center.y);
 
         final radiusStartPoint = new Point<double>(
-            radius * cos(slice.startAngle) + center.x,
-            radius * sin(slice.startAngle) + center.y);
+            slice.radius * cos(slice.startAngle) + center.x,
+            slice.radius * sin(slice.startAngle) + center.y);
 
         final radiusEndPoint = new Point<double>(
-            radius * cos(slice.endAngle) + center.x,
-            radius * sin(slice.endAngle) + center.y);
+            slice.radius * cos(slice.endAngle) + center.x,
+            slice.radius * sin(slice.endAngle) + center.y);
 
         path.moveTo(innerRadiusStartPoint.x, innerRadiusStartPoint.y);
 

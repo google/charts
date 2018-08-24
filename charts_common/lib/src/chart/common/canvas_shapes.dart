@@ -101,7 +101,6 @@ class CanvasBarStack {
 class CanvasPie {
   final List<CanvasPieSlice> slices;
   Point center;
-  double radius;
   double innerRadius;
 
   /// Color of separator lines between arcs.
@@ -110,7 +109,7 @@ class CanvasPie {
   /// Stroke width of separator lines between arcs.
   double strokeWidthPx;
 
-  CanvasPie(this.slices, this.center, this.radius, this.innerRadius,
+  CanvasPie(this.slices, this.center, this.innerRadius,
       {this.stroke, this.strokeWidthPx = 0.0});
 }
 
@@ -118,7 +117,8 @@ class CanvasPie {
 class CanvasPieSlice {
   double startAngle;
   double endAngle;
+  double radius;
   Color fill;
 
-  CanvasPieSlice(this.startAngle, this.endAngle, {this.fill});
+  CanvasPieSlice(this.startAngle, this.endAngle, this.radius, {this.fill});
 }
