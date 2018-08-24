@@ -20,6 +20,7 @@ import 'area_and_line.dart';
 import 'dash_pattern.dart';
 import 'points.dart';
 import 'range_annotation.dart';
+import 'range_annotation_margin.dart';
 import 'segments.dart';
 import 'simple.dart';
 import 'simple_nulls.dart';
@@ -81,6 +82,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Range Annotation Line Chart',
       subtitle: 'Line chart with range annotations',
       childBuilder: () => new LineRangeAnnotationChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Range Annotation Margin Labels Line Chart',
+      subtitle: 'Line chart with range annotations with labels in margins',
+      childBuilder: () => new LineRangeAnnotationMarginChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),

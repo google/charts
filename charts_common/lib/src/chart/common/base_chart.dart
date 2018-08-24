@@ -356,6 +356,11 @@ abstract class BaseChart<D> {
   /// Returns the bounds of the chart draw area.
   Rectangle<int> get drawAreaBounds => _layoutManager.drawAreaBounds;
 
+  int get marginBottom => _layoutManager.marginBottom;
+  int get marginLeft => _layoutManager.marginLeft;
+  int get marginRight => _layoutManager.marginRight;
+  int get marginTop => _layoutManager.marginTop;
+
   /// Returns the combined bounds of the chart draw area and all layout
   /// components that draw series data.
   Rectangle<int> get drawableLayoutAreaBounds =>

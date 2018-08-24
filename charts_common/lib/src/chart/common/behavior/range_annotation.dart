@@ -266,7 +266,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   /// types for domain and measure axes, e.g. DateTime and num for a TimeSeries
   /// chart.
   _DatumAnnotation _getAnnotationDatum(dynamic startValue, dynamic endValue,
-      ImmutableAxis<D> axis, RangeAnnotationAxisType axisType) {
+      ImmutableAxis axis, RangeAnnotationAxisType axisType) {
     // Remove floating point rounding errors by rounding to 2 decimal places of
     // precision. The difference in the canvas is negligible.
     final startPosition = (axis.getLocation(startValue) * 100).round() / 100;
@@ -369,17 +369,19 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
       final labelStyle =
           _getTextStyle(graphicsFactory, annotationElement.labelStyleSpec);
 
+      // Measure the label max width once if either type of label is defined.
+      final labelMaxWidth = (annotationElement.startLabel != null ||
+              annotationElement.endLabel != null)
+          ? _getLabelMaxWidth(bounds, annotationElement)
+          : 0;
+
       // Draw a start label if one is defined.
       if (annotationElement.startLabel != null) {
         final labelElement =
             graphicsFactory.createTextElement(annotationElement.startLabel)
               ..maxWidthStrategy = MaxWidthStrategy.ellipsize
-              ..textStyle = labelStyle;
-
-        labelElement.maxWidth = annotationElement.labelDirection ==
-                AnnotationLabelDirection.horizontal
-            ? bounds.width
-            : bounds.height;
+              ..textStyle = labelStyle
+              ..maxWidth = labelMaxWidth;
 
         final labelPoint =
             _getStartLabelPosition(bounds, annotationElement, labelElement);
@@ -394,12 +396,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         final labelElement =
             graphicsFactory.createTextElement(annotationElement.endLabel)
               ..maxWidthStrategy = MaxWidthStrategy.ellipsize
-              ..textStyle = labelStyle;
-
-        labelElement.maxWidth = annotationElement.labelDirection ==
-                AnnotationLabelDirection.horizontal
-            ? bounds.width
-            : bounds.height;
+              ..textStyle = labelStyle
+              ..maxWidth = labelMaxWidth;
 
         final labelPoint =
             _getEndLabelPosition(bounds, annotationElement, labelElement);
@@ -411,8 +409,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
     });
   }
 
+  /// Calculates the bounds of the annotation.
   Rectangle<num> _getAnnotationBounds(_AnnotationElement<D> annotationElement) {
-    // Calculate the bounds of the annotation.
     Rectangle<num> bounds;
 
     switch (annotationElement.annotation.axisType) {
@@ -436,6 +434,43 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
     }
 
     return bounds;
+  }
+
+  /// Measures the max label width of the annotation.
+  int _getLabelMaxWidth(
+      Rectangle<num> bounds, _AnnotationElement<D> annotationElement) {
+    var maxWidth = 0;
+
+    if (annotationElement.labelPosition == AnnotationLabelPosition.margin &&
+        annotationElement.annotation.axisType ==
+            RangeAnnotationAxisType.measure) {
+      switch (annotationElement.annotation.axisType) {
+        case RangeAnnotationAxisType.domain:
+          break;
+
+        case RangeAnnotationAxisType.measure:
+          switch (annotationElement.labelAnchor) {
+            case AnnotationLabelAnchor.start:
+              maxWidth = chart.marginLeft - labelPadding;
+              break;
+
+            case AnnotationLabelAnchor.end:
+              maxWidth = chart.marginRight - labelPadding;
+              break;
+
+            case AnnotationLabelAnchor.middle:
+              break;
+          }
+          break;
+      }
+    } else {
+      maxWidth = annotationElement.labelDirection ==
+              AnnotationLabelDirection.horizontal
+          ? bounds.width
+          : bounds.height;
+    }
+
+    return maxWidth;
   }
 
   /// Gets the resolved location for a start label element.
@@ -489,18 +524,30 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         break;
 
       case AnnotationLabelAnchor.end:
-        labelY = (bounds.top + labelPadding).round();
+        if (annotationElement.labelPosition == AnnotationLabelPosition.margin) {
+          labelY = (bounds.top -
+                  labelElement.measurement.verticalSliceWidth -
+                  labelPadding)
+              .round();
+        } else {
+          labelY = (bounds.top + labelPadding).round();
+        }
         break;
 
       case AnnotationLabelAnchor.start:
-        labelY = (bounds.bottom -
-                labelElement.measurement.verticalSliceWidth -
-                labelPadding)
-            .round();
+        if (annotationElement.labelPosition == AnnotationLabelPosition.margin) {
+          labelY = (bounds.bottom + labelPadding).round();
+        } else {
+          labelY = (bounds.bottom -
+                  labelElement.measurement.verticalSliceWidth -
+                  labelPadding)
+              .round();
+        }
         break;
     }
 
     switch (calculatedLabelPosition) {
+      case AnnotationLabelPosition.margin:
       case AnnotationLabelPosition.auto:
         throw new ArgumentError('Unresolved AnnotationLabelPosition.auto');
         break;
@@ -561,21 +608,36 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
       case AnnotationLabelAnchor.end:
       case AnnotationLabelAnchor.start:
-        final alignLeft = rtl
-            ? (annotationElement.labelAnchor == AnnotationLabelAnchor.end)
-            : (annotationElement.labelAnchor == AnnotationLabelAnchor.start);
+        if (annotationElement.labelPosition == AnnotationLabelPosition.margin) {
+          final alignLeft = rtl
+              ? (annotationElement.labelAnchor == AnnotationLabelAnchor.end)
+              : (annotationElement.labelAnchor == AnnotationLabelAnchor.start);
 
-        if (alignLeft) {
-          labelX = (bounds.left + labelPadding).round();
-          labelElement.textDirection = TextDirection.ltr;
+          if (alignLeft) {
+            labelX = (bounds.left - labelPadding).round();
+            labelElement.textDirection = TextDirection.rtl;
+          } else {
+            labelX = (bounds.right + labelPadding).round();
+            labelElement.textDirection = TextDirection.ltr;
+          }
         } else {
-          labelX = (bounds.right - labelPadding).round();
-          labelElement.textDirection = TextDirection.rtl;
+          final alignLeft = rtl
+              ? (annotationElement.labelAnchor == AnnotationLabelAnchor.end)
+              : (annotationElement.labelAnchor == AnnotationLabelAnchor.start);
+
+          if (alignLeft) {
+            labelX = (bounds.left + labelPadding).round();
+            labelElement.textDirection = TextDirection.ltr;
+          } else {
+            labelX = (bounds.right - labelPadding).round();
+            labelElement.textDirection = TextDirection.rtl;
+          }
         }
         break;
     }
 
     switch (calculatedLabelPosition) {
+      case AnnotationLabelPosition.margin:
       case AnnotationLabelPosition.auto:
         throw new ArgumentError('Unresolved AnnotationLabelPosition.auto');
         break;
@@ -615,7 +677,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
       num drawBoundsSize,
       double labelSize) {
     var calculatedLabelPosition = annotationElement.labelPosition;
-    if (calculatedLabelPosition == AnnotationLabelPosition.auto) {
+    if (calculatedLabelPosition == AnnotationLabelPosition.auto ||
+        calculatedLabelPosition == AnnotationLabelPosition.margin) {
       // Get space available inside and outside the annotation.
       final totalPadding = labelPadding * 2;
       final insideBarWidth = annotationBoundsSize - totalPadding;
@@ -875,4 +938,15 @@ enum AnnotationLabelPosition {
 
   /// Always place label on the inside.
   inside,
+
+  /// Place the label outside of the draw area, in the chart margin.
+  ///
+  /// Labels will be rendered on the opposite side of the chart from the primary
+  /// axis. For measure annotations, this means the "end" side, opposite from
+  /// the "start" side where the primary measure axis is located.
+  ///
+  /// This should not be used for measure annotations if the chart has a
+  /// secondary measure axis. The annotation behaviors do not perform collision
+  /// detection with tick labels.
+  margin,
 }

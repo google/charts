@@ -18,6 +18,7 @@ import '../gallery_scaffold.dart';
 import 'confidence_interval.dart';
 import 'end_points_axis.dart';
 import 'range_annotation.dart';
+import 'range_annotation_margin.dart';
 import 'simple.dart';
 import 'symbol_annotation.dart';
 import 'with_bar_renderer.dart';
@@ -38,9 +39,17 @@ List<GalleryScaffold> buildGallery() {
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
-      title: 'Range Annotation Time Series Chart',
+      title: 'Range Annotation on Time Series Chart',
       subtitle: 'Time series chart with future range annotation',
       childBuilder: () => new TimeSeriesRangeAnnotationChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Range Annotation Margin Labels on Time Series Chart',
+      subtitle:
+          'Time series chart with range annotations with labels in margins',
+      childBuilder: () =>
+          new TimeSeriesRangeAnnotationMarginChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
