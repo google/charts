@@ -19,6 +19,8 @@ import 'donut.dart';
 import 'auto_label.dart';
 import 'simple.dart';
 import 'outside_label.dart';
+import 'radar.dart';
+import 'radar_donut.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -46,6 +48,18 @@ List<GalleryScaffold> buildGallery() {
       subtitle:
           'With a single series, a hole in the middle, and auto-positioned labels',
       childBuilder: () => new DonutAutoLabelChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart_outlined),
+      title: 'Radar Pie Chart',
+      subtitle: 'With a single series and labels outside the arcs',
+      childBuilder: () => new RadarPieChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart_outlined),
+      title: 'Radar Donut Chart',
+      subtitle: 'With a single series and a hole in the middle',
+      childBuilder: () => new RadarDonutPieChart.withRandomData(),
     ),
   ];
 }

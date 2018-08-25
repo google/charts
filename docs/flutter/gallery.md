@@ -49,6 +49,7 @@
 | | | | |
 | --- | --- | --- | --- |
 | Simple<br>[![](example/pie_charts/simple_thumb.png)](example/pie_charts/simple) | Outside Label<br>[![](example/pie_charts/outside_label_thumb.png)](example/pie_charts/outside_label) | Donut<br>[![](example/pie_charts/donut_thumb.png)](example/pie_charts/donut) | Auto Label<br>[![](example/pie_charts/auto_label_thumb.png)](example/pie_charts/auto_label) |
+| Radar<br>[![](example/pie_charts/radar_thumb.png)](example/pie_charts/radar) | Radar Donut<br>[![](example/pie_charts/radar_donut_thumb.png)](example/pie_charts/radar_donut) | | |
 
 
 ### Axes
