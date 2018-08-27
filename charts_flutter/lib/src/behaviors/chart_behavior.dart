@@ -39,8 +39,6 @@ abstract class ChartBehavior<B extends common.ChartBehavior> {
 
 /// A chart behavior that depends on Flutter [State].
 abstract class ChartStateBehavior<B extends common.ChartBehavior> {
-  BaseChartState get chartState;
-
   set chartState(BaseChartState chartState);
 }
 

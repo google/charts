@@ -16,7 +16,7 @@
 import 'package:flutter/widgets.dart' show AnimationController;
 
 import 'package:charts_common/common.dart' as common
-    show ChartBehavior, InitialHintBehavior;
+    show BaseChart, ChartBehavior, InitialHintBehavior;
 import 'package:meta/meta.dart' show immutable;
 
 import '../../base_chart_state.dart' show BaseChartState;
@@ -76,17 +76,13 @@ class FlutterInitialHintBehavior<D> extends common.InitialHintBehavior<D>
 
   BaseChartState _chartState;
 
-  BaseChartState get chartState => _chartState;
-
   set chartState(BaseChartState chartState) {
+    assert(chartState != null);
+
     _chartState = chartState;
 
-    if (_chartState != null) {
-      _hintAnimator = new AnimationController(vsync: _chartState)
-        ..addListener(onHintTick);
-    } else {
-      _hintAnimator = null;
-    }
+    _hintAnimator = _chartState.getAnimationController(this);
+    _hintAnimator?.addListener(onHintTick);
   }
 
   @override
@@ -105,6 +101,7 @@ class FlutterInitialHintBehavior<D> extends common.InitialHintBehavior<D>
     _hintAnimator?.stop();
     // Hint animation occurs only on the first draw. The hint animator is no
     // longer needed after the hint animation stops and is removed.
+    _chartState.disposeAnimationController(this);
     _hintAnimator = null;
   }
 
@@ -123,5 +120,12 @@ class FlutterInitialHintBehavior<D> extends common.InitialHintBehavior<D>
     }
 
     super.onHintTick();
+  }
+
+  @override
+  removeFrom(common.BaseChart<D> chart) {
+    _chartState.disposeAnimationController(this);
+    _hintAnimator = null;
+    super.removeFrom(chart);
   }
 }
