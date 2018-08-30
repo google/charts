@@ -225,7 +225,8 @@ class ChartCanvas implements common.ChartCanvas {
   }
 
   @override
-  void drawText(common.TextElement textElement, int offsetX, int offsetY) {
+  void drawText(common.TextElement textElement, int offsetX, int offsetY,
+      {double rotation = 0.0}) {
     // Must be Flutter TextElement.
     assert(textElement is TextElement);
 
@@ -233,21 +234,40 @@ class ChartCanvas implements common.ChartCanvas {
     final textDirection = flutterTextElement.textDirection;
     final measurement = flutterTextElement.measurement;
 
-    // TODO: Remove once textAnchor works.
-    if (textDirection == common.TextDirection.rtl) {
-      offsetX -= measurement.horizontalSliceWidth.toInt();
+    if (rotation != 0) {
+      // TODO: Remove once textAnchor works.
+      if (textDirection == common.TextDirection.rtl) {
+        offsetY += measurement.horizontalSliceWidth.toInt();
+      }
+
+      offsetX -= flutterTextElement.verticalFontShift;
+
+      canvas.save();
+      canvas.translate(offsetX.toDouble(), offsetY.toDouble());
+      canvas.rotate(rotation);
+
+      (textElement as TextElement)
+          .textPainter
+          .paint(canvas, new Offset(0.0, 0.0));
+
+      canvas.restore();
+    } else {
+      // TODO: Remove once textAnchor works.
+      if (textDirection == common.TextDirection.rtl) {
+        offsetX -= measurement.horizontalSliceWidth.toInt();
+      }
+
+      // Account for missing center alignment.
+      if (textDirection == common.TextDirection.center) {
+        offsetX -= (measurement.horizontalSliceWidth / 2).ceil();
+      }
+
+      offsetY -= flutterTextElement.verticalFontShift;
+
+      (textElement as TextElement)
+          .textPainter
+          .paint(canvas, new Offset(offsetX.toDouble(), offsetY.toDouble()));
     }
-
-    // Account for missing center alignment.
-    if (textDirection == common.TextDirection.center) {
-      offsetX -= (measurement.horizontalSliceWidth / 2).ceil();
-    }
-
-    offsetY -= flutterTextElement.verticalFontShift;
-
-    (textElement as TextElement)
-        .textPainter
-        .paint(canvas, new Offset(offsetX.toDouble(), offsetY.toDouble()));
   }
 
   @override

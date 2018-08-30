@@ -99,7 +99,8 @@ abstract class ChartCanvas {
   /// be the bottom most bar for a vertically rendered bar.
   void drawBarStack(CanvasBarStack canvasBarStack);
 
-  void drawText(TextElement textElement, int offsetX, int offsetY);
+  void drawText(TextElement textElement, int offsetX, int offsetY,
+      {double rotation = 0.0});
 
   /// Request the canvas to clip to [clipBounds].
   ///

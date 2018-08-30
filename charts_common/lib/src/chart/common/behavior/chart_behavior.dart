@@ -53,6 +53,8 @@ enum BehaviorPosition {
 enum OutsideJustification {
   startDrawArea,
   start,
+  middleDrawArea,
+  middle,
   endDrawArea,
   end,
 }

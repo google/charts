@@ -139,6 +139,8 @@ export 'src/chart/common/behavior/range_annotation.dart'
         RangeAnnotationAxisType,
         RangeAnnotationSegment;
 export 'src/chart/common/behavior/sliding_viewport.dart' show SlidingViewport;
+export 'src/chart/common/behavior/chart_title/chart_title.dart'
+    show ChartTitle, ChartTitleDirection;
 export 'src/chart/common/behavior/selection/lock_selection.dart'
     show LockSelection;
 export 'src/chart/common/behavior/selection/select_nearest.dart'

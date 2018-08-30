@@ -54,6 +54,7 @@ export 'package:charts_common/common.dart'
         CartesianChart,
         ChartCanvas,
         ChartContext,
+        ChartTitleDirection,
         CircleSymbolRenderer,
         Color,
         ComparisonPointsDecorator,
@@ -90,6 +91,7 @@ export 'package:charts_common/common.dart'
         MarginSpec,
         MaterialPalette,
         MaterialStyle,
+        MaxWidthStrategy,
         MeasureFormatter,
         NoCornerStrategy,
         NoneRenderSpec,
@@ -161,6 +163,7 @@ export 'src/behaviors/chart_behavior.dart' show ChartBehavior;
 export 'src/behaviors/domain_highlighter.dart' show DomainHighlighter;
 export 'src/behaviors/initial_selection.dart' show InitialSelection;
 export 'src/behaviors/calculation/percent_injector.dart' show PercentInjector;
+export 'src/behaviors/chart_title/chart_title.dart' show ChartTitle;
 export 'src/behaviors/legend/legend_content_builder.dart'
     show LegendContentBuilder, TabularLegendContentBuilder;
 export 'src/behaviors/legend/legend_layout.dart'
