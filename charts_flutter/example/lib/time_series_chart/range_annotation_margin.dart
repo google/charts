@@ -91,15 +91,17 @@ class TimeSeriesRangeAnnotationMarginChart extends StatelessWidget {
                 startLabel: 'D1 Start',
                 endLabel: 'D1 End',
                 labelAnchor: charts.AnnotationLabelAnchor.end,
-                color: charts.MaterialPalette.gray.shade200),
+                color: charts.MaterialPalette.gray.shade200,
+                // Override the default vertical direction for domain labels.
+                labelDirection: charts.AnnotationLabelDirection.horizontal),
             new charts.RangeAnnotationSegment(
-                40, 45, charts.RangeAnnotationAxisType.measure,
+                15, 20, charts.RangeAnnotationAxisType.measure,
                 startLabel: 'M1 Start',
                 endLabel: 'M1 End',
                 labelAnchor: charts.AnnotationLabelAnchor.end,
                 color: charts.MaterialPalette.gray.shade300),
             new charts.RangeAnnotationSegment(
-                70, 90, charts.RangeAnnotationAxisType.measure,
+                35, 65, charts.RangeAnnotationAxisType.measure,
                 startLabel: 'M2 Start',
                 endLabel: 'M2 End',
                 labelAnchor: charts.AnnotationLabelAnchor.start,
