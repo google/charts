@@ -95,6 +95,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       // On the canvas, arc measurements are defined as angles from the positive
       // x axis. Start our first slice at the positive y axis instead.
       var startAngle = config.startAngle;
+      var arcLength = config.arcLength;
 
       var totalAngle = 0.0;
 
@@ -106,12 +107,12 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         //
         // Use a tiny epsilon difference to ensure that the canvas renders a
         // "full" circle, in the correct direction.
-        var angle = 2 * pi * .999999;
-        var endAngle = startAngle + angle;
+        var angle = arcLength == 2 * pi ? arcLength * .999999 : arcLength;
+        var arcEndAngle = startAngle + angle;
 
         var details = new ArcRendererElement<D>();
         details.startAngle = startAngle;
-        details.endAngle = endAngle;
+        details.endAngle = arcEndAngle;
         details.index = 0;
         details.key = 0;
         details.series = series;
@@ -128,12 +129,12 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           }
 
           final percentOfSeries = (measure / seriesMeasureTotal);
-          var angle = percentOfSeries * 2 * pi;
-          var endAngle = startAngle + angle;
+          var angle = arcLength * percentOfSeries;
+          var arcEndAngle = startAngle + angle;
 
           var details = new ArcRendererElement<D>();
           details.startAngle = startAngle;
-          details.endAngle = endAngle;
+          details.endAngle = arcEndAngle;
           details.index = arcIndex;
           details.key = arcIndex;
           details.domain = domain;
@@ -142,7 +143,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           elements.add(details);
 
           // Update the starting angle for the next datum in the series.
-          startAngle = endAngle;
+          startAngle = arcEndAngle;
 
           totalAngle = totalAngle + angle;
         }
