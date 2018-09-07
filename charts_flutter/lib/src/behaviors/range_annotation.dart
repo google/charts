@@ -18,10 +18,10 @@ import 'package:charts_common/common.dart' as common
         AnnotationLabelAnchor,
         AnnotationLabelDirection,
         AnnotationLabelPosition,
+        AnnotationSegment,
         Color,
         MaterialPalette,
         RangeAnnotation,
-        RangeAnnotationSegment,
         TextStyleSpec;
 import 'package:collection/collection.dart' show ListEquality;
 import 'package:flutter/widgets.dart' show hashValues;
@@ -40,7 +40,7 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
   final desiredGestures = new Set<GestureType>();
 
   /// List of annotations to render on the chart.
-  final List<common.RangeAnnotationSegment> annotations;
+  final List<common.AnnotationSegment> annotations;
 
   /// Configures where to anchor annotation label text.
   final common.AnnotationLabelAnchor defaultLabelAnchor;

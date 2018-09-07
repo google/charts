@@ -18,7 +18,7 @@ class LineRangeAnnotationMarginChart extends StatelessWidget {
 
   /// Creates a [LineChart] with sample data and range annotations.
   ///
-  /// The second series extends beyond the range of the series data,
+  /// The second annotation extends beyond the range of the series data,
   /// demonstrating the effect of the [Charts.RangeAnnotation.extendAxis] flag.
   /// This can be set to false to disable range extension.
   factory LineRangeAnnotationMarginChart.withSampleData() {

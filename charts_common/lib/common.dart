@@ -135,6 +135,8 @@ export 'src/chart/common/behavior/range_annotation.dart'
         AnnotationLabelAnchor,
         AnnotationLabelDirection,
         AnnotationLabelPosition,
+        AnnotationSegment,
+        LineAnnotationSegment,
         RangeAnnotation,
         RangeAnnotationAxisType,
         RangeAnnotationSegment;

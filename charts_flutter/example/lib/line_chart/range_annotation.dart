@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Line chart with range annotation example
+/// Line chart with range annotations example.
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
@@ -28,7 +28,7 @@ class LineRangeAnnotationChart extends StatelessWidget {
 
   /// Creates a [LineChart] with sample data and range annotations.
   ///
-  /// The second series extends beyond the range of the series data,
+  /// The second annotation extends beyond the range of the series data,
   /// demonstrating the effect of the [Charts.RangeAnnotation.extendAxis] flag.
   /// This can be set to false to disable range extension.
   factory LineRangeAnnotationChart.withSampleData() {

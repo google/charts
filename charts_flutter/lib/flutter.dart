@@ -82,6 +82,7 @@ export 'package:charts_common/common.dart'
         LayoutViewPositionOrder,
         LegendDefaultMeasure,
         LegendTapHandling,
+        LineAnnotationSegment,
         LinePointHighlighterFollowLineType,
         LineRenderer,
         LineRendererConfig,

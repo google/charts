@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'confidence_interval.dart';
 import 'end_points_axis.dart';
+import 'line_annotation.dart';
 import 'range_annotation.dart';
 import 'range_annotation_margin.dart';
 import 'simple.dart';
@@ -36,6 +37,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'End Points Axis Time Series Chart',
       subtitle: 'Time series chart with an end points axis',
       childBuilder: () => new EndPointsAxisTimeSeriesChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Line Annotation on Time Series Chart',
+      subtitle: 'Time series chart with future line annotation',
+      childBuilder: () => new TimeSeriesLineAnnotationChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),

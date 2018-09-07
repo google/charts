@@ -18,6 +18,7 @@ import '../gallery_scaffold.dart';
 import 'animation_zoom.dart';
 import 'area_and_line.dart';
 import 'dash_pattern.dart';
+import 'line_annotation.dart';
 import 'points.dart';
 import 'range_annotation.dart';
 import 'range_annotation_margin.dart';
@@ -76,6 +77,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Segments Line Chart',
       subtitle: 'Line chart with changes of style for each line',
       childBuilder: () => new SegmentsLineChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Line Annotation Line Chart',
+      subtitle: 'Line chart with line annotations',
+      childBuilder: () => new LineLineAnnotationChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
