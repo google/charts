@@ -236,9 +236,6 @@ class BarRenderer<D>
 
       var bounds = bar.bounds;
 
-      //print("left: ${bar.bounds.left}, top: ${bar.bounds.top}, width: ${bar.bounds.width} height: ${bar.bounds.height}");
-
-
       if (bar != unmodifiedBar) {
         bounds = renderingVertically
             ? new Rectangle<int>(
