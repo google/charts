@@ -29,6 +29,7 @@ class LegendEntry<D> {
   final int datumIndex;
   final D domain;
   final Color color;
+  final Color labelTextColor;
   double value;
   String formattedValue;
   bool isSelected;
@@ -66,6 +67,7 @@ class LegendEntry<D> {
       this.domain,
       this.value,
       this.color,
+      this.labelTextColor,
       this.isSelected = false,
       this.rowNumber,
       this.columnNumber,

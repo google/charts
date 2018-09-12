@@ -16,6 +16,7 @@
 import 'package:charts_common/common.dart' as common
     show
         BehaviorPosition,
+        Color,
         InsideJustification,
         LegendEntry,
         LegendTapHandling,
@@ -82,6 +83,9 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// legend and the series uses the secondary axis.
   final common.MeasureFormatter secondaryMeasureFormatter;
 
+  /// Color of legend text
+  final common.Color labelTextColor;
+
   static const defaultCellPadding = const EdgeInsets.all(8.0);
 
   final List<String> defaultHiddenSeries;
@@ -139,6 +143,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     common.LegendDefaultMeasure legendDefaultMeasure,
     common.MeasureFormatter measureFormatter,
     common.MeasureFormatter secondaryMeasureFormatter,
+    common.Color labelTextColor,
   }) {
     // Set defaults if empty.
     position ??= defaultBehaviorPosition;
@@ -169,7 +174,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         legendDefaultMeasure:
             legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
         measureFormatter: measureFormatter,
-        secondaryMeasureFormatter: secondaryMeasureFormatter);
+        secondaryMeasureFormatter: secondaryMeasureFormatter,
+        labelTextColor: labelTextColor);
   }
 
   /// Create a legend with custom layout.
@@ -212,6 +218,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     common.LegendDefaultMeasure legendDefaultMeasure,
     common.MeasureFormatter measureFormatter,
     common.MeasureFormatter secondaryMeasureFormatter,
+    common.Color labelTextColor,
   }) {
     // Set defaults if empty.
     position ??= defaultBehaviorPosition;
@@ -230,6 +237,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
           legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
       measureFormatter: measureFormatter,
       secondaryMeasureFormatter: secondaryMeasureFormatter,
+      labelTextColor: labelTextColor,
     );
   }
 
@@ -244,6 +252,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     this.legendDefaultMeasure,
     this.measureFormatter,
     this.secondaryMeasureFormatter,
+    this.labelTextColor,
   });
 
   @override
@@ -300,6 +309,7 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
           measureFormatter: config.measureFormatter,
           secondaryMeasureFormatter: config.secondaryMeasureFormatter,
           legendDefaultMeasure: config.legendDefaultMeasure,
+          labelTextColor: config.labelTextColor,
         ) {
     super.defaultHiddenSeries = config.defaultHiddenSeries;
   }

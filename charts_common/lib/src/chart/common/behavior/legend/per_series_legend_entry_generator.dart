@@ -21,12 +21,14 @@ import '../../../cartesian/axis/axis.dart' show Axis, measureAxisIdKey;
 import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
 import '../../series_datum.dart' show SeriesDatum;
+import '../../../../common/color.dart';
 
 /// A strategy for generating a list of [LegendEntry] per series drawn.
 ///
 /// [T] the datum class type for chart.
 /// [D] the domain class type for the datum.
 class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
+  Color labelTextColor;
   MeasureFormatter measureFormatter;
   MeasureFormatter secondaryMeasureFormatter;
 
@@ -37,7 +39,8 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList) {
     final legendEntries = seriesList
         .map((series) => new LegendEntry<D>(series, series.displayName,
-            color: series.colorFn(0)))
+            color: series.colorFn(0),
+            labelTextColor: labelTextColor))
         .toList();
 
     // Update with measures only if showing measure on no selection.
@@ -173,7 +176,8 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     return o is PerSeriesLegendEntryGenerator &&
         measureFormatter == o.measureFormatter &&
         secondaryMeasureFormatter == o.secondaryMeasureFormatter &&
-        legendDefaultMeasure == o.legendDefaultMeasure;
+        legendDefaultMeasure == o.legendDefaultMeasure &&
+        labelTextColor == labelTextColor;
   }
 
   @override
@@ -181,6 +185,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     int hashcode = measureFormatter?.hashCode ?? 0;
     hashcode = (hashcode * 37) + secondaryMeasureFormatter.hashCode;
     hashcode = (hashcode * 37) + legendDefaultMeasure.hashCode;
+    hashcode = (hashcode * 37) + labelTextColor?.hashCode ?? 0;
     return hashcode;
   }
 }
