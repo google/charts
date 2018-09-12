@@ -220,18 +220,25 @@ class BarRenderer<D>
     // Find the max bar width from each segment to calculate corner radius.
     int maxBarWidth = 0;
 
-    bool positive = false;
-    bool negative = false;
+    // flags used to determine if rounded corners should
+    // be drawn left/right (horizontal) | top/bottom (vertical) for this bar.
+    bool positive, negative = false;
 
     for (var bar in barElements) {
-
-      if(renderingVertically){
-        if(bar.bounds.top+1 < bar.measureAxisPosition ) positive=true;
-        if(bar.bounds.top + bar.bounds.height -1 > bar.measureAxisPosition) negative = true;
-      }
-      else{
-        if(bar.bounds.left +1 < bar.measureAxisPosition ) negative = true;
-        if(bar.bounds.left + bar.bounds.width-1 > bar.measureAxisPosition) positive = true;
+      if (renderingVertically) {
+        if (bar.bounds.top + 1 < bar.measureAxisPosition) {
+          positive = true;
+        }
+        if (bar.bounds.top + bar.bounds.height - 1 > bar.measureAxisPosition) {
+          negative = true;
+        }
+      } else {
+        if (bar.bounds.left + 1 < bar.measureAxisPosition) {
+          negative = true;
+        }
+        if (bar.bounds.left + bar.bounds.width - 1 > bar.measureAxisPosition) {
+          positive = true;
+        }
       }
 
       var bounds = bar.bounds;
@@ -264,21 +271,18 @@ class BarRenderer<D>
     }
 
     bool roundTopLeft, roundTopRight, roundBottomLeft, roundBottomRight = false;
-
-    if( renderingVertically ){
+    if (renderingVertically) {
       roundTopLeft = roundTopRight = positive;
       roundBottomLeft = roundBottomRight = negative;
-    }
-    else {
+    } else {
       roundTopLeft = roundBottomLeft = rtl ? positive : negative;
-      roundTopRight = roundBottomRight = rtl? negative : positive;
+      roundTopRight = roundBottomRight = rtl ? negative : positive;
     }
 
     final barStack = new CanvasBarStack(
       bars,
       radius: cornerStrategy.getRadius(maxBarWidth),
       stackedBarPadding: _stackedBarPadding,
-
       roundTopLeft: roundTopLeft,
       roundTopRight: roundTopRight,
       roundBottomLeft: roundBottomLeft,
@@ -413,12 +417,12 @@ class BarRenderer<D>
       // Rectangle clamps to zero width/height
 
       var top = measureEnd;
-      if( measureStart < measureEnd ){
+      if (measureStart < measureEnd) {
         top = measureStart;
       }
 
-      bounds = new Rectangle<int>(domainStart, top,
-          domainEnd - domainStart, (measureStart - measureEnd).abs());
+      bounds = new Rectangle<int>(domainStart, top, domainEnd - domainStart,
+          (measureStart - measureEnd).abs());
     } else {
       // Rectangle clamps to zero width/height
       bounds = new Rectangle<int>(min(measureStart, measureEnd), domainStart,
@@ -433,8 +437,11 @@ class BarRenderer<D>
 
 abstract class ImmutableBarRendererElement<D> {
   ImmutableSeries<D> get series;
+
   dynamic get datum;
+
   int get index;
+
   Rectangle<int> get bounds;
 }
 
