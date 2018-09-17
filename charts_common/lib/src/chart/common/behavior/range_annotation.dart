@@ -188,8 +188,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   }
 
   /// Generates a datum that describes an annotation.
-  _DatumAnnotation<D> _getAnnotationDatum(D startValue, D endValue,
-      ImmutableAxis<D> axis, RangeAnnotationAxisType axisType) {
+  _DatumAnnotation<D> _getAnnotationDatum(dynamic startValue, dynamic endValue,
+      ImmutableAxis<dynamic> axis, RangeAnnotationAxisType axisType) {
     final startPosition = axis.getLocation(startValue);
     final endPosition = axis.getLocation(endValue);
 
