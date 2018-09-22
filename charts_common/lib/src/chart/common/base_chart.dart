@@ -21,8 +21,9 @@ import 'behavior/chart_behavior.dart' show ChartBehavior;
 import 'chart_canvas.dart' show ChartCanvas;
 import 'chart_context.dart' show ChartContext;
 import 'datum_details.dart' show DatumDetails;
+import 'processed_series.dart' show MutableSeries;
+import 'series_datum.dart' show SeriesDatum;
 import 'series_renderer.dart' show SeriesRenderer, rendererIdKey, rendererKey;
-import 'processed_series.dart' show MutableSeries, SeriesDatum;
 import '../layout/layout_view.dart' show LayoutView;
 import '../layout/layout_config.dart' show LayoutConfig;
 import '../layout/layout_manager.dart' show LayoutManager;
@@ -32,7 +33,7 @@ import '../../data/series.dart' show Series;
 import '../../common/gesture_listener.dart' show GestureListener;
 import '../../common/proxy_gesture_listener.dart' show ProxyGestureListener;
 import 'selection_model/selection_model.dart'
-    show SelectionModel, SelectionModelType;
+    show MutableSelectionModel, SelectionModelType;
 
 typedef BehaviorCreator = ChartBehavior<D> Function<D>();
 
@@ -76,7 +77,7 @@ abstract class BaseChart<D> {
 
   final _gestureProxy = new ProxyGestureListener();
 
-  final _selectionModels = <SelectionModelType, SelectionModel<D>>{};
+  final _selectionModels = <SelectionModelType, MutableSelectionModel<D>>{};
 
   /// Whether data should be selected by nearest domain distance, or by relative
   /// distance.
@@ -133,10 +134,11 @@ abstract class BaseChart<D> {
   bool removeLifecycleListener(LifecycleListener<D> listener) =>
       _lifecycleListeners.remove(listener);
 
-  /// Returns a SelectionModel for the given type. Lazy creates one upon first
+  /// Returns MutableSelectionModel for the given type. Lazy creates one upon first
   /// request.
-  SelectionModel<D> getSelectionModel(SelectionModelType type) {
-    return _selectionModels.putIfAbsent(type, () => new SelectionModel<D>());
+  MutableSelectionModel<D> getSelectionModel(SelectionModelType type) {
+    return _selectionModels.putIfAbsent(
+        type, () => new MutableSelectionModel<D>());
   }
 
   /// Returns a list of datum details from selection model of [type].
@@ -244,7 +246,7 @@ abstract class BaseChart<D> {
       return details;
     }
 
-    SelectionModel selectionModel = getSelectionModel(selectionModelType);
+    final selectionModel = getSelectionModel(selectionModelType);
     if (selectionModel == null || !selectionModel.hasDatumSelection) {
       return details;
     }
@@ -607,8 +609,8 @@ abstract class BaseChart<D> {
     }
     _behaviorStack.clear();
     _behaviorRoleMap.clear();
-    _selectionModels.values.forEach(
-        (SelectionModel selectionModel) => selectionModel.clearListeners());
+    _selectionModels.values.forEach((MutableSelectionModel selectionModel) =>
+        selectionModel.clearListeners());
   }
 }
 

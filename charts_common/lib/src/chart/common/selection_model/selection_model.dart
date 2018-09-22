@@ -15,7 +15,8 @@
 
 import 'package:collection/collection.dart' show ListEquality;
 
-import '../processed_series.dart' show ImmutableSeries, SeriesDatum;
+import '../processed_series.dart' show ImmutableSeries;
+import '../series_datum.dart' show SeriesDatum, SeriesDatumConfig;
 
 /// Holds the state of interaction or selection for the chart to coordinate
 /// between various event sources and things that wish to act upon the selection
@@ -30,9 +31,97 @@ import '../processed_series.dart' show ImmutableSeries, SeriesDatum;
 /// for each datum for a given domain/time, but highlights the closest entry to
 /// match up with highlighting/bolding of the line and legend.
 class SelectionModel<D> {
-  final _listeners = <SelectionModelListener<D>>[];
   var _selectedDatum = <SeriesDatum<D>>[];
   var _selectedSeries = <ImmutableSeries<D>>[];
+
+  /// Create selection model with the desired selection.
+  SelectionModel(
+      {List<SeriesDatum<D>> selectedData,
+      List<ImmutableSeries<D>> selectedSeries}) {
+    if (selectedData != null) {
+      _selectedDatum = selectedData;
+    }
+    if (selectedSeries != null) {
+      _selectedSeries = selectedSeries;
+    }
+  }
+
+  /// Create selection model from configuration.
+  SelectionModel.fromConfig(List<SeriesDatumConfig> selectedDataConfig,
+      List<String> selectedSeriesConfig, List<ImmutableSeries<D>> seriesList) {
+    final selectedDataMap = <String, List<D>>{};
+
+    if (selectedDataConfig != null) {
+      for (SeriesDatumConfig config in selectedDataConfig) {
+        selectedDataMap[config.seriesId] ??= <D>[];
+        selectedDataMap[config.seriesId].add(config.domainValue);
+      }
+
+      // Add to list of selected series.
+      _selectedSeries.addAll(seriesList.where((ImmutableSeries<D> series) =>
+          selectedDataMap.keys.contains(series.id)));
+
+      // Add to list of selected data.
+      for (ImmutableSeries<D> series in seriesList) {
+        if (selectedDataMap.containsKey(series.id)) {
+          final domainFn = series.domainFn;
+
+          for (var i = 0; i < series.data.length; i++) {
+            final datum = series.data[i];
+
+            if (selectedDataMap[series.id].contains(domainFn(i))) {
+              _selectedDatum.add(new SeriesDatum(series, datum));
+            }
+          }
+        }
+      }
+    }
+
+    // Add to list of selected series, if it does not already exist.
+    if (selectedSeriesConfig != null) {
+      final remainingSeriesToAdd = selectedSeriesConfig
+          .where((String seriesId) => !selectedSeries.contains(seriesId))
+          .toList();
+
+      _selectedSeries.addAll(seriesList.where((ImmutableSeries<D> series) =>
+          remainingSeriesToAdd.contains(series.id)));
+    }
+  }
+
+  /// Returns true if this [SelectionModel] has a selected datum.
+  bool get hasDatumSelection => _selectedDatum.isNotEmpty;
+
+  bool isDatumSelected(ImmutableSeries<D> series, int index) {
+    final datum = index == null ? null : series.data[index];
+    return _selectedDatum.contains(new SeriesDatum(series, datum));
+  }
+
+  /// Returns the selected [SeriesDatum] for this [SelectionModel].
+  ///
+  /// This is empty by default.
+  List<SeriesDatum<D>> get selectedDatum =>
+      new List.unmodifiable(_selectedDatum);
+
+  /// Returns true if this [SelectionModel] has a selected series.
+  bool get hasSeriesSelection => _selectedSeries.isNotEmpty;
+
+  /// Returns the selected [ImmutableSeries] for this [SelectionModel].
+  ///
+  /// This is empty by default.
+  List<ImmutableSeries<D>> get selectedSeries =>
+      new List.unmodifiable(_selectedSeries);
+
+  /// Returns true if this [SelectionModel] has a selected datum or series.
+  bool get hasAnySelection =>
+      _selectedDatum.isNotEmpty || selectedSeries.isNotEmpty;
+}
+
+/// A [SelectionModel] that can be updated.
+///
+/// This model will notify listeners subscribed to this model when the selection
+/// is modified.
+class MutableSelectionModel<D> extends SelectionModel<D> {
+  final _listeners = <SelectionModelListener<D>>[];
 
   /// When set to true, prevents the model from being updated.
   bool locked = false;
@@ -65,31 +154,6 @@ class SelectionModel<D> {
     }
     return changed;
   }
-
-  /// Returns true if this [SelectionModel] has a selected datum.
-  bool get hasDatumSelection => _selectedDatum.isNotEmpty;
-
-  bool isDatumSelected(ImmutableSeries<D> series, int index) {
-    final datum = index == null ? null : series.data[index];
-    return _selectedDatum.contains(new SeriesDatum(series, datum));
-  }
-
-  /// Returns the selected [SeriesDatum] for this [SelectionModel].
-  ///
-  /// This is empty by default.
-  List<SeriesDatum<D>> get selectedDatum => _selectedDatum;
-
-  /// Returns true if this [SelectionModel] has a selected series.
-  bool get hasSeriesSelection => _selectedSeries.isNotEmpty;
-
-  /// Returns the selected [ImmutableSeries] for this [SelectionModel].
-  ///
-  /// This is empty by default.
-  List<ImmutableSeries<D>> get selectedSeries => _selectedSeries;
-
-  /// Returns true if this [SelectionModel] has a selected datum or series.
-  bool get hasAnySelection =>
-      _selectedDatum.isNotEmpty || selectedSeries.isNotEmpty;
 
   /// Add a listener to be notified when this [SelectionModel] changes.
   ///

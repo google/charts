@@ -189,22 +189,3 @@ abstract class ImmutableSeries<D> {
   void setAttr<R>(AttributeKey<R> key, R value);
   R getAttr<R>(AttributeKey<R> key);
 }
-
-class SeriesDatum<D> {
-  final ImmutableSeries<D> series;
-  final dynamic datum;
-  int _index;
-
-  SeriesDatum(this.series, this.datum) {
-    _index = datum == null ? null : series.data.indexOf(datum);
-  }
-
-  int get index => _index;
-
-  @override
-  bool operator ==(Object other) =>
-      other is SeriesDatum && other.series == series && other.datum == datum;
-
-  @override
-  int get hashCode => series.hashCode * 31 + datum.hashCode;
-}

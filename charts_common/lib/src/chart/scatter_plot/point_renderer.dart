@@ -25,8 +25,8 @@ import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
-import '../common/processed_series.dart'
-    show ImmutableSeries, MutableSeries, SeriesDatum;
+import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../common/series_datum.dart' show SeriesDatum;
 import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/color.dart' show Color;
 import '../../common/math.dart' show distanceBetweenPointAndLineSegment;

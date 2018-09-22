@@ -36,7 +36,7 @@ class MockChart extends Mock implements BaseChart {
   }
 }
 
-class MockSelectionModel extends Mock implements SelectionModel {
+class MockSelectionModel extends Mock implements MutableSelectionModel {
   SelectionModelListener lastListener;
 
   @override

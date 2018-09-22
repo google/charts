@@ -30,8 +30,8 @@ import '../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
-import '../common/processed_series.dart'
-    show ImmutableSeries, MutableSeries, SeriesDatum;
+import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../common/series_datum.dart' show SeriesDatum;
 import '../../common/color.dart' show Color;
 
 /// Renders series data as a series of bar target lines.

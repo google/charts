@@ -18,7 +18,8 @@ import 'package:meta/meta.dart' show required;
 import '../../../cartesian/axis/axis.dart' show ImmutableAxis, domainAxisKey;
 import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
-import '../../processed_series.dart' show MutableSeries, SeriesDatum;
+import '../../processed_series.dart' show MutableSeries;
+import '../../series_datum.dart' show SeriesDatum;
 import '../../selection_model/selection_model.dart' show SelectionModelType;
 import 'a11y_explore_behavior.dart'
     show A11yExploreBehavior, ExploreModeTrigger;

@@ -15,11 +15,12 @@
 
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
+import 'package:charts_common/src/chart/common/series_datum.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:test/test.dart';
 
 void main() {
-  SelectionModel<String> _selectionModel;
+  MutableSelectionModel<String> _selectionModel;
 
   ImmutableSeries<String> _closestSeries;
   MyDatum _closestDatumClosestSeries;
@@ -34,7 +35,7 @@ void main() {
   SeriesDatum<String> _otherDatumOtherSeriesPair;
 
   setUp(() {
-    _selectionModel = new SelectionModel<String>();
+    _selectionModel = new MutableSelectionModel<String>();
 
     _closestDatumClosestSeries = new MyDatum('cDcS');
     _otherDatumClosestSeries = new MyDatum('oDcS');

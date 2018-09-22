@@ -19,7 +19,8 @@ import 'legend_entry_generator.dart';
 import '../../selection_model/selection_model.dart';
 import '../../../cartesian/axis/axis.dart' show Axis, measureAxisIdKey;
 import '../../datum_details.dart' show MeasureFormatter;
-import '../../processed_series.dart' show MutableSeries, SeriesDatum;
+import '../../processed_series.dart' show MutableSeries;
+import '../../series_datum.dart' show SeriesDatum;
 
 /// A strategy for generating a list of [LegendEntry] per series drawn.
 ///

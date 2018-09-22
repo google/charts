@@ -116,8 +116,7 @@ export 'src/chart/common/behavior/calculation/percent_injector.dart'
     show PercentInjector, PercentInjectorTotalType;
 export 'src/chart/common/behavior/domain_highlighter.dart'
     show DomainHighlighter;
-export 'src/chart/common/behavior/initial_selection.dart'
-    show InitialSelection, SeriesDatumConfig;
+export 'src/chart/common/behavior/initial_selection.dart' show InitialSelection;
 export 'src/chart/common/behavior/legend/legend.dart'
     show
         Legend,
@@ -165,8 +164,8 @@ export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
-export 'src/chart/common/processed_series.dart'
-    show ImmutableSeries, SeriesDatum;
+export 'src/chart/common/processed_series.dart' show ImmutableSeries;
+export 'src/chart/common/series_datum.dart' show SeriesDatum, SeriesDatumConfig;
 export 'src/chart/common/selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType, SelectionModelListener;
 export 'src/chart/common/series_renderer.dart'
