@@ -1,3 +1,9 @@
+# 0.5.0-dev
+* SelectionModelConfig's listener parameter has been renamed to "changeListener". This is a breaking
+change. Please rename any existing uses of the "listener" parameter to "changeListener". This was
+named in order to add an additional listener "updateListener" that listens to any update requests,
+regardless if the selection model has changed.
+
 # 0.4.0
 * Fixed export file to export ChartsBehavior in the Flutter library instead of the one that resides
 in charts_common. The charts_common behavior should not be used except internally in the

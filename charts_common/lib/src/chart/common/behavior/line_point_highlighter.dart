@@ -152,7 +152,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     chart.addLifecycleListener(_lifecycleListener);
     chart
         .getSelectionModel(selectionModelType)
-        .addSelectionListener(_selectionChanged);
+        .addSelectionChangedListener(_selectionChanged);
   }
 
   @override
@@ -160,7 +160,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     chart.removeView(_view);
     chart
         .getSelectionModel(selectionModelType)
-        .removeSelectionListener(_selectionChanged);
+        .removeSelectionChangedListener(_selectionChanged);
     chart.removeLifecycleListener(_lifecycleListener);
   }
 

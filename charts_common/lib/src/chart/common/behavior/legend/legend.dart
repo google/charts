@@ -343,7 +343,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     chart.addLifecycleListener(_lifecycleListener);
     chart
         .getSelectionModel(selectionModelType)
-        .addSelectionListener(_selectionChanged);
+        .addSelectionChangedListener(_selectionChanged);
 
     chart.addView(this);
   }
@@ -352,7 +352,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   void removeFrom(BaseChart chart) {
     chart
         .getSelectionModel(selectionModelType)
-        .removeSelectionListener(_selectionChanged);
+        .removeSelectionChangedListener(_selectionChanged);
     chart.removeLifecycleListener(_lifecycleListener);
 
     chart.removeView(this);

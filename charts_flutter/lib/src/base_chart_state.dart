@@ -49,7 +49,9 @@ class BaseChartState<D> extends State<BaseChart<D>>
   final addedBehaviorWidgets = <ChartBehavior>[];
   final addedCommonBehaviorsByRole = <String, common.ChartBehavior>{};
 
-  final addedSelectionListenersByType =
+  final addedSelectionChangedListenersByType =
+      <common.SelectionModelType, common.SelectionModelListener<D>>{};
+  final addedSelectionUpdatedListenersByType =
       <common.SelectionModelType, common.SelectionModelListener<D>>{};
 
   final _behaviorAnimationControllers =

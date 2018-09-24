@@ -60,14 +60,14 @@ class SlidingViewport<D> implements ChartBehavior<D> {
     _chart = chart as CartesianChart<D>;
     chart
         .getSelectionModel(selectionModelType)
-        .addSelectionListener(_selectionChanged);
+        .addSelectionChangedListener(_selectionChanged);
   }
 
   @override
   void removeFrom(BaseChart chart) {
     chart
         .getSelectionModel(selectionModelType)
-        .removeSelectionListener(_selectionChanged);
+        .removeSelectionChangedListener(_selectionChanged);
   }
 
   @override

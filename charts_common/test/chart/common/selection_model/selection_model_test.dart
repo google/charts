@@ -182,11 +182,12 @@ void main() {
     });
   });
 
-  group('SelectionModel update listeners', () {
+  group('SelectionModel changed listeners', () {
     test('listener triggered for change', () {
       SelectionModel<String> triggeredModel;
       // Listen
-      _selectionModel.addSelectionListener((SelectionModel<String> model) {
+      _selectionModel
+          .addSelectionChangedListener((SelectionModel<String> model) {
         triggeredModel = model;
       });
 
@@ -211,7 +212,8 @@ void main() {
       ]);
 
       // Listen
-      _selectionModel.addSelectionListener((SelectionModel<String> model) {
+      _selectionModel
+          .addSelectionChangedListener((SelectionModel<String> model) {
         triggeredModel = model;
       });
 
@@ -234,10 +236,81 @@ void main() {
       };
 
       // Listen
-      _selectionModel.addSelectionListener(cb);
+      _selectionModel.addSelectionChangedListener(cb);
 
       // Unlisten
-      _selectionModel.removeSelectionListener(cb);
+      _selectionModel.removeSelectionChangedListener(cb);
+
+      // Set the selection to closest datum.
+      _selectionModel.updateSelection([
+        new SeriesDatum(_closestSeries, _closestDatumClosestSeries),
+      ], [
+        _closestSeries
+      ]);
+
+      // Callback should not have been triggered.
+      expect(triggeredModel, isNull);
+    });
+  });
+
+  group('SelectionModel updated listeners', () {
+    test('listener triggered for change', () {
+      SelectionModel<String> triggeredModel;
+      // Listen
+      _selectionModel
+          .addSelectionUpdatedListener((SelectionModel<String> model) {
+        triggeredModel = model;
+      });
+
+      // Set the selection to closest datum.
+      _selectionModel.updateSelection([
+        new SeriesDatum(_closestSeries, _closestDatumClosestSeries),
+      ], [
+        _closestSeries
+      ]);
+
+      // Callback should have been triggered.
+      expect(triggeredModel, equals(_selectionModel));
+    });
+
+    test('listener triggered for no change', () {
+      SelectionModel<String> triggeredModel;
+      // Set the selection to closest datum.
+      _selectionModel.updateSelection([
+        new SeriesDatum(_closestSeries, _closestDatumClosestSeries),
+      ], [
+        _closestSeries
+      ]);
+
+      // Listen
+      _selectionModel
+          .addSelectionUpdatedListener((SelectionModel<String> model) {
+        triggeredModel = model;
+      });
+
+      // Try to update the model with the same value.
+      _selectionModel.updateSelection([
+        new SeriesDatum(_closestSeries, _closestDatumClosestSeries),
+      ], [
+        _closestSeries
+      ]);
+
+      // Callback should have been triggered.
+      expect(triggeredModel, equals(_selectionModel));
+    });
+
+    test('removed listener not triggered for change', () {
+      SelectionModel<String> triggeredModel;
+
+      Function cb = (SelectionModel<String> model) {
+        triggeredModel = model;
+      };
+
+      // Listen
+      _selectionModel.addSelectionUpdatedListener(cb);
+
+      // Unlisten
+      _selectionModel.removeSelectionUpdatedListener(cb);
 
       // Set the selection to closest datum.
       _selectionModel.updateSelection([

@@ -46,6 +46,12 @@ class SelectionModel<D> {
     }
   }
 
+  /// Create a deep copy of the selection model.
+  SelectionModel.fromOther(SelectionModel<D> other) {
+    _selectedDatum = new List.from(other._selectedDatum);
+    _selectedSeries = new List.from(other._selectedSeries);
+  }
+
   /// Create selection model from configuration.
   SelectionModel.fromConfig(List<SeriesDatumConfig> selectedDataConfig,
       List<String> selectedSeriesConfig, List<ImmutableSeries<D>> seriesList) {
@@ -114,6 +120,20 @@ class SelectionModel<D> {
   /// Returns true if this [SelectionModel] has a selected datum or series.
   bool get hasAnySelection =>
       _selectedDatum.isNotEmpty || selectedSeries.isNotEmpty;
+
+  @override
+  bool operator ==(Object o) {
+    return o is SelectionModel &&
+        new ListEquality().equals(_selectedDatum, o.selectedDatum) &&
+        new ListEquality().equals(_selectedSeries, o.selectedSeries);
+  }
+
+  @override
+  int get hashCode {
+    int hashcode = new ListEquality().hash(_selectedDatum);
+    hashcode = hashcode * 37 + new ListEquality().hash(_selectedSeries);
+    return hashcode;
+  }
 }
 
 /// A [SelectionModel] that can be updated.
@@ -121,7 +141,8 @@ class SelectionModel<D> {
 /// This model will notify listeners subscribed to this model when the selection
 /// is modified.
 class MutableSelectionModel<D> extends SelectionModel<D> {
-  final _listeners = <SelectionModelListener<D>>[];
+  final _changedListeners = <SelectionModelListener<D>>[];
+  final _updatedListeners = <SelectionModelListener<D>>[];
 
   /// When set to true, prevents the model from being updated.
   bool locked = false;
@@ -146,11 +167,15 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
     _selectedDatum = datumSelection;
     _selectedSeries = seriesList;
 
+    // Provide a copy, so listeners get an immutable model.
+    final copyOfSelectionModel = new SelectionModel.fromOther(this);
+    _updatedListeners.forEach((listener) => listener(copyOfSelectionModel));
+
     final changed =
         !new ListEquality().equals(origSelectedDatum, _selectedDatum) ||
             !new ListEquality().equals(origSelectedSeries, _selectedSeries);
     if (notifyListeners && changed) {
-      _listeners.forEach((listener) => listener(this));
+      _changedListeners.forEach((listener) => listener(copyOfSelectionModel));
     }
     return changed;
   }
@@ -159,17 +184,37 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
   ///
   /// Note: the listener will not be triggered if [updateSelection] is called
   /// resulting in the same selection state.
-  addSelectionListener(SelectionModelListener<D> listener) {
-    _listeners.add(listener);
+  void addSelectionChangedListener(SelectionModelListener<D> listener) {
+    _changedListeners.add(listener);
   }
 
   /// Remove listener from being notified when this [SelectionModel] changes.
-  removeSelectionListener(SelectionModelListener<D> listener) {
-    _listeners.remove(listener);
+  void removeSelectionChangedListener(SelectionModelListener<D> listener) {
+    _changedListeners.remove(listener);
   }
 
-  clearListeners() {
-    _listeners.clear();
+  /// Add a listener to be notified when [updateSelection] is called, even if
+  /// the selection state is the same.
+  ///
+  /// This is necessary in order to support programmatic selections in Flutter.
+  /// Due to the way widgets are constructed in Flutter, there currently isn't
+  /// a way for users to programmatically specify the selection. In order to
+  /// provide this support, the users who subscribe to the selection updated
+  /// event can keep a copy of the selection model and also decide if it should
+  /// be overwritten.
+  void addSelectionUpdatedListener(SelectionModelListener<D> listener) {
+    _updatedListeners.add(listener);
+  }
+
+  /// Remove listener from being notified when [updateSelection] is called.
+  void removeSelectionUpdatedListener(SelectionModelListener<D> listener) {
+    _updatedListeners.remove(listener);
+  }
+
+  /// Remove all listeners.
+  void clearAllListeners() {
+    _changedListeners.clear();
+    _updatedListeners.clear();
   }
 }
 
