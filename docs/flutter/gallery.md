@@ -35,7 +35,7 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/scatter_plot_charts/simple_thumb.png)](example/scatter_plot_charts/simple) | Comparison Points<br>[![](example/scatter_plot_charts/comparison_points_thumb.png)](example/scatter_plot_charts/comparison_points) | Bucketing Axis<br>[![](example/scatter_plot_charts/bucketing_axis_thumb.png)](example/scatter_plot_charts/bucketing_axis) | |
+| Simple<br>[![](example/scatter_plot_charts/simple_thumb.png)](example/scatter_plot_charts/simple) | Shapes<br>[![](example/scatter_plot_charts/shapes_thumb.png)](example/scatter_plot_charts/shapes) | Comparison Points<br>[![](example/scatter_plot_charts/comparison_points_thumb.png)](example/scatter_plot_charts/comparison_points) | Bucketing Axis<br>[![](example/scatter_plot_charts/bucketing_axis_thumb.png)](example/scatter_plot_charts/bucketing_axis) |
 
 
 ### Combo Charts

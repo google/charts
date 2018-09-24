@@ -60,7 +60,22 @@ abstract class ChartCanvas {
   void drawPie(CanvasPie canvasPie);
 
   /// Renders a simple point.
-  void drawPoint({Point point, Color fill, double radius});
+  ///
+  /// [point] The x, y coordinates of the point.
+  ///
+  /// [radius] The radius of the point.
+  ///
+  /// [fill] Fill color for the point.
+  ///
+  /// [stroke] and [strokeWidthPx] configure the color and thickness of the
+  /// outer edge of the point. Both must be provided together for a line to
+  /// appear.
+  void drawPoint(
+      {Point point,
+      double radius,
+      Color fill,
+      Color stroke,
+      double strokeWidthPx});
 
   /// Renders a polygon shape described by a set of points.
   ///

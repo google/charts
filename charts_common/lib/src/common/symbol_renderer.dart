@@ -127,7 +127,12 @@ class CircleSymbolRenderer extends SymbolRenderer {
       bounds.top + (bounds.height / 2),
     );
     final radius = min(bounds.width, bounds.height) / 2;
-    canvas.drawPoint(point: center, fill: fillColor, radius: radius);
+    canvas.drawPoint(
+        point: center,
+        radius: radius,
+        fill: fillColor,
+        stroke: strokeColor,
+        strokeWidthPx: strokeWidthPx);
   }
 
   bool shouldRepaint(CircleSymbolRenderer oldRenderer) {

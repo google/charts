@@ -91,14 +91,21 @@ class ChartCanvas implements common.ChartCanvas {
   }
 
   @override
-  void drawPoint({Point point, common.Color fill, double radius}) {
+  void drawPoint(
+      {Point point,
+      double radius,
+      common.Color fill,
+      common.Color stroke,
+      double strokeWidthPx}) {
     _pointPainter ??= new PointPainter();
     _pointPainter.draw(
         canvas: canvas,
         paint: _paint,
         point: point,
+        radius: radius,
         fill: fill,
-        radius: radius);
+        stroke: stroke,
+        strokeWidthPx: strokeWidthPx);
   }
 
   @override
