@@ -301,18 +301,26 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   void preProcessSeriesList(List<MutableSeries<D>> seriesList) {}
 
   /// Build LegendEntries from list of series.
-  void _postProcess(List<MutableSeries<D>> seriesList) {
-    legendState._legendEntries =
-        legendEntryGenerator.getLegendEntries(_currentSeriesList);
+  void _postProcess(_) {
     // Get the selection model directly from chart on post process.
     //
     // This is because if initial selection is set as a behavior, it will be
     // handled during onData. onData is prior to this behavior's postProcess
     // call, so the selection will have changed prior to the entries being
     // generated.
-    legendState._selectionModel = chart.getSelectionModel(selectionModelType);
+    final selectionModel = chart.getSelectionModel(selectionModelType);
 
-    _updateLegendEntries();
+    // Only update entries if the selection model is different because post
+    // process is called on each draw cycle, so this is called on each animation
+    // frame and we don't want to update and request the native platform to
+    // rebuild if nothing has changed.
+    if (legendState._selectionModel != selectionModel) {
+      legendState._legendEntries =
+          legendEntryGenerator.getLegendEntries(_currentSeriesList);
+
+      legendState._selectionModel = selectionModel;
+      _updateLegendEntries();
+    }
   }
 
   // need to handle when series data changes, selection should be reset
