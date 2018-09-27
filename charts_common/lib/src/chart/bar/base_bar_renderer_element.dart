@@ -28,6 +28,7 @@ abstract class BaseBarRendererElement {
   num measureOffset;
   num measureOffsetPlusMeasure;
   double strokeWidthPx;
+  bool measureIsNull;
 
   BaseBarRendererElement();
 
@@ -45,6 +46,7 @@ abstract class BaseBarRendererElement {
     measureOffset = other.measureOffset;
     measureOffsetPlusMeasure = other.measureOffsetPlusMeasure;
     strokeWidthPx = other.strokeWidthPx;
+    measureIsNull = other.measureIsNull;
   }
 
   void updateAnimationPercent(BaseBarRendererElement previous,
@@ -52,6 +54,7 @@ abstract class BaseBarRendererElement {
     color = getAnimatedColor(previous.color, target.color, animationPercent);
     fillColor = getAnimatedColor(
         previous.fillColor, target.fillColor, animationPercent);
+    measureIsNull = target.measureIsNull;
   }
 }
 
@@ -99,6 +102,10 @@ abstract class BaseAnimatedBar<D, R extends BaseBarRendererElement> {
   }
 
   R get currentBar => _currentBar;
+
+  R get previousBar => _previousBar;
+
+  R get targetBar => _targetBar;
 
   /// Gets the new state of the bar element for painting, updated for a
   /// transition between the previous state and the new animationPercent.

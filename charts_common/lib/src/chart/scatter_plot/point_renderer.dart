@@ -25,8 +25,8 @@ import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
-import '../common/processed_series.dart'
-    show ImmutableSeries, MutableSeries, SeriesDatum;
+import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../common/series_datum.dart' show SeriesDatum;
 import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/color.dart' show Color;
 import '../../common/math.dart' show distanceBetweenPointAndLineSegment;
@@ -143,6 +143,13 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         boundsLineRadiusPx ??= config.boundsLineRadiusPx;
         boundsLineRadiusPx ??= radiusPx;
 
+        // Default to the configured stroke width if none was returned by the
+        // accessor function.
+        var strokeWidthPx = series.strokeWidthPxFn != null
+            ? series.strokeWidthPxFn(index)
+            : null;
+        strokeWidthPx ??= config.strokeWidthPx;
+
         // Get the ID of the [SymbolRenderer] for this point. An ID may be
         // specified on the datum, or on the series. If neither is specified,
         // fall back to the default.
@@ -153,9 +160,21 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         symbolRendererId ??= series.getAttr(pointSymbolRendererIdKey);
         symbolRendererId ??= defaultSymbolRendererId;
 
+        // Get the colors. If no fill color is provided, default it to the
+        // primary data color.
+        final colorFn = series.colorFn;
+        final fillColorFn = series.fillColorFn ?? colorFn;
+
+        final color = colorFn(index);
+        var fillColor = fillColorFn(index);
+        fillColor ??= color;
+
         final details = new PointRendererElement<D>()
+          ..color = color
+          ..fillColor = fillColor
           ..radiusPx = radiusPx.toDouble()
           ..boundsLineRadiusPx = boundsLineRadiusPx.toDouble()
+          ..strokeWidthPx = strokeWidthPx.toDouble()
           ..symbolRendererId = symbolRendererId;
 
         elements.add(details);
@@ -169,17 +188,16 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     _currentKeys.clear();
 
     seriesList.forEach((ImmutableSeries<D> series) {
-      var domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
-      var domainFn = series.domainFn;
-      var domainLowerBoundFn = series.domainLowerBoundFn;
-      var domainUpperBoundFn = series.domainUpperBoundFn;
-      var measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
-      var measureFn = series.measureFn;
-      var measureLowerBoundFn = series.measureLowerBoundFn;
-      var measureUpperBoundFn = series.measureUpperBoundFn;
-      var measureOffsetFn = series.measureOffsetFn;
-      var colorFn = series.colorFn;
-      var seriesKey = series.id;
+      final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
+      final domainFn = series.domainFn;
+      final domainLowerBoundFn = series.domainLowerBoundFn;
+      final domainUpperBoundFn = series.domainUpperBoundFn;
+      final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+      final measureFn = series.measureFn;
+      final measureLowerBoundFn = series.measureLowerBoundFn;
+      final measureUpperBoundFn = series.measureUpperBoundFn;
+      final measureOffsetFn = series.measureOffsetFn;
+      final seriesKey = series.id;
 
       var pointList = seriesPointMap.putIfAbsent(seriesKey, () => []);
 
@@ -245,11 +263,13 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
           animatingPoint = new AnimatedPoint<D>(
               key: pointKey, overlaySeries: series.overlaySeries)
             ..setNewTarget(new PointRendererElement<D>()
-              ..color = colorFn(index)
+              ..color = details.color
+              ..fillColor = details.fillColor
               ..measureAxisPosition = measureAxis.getLocation(0.0)
               ..point = point
               ..radiusPx = details.radiusPx
               ..boundsLineRadiusPx = details.boundsLineRadiusPx
+              ..strokeWidthPx = details.strokeWidthPx
               ..symbolRendererId = details.symbolRendererId);
 
           pointList.add(animatingPoint);
@@ -260,11 +280,13 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
         // Get the pointElement we are going to setup.
         final pointElement = new PointRendererElement<D>()
-          ..color = colorFn(index)
+          ..color = details.color
+          ..fillColor = details.fillColor
           ..measureAxisPosition = measureAxis.getLocation(0.0)
           ..point = point
           ..radiusPx = details.radiusPx
           ..boundsLineRadiusPx = details.boundsLineRadiusPx
+          ..strokeWidthPx = details.strokeWidthPx
           ..symbolRendererId = details.symbolRendererId;
 
         animatingPoint.setNewTarget(pointElement);
@@ -334,7 +356,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
               point.radiusPx * 2);
 
           if (point.symbolRendererId == defaultSymbolRendererId) {
-            symbolRenderer.paint(canvas, bounds, fillColor: point.color);
+            symbolRenderer.paint(canvas, bounds,
+                fillColor: point.fillColor,
+                strokeColor: point.color,
+                strokeWidthPx: point.strokeWidthPx);
           } else {
             final id = point.symbolRendererId;
             if (!config.customSymbolRenderers.containsKey(id)) {
@@ -343,7 +368,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
             }
 
             final customRenderer = config.customSymbolRenderers[id];
-            customRenderer.paint(canvas, bounds, fillColor: point.color);
+            customRenderer.paint(canvas, bounds,
+                fillColor: point.fillColor,
+                strokeColor: point.color,
+                strokeWidthPx: point.strokeWidthPx);
           }
         }
 
@@ -605,18 +633,23 @@ class DatumPoint<D> extends Point<double> {
 class PointRendererElement<D> {
   DatumPoint<D> point;
   Color color;
+  Color fillColor;
   double measureAxisPosition;
   double radiusPx;
   double boundsLineRadiusPx;
+  double strokeWidthPx;
   String symbolRendererId;
 
   PointRendererElement<D> clone() {
     return new PointRendererElement<D>()
       ..point = new DatumPoint<D>.from(point)
       ..color = color != null ? new Color.fromOther(color: color) : null
+      ..fillColor =
+          fillColor != null ? new Color.fromOther(color: fillColor) : null
       ..measureAxisPosition = measureAxisPosition
       ..radiusPx = radiusPx
       ..boundsLineRadiusPx = boundsLineRadiusPx
+      ..strokeWidthPx = strokeWidthPx
       ..symbolRendererId = symbolRendererId;
   }
 
@@ -668,6 +701,9 @@ class PointRendererElement<D> {
 
     color = getAnimatedColor(previous.color, target.color, animationPercent);
 
+    fillColor = getAnimatedColor(
+        previous.fillColor, target.fillColor, animationPercent);
+
     radiusPx = (((target.radiusPx - previous.radiusPx) * animationPercent) +
         previous.radiusPx);
 
@@ -675,6 +711,10 @@ class PointRendererElement<D> {
         (((target.boundsLineRadiusPx - previous.boundsLineRadiusPx) *
                 animationPercent) +
             previous.boundsLineRadiusPx);
+
+    strokeWidthPx =
+        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx);
   }
 }
 
@@ -709,9 +749,10 @@ class AnimatedPoint<D> {
         yLower: newTarget.measureAxisPosition.roundToDouble(),
         yUpper: newTarget.measureAxisPosition.roundToDouble());
 
-    // Animate the stroke width to 0 so that we don't get a lingering point after
-    // animation is done.
+    // Animate the radius and stroke width to 0 so that we don't get a lingering
+    // point after animation is done.
     newTarget.radiusPx = 0.0;
+    newTarget.strokeWidthPx = 0.0;
 
     setNewTarget(newTarget);
     animatingOut = true;

@@ -31,6 +31,8 @@ class TextElement implements common.TextElement {
   @override
   final String text;
 
+  final double textScaleFactor;
+
   var _painterReady = false;
   common.TextStyle _textStyle;
   common.TextDirection _textDirection = common.TextDirection.ltr;
@@ -44,7 +46,8 @@ class TextElement implements common.TextElement {
 
   double _opacity;
 
-  TextElement(this.text, {common.TextStyle style}) : _textStyle = style;
+  TextElement(this.text, {common.TextStyle style, this.textScaleFactor})
+      : _textStyle = style;
 
   @override
   common.TextStyle get textStyle => _textStyle;
@@ -154,8 +157,13 @@ class TextElement implements common.TextElement {
       //     TextAlign.right : TextAlign.left
       ..ellipsis = maxWidthStrategy == common.MaxWidthStrategy.ellipsize
           ? ellipsis
-          : null
-      ..layout(maxWidth: maxWidth?.toDouble() ?? double.infinity);
+          : null;
+
+    if (textScaleFactor != null) {
+      _textPainter.textScaleFactor = textScaleFactor;
+    }
+
+    _textPainter.layout(maxWidth: maxWidth?.toDouble() ?? double.infinity);
 
     final baseline =
         _textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);

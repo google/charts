@@ -18,7 +18,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/time_series_charts/simple_thumb.png)](example/time_series_charts/simple) | Range Annotation<br>[![](example/time_series_charts/range_annotation_thumb.png)](example/time_series_charts/range_annotation) | Symbol Annotation<br>[![](example/time_series_charts/symbol_annotation_thumb.png)](example/time_series_charts/symbol_annotation) | With Bar Renderer<br>[![](example/time_series_charts/with_bar_renderer_thumb.png)](example/time_series_charts/with_bar_renderer) |
+| Simple<br>[![](example/time_series_charts/simple_thumb.png)](example/time_series_charts/simple) | End Points Axis<br>[![](example/time_series_charts/end_points_axis_thumb.png)](example/time_series_charts/end_points_axis) | Confidence Interval<br>[![](example/time_series_charts/confidence_interval_thumb.png)](example/time_series_charts/confidence_interval) | Line Annotation<br>[![](example/time_series_charts/line_annotation_thumb.png)](example/time_series_charts/line_annotation) |
+| Range Annotation<br>[![](example/time_series_charts/range_annotation_thumb.png)](example/time_series_charts/range_annotation) | Range Annotation Margin<br>[![](example/time_series_charts/range_annotation_margin_thumb.png)](example/time_series_charts/range_annotation_margin) | Symbol Annotation<br>[![](example/time_series_charts/symbol_annotation_thumb.png)](example/time_series_charts/symbol_annotation) | With Bar Renderer<br>[![](example/time_series_charts/with_bar_renderer_thumb.png)](example/time_series_charts/with_bar_renderer) |
 
 
 ### Line Charts
@@ -27,14 +28,14 @@
 | --- | --- | --- | --- |
 | Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Points<br>[![](example/line_charts/points_thumb.png)](example/line_charts/points) | Stacked Area<br>[![](example/line_charts/stacked_area_thumb.png)](example/line_charts/stacked_area) | Area And Line<br>[![](example/line_charts/area_and_line_thumb.png)](example/line_charts/area_and_line) |
 | Simple Nulls<br>[![](example/line_charts/simple_nulls_thumb.png)](example/line_charts/simple_nulls) | Stacked Area Nulls<br>[![](example/line_charts/stacked_area_nulls_thumb.png)](example/line_charts/stacked_area_nulls) | Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) | Segments<br>[![](example/line_charts/segments_thumb.png)](example/line_charts/segments) |
-| Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | | | |
+| Line Annotation<br>[![](example/line_charts/line_annotation_thumb.png)](example/line_charts/line_annotation) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | Range Annotation Margin<br>[![](example/line_charts/range_annotation_margin_thumb.png)](example/line_charts/range_annotation_margin) | |
 
 
 ### Scatter Plot Charts
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/scatter_plot_charts/simple_thumb.png)](example/scatter_plot_charts/simple) | Comparison Points<br>[![](example/scatter_plot_charts/comparison_points_thumb.png)](example/scatter_plot_charts/comparison_points) | Bucketing Axis<br>[![](example/scatter_plot_charts/bucketing_axis_thumb.png)](example/scatter_plot_charts/bucketing_axis) | |
+| Simple<br>[![](example/scatter_plot_charts/simple_thumb.png)](example/scatter_plot_charts/simple) | Shapes<br>[![](example/scatter_plot_charts/shapes_thumb.png)](example/scatter_plot_charts/shapes) | Comparison Points<br>[![](example/scatter_plot_charts/comparison_points_thumb.png)](example/scatter_plot_charts/comparison_points) | Bucketing Axis<br>[![](example/scatter_plot_charts/bucketing_axis_thumb.png)](example/scatter_plot_charts/bucketing_axis) |
 
 
 ### Combo Charts
@@ -80,8 +81,8 @@
 | | | | |
 | --- | --- | --- | --- |
 | Initial Selection<br>[![](example/behaviors/initial_selection_thumb.png)](example/behaviors/initial_selection) | Selection Bar Highlight<br>[![](example/behaviors/selection_bar_highlight_thumb.png)](example/behaviors/selection_bar_highlight) | Selection Line Highlight<br>[![](example/behaviors/selection_line_highlight_thumb.png)](example/behaviors/selection_line_highlight) | Selection Callback Example<br>[![](example/behaviors/selection_callback_example_thumb.png)](example/behaviors/selection_callback_example) |
-| Slider<br>[![](example/behaviors/slider_thumb.png)](example/behaviors/slider) | Sliding Viewport On Selection<br>[![](example/behaviors/sliding_viewport_on_selection_thumb.png)](example/behaviors/sliding_viewport_on_selection) | Percent Of Domain<br>[![](example/behaviors/percent_of_domain_thumb.png)](example/behaviors/percent_of_domain) | Percent Of Domain By Category<br>[![](example/behaviors/percent_of_domain_by_category_thumb.png)](example/behaviors/percent_of_domain_by_category) |
-| Percent Of Series<br>[![](example/behaviors/percent_of_series_thumb.png)](example/behaviors/percent_of_series) | Initial Hint Animation<br>[![](example/behaviors/initial_hint_animation_thumb.png)](example/behaviors/initial_hint_animation) | | |
+| Chart Title<br>[![](example/behaviors/chart_title_thumb.png)](example/behaviors/chart_title) | Slider<br>[![](example/behaviors/slider_thumb.png)](example/behaviors/slider) | Sliding Viewport On Selection<br>[![](example/behaviors/sliding_viewport_on_selection_thumb.png)](example/behaviors/sliding_viewport_on_selection) | Percent Of Domain<br>[![](example/behaviors/percent_of_domain_thumb.png)](example/behaviors/percent_of_domain) |
+| Percent Of Domain By Category<br>[![](example/behaviors/percent_of_domain_by_category_thumb.png)](example/behaviors/percent_of_domain_by_category) | Percent Of Series<br>[![](example/behaviors/percent_of_series_thumb.png)](example/behaviors/percent_of_series) | Initial Hint Animation<br>[![](example/behaviors/initial_hint_animation_thumb.png)](example/behaviors/initial_hint_animation) | |
 
 
 ### a11y

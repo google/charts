@@ -21,6 +21,7 @@ import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../../../common/datum_details.dart' show MeasureFormatter;
 import '../axis.dart' show Axis, NumericAxis;
+import '../end_points_tick_provider.dart' show EndPointsTickProvider;
 import '../numeric_extents.dart' show NumericExtents;
 import '../numeric_tick_provider.dart' show NumericTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
@@ -158,6 +159,23 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
     hashcode = (hashcode * 37) + desiredMaxTickCount?.hashCode ?? 0;
     return hashcode;
   }
+}
+
+/// [TickProviderSpec] that sets up numeric ticks at the two end points of the
+/// axis range.
+@immutable
+class NumericEndPointsTickProviderSpec implements NumericTickProviderSpec {
+  /// Creates a [TickProviderSpec] that dynamically chooses numeric ticks at the
+  /// two end points of the axis range
+  NumericEndPointsTickProviderSpec();
+
+  @override
+  EndPointsTickProvider<num> createTickProvider(ChartContext context) {
+    return new EndPointsTickProvider<num>();
+  }
+
+  @override
+  bool operator ==(Object other) => other is NumericEndPointsTickProviderSpec;
 }
 
 /// [TickProviderSpec] that allows you to specific the ticks to be used.

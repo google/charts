@@ -30,14 +30,32 @@ abstract class LegendEntryGenerator<D> {
 
   /// Update the list of legend entries based on the selection model.
   ///
-  /// [seriesList] Processed series list.
+  /// [legendEntries] Existing legend entries to update.
   /// [selectionModel] Selection model to query selected state.
-  void updateLegendEntries(
-      List<LegendEntry<D>> legendEntries, SelectionModel<D> selectionModel);
+  /// [seriesList] Processed series list.
+  void updateLegendEntries(List<LegendEntry<D>> legendEntries,
+      SelectionModel<D> selectionModel, List<MutableSeries<D>> seriesList);
 
   MeasureFormatter get measureFormatter;
   set measureFormatter(MeasureFormatter formatter);
 
   MeasureFormatter get secondaryMeasureFormatter;
   set secondaryMeasureFormatter(MeasureFormatter formatter);
+
+  LegendDefaultMeasure get legendDefaultMeasure;
+  set legendDefaultMeasure(LegendDefaultMeasure noSelectionMeasure);
+}
+
+/// Options for calculating what measures are shown when there is no selection.
+enum LegendDefaultMeasure {
+  // No measures are shown where there is no selection.
+  none,
+  // Sum of all measure values for the series.
+  sum,
+  // Average of all measure values for the series.
+  average,
+  // The first measure value of the series.
+  firstValue,
+  // The last measure value of the series.
+  lastValue,
 }

@@ -35,21 +35,26 @@ class ConcreteChart extends CartesianChart {
 
   Axis _domainAxis = new ConcreteNumericAxis();
 
+  Axis _primaryMeasureAxis = new ConcreteNumericAxis();
+
   @override
   addLifecycleListener(LifecycleListener listener) {
     lastListener = listener;
-    super.addLifecycleListener(listener);
+    return super.addLifecycleListener(listener);
   }
 
   @override
   removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
-    super.removeLifecycleListener(listener);
+    return super.removeLifecycleListener(listener);
   }
 
   @override
   Axis get domainAxis => _domainAxis;
+
+  @override
+  Axis getMeasureAxis(String axisId) => _primaryMeasureAxis;
 }
 
 class ConcreteNumericAxis extends Axis<num> {
@@ -64,6 +69,10 @@ class ConcreteNumericAxis extends Axis<num> {
 class MockTickProvider extends Mock implements NumericTickProvider {}
 
 void main() {
+  Rectangle<int> drawBounds;
+  Rectangle<int> domainAxisBounds;
+  Rectangle<int> measureAxisBounds;
+
   ConcreteChart _chart;
 
   Series<MyRow, int> _series1;
@@ -90,6 +99,30 @@ void main() {
     return chart;
   }
 
+  /// Initializes the [chart], draws the [seriesList], and configures mock axis
+  /// layout bounds.
+  _drawSeriesList(ConcreteChart chart, List<Series<MyRow, int>> seriesList) {
+    _chart.domainAxis.autoViewport = true;
+    _chart.domainAxis.resetDomains();
+
+    _chart.getMeasureAxis('').autoViewport = true;
+    _chart.getMeasureAxis('').resetDomains();
+
+    _chart.draw(seriesList);
+
+    _chart.domainAxis.layout(domainAxisBounds, drawBounds);
+
+    _chart.getMeasureAxis('').layout(measureAxisBounds, drawBounds);
+
+    _chart.lastListener.onAxisConfigured();
+  }
+
+  setUpAll(() {
+    drawBounds = new Rectangle<int>(0, 0, 100, 100);
+    domainAxisBounds = new Rectangle<int>(0, 0, 100, 100);
+    measureAxisBounds = new Rectangle<int>(0, 0, 100, 100);
+  });
+
   setUp(() {
     _chart = _makeChart();
 
@@ -108,9 +141,17 @@ void main() {
         colorFn: (_, __) => MaterialPalette.red.shadeDefault);
 
     _annotations1 = [
-      new RangeAnnotationSegment(1, 2, RangeAnnotationAxisType.domain),
+      new RangeAnnotationSegment(1, 2, RangeAnnotationAxisType.domain,
+          startLabel: 'Ann 1'),
       new RangeAnnotationSegment(4, 5, RangeAnnotationAxisType.domain,
-          color: MaterialPalette.gray.shade200),
+          color: MaterialPalette.gray.shade200, endLabel: 'Ann 2'),
+      new RangeAnnotationSegment(5, 5.5, RangeAnnotationAxisType.measure,
+          startLabel: 'Really long tick start label',
+          endLabel: 'Really long tick end label'),
+      new RangeAnnotationSegment(10, 15, RangeAnnotationAxisType.measure,
+          startLabel: 'Ann 4 Start', endLabel: 'Ann 4 End'),
+      new RangeAnnotationSegment(16, 22, RangeAnnotationAxisType.measure,
+          startLabel: 'Ann 5 Start', endLabel: 'Ann 5 End'),
     ];
 
     _annotations2 = [
@@ -132,22 +173,65 @@ void main() {
       final seriesList = [_series1, _series2];
 
       // Act
-      _chart.domainAxis.autoViewport = true;
-      _chart.domainAxis.resetDomains();
-      _chart.draw(seriesList);
-      _chart.domainAxis.layout(new Rectangle<int>(0, 0, 100, 100),
-          new Rectangle<int>(0, 0, 100, 100));
-      _chart.lastListener.onAxisConfigured();
+      _drawSeriesList(_chart, seriesList);
 
       // Verify
       expect(_chart.domainAxis.getLocation(2), equals(40.0));
-      tester.doesAnnotationExist(20.0, 40.0, MaterialPalette.gray.shade100);
       expect(
-          tester.doesAnnotationExist(20.0, 40.0, MaterialPalette.gray.shade100),
+          tester.doesAnnotationExist(
+              startPosition: 20.0,
+              endPosition: 40.0,
+              color: MaterialPalette.gray.shade100,
+              startLabel: 'Ann 1',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.vertical,
+              labelPosition: AnnotationLabelPosition.auto),
           equals(true));
       expect(
           tester.doesAnnotationExist(
-              80.0, 100.0, MaterialPalette.gray.shade200),
+              startPosition: 80.0,
+              endPosition: 100.0,
+              color: MaterialPalette.gray.shade200,
+              endLabel: 'Ann 2',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.vertical,
+              labelPosition: AnnotationLabelPosition.auto),
+          equals(true));
+
+      // Verify measure annotations
+      expect(_chart.getMeasureAxis('').getLocation(11).round(), equals(33));
+      expect(
+          tester.doesAnnotationExist(
+              startPosition: 0.0,
+              endPosition: 2.78,
+              color: MaterialPalette.gray.shade100,
+              startLabel: 'Really long tick start label',
+              endLabel: 'Really long tick end label',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.horizontal,
+              labelPosition: AnnotationLabelPosition.auto),
+          equals(true));
+      expect(
+          tester.doesAnnotationExist(
+              startPosition: 27.78,
+              endPosition: 55.56,
+              color: MaterialPalette.gray.shade100,
+              startLabel: 'Ann 4 Start',
+              endLabel: 'Ann 4 End',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.horizontal,
+              labelPosition: AnnotationLabelPosition.auto),
+          equals(true));
+      expect(
+          tester.doesAnnotationExist(
+              startPosition: 61.11,
+              endPosition: 94.44,
+              color: MaterialPalette.gray.shade100,
+              startLabel: 'Ann 5 Start',
+              endLabel: 'Ann 5 End',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.horizontal,
+              labelPosition: AnnotationLabelPosition.auto),
           equals(true));
     });
 
@@ -160,24 +244,36 @@ void main() {
       final seriesList = [_series1, _series2];
 
       // Act
-      _chart.domainAxis.autoViewport = true;
-      _chart.domainAxis.resetDomains();
-      _chart.draw(seriesList);
-      _chart.domainAxis.layout(new Rectangle<int>(0, 0, 100, 100),
-          new Rectangle<int>(0, 0, 100, 100));
-      _chart.lastListener.onAxisConfigured();
+      _drawSeriesList(_chart, seriesList);
 
       // Verify
       expect(_chart.domainAxis.getLocation(2), equals(20.0));
       expect(
-          tester.doesAnnotationExist(10.0, 20.0, MaterialPalette.gray.shade100),
-          equals(true));
-      expect(
-          tester.doesAnnotationExist(40.0, 50.0, MaterialPalette.gray.shade200),
+          tester.doesAnnotationExist(
+              startPosition: 10.0,
+              endPosition: 20.0,
+              color: MaterialPalette.gray.shade100,
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.vertical,
+              labelPosition: AnnotationLabelPosition.auto),
           equals(true));
       expect(
           tester.doesAnnotationExist(
-              80.0, 100.0, MaterialPalette.gray.shade300),
+              startPosition: 40.0,
+              endPosition: 50.0,
+              color: MaterialPalette.gray.shade200,
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.vertical,
+              labelPosition: AnnotationLabelPosition.auto),
+          equals(true));
+      expect(
+          tester.doesAnnotationExist(
+              startPosition: 80.0,
+              endPosition: 100.0,
+              color: MaterialPalette.gray.shade300,
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.vertical,
+              labelPosition: AnnotationLabelPosition.auto),
           equals(true));
     });
 

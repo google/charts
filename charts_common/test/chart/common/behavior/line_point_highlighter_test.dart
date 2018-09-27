@@ -21,6 +21,7 @@ import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/behavior/line_point_highlighter.dart';
 import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
+import 'package:charts_common/src/chart/common/series_datum.dart';
 import 'package:charts_common/src/chart/common/series_renderer.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
 import 'package:charts_common/src/common/material_palette.dart';
@@ -38,21 +39,22 @@ class MockChart extends Mock implements CartesianChart {
   removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
+    return true;
   }
 
   @override
   bool get vertical => true;
 }
 
-class MockSelectionModel extends Mock implements SelectionModel {
+class MockSelectionModel extends Mock implements MutableSelectionModel {
   SelectionModelListener lastListener;
 
   @override
-  addSelectionListener(SelectionModelListener listener) =>
+  addSelectionChangedListener(SelectionModelListener listener) =>
       lastListener = listener;
 
   @override
-  removeSelectionListener(SelectionModelListener listener) {
+  removeSelectionChangedListener(SelectionModelListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
   }

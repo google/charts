@@ -18,6 +18,7 @@ import '../gallery_scaffold.dart';
 import 'animation_zoom.dart';
 import 'bucketing_axis.dart';
 import 'comparison_points.dart';
+import 'shapes.dart';
 import 'simple.dart';
 
 List<GalleryScaffold> buildGallery() {
@@ -27,6 +28,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Simple Scatter Plot Chart',
       subtitle: 'With a single series',
       childBuilder: () => new SimpleScatterPlotChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.scatter_plot),
+      title: 'Shapes Scatter Plot Chart',
+      subtitle: 'With custom shapes',
+      childBuilder: () => new ShapesScatterPlotChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.scatter_plot),

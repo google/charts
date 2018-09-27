@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:collection' show LinkedHashMap;
+import 'dart:collection' show LinkedHashMap, HashSet;
 import 'dart:math' show Point, Rectangle, max;
 import 'package:meta/meta.dart' show protected, required;
 
@@ -376,39 +376,51 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         var animatingBar = barStackList.firstWhere((B bar) => bar.key == barKey,
             orElse: () => null);
 
+        final measureValue = measureFn(barIndex);
+        final measureIsNull = measureValue == null;
+
         // If we don't have any existing bar element, create a new bar and have
         // it animate in from the domain axis.
         // TODO: Animate bars in the middle of a stack from their
         // nearest neighbors, instead of the measure axis.
         if (animatingBar == null) {
-          animatingBar = makeAnimatedBar(
-              key: barKey,
-              series: series,
-              datum: datum,
-              barGroupIndex: barGroupIndex,
-              previousBarGroupWeight: previousBarGroupWeight,
-              barGroupWeight: barGroupWeight,
-              color: colorFn(barIndex),
-              dashPattern: dashPatternFn(barIndex),
-              details: details,
-              domainValue: domainFn(barIndex),
-              domainAxis: domainAxis,
-              domainWidth: domainAxis.rangeBand.round(),
-              fillColor: fillColorFn(barIndex),
-              fillPattern: details.fillPattern,
-              measureValue: 0.0,
-              measureOffsetValue: 0.0,
-              measureAxisPosition: measureAxisPosition,
-              measureAxis: measureAxis,
-              numBarGroups: barGroupCount,
-              strokeWidthPx: details.strokeWidthPx);
+          // If the measure is null and there was no existing animating bar, it
+          // means we don't need to draw this bar at all.
+          if (!measureIsNull) {
+            animatingBar = makeAnimatedBar(
+                key: barKey,
+                series: series,
+                datum: datum,
+                barGroupIndex: barGroupIndex,
+                previousBarGroupWeight: previousBarGroupWeight,
+                barGroupWeight: barGroupWeight,
+                color: colorFn(barIndex),
+                dashPattern: dashPatternFn(barIndex),
+                details: details,
+                domainValue: domainFn(barIndex),
+                domainAxis: domainAxis,
+                domainWidth: domainAxis.rangeBand.round(),
+                fillColor: fillColorFn(barIndex),
+                fillPattern: details.fillPattern,
+                measureValue: 0.0,
+                measureOffsetValue: 0.0,
+                measureAxisPosition: measureAxisPosition,
+                measureAxis: measureAxis,
+                numBarGroups: barGroupCount,
+                strokeWidthPx: details.strokeWidthPx,
+                measureIsNull: measureIsNull);
 
-          barStackList.add(animatingBar);
+            barStackList.add(animatingBar);
+          }
         } else {
           animatingBar
             ..datum = datum
             ..series = series
             ..domainValue = domainValue;
+        }
+
+        if (animatingBar == null) {
+          continue;
         }
 
         // Update the set of bars that still exist in the series data.
@@ -434,12 +446,13 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             domainWidth: domainAxis.rangeBand.round(),
             fillColor: fillColorFn(barIndex),
             fillPattern: details.fillPattern,
-            measureValue: measureFn(barIndex),
+            measureValue: measureValue,
             measureOffsetValue: details.measureOffset,
             measureAxisPosition: measureAxisPosition,
             measureAxis: measureAxis,
             numBarGroups: barGroupCount,
-            strokeWidthPx: details.strokeWidthPx);
+            strokeWidthPx: details.strokeWidthPx,
+            measureIsNull: measureValue == null);
 
         animatingBar.setNewTarget(barElement);
       }
@@ -448,8 +461,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     // Animate out bars that don't exist anymore.
     _barStackMap.forEach((String key, List<B> barStackList) {
       for (var barIndex = 0; barIndex < barStackList.length; barIndex++) {
-        var bar = barStackList[barIndex];
-
+        final bar = barStackList[barIndex];
         if (_currentKeys.contains(bar.key) != true) {
           bar.animateOut();
         }
@@ -479,7 +491,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       int numBarGroups,
       Color fillColor,
       FillPatternType fillPattern,
-      double strokeWidthPx});
+      double strokeWidthPx,
+      bool measureIsNull});
 
   /// Generates a [BaseBarRendererElement] to represent the rendering data for
   /// one bar on the chart.
@@ -500,7 +513,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       int numBarGroups,
       Color fillColor,
       FillPatternType fillPattern,
-      double strokeWidthPx});
+      double strokeWidthPx,
+      bool measureIsNull});
 
   @override
   void onAttach(BaseChart<D> chart) {
@@ -515,17 +529,26 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the bars that no longer exist.
     if (animationPercent == 1.0) {
-      final keysToRemove = <String>[];
+      final keysToRemove = new HashSet<String>();
 
       _barStackMap.forEach((String key, List<B> barStackList) {
-        barStackList.retainWhere((B bar) => !bar.animatingOut);
+        barStackList.retainWhere(
+            (B bar) => !bar.animatingOut && !bar.targetBar.measureIsNull);
 
         if (barStackList.isEmpty) {
           keysToRemove.add(key);
         }
       });
 
-      keysToRemove.forEach((String key) => _barStackMap.remove(key));
+      // When cleaning up the animation, also clean up the keys used to lookup
+      // if a bar is selected.
+      for (String key in keysToRemove) {
+        _barStackMap.remove(key);
+        _currentKeys.remove(key);
+      }
+      _currentGroupsStackKeys.forEach((domain, keys) {
+        keys.removeWhere((key) => keysToRemove.contains(key));
+      });
     }
 
     _barStackMap.forEach((String stackKey, List<B> barStack) {
@@ -536,7 +559,9 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
           .map((B animatingBar) => animatingBar.getCurrentBar(animationPercent))
           .toList();
 
-      paintBar(canvas, animationPercent, barElements);
+      if (barElements.isNotEmpty) {
+        paintBar(canvas, animationPercent, barElements);
+      }
     });
   }
 

@@ -66,7 +66,9 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
   void draw(ChartCanvas canvas, Tick<num> tick,
       {AxisOrientation orientation,
       Rectangle<int> axisBounds,
-      Rectangle<int> drawAreaBounds}) {}
+      Rectangle<int> drawAreaBounds,
+      bool isFirst,
+      bool isLast}) {}
 }
 
 /// A fake [GraphicsFactory] that returns [MockTextStyle] and [MockTextElement].

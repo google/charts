@@ -22,8 +22,8 @@ import '../common/base_chart.dart' show BaseChart;
 import '../common/canvas_shapes.dart' show CanvasPieSlice, CanvasPie;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../common/datum_details.dart' show DatumDetails;
-import '../common/processed_series.dart'
-    show ImmutableSeries, MutableSeries, SeriesDatum;
+import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../common/series_datum.dart' show SeriesDatum;
 import '../common/series_renderer.dart' show BaseSeriesRenderer;
 import '../../common/color.dart' show Color;
 import '../../common/style/style_factory.dart' show StyleFactory;

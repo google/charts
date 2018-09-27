@@ -304,14 +304,13 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   void drawLabel(ChartCanvas canvas, Tick<D> tick,
       {@required AxisOrientation orientation,
       @required Rectangle<int> axisBounds,
-      @required Rectangle<int> drawAreaBounds}) {
+      @required Rectangle<int> drawAreaBounds,
+      @required bool isFirst,
+      @required bool isLast}) {
     final locationPx = tick.locationPx;
     final measurement = tick.textElement.measurement;
     final isRTL = chartContext.rtl &&
         chartContext.rtlSpec.axisPosition == AxisPosition.reversed;
-    // TODO: Get its first tick and its last tick values.
-    final isFirst = false;
-    final isLast = false;
 
     int x = 0;
     int y = 0;

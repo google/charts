@@ -60,19 +60,21 @@ class SeriesLegend<D> extends Legend<D> {
   /// Whether or not the series legend should show measures on datum selection.
   bool _showMeasures;
 
-  SeriesLegend(
-      {SelectionModelType selectionModelType,
-      LegendEntryGenerator<D> legendEntryGenerator,
-      MeasureFormatter measureFormatter,
-      MeasureFormatter secondaryMeasureFormatter,
-      bool showMeasures})
-      : super(
+  SeriesLegend({
+    SelectionModelType selectionModelType,
+    LegendEntryGenerator<D> legendEntryGenerator,
+    MeasureFormatter measureFormatter,
+    MeasureFormatter secondaryMeasureFormatter,
+    bool showMeasures,
+    LegendDefaultMeasure legendDefaultMeasure,
+  }) : super(
           selectionModelType: selectionModelType ?? SelectionModelType.info,
           legendEntryGenerator:
               legendEntryGenerator ?? new PerSeriesLegendEntryGenerator(),
         ) {
     // Call the setters that include the setting for default.
     this.showMeasures = showMeasures;
+    this.legendDefaultMeasure = legendDefaultMeasure;
     this.measureFormatter = measureFormatter;
     this.secondaryMeasureFormatter = secondaryMeasureFormatter;
   }
@@ -98,14 +100,33 @@ class SeriesLegend<D> extends Legend<D> {
   /// draw.
   List<String> get defaultHiddenSeries => _defaultHiddenSeries;
 
-  /// Whether or not the legend should show measures on datum selection.
+  /// Whether or not the legend should show measures.
   ///
-  /// By default this is false, measures are not shown.
+  /// By default this is false, measures are not shown. When set to true, the
+  /// default behavior is to show measure only if there is selected data.
+  /// Please set [legendDefaultMeasure] to something other than none to enable
+  /// showing measures when there is no selection.
+  ///
   /// If [showMeasure] is set to null, it is changed to the default of false.
   bool get showMeasures => _showMeasures;
 
   set showMeasures(bool showMeasures) {
     _showMeasures = showMeasures ?? false;
+  }
+
+  /// Option to show measures when selection is null.
+  ///
+  /// By default this is set to none, so no measures are shown when there is
+  /// no selection.
+  ///
+  /// If [legendDefaultMeasure] is set to null, it is changed to the default of
+  /// none.
+  LegendDefaultMeasure get legendDefaultMeasure =>
+      legendEntryGenerator.legendDefaultMeasure;
+
+  set legendDefaultMeasure(LegendDefaultMeasure legendDefaultMeasure) {
+    legendEntryGenerator.legendDefaultMeasure =
+        legendDefaultMeasure ?? LegendDefaultMeasure.none;
   }
 
   /// Formatter for measure values.
@@ -280,18 +301,26 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   void preProcessSeriesList(List<MutableSeries<D>> seriesList) {}
 
   /// Build LegendEntries from list of series.
-  void _postProcess(List<MutableSeries<D>> seriesList) {
-    legendState._legendEntries =
-        legendEntryGenerator.getLegendEntries(_currentSeriesList);
+  void _postProcess(_) {
     // Get the selection model directly from chart on post process.
     //
     // This is because if initial selection is set as a behavior, it will be
     // handled during onData. onData is prior to this behavior's postProcess
     // call, so the selection will have changed prior to the entries being
     // generated.
-    legendState._selectionModel = chart.getSelectionModel(selectionModelType);
+    final selectionModel = chart.getSelectionModel(selectionModelType);
 
-    _updateLegendEntries();
+    // Only update entries if the selection model is different because post
+    // process is called on each draw cycle, so this is called on each animation
+    // frame and we don't want to update and request the native platform to
+    // rebuild if nothing has changed.
+    if (legendState._selectionModel != selectionModel) {
+      legendState._legendEntries =
+          legendEntryGenerator.getLegendEntries(_currentSeriesList);
+
+      legendState._selectionModel = selectionModel;
+      _updateLegendEntries();
+    }
   }
 
   // need to handle when series data changes, selection should be reset
@@ -307,8 +336,8 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   /// Internally update legend entries, before calling [updateLegend] that
   /// notifies the native platform.
   void _updateLegendEntries() {
-    legendEntryGenerator.updateLegendEntries(
-        legendState._legendEntries, legendState._selectionModel);
+    legendEntryGenerator.updateLegendEntries(legendState._legendEntries,
+        legendState._selectionModel, chart.currentSeriesList);
 
     updateLegend();
   }
@@ -322,7 +351,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     chart.addLifecycleListener(_lifecycleListener);
     chart
         .getSelectionModel(selectionModelType)
-        .addSelectionListener(_selectionChanged);
+        .addSelectionChangedListener(_selectionChanged);
 
     chart.addView(this);
   }
@@ -331,7 +360,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   void removeFrom(BaseChart chart) {
     chart
         .getSelectionModel(selectionModelType)
-        .removeSelectionListener(_selectionChanged);
+        .removeSelectionChangedListener(_selectionChanged);
     chart.removeLifecycleListener(_lifecycleListener);
 
     chart.removeView(this);
