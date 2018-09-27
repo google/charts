@@ -224,7 +224,27 @@ class BarRenderer<D>
     // Find the max bar width from each segment to calculate corner radius.
     int maxBarWidth = 0;
 
+    // flags used to determine if rounded corners should
+    // be drawn left/right (horizontal) | top/bottom (vertical) for this bar.
+    bool positive, negative = false;
+
     for (var bar in barElements) {
+      if (renderingVertically) {
+        if (bar.bounds.top + 1 < bar.measureAxisPosition) {
+          positive = true;
+        }
+        if (bar.bounds.top + bar.bounds.height - 1 > bar.measureAxisPosition) {
+          negative = true;
+        }
+      } else {
+        if (bar.bounds.left + 1 < bar.measureAxisPosition) {
+          negative = true;
+        }
+        if (bar.bounds.left + bar.bounds.width - 1 > bar.measureAxisPosition) {
+          positive = true;
+        }
+      }
+
       var bounds = bar.bounds;
 
       if (bar != unmodifiedBar) {
@@ -254,14 +274,23 @@ class BarRenderer<D>
           maxBarWidth, (renderingVertically ? bounds.width : bounds.height));
     }
 
+    bool roundTopLeft, roundTopRight, roundBottomLeft, roundBottomRight = false;
+    if (renderingVertically) {
+      roundTopLeft = roundTopRight = positive;
+      roundBottomLeft = roundBottomRight = negative;
+    } else {
+      roundTopLeft = roundBottomLeft = rtl ? positive : negative;
+      roundTopRight = roundBottomRight = rtl ? negative : positive;
+    }
+
     final barStack = new CanvasBarStack(
       bars,
       radius: cornerStrategy.getRadius(maxBarWidth),
       stackedBarPadding: _stackedBarPadding,
-      roundTopLeft: renderingVertically || rtl ? true : false,
-      roundTopRight: rtl ? false : true,
-      roundBottomLeft: rtl ? true : false,
-      roundBottomRight: renderingVertically || rtl ? false : true,
+      roundTopLeft: roundTopLeft,
+      roundTopRight: roundTopRight,
+      roundBottomLeft: roundBottomLeft,
+      roundBottomRight: roundBottomRight,
     );
 
     // If bar stack's range width is:
@@ -390,8 +419,14 @@ class BarRenderer<D>
     var bounds;
     if (this.renderingVertically) {
       // Rectangle clamps to zero width/height
-      bounds = new Rectangle<int>(domainStart, measureEnd,
-          domainEnd - domainStart, measureStart - measureEnd);
+
+      var top = measureEnd;
+      if (measureStart < measureEnd) {
+        top = measureStart;
+      }
+
+      bounds = new Rectangle<int>(domainStart, top, domainEnd - domainStart,
+          (measureStart - measureEnd).abs());
     } else {
       // Rectangle clamps to zero width/height
       bounds = new Rectangle<int>(min(measureStart, measureEnd), domainStart,
@@ -406,8 +441,11 @@ class BarRenderer<D>
 
 abstract class ImmutableBarRendererElement<D> {
   ImmutableSeries<D> get series;
+
   dynamic get datum;
+
   int get index;
+
   Rectangle<int> get bounds;
 }
 
