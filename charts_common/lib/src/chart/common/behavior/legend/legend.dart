@@ -19,6 +19,7 @@ import 'package:meta/meta.dart' show protected;
 import 'package:intl/intl.dart';
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../../layout/layout_view.dart'
     show
         LayoutPosition,
@@ -219,6 +220,9 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   LegendCellPadding _cellPadding;
   LegendCellPadding _legendPadding;
 
+  TextStyleSpec _entryTextStyle;
+  TextStyleSpec _titleTextStyle;
+
   LegendTapHandling _legendTapHandling = LegendTapHandling.hide;
 
   List<MutableSeries<D>> _currentSeriesList;
@@ -273,6 +277,20 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   }
 
   LegendTapHandling get legendTapHandling => _legendTapHandling;
+
+  /// Text style of the legend entry text.
+  TextStyleSpec get entryTextStyle => _entryTextStyle;
+
+  set entryTextStyle(TextStyleSpec entryTextStyle) {
+    _entryTextStyle = entryTextStyle;
+  }
+
+  /// Text style of the legend title text.
+  TextStyleSpec get titleTextStyle => _titleTextStyle;
+
+  set titleTextStyle(TextStyleSpec titleTextStyle) {
+    _titleTextStyle = titleTextStyle;
+  }
 
   /// Configures the behavior of the legend when the user taps/clicks on an
   /// entry. Defaults to no behavior.

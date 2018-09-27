@@ -71,6 +71,12 @@ class MaterialStyle implements Style {
   Color get arcLabelOutsideLeaderLine => MaterialPalette.gray.shade600;
 
   @override
+  Color get legendEntryTextColor => MaterialPalette.gray.shade800;
+
+  @override
+  Color get legendTitleTextColor => MaterialPalette.gray.shade800;
+
+  @override
   Color get linePointHighlighterColor => MaterialPalette.gray.shade600;
 
   @override
