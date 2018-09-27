@@ -36,6 +36,8 @@ import '../../layout/layout_view.dart'
         ViewMeasuredSizes;
 import '../../../common/color.dart' show Color;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../common/symbol_renderer.dart'
+    show CircleSymbolRenderer, SymbolRenderer;
 import '../../../common/style/style_factory.dart' show StyleFactory;
 
 /// Chart behavior that monitors the specified [SelectionModel] and renders a
@@ -90,6 +92,9 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   /// LTR mode, from the left-hand axis.
   final bool drawFollowLinesAcrossChart;
 
+  /// Renderer used to draw the highlighted points.
+  final SymbolRenderer symbolRenderer;
+
   BaseChart<D> _chart;
 
   _LinePointLayoutView _view;
@@ -116,16 +121,18 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
       LinePointHighlighterFollowLineType showHorizontalFollowLine,
       LinePointHighlighterFollowLineType showVerticalFollowLine,
       List<int> dashPattern,
-      bool drawFollowLinesAcrossChart})
+      bool drawFollowLinesAcrossChart,
+      SymbolRenderer symbolRenderer})
       : selectionModelType = selectionModelType ?? SelectionModelType.info,
         defaultRadiusPx = defaultRadiusPx ?? 4.0,
-        radiusPaddingPx = radiusPaddingPx ?? 0.5,
+        radiusPaddingPx = radiusPaddingPx ?? 2.0,
         showHorizontalFollowLine =
             showHorizontalFollowLine ?? LinePointHighlighterFollowLineType.none,
         showVerticalFollowLine = showVerticalFollowLine ??
             LinePointHighlighterFollowLineType.nearest,
         dashPattern = dashPattern ?? [1, 3],
-        drawFollowLinesAcrossChart = drawFollowLinesAcrossChart ?? true {
+        drawFollowLinesAcrossChart = drawFollowLinesAcrossChart ?? true,
+        symbolRenderer = symbolRenderer ?? new CircleSymbolRenderer() {
     _lifecycleListener =
         new LifecycleListener<D>(onAxisConfigured: _updateViewData);
   }
@@ -140,7 +147,8 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
         showHorizontalFollowLine: showHorizontalFollowLine,
         showVerticalFollowLine: showVerticalFollowLine,
         dashPattern: dashPattern,
-        drawFollowLinesAcrossChart: drawFollowLinesAcrossChart);
+        drawFollowLinesAcrossChart: drawFollowLinesAcrossChart,
+        symbolRenderer: symbolRenderer);
 
     if (chart is CartesianChart) {
       // Only vertical rendering is supported by this behavior.
@@ -214,10 +222,12 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
         animatingPoint = new _AnimatedPoint<D>(
             key: pointKey, overlaySeries: series.overlaySeries)
           ..setNewTarget(new _PointRendererElement<D>()
-            ..color = detail.color
             ..point = point
+            ..color = detail.color
+            ..fillColor = detail.fillColor
             ..radiusPx = radiusPx
-            ..measureAxisPosition = measureAxis.getLocation(0.0));
+            ..measureAxisPosition = measureAxis.getLocation(0.0)
+            ..strokeWidthPx = detail.strokeWidthPx);
       }
 
       newSeriesMap[pointKey] = animatingPoint;
@@ -237,8 +247,10 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
       final pointElement = new _PointRendererElement<D>()
         ..point = point
         ..color = detail.color
+        ..fillColor = detail.fillColor
         ..radiusPx = radiusPx
-        ..measureAxisPosition = measureAxis.getLocation(0.0);
+        ..measureAxisPosition = measureAxis.getLocation(0.0)
+        ..strokeWidthPx = detail.strokeWidthPx;
 
       animatingPoint.setNewTarget(pointElement);
     }
@@ -275,6 +287,8 @@ class _LinePointLayoutView<D> extends LayoutView {
 
   final bool drawFollowLinesAcrossChart;
 
+  final SymbolRenderer symbolRenderer;
+
   GraphicsFactory _graphicsFactory;
 
   /// Store a map of series drawn on the chart, mapped by series name.
@@ -288,6 +302,7 @@ class _LinePointLayoutView<D> extends LayoutView {
     @required int layoutPaintOrder,
     @required this.showHorizontalFollowLine,
     @required this.showVerticalFollowLine,
+    @required this.symbolRenderer,
     this.dashPattern,
     this.drawFollowLinesAcrossChart,
   }) : this.layoutConfig = new LayoutViewConfig(
@@ -481,12 +496,18 @@ class _LinePointLayoutView<D> extends LayoutView {
         continue;
       }
 
+      final bounds = new Rectangle<double>(
+          pointElement.point.x - pointElement.radiusPx,
+          pointElement.point.y - pointElement.radiusPx,
+          pointElement.radiusPx * 2,
+          pointElement.radiusPx * 2);
+
       // Draw the highlight dot.
-      // TODO: Draw the shape of the PointRenderer
-      canvas.drawPoint(
-          point: pointElement.point,
-          fill: pointElement.color,
-          radius: pointElement.radiusPx);
+      // TODO: Read custom symbol renderers from PointRenderer.
+      symbolRenderer.paint(canvas, bounds,
+          fillColor: pointElement.fillColor,
+          strokeColor: pointElement.color,
+          strokeWidthPx: pointElement.strokeWidthPx);
     }
   }
 
@@ -518,15 +539,21 @@ class _DatumPoint<D> extends Point<double> {
 class _PointRendererElement<D> {
   _DatumPoint<D> point;
   Color color;
+  Color fillColor;
   double radiusPx;
   double measureAxisPosition;
+  double strokeWidthPx;
+  String symbolRendererId;
 
   _PointRendererElement<D> clone() {
     return new _PointRendererElement<D>()
       ..point = this.point
       ..color = this.color
+      ..fillColor = this.fillColor
       ..measureAxisPosition = this.measureAxisPosition
-      ..radiusPx = this.radiusPx;
+      ..radiusPx = this.radiusPx
+      ..strokeWidthPx = this.strokeWidthPx
+      ..symbolRendererId = this.symbolRendererId;
   }
 
   void updateAnimationPercent(_PointRendererElement previous,
@@ -542,8 +569,15 @@ class _PointRendererElement<D> {
 
     color = getAnimatedColor(previous.color, target.color, animationPercent);
 
+    fillColor = getAnimatedColor(
+        previous.fillColor, target.fillColor, animationPercent);
+
     radiusPx =
         _lerpDouble(previous.radiusPx, target.radiusPx, animationPercent);
+
+    strokeWidthPx =
+        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx);
   }
 
   /// Linear interpolation for doubles.

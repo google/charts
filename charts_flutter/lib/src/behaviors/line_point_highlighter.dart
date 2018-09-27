@@ -18,7 +18,8 @@ import 'package:charts_common/common.dart' as common
     show
         LinePointHighlighter,
         LinePointHighlighterFollowLineType,
-        SelectionModelType;
+        SelectionModelType,
+        SymbolRenderer;
 import 'package:flutter/widgets.dart' show hashValues;
 import 'package:meta/meta.dart' show immutable;
 
@@ -67,6 +68,9 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
   /// LTR mode, from the left-hand axis.
   final bool drawFollowLinesAcrossChart;
 
+  /// Renderer used to draw the highlighted points.
+  final common.SymbolRenderer symbolRenderer;
+
   LinePointHighlighter(
       {this.selectionModelType,
       this.defaultRadiusPx,
@@ -74,7 +78,8 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
       this.showHorizontalFollowLine,
       this.showVerticalFollowLine,
       this.dashPattern,
-      this.drawFollowLinesAcrossChart});
+      this.drawFollowLinesAcrossChart,
+      this.symbolRenderer});
 
   @override
   common.LinePointHighlighter<D> createCommonBehavior<D>() =>
@@ -86,6 +91,7 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
         showVerticalFollowLine: showVerticalFollowLine,
         dashPattern: dashPattern,
         drawFollowLinesAcrossChart: drawFollowLinesAcrossChart,
+        symbolRenderer: symbolRenderer,
       );
 
   @override

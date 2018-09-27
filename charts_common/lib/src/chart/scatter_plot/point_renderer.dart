@@ -166,6 +166,9 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         final fillColorFn = series.fillColorFn ?? colorFn;
 
         final color = colorFn(index);
+
+        // Fill color is an optional override for color. Make sure we get a
+        // value if the series doesn't define anything specific.
         var fillColor = fillColorFn(index);
         fillColor ??= color;
 

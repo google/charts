@@ -300,7 +300,9 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     final rawMeasureLowerBoundFn = series.rawMeasureLowerBoundFn;
     final rawMeasureUpperBoundFn = series.rawMeasureUpperBoundFn;
     final colorFn = series.colorFn;
+    final fillColorFn = series.fillColorFn ?? colorFn;
     final radiusPxFn = series.radiusPxFn;
+    final strokeWidthPxFn = series.strokeWidthPxFn;
 
     final domainValue = domainFn(index);
     final domainLowerBoundValue =
@@ -323,7 +325,17 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         rawMeasureUpperBoundFn != null ? rawMeasureUpperBoundFn(index) : null;
 
     final color = colorFn(index);
-    final radiusPx = radiusPxFn != null ? radiusPxFn(index).toDouble() : null;
+
+    // Fill color is an optional override for color. Make sure we get a value if
+    // the series doesn't define anything specific.
+    var fillColor = fillColorFn(index);
+    fillColor ??= color;
+
+    var radiusPx = radiusPxFn != null ? radiusPxFn(index) : null;
+    radiusPx = radiusPx?.toDouble();
+
+    var strokeWidthPx = strokeWidthPxFn != null ? strokeWidthPxFn(index) : null;
+    strokeWidthPx = strokeWidthPx?.toDouble();
 
     final details = new DatumDetails<D>(
         datum: seriesDatum.datum,
@@ -340,7 +352,9 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         rawMeasureUpperBound: rawMeasureUpperBoundValue,
         series: series,
         color: color,
-        radiusPx: radiusPx);
+        fillColor: fillColor,
+        radiusPx: radiusPx,
+        strokeWidthPx: strokeWidthPx);
 
     // chartPosition depends on the shape of the rendered elements, and must be
     // added by concrete [SeriesRenderer] classes.
