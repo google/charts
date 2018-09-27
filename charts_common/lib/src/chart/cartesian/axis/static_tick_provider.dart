@@ -18,6 +18,7 @@ import '../../common/chart_context.dart' show ChartContext;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import 'axis.dart' show AxisOrientation;
 import 'scale.dart' show MutableScale;
+import 'numeric_scale.dart' show NumericScale;
 import 'tick.dart' show Tick;
 import 'spec/tick_spec.dart' show TickSpec;
 import 'tick_formatter.dart' show TickFormatter;
@@ -47,14 +48,31 @@ class StaticTickProvider<D> extends TickProvider<D> {
   }) {
     final ticks = <Tick<D>>[];
 
+    bool allTicksHaveLabels = true;
+
+    for (TickSpec<D> spec in tickSpec) {
+      // When static ticks are being used with a numeric axis, extend the axis
+      // with the values specified.
+      if (scale is NumericScale) {
+        scale.addDomain(spec.value);
+      }
+
+      // Save off whether all ticks have labels.
+      allTicksHaveLabels = allTicksHaveLabels && (spec.label != null);
+    }
+
     // Use the formatter's label if the tick spec does not provide one.
-    final formattedValues = formatter.format(
-        tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
-        stepSize: scale.domainStepSize);
+    List<String> formattedValues;
+    if (allTicksHaveLabels == false) {
+      formattedValues = formatter.format(
+          tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
+          stepSize: scale.domainStepSize);
+    }
 
     for (var i = 0; i < tickSpec.length; i++) {
       final spec = tickSpec[i];
-
+      // We still check if the spec is within the viewport because we do not
+      // extend the axis for OrdinalScale.
       if (scale.compareDomainValueToViewport(spec.value) == 0) {
         final tick = new Tick<D>(
             value: spec.value,

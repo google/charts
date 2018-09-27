@@ -19,7 +19,8 @@ import 'selection_trigger.dart' show SelectionTrigger;
 import '../../base_chart.dart' show BaseChart;
 import '../../datum_details.dart' show DatumDetails;
 import '../../behavior/chart_behavior.dart' show ChartBehavior;
-import '../../processed_series.dart' show ImmutableSeries, SeriesDatum;
+import '../../processed_series.dart' show ImmutableSeries;
+import '../../series_datum.dart' show SeriesDatum;
 import '../../selection_model/selection_model.dart' show SelectionModelType;
 import '../../../../common/gesture_listener.dart' show GestureListener;
 

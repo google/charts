@@ -32,18 +32,19 @@ class MockChart extends Mock implements BaseChart {
   removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
+    return true;
   }
 }
 
-class MockSelectionModel extends Mock implements SelectionModel {
+class MockSelectionModel extends Mock implements MutableSelectionModel {
   SelectionModelListener lastListener;
 
   @override
-  addSelectionListener(SelectionModelListener listener) =>
+  addSelectionChangedListener(SelectionModelListener listener) =>
       lastListener = listener;
 
   @override
-  removeSelectionListener(SelectionModelListener listener) {
+  removeSelectionChangedListener(SelectionModelListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
   }

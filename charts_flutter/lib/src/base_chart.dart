@@ -192,26 +192,40 @@ abstract class BaseChart<D> extends StatefulWidget {
   void _updateSelectionModel(
       common.BaseChart<D> chart, BaseChartState<D> chartState) {
     final prevTypes = new List<common.SelectionModelType>.from(
-        chartState.addedSelectionListenersByType.keys);
+        chartState.addedSelectionChangedListenersByType.keys);
 
     // Update any listeners for each type.
     selectionModels?.forEach((SelectionModelConfig<D> model) {
-      final prevListener = chartState.addedSelectionListenersByType[model.type];
+      final selectionModel = chart.getSelectionModel(model.type);
 
-      if (!identical(model.listener, prevListener)) {
-        final selectionModel = chart.getSelectionModel(model.type);
-        selectionModel.removeSelectionListener(prevListener);
-        selectionModel.addSelectionListener(model.listener);
+      final prevChangedListener =
+          chartState.addedSelectionChangedListenersByType[model.type];
+      if (!identical(model.changedListener, prevChangedListener)) {
+        selectionModel.removeSelectionChangedListener(prevChangedListener);
+        selectionModel.addSelectionChangedListener(model.changedListener);
+        chartState.addedSelectionChangedListenersByType[model.type] =
+            model.changedListener;
       }
-      chartState.addedSelectionListenersByType[model.type] = model.listener;
+
+      final prevUpdatedListener =
+          chartState.addedSelectionUpdatedListenersByType[model.type];
+      if (!identical(model.updatedListener, prevUpdatedListener)) {
+        selectionModel.removeSelectionUpdatedListener(prevUpdatedListener);
+        selectionModel.addSelectionUpdatedListener(model.updatedListener);
+        chartState.addedSelectionUpdatedListenersByType[model.type] =
+            model.updatedListener;
+      }
 
       prevTypes.remove(model.type);
     });
 
     // Remove any lingering listeners.
     prevTypes.forEach((common.SelectionModelType type) {
-      chart.getSelectionModel(type).removeSelectionListener(
-          chartState.addedSelectionListenersByType[type]);
+      chart.getSelectionModel(type)
+        ..removeSelectionChangedListener(
+            chartState.addedSelectionChangedListenersByType[type])
+        ..removeSelectionUpdatedListener(
+            chartState.addedSelectionUpdatedListenersByType[type]);
     });
   }
 

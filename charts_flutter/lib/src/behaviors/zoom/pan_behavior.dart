@@ -69,17 +69,12 @@ class FlutterPanBehavior<D> extends common.PanBehavior<D>
     implements ChartStateBehavior {
   BaseChartState _chartState;
 
-  BaseChartState get chartState => _chartState;
-
   set chartState(BaseChartState chartState) {
-    _chartState = chartState;
+    assert(chartState != null);
 
-    if (_chartState != null) {
-      _flingAnimator = new AnimationController(vsync: _chartState)
-        ..addListener(_onFlingTick);
-    } else {
-      _flingAnimator = null;
-    }
+    _chartState = chartState;
+    _flingAnimator = _chartState.getAnimationController(this);
+    _flingAnimator?.addListener(_onFlingTick);
   }
 
   AnimationController _flingAnimator;
@@ -97,6 +92,7 @@ class FlutterPanBehavior<D> extends common.PanBehavior<D>
   @override
   removeFrom(common.BaseChart chart) {
     stopFlingAnimation();
+    _chartState.disposeAnimationController(this);
     _flingAnimator = null;
     super.removeFrom(chart);
   }
@@ -179,7 +175,7 @@ class FlutterPanBehavior<D> extends common.PanBehavior<D>
   void stopFlingAnimation() {
     if (_isFlinging) {
       _isFlinging = false;
-      _flingAnimator.stop();
+      _flingAnimator?.stop();
     }
   }
 }

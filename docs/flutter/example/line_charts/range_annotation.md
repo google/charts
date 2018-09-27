@@ -5,7 +5,7 @@
 Example:
 
 ```
-/// Line chart with range annotation example
+/// Line chart with range annotations example.
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class LineRangeAnnotationChart extends StatelessWidget {
 
   /// Creates a [LineChart] with sample data and range annotations.
   ///
-  /// The second series extends beyond the range of the series data,
+  /// The second annotation extends beyond the range of the series data,
   /// demonstrating the effect of the [Charts.RangeAnnotation.extendAxis] flag.
   /// This can be set to false to disable range extension.
   factory LineRangeAnnotationChart.withSampleData() {
@@ -34,10 +34,21 @@ class LineRangeAnnotationChart extends StatelessWidget {
     return new charts.LineChart(seriesList, animate: animate, behaviors: [
       new charts.RangeAnnotation([
         new charts.RangeAnnotationSegment(
-            0.5, 1.0, charts.RangeAnnotationAxisType.domain),
+            0.5, 1.0, charts.RangeAnnotationAxisType.domain,
+            startLabel: 'Domain 1'),
         new charts.RangeAnnotationSegment(
             2, 4, charts.RangeAnnotationAxisType.domain,
-            color: charts.MaterialPalette.gray.shade200),
+            endLabel: 'Domain 2', color: charts.MaterialPalette.gray.shade200),
+        new charts.RangeAnnotationSegment(
+            15, 20, charts.RangeAnnotationAxisType.measure,
+            startLabel: 'Measure 1 Start',
+            endLabel: 'Measure 1 End',
+            color: charts.MaterialPalette.gray.shade300),
+        new charts.RangeAnnotationSegment(
+            35, 65, charts.RangeAnnotationAxisType.measure,
+            startLabel: 'Measure 2 Start',
+            endLabel: 'Measure 2 End',
+            color: charts.MaterialPalette.gray.shade400),
       ]),
     ]);
   }

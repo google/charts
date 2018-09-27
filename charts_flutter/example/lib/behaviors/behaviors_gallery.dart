@@ -15,6 +15,7 @@
 
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
+import 'chart_title.dart';
 import 'initial_hint_animation.dart';
 import 'initial_selection.dart';
 import 'percent_of_domain.dart';
@@ -51,6 +52,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Bar Chart with initial selection',
       subtitle: 'Single series with initial selection',
       childBuilder: () => new InitialSelection.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.flag),
+      title: 'Line Chart with Chart Titles',
+      subtitle: 'Line chart with four chart titles',
+      childBuilder: () => new ChartTitleLine.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.flag),

@@ -53,7 +53,9 @@ class BaseTickDrawStrategyImpl<D> extends BaseTickDrawStrategy<D> {
   void draw(ChartCanvas canvas, Tick<D> tick,
       {AxisOrientation orientation,
       Rectangle<int> axisBounds,
-      Rectangle<int> drawAreaBounds}) {}
+      Rectangle<int> drawAreaBounds,
+      bool isFirst,
+      bool isLast}) {}
 }
 
 /// Fake [TextElement] for testing.

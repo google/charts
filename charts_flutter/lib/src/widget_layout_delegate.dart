@@ -145,10 +145,12 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
 
       switch (outsideJustification) {
         case common.OutsideJustification.startDrawArea:
+        case common.OutsideJustification.middleDrawArea:
           behaviorOffset =
               new Offset(widthOffset, behavior.drawAreaBounds.top.toDouble());
           break;
         case common.OutsideJustification.start:
+        case common.OutsideJustification.middle:
           behaviorOffset = new Offset(widthOffset, 0.0);
           break;
         case common.OutsideJustification.endDrawArea:
@@ -182,11 +184,13 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
 
     switch (justification) {
       case common.OutsideJustification.startDrawArea:
+      case common.OutsideJustification.middleDrawArea:
         mappedJustification = isRTL
             ? _HorizontalJustification.rightDrawArea
             : _HorizontalJustification.leftDrawArea;
         break;
       case common.OutsideJustification.start:
+      case common.OutsideJustification.middle:
         mappedJustification = isRTL
             ? _HorizontalJustification.right
             : _HorizontalJustification.left;

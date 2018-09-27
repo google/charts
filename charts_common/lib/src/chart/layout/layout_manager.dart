@@ -43,6 +43,18 @@ abstract class LayoutManager {
   /// function as series draw areas. Must be called after layout().
   Rectangle<int> get drawableLayoutAreaBounds;
 
+  /// Gets the measured size of the bottom margin, available after layout.
+  int get marginBottom;
+
+  /// Gets the measured size of the left margin, available after layout.
+  int get marginLeft;
+
+  /// Gets the measured size of the right margin, available after layout.
+  int get marginRight;
+
+  /// Gets the measured size of the top margin, available after layout.
+  int get marginTop;
+
   /// Returns whether or not [point] is within the draw area bounds.
   bool withinDrawArea(Point<num> point);
 

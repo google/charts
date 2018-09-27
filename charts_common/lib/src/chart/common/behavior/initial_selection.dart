@@ -14,8 +14,10 @@
 // limitations under the License.
 
 import '../base_chart.dart' show BaseChart, LifecycleListener;
-import '../processed_series.dart' show MutableSeries, SeriesDatum;
-import '../selection_model/selection_model.dart' show SelectionModelType;
+import '../processed_series.dart' show MutableSeries;
+import '../series_datum.dart' show SeriesDatumConfig;
+import '../selection_model/selection_model.dart'
+    show SelectionModel, SelectionModelType;
 import 'chart_behavior.dart' show ChartBehavior;
 
 /// Behavior that sets initial selection.
@@ -47,49 +49,11 @@ class InitialSelection<D> implements ChartBehavior<D> {
     }
     _firstDraw = false;
 
-    final selectionModel = _chart.getSelectionModel(selectionModelType);
+    final immutableModel = new SelectionModel<D>.fromConfig(
+        selectedDataConfig, selectedSeriesConfig, seriesList);
 
-    final selectedData = <SeriesDatum<D>>[];
-    final selectedSeries = <MutableSeries<D>>[];
-    final selectedDataMap = <String, List<D>>{};
-
-    if (selectedDataConfig != null) {
-      for (SeriesDatumConfig config in selectedDataConfig) {
-        selectedDataMap[config.seriesId] ??= <D>[];
-        selectedDataMap[config.seriesId].add(config.domainValue);
-      }
-
-      // Add to list of selected series.
-      selectedSeries.addAll(seriesList.where((MutableSeries<D> series) =>
-          selectedDataMap.keys.contains(series.id)));
-
-      // Add to list of selected data.
-      for (MutableSeries<D> series in seriesList) {
-        if (selectedDataMap.containsKey(series.id)) {
-          final domainFn = series.domainFn;
-
-          for (var i = 0; i < series.data.length; i++) {
-            final datum = series.data[i];
-
-            if (selectedDataMap[series.id].contains(domainFn(i))) {
-              selectedData.add(new SeriesDatum(series, datum));
-            }
-          }
-        }
-      }
-    }
-
-    // Add to list of selected series, if it does not already exist.
-    if (selectedSeriesConfig != null) {
-      final remainingSeriesToAdd = selectedSeriesConfig
-          .where((String seriesId) => !selectedSeries.contains(seriesId))
-          .toList();
-
-      selectedSeries.addAll(seriesList.where((MutableSeries<D> series) =>
-          remainingSeriesToAdd.contains(series.id)));
-    }
-
-    selectionModel.updateSelection(selectedData, selectedSeries,
+    _chart.getSelectionModel(selectionModelType).updateSelection(
+        immutableModel.selectedDatum, immutableModel.selectedSeries,
         notifyListeners: false);
   }
 
@@ -107,26 +71,4 @@ class InitialSelection<D> implements ChartBehavior<D> {
 
   @override
   String get role => 'InitialSelection-${selectionModelType.toString()}}';
-}
-
-/// Represents a series datum based on series id and datum index.
-class SeriesDatumConfig<D> {
-  final String seriesId;
-  final D domainValue;
-
-  SeriesDatumConfig(this.seriesId, this.domainValue);
-
-  @override
-  bool operator ==(Object o) {
-    return o is SeriesDatumConfig &&
-        seriesId == o.seriesId &&
-        domainValue == o.domainValue;
-  }
-
-  @override
-  int get hashCode {
-    int hashcode = seriesId.hashCode;
-    hashcode = hashcode * 37 + domainValue.hashCode;
-    return hashcode;
-  }
 }

@@ -18,7 +18,8 @@ import 'package:meta/meta.dart';
 import 'base_chart.dart' show BaseChart;
 import 'chart_canvas.dart' show ChartCanvas;
 import 'datum_details.dart' show DatumDetails;
-import 'processed_series.dart' show ImmutableSeries, MutableSeries, SeriesDatum;
+import 'processed_series.dart' show ImmutableSeries, MutableSeries;
+import 'series_datum.dart' show SeriesDatum;
 import '../layout/layout_view.dart'
     show
         LayoutPosition,

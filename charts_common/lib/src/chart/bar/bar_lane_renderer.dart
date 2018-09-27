@@ -193,7 +193,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
               measureAxisPosition: measureAxisPosition,
               measureAxis: measureAxis,
               numBarGroups: barGroupCount,
-              strokeWidthPx: config.strokeWidthPx);
+              strokeWidthPx: config.strokeWidthPx,
+              measureIsNull: false);
 
           barStackList.add(animatingBar);
         } else {
@@ -220,7 +221,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
             measureAxisPosition: measureAxisPosition,
             measureAxis: measureAxis,
             numBarGroups: barGroupCount,
-            strokeWidthPx: config.strokeWidthPx);
+            strokeWidthPx: config.strokeWidthPx,
+            measureIsNull: false);
 
         animatingBar.setNewTarget(barElement);
 
@@ -295,7 +297,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
                 measureAxisPosition: measureAxisPosition,
                 measureAxis: measureAxis,
                 numBarGroups: barGroupCount,
-                strokeWidthPx: config.strokeWidthPx);
+                strokeWidthPx: config.strokeWidthPx,
+                measureIsNull: false);
 
             barStackList.add(animatingBar);
           } else {
@@ -322,7 +325,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
               measureAxisPosition: measureAxisPosition,
               measureAxis: measureAxis,
               numBarGroups: barGroupCount,
-              strokeWidthPx: config.strokeWidthPx);
+              strokeWidthPx: config.strokeWidthPx,
+              measureIsNull: false);
 
           animatingBar.setNewTarget(barElement);
 

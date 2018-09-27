@@ -125,6 +125,30 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   @override
+  int get marginBottom {
+    assert(_drawAreaBoundsOutdated == false);
+    return _measurements.bottomHeight;
+  }
+
+  @override
+  int get marginLeft {
+    assert(_drawAreaBoundsOutdated == false);
+    return _measurements.leftWidth;
+  }
+
+  @override
+  int get marginRight {
+    assert(_drawAreaBoundsOutdated == false);
+    return _measurements.rightWidth;
+  }
+
+  @override
+  int get marginTop {
+    assert(_drawAreaBoundsOutdated == false);
+    return _measurements.topHeight;
+  }
+
+  @override
   withinDrawArea(Point<num> point) {
     return _drawAreaBounds.containsPoint(point);
   }

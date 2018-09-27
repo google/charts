@@ -18,7 +18,8 @@ import 'package:meta/meta.dart' show required;
 import '../../../cartesian/axis/axis.dart' show ImmutableAxis, domainAxisKey;
 import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
-import '../../processed_series.dart' show MutableSeries, SeriesDatum;
+import '../../processed_series.dart' show MutableSeries;
+import '../../series_datum.dart' show SeriesDatum;
 import '../../selection_model/selection_model.dart' show SelectionModelType;
 import 'a11y_explore_behavior.dart'
     show A11yExploreBehavior, ExploreModeTrigger;
@@ -41,7 +42,7 @@ String domainVocalization<D>(List<SeriesDatum<D>> seriesDatums) {
 class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
   final VocalizationCallback _vocalizationCallback;
   LifecycleListener<D> _lifecycleListener;
-  CartesianChart _chart;
+  CartesianChart<D> _chart;
   List<MutableSeries<D>> _seriesList;
 
   DomainA11yExploreBehavior(
@@ -75,7 +76,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
         D domain = series.domainFn(index);
 
         domainSeriesDatum[domain] ??= new List<SeriesDatum<D>>();
-        domainSeriesDatum[domain].add(new SeriesDatum(series, datum));
+        domainSeriesDatum[domain].add(new SeriesDatum<D>(series, datum));
       }
     }
 

@@ -54,13 +54,13 @@ class ChartContainer<D> extends CustomPaint {
 
   @override
   RenderCustomPaint createRenderObject(BuildContext context) {
-    return new ChartContainerRenderObject<D>()..reconfigure(this);
+    return new ChartContainerRenderObject<D>()..reconfigure(this, context);
   }
 
   @override
   void updateRenderObject(
       BuildContext context, ChartContainerRenderObject renderObject) {
-    renderObject.reconfigure(this);
+    renderObject.reconfigure(this, context);
   }
 }
 
@@ -92,7 +92,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   /// The minimum time required before the next configuration change.
   static const configurationChangeThresholdMs = 500;
 
-  void reconfigure(ChartContainer config) {
+  void reconfigure(ChartContainer config, BuildContext context) {
     _chartState = config.chartState;
 
     _dateTimeFactory = (config.chartWidget is TimeSeriesChart)
@@ -103,7 +103,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     if (_chart == null) {
       common.Performance.time('chartsCreate');
       _chart = config.chartWidget.createCommonChart(_chartState);
-      _chart.init(this, const GraphicsFactory());
+      _chart.init(this, new GraphicsFactory(context));
       common.Performance.timeEnd('chartsCreate');
     }
     common.Performance.time('chartsConfig');

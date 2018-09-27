@@ -59,13 +59,22 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
   /// This is because if dashPattern is null or not set, it defaults to [1,3].
   final List<int> dashPattern;
 
+  /// Whether or not follow lines should be drawn across the entire chart draw
+  /// area, or just from the axis to the point.
+  ///
+  /// When disabled, measure follow lines will be drawn from the primary measure
+  /// axis to the point. In RTL mode, this means from the right-hand axis. In
+  /// LTR mode, from the left-hand axis.
+  final bool drawFollowLinesAcrossChart;
+
   LinePointHighlighter(
       {this.selectionModelType,
       this.defaultRadiusPx,
       this.radiusPaddingPx,
       this.showHorizontalFollowLine,
       this.showVerticalFollowLine,
-      this.dashPattern});
+      this.dashPattern,
+      this.drawFollowLinesAcrossChart});
 
   @override
   common.LinePointHighlighter<D> createCommonBehavior<D>() =>
@@ -76,6 +85,7 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
         showHorizontalFollowLine: showHorizontalFollowLine,
         showVerticalFollowLine: showVerticalFollowLine,
         dashPattern: dashPattern,
+        drawFollowLinesAcrossChart: drawFollowLinesAcrossChart,
       );
 
   @override
@@ -92,7 +102,8 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
         showHorizontalFollowLine == o.showHorizontalFollowLine &&
         showVerticalFollowLine == o.showVerticalFollowLine &&
         selectionModelType == o.selectionModelType &&
-        new ListEquality().equals(dashPattern, o.dashPattern);
+        new ListEquality().equals(dashPattern, o.dashPattern) &&
+        drawFollowLinesAcrossChart == o.drawFollowLinesAcrossChart;
   }
 
   @override
@@ -104,6 +115,7 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
       showHorizontalFollowLine,
       showVerticalFollowLine,
       dashPattern,
+      drawFollowLinesAcrossChart,
     );
   }
 }

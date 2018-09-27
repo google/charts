@@ -24,7 +24,8 @@ import 'package:flutter/material.dart'
 import 'package:charts_common/common.dart' as common;
 import 'package:flutter/widgets.dart'
     show Directionality, LayoutId, CustomMultiChildLayout;
-import 'behaviors/chart_behavior.dart' show BuildableBehavior, ChartBehavior;
+import 'behaviors/chart_behavior.dart'
+    show BuildableBehavior, ChartBehavior, ChartStateBehavior;
 import 'base_chart.dart' show BaseChart;
 import 'chart_container.dart' show ChartContainer;
 import 'chart_state.dart' show ChartState;
@@ -48,8 +49,13 @@ class BaseChartState<D> extends State<BaseChart<D>>
   final addedBehaviorWidgets = <ChartBehavior>[];
   final addedCommonBehaviorsByRole = <String, common.ChartBehavior>{};
 
-  final addedSelectionListenersByType =
+  final addedSelectionChangedListenersByType =
       <common.SelectionModelType, common.SelectionModelListener<D>>{};
+  final addedSelectionUpdatedListenersByType =
+      <common.SelectionModelType, common.SelectionModelListener<D>>{};
+
+  final _behaviorAnimationControllers =
+      <ChartStateBehavior, AnimationController>{};
 
   static const chartContainerLayoutID = 'chartContainer';
 
@@ -132,6 +138,9 @@ class BaseChartState<D> extends State<BaseChart<D>>
   @override
   void dispose() {
     _animationController.dispose();
+    _behaviorAnimationControllers
+        .forEach((_, controller) => controller?.dispose());
+    _behaviorAnimationControllers.clear();
     super.dispose();
   }
 
@@ -150,5 +159,19 @@ class BaseChartState<D> extends State<BaseChart<D>>
     setState(() {
       _animationValue = _animationController.value;
     });
+  }
+
+  /// Get animation controller to be used by [behavior].
+  AnimationController getAnimationController(ChartStateBehavior behavior) {
+    _behaviorAnimationControllers[behavior] ??=
+        new AnimationController(vsync: this);
+
+    return _behaviorAnimationControllers[behavior];
+  }
+
+  /// Dispose of animation controller used by [behavior].
+  void disposeAnimationController(ChartStateBehavior behavior) {
+    final controller = _behaviorAnimationControllers.remove(behavior);
+    controller?.dispose();
   }
 }

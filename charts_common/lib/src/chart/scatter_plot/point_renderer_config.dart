@@ -48,6 +48,9 @@ class PointRendererConfig<D> extends LayoutViewConfig
   /// accessor function.
   final double radiusPx;
 
+  /// Stroke width of the target line.
+  final double strokeWidthPx;
+
   /// Optional default radius of data bounds lines, used if a series does not
   /// define a boundsLineRadiusPx accessor function.
   ///
@@ -66,6 +69,7 @@ class PointRendererConfig<D> extends LayoutViewConfig
       this.pointRendererDecorators = const [],
       this.radiusPx = 3.5,
       this.boundsLineRadiusPx,
+      this.strokeWidthPx = 0.0,
       this.symbolRenderer,
       this.customSymbolRenderers});
 

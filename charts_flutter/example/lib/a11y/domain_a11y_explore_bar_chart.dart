@@ -108,6 +108,8 @@ class DomainA11yExploreBarChart extends StatelessWidget {
   String vocalizeDomainAndMeasures(List<charts.SeriesDatum> seriesDatums) {
     final buffer = new StringBuffer();
 
+    // The datum's type in this case is [OrdinalSales].
+    // So we can access year and sales information here.
     buffer.write(seriesDatums.first.datum.year);
 
     for (charts.SeriesDatum seriesDatum in seriesDatums) {
@@ -133,8 +135,10 @@ class DomainA11yExploreBarChart extends StatelessWidget {
           seriesList,
           animate: animate,
           // To prevent conflict with the select nearest behavior that uses the
-          // tap gesture, turn off default interactions.
-          defaultInteractions: false,
+          // tap gesture, turn off default interactions when the user is using
+          // an accessibility service like TalkBack or VoiceOver to interact
+          // with the application.
+          defaultInteractions: !MediaQuery.of(context).accessibleNavigation,
           behaviors: [
             new charts.DomainA11yExploreBehavior(
               // Callback for generating the message that is vocalized.

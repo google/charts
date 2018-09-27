@@ -105,7 +105,9 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
   void draw(ChartCanvas canvas, Tick<D> tick,
       {@required AxisOrientation orientation,
       @required Rectangle<int> axisBounds,
-      @required Rectangle<int> drawAreaBounds}) {}
+      @required Rectangle<int> drawAreaBounds,
+      @required bool isFirst,
+      @required bool isLast}) {}
 
   @override
   ViewMeasuredSizes measureHorizontallyDrawnTicks(

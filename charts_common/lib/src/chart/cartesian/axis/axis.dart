@@ -480,12 +480,15 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       _axisTicks.removeWhere((t) => t.markedForRemoval);
     }
 
-    for (AxisTicks<D> animatedTick in _axisTicks) {
+    for (var i = 0; i < _axisTicks.length; i++) {
+      final animatedTick = _axisTicks[i];
       tickDrawStrategy.draw(
           canvas, animatedTick..setCurrentTick(animationPercent),
           orientation: axisOrientation,
           axisBounds: _componentBounds,
-          drawAreaBounds: _drawAreaBounds);
+          drawAreaBounds: _drawAreaBounds,
+          isFirst: i == 0,
+          isLast: i == _axisTicks.length - 1);
     }
 
     if (drawAxisLine) {
