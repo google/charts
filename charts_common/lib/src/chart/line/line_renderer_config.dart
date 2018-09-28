@@ -36,6 +36,9 @@ class LineRendererConfig<D> extends LayoutViewConfig
   /// This is typically enabled when including area skirts.
   final bool stacked;
 
+  // Create a stepped graph
+  final bool stepped;
+
   /// Stroke width of the line.
   final double strokeWidthPx;
 
@@ -71,6 +74,7 @@ class LineRendererConfig<D> extends LayoutViewConfig
       {this.customRendererId,
       this.radiusPx = 3.5,
       this.stacked = false,
+      this.stepped = false,
       double strokeWidthPx = 2.0,
       this.dashPattern,
       this.includeLine = true,

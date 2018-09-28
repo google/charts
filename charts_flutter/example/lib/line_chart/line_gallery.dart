@@ -27,6 +27,7 @@ import 'simple.dart';
 import 'simple_nulls.dart';
 import 'stacked_area.dart';
 import 'stacked_area_nulls.dart';
+import 'stepped.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -102,5 +103,12 @@ List<GalleryScaffold> buildGallery() {
       subtitle: 'Simple line chart pan and zoom behaviors enabled',
       childBuilder: () => new LineAnimationZoomChart.withRandomData(),
     ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Stepped Line Chart',
+      subtitle: 'Simple line chart with data being stepped',
+      childBuilder: () => new SteppedLineChart.withRandomData(),
+    ),
+
   ];
 }

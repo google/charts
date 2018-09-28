@@ -623,6 +623,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
     final pointList = <_DatumPoint<D>>[];
 
+    var previousMeasure = measureFn(0);
+
     // Generate [_DatumPoints]s for the series data.
     for (var index = 0; index < series.data.length; index++) {
       final datum = series.data[index];
@@ -638,9 +640,16 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         measureOffset = 0.0;
       }
 
+      if (config.stepped) {
+        pointList.add(_getPoint(datum, domainFn(index), series, domainAxis,
+            previousMeasure, measureOffset, measureAxis));
+      }
+
       pointList.add(_getPoint(datum, domainFn(index), series, domainAxis,
           measure, measureOffset, measureAxis,
           index: index));
+
+      previousMeasure = measure;
     }
 
     return pointList;
