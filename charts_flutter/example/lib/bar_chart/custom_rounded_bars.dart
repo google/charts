@@ -49,7 +49,7 @@ class CustomRoundedBars extends StatelessWidget {
 
     final data = [
       new OrdinalSales('2014', random.nextInt(100)),
-      new OrdinalSales('2015', random.nextInt(100)),
+      new OrdinalSales('2015', random.nextInt(100)*(-1)),
       new OrdinalSales('2016', random.nextInt(100)),
       new OrdinalSales('2017', random.nextInt(100)),
     ];
