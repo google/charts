@@ -99,7 +99,17 @@ class DashPatternLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(seriesList, animate: animate);
+    return new charts.LineChart(
+      seriesList,
+      animate: animate,
+      primaryMeasureAxis: charts.NumericAxisSpec(
+        renderSpec: charts.GridlineRendererSpec(
+          lineStyle: charts.LineStyleSpec(
+            dashPattern: [4, 4],
+          ),
+        ),
+      ),
+    );
   }
 
   /// Create three series with sample hard coded data.
