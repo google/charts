@@ -57,6 +57,11 @@ class ArcRendererConfig<D> extends LayoutViewConfig
   /// default startAngle is -π/2.
   final double startAngle;
 
+  /// Total arc length, in radians.
+  ///
+  /// The default arcLength is 2π.
+  final double arcLength;
+
   /// Stroke width of the border of the arcs.
   final double strokeWidthPx;
 
@@ -75,6 +80,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
       this.layoutPaintOrder = LayoutViewPaintOrder.arc,
       this.minHoleWidthForCenterContent = 30,
       this.startAngle = -pi / 2,
+      this.arcLength = 2 * pi,
       this.strokeWidthPx = 2.0,
       this.symbolRenderer})
       : this.stroke = StyleFactory.style.white,
