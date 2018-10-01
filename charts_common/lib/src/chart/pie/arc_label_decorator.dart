@@ -270,8 +270,8 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
         arcElements.center.x + labelRadius * cos(centerAngle),
         arcElements.center.y + labelRadius * sin(centerAngle));
 
-    // Factor in the [ArcRenderer] start angle (defaults to -PI/2).
-    final labelLeftOfChart = centerAngle > pi + arcElements.startAngle;
+    final centerAbs = centerAngle.abs() % (2 * pi);
+    final labelLeftOfChart = centerAbs > pi / 2 && centerAbs < pi * 3 / 2;
 
     // Shift the label horizontally away from the center of the chart.
     var labelX = labelLeftOfChart
