@@ -26,6 +26,7 @@ import 'cartesian_chart.dart' show CartesianChart;
 import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
+import 'user_managed_state.dart' show UserManagedState;
 
 class TimeSeriesChart extends CartesianChart<DateTime> {
   final common.DateTimeFactory dateTimeFactory;
@@ -49,6 +50,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
     this.dateTimeFactory,
     bool defaultInteractions: true,
     bool flipVerticalAxis,
+    UserManagedState<DateTime> userManagedState,
   }) : super(
           seriesList,
           animate: animate,
@@ -63,6 +65,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
           layoutConfig: layoutConfig,
           defaultInteractions: defaultInteractions,
           flipVerticalAxis: flipVerticalAxis,
+          userManagedState: userManagedState,
         );
 
   @override

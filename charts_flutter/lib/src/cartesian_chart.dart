@@ -27,6 +27,7 @@ import 'base_chart_state.dart' show BaseChartState;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'base_chart.dart' show BaseChart, LayoutConfig;
 import 'selection_model_config.dart' show SelectionModelConfig;
+import 'user_managed_state.dart' show UserManagedState;
 
 @immutable
 abstract class CartesianChart<D> extends BaseChart<D> {
@@ -49,6 +50,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     common.RTLSpec rtlSpec,
     bool defaultInteractions: true,
     LayoutConfig layoutConfig,
+    UserManagedState userManagedState,
     this.flipVerticalAxis,
   }) : super(
           seriesList,
@@ -61,6 +63,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
           rtlSpec: rtlSpec,
           defaultInteractions: defaultInteractions,
           layoutConfig: layoutConfig,
+          userManagedState: userManagedState,
         );
 
   @override

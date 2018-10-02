@@ -31,6 +31,7 @@ import 'behaviors/chart_behavior.dart'
 import 'selection_model_config.dart' show SelectionModelConfig;
 import 'package:flutter/material.dart' show StatefulWidget;
 import 'base_chart_state.dart' show BaseChartState;
+import 'user_managed_state.dart' show UserManagedState;
 
 @immutable
 abstract class BaseChart<D> extends StatefulWidget {
@@ -65,6 +66,9 @@ abstract class BaseChart<D> extends StatefulWidget {
   /// The spec to use if RTL is enabled.
   final common.RTLSpec rtlSpec;
 
+  /// Optional state that overrides internally kept state, such as selection.
+  final UserManagedState<D> userManagedState;
+
   BaseChart(this.seriesList,
       {bool animate,
       Duration animationDuration,
@@ -74,7 +78,8 @@ abstract class BaseChart<D> extends StatefulWidget {
       this.selectionModels,
       this.rtlSpec,
       this.defaultInteractions = true,
-      this.layoutConfig})
+      this.layoutConfig,
+      this.userManagedState})
       : this.animate = animate ?? true,
         this.animationDuration =
             animationDuration ?? const Duration(milliseconds: 300);

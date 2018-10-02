@@ -22,6 +22,7 @@ import 'package:charts_common/common.dart' as common
         LocalDateTimeFactory,
         ProxyGestureListener,
         RTLSpec,
+        SelectionModelType,
         Series,
         Performance;
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ import 'chart_state.dart' show ChartState;
 import 'base_chart.dart' show BaseChart;
 import 'graphics_factory.dart' show GraphicsFactory;
 import 'time_series_chart.dart' show TimeSeriesChart;
+import 'user_managed_state.dart' show UserManagedState;
 
 /// Widget that inflates to a [CustomPaint] that implements common [ChartContext].
 class ChartContainer<D> extends CustomPaint {
@@ -43,6 +45,7 @@ class ChartContainer<D> extends CustomPaint {
   final double animationValue;
   final bool rtl;
   final common.RTLSpec rtlSpec;
+  final UserManagedState<D> userManagedState;
 
   ChartContainer(
       {@required this.oldChartWidget,
@@ -50,7 +53,8 @@ class ChartContainer<D> extends CustomPaint {
       @required this.chartState,
       @required this.animationValue,
       @required this.rtl,
-      @required this.rtlSpec});
+      @required this.rtlSpec,
+      this.userManagedState});
 
   @override
   RenderCustomPaint createRenderObject(BuildContext context) {
@@ -169,9 +173,33 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
       markNeedsPaint();
     }
 
+    _updateUserManagedState(config.userManagedState);
+
     // Set the painter used for calling common chart for paint.
     // This painter is also used to generate semantic nodes for a11y.
     _setNewPainter();
+  }
+
+  /// If user managed state is set, check each setting to see if it is different
+  /// than internal chart state and only update if different.
+  _updateUserManagedState(UserManagedState<D> newState) {
+    if (newState == null) {
+      return;
+    }
+
+    // Only override the selection model if it is different than the existing
+    // selection model so update listeners are not unnecessarily triggered.
+    for (common.SelectionModelType type in newState.selectionModels.keys) {
+      final model = _chart.getSelectionModel(type);
+
+      final userModel =
+          newState.selectionModels[type].getModel(_chart.currentSeriesList);
+
+      if (model != userModel) {
+        model.updateSelection(
+            userModel.selectedDatum, userModel.selectedSeries);
+      }
+    }
   }
 
   @override

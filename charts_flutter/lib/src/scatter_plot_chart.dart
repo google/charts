@@ -26,6 +26,7 @@ import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'cartesian_chart.dart' show CartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
+import 'user_managed_state.dart' show UserManagedState;
 
 class ScatterPlotChart extends CartesianChart<num> {
   ScatterPlotChart(
@@ -43,6 +44,7 @@ class ScatterPlotChart extends CartesianChart<num> {
     LayoutConfig layoutConfig,
     bool defaultInteractions: true,
     bool flipVerticalAxis,
+    UserManagedState<num> userManagedState,
   }) : super(
           seriesList,
           animate: animate,
@@ -58,6 +60,7 @@ class ScatterPlotChart extends CartesianChart<num> {
           layoutConfig: layoutConfig,
           defaultInteractions: defaultInteractions,
           flipVerticalAxis: flipVerticalAxis,
+          userManagedState: userManagedState,
         );
 
   @override

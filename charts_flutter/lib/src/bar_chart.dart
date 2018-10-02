@@ -30,6 +30,7 @@ import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'cartesian_chart.dart' show CartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
+import 'user_managed_state.dart' show UserManagedState;
 
 @immutable
 class BarChart extends CartesianChart<String> {
@@ -52,6 +53,7 @@ class BarChart extends CartesianChart<String> {
     this.vertical: true,
     bool defaultInteractions: true,
     LayoutConfig layoutConfig,
+    UserManagedState<String> userManagedState,
     this.barRendererDecorator,
     bool flipVerticalAxis,
   }) : super(
@@ -71,6 +73,7 @@ class BarChart extends CartesianChart<String> {
           rtlSpec: rtlSpec,
           defaultInteractions: defaultInteractions,
           layoutConfig: layoutConfig,
+          userManagedState: userManagedState,
           flipVerticalAxis: flipVerticalAxis,
         );
 
