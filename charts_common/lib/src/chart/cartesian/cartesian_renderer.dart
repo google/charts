@@ -52,6 +52,10 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @override
   void configureDomainAxes(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
+      if (series.data.length == 0) {
+        return;
+      }
+
       final domainAxis = series.getAttr(domainAxisKey);
       final domainFn = series.domainFn;
       final domainLowerBoundFn = series.domainLowerBoundFn;
@@ -96,6 +100,10 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @override
   void configureMeasureAxes(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
+      if (series.data.length == 0) {
+        return;
+      }
+
       final domainAxis = series.getAttr(domainAxisKey);
       final domainFn = series.domainFn;
 
@@ -143,6 +151,10 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @visibleForTesting
   int findNearestViewportStart(
       Axis domainAxis, AccessorFn<D> domainFn, List data) {
+    if (data.length == 0) {
+      return null;
+    }
+
     // Quick optimization for full viewport (likely).
     if (domainAxis.compareDomainValueToViewport(domainFn(0)) == 0) {
       return 0;
@@ -195,6 +207,10 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @visibleForTesting
   int findNearestViewportEnd(
       Axis domainAxis, AccessorFn<D> domainFn, List data) {
+    if (data.length == 0) {
+      return null;
+    }
+
     var start = 1;
     var end = data.length - 1;
 
