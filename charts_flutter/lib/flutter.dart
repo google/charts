@@ -185,3 +185,4 @@ export 'src/scatter_plot_chart.dart';
 export 'src/selection_model_config.dart' show SelectionModelConfig;
 export 'src/symbol_renderer.dart' show CustomSymbolRenderer;
 export 'src/time_series_chart.dart';
+export 'src/color_util.dart' show ColorUtil;

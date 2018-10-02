@@ -18,6 +18,7 @@ import 'dart:math' show Rectangle;
 import 'package:meta/meta.dart' show protected;
 import 'package:intl/intl.dart';
 
+import '../../../../common/color.dart' show Color;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../layout/layout_view.dart'
     show
@@ -67,6 +68,7 @@ class SeriesLegend<D> extends Legend<D> {
     MeasureFormatter secondaryMeasureFormatter,
     bool showMeasures,
     LegendDefaultMeasure legendDefaultMeasure,
+    Color labelTextColor,
   }) : super(
           selectionModelType: selectionModelType ?? SelectionModelType.info,
           legendEntryGenerator:
@@ -77,6 +79,7 @@ class SeriesLegend<D> extends Legend<D> {
     this.legendDefaultMeasure = legendDefaultMeasure;
     this.measureFormatter = measureFormatter;
     this.secondaryMeasureFormatter = secondaryMeasureFormatter;
+    this.labelTextColor = labelTextColor;
   }
 
   /// Sets a list of series IDs that should be hidden by default on first chart
@@ -147,6 +150,13 @@ class SeriesLegend<D> extends Legend<D> {
   set secondaryMeasureFormatter(MeasureFormatter formatter) {
     legendEntryGenerator.secondaryMeasureFormatter =
         formatter ?? _defaultLegendMeasureFormatter;
+  }
+
+  /// Color of label text
+  ///
+  /// This is optional.
+  set labelTextColor(Color labelTextColor) {
+    legendEntryGenerator.labelTextColor = labelTextColor;
   }
 
   /// Remove series IDs from the currently hidden list if those series have been

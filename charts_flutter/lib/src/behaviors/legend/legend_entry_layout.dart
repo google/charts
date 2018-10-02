@@ -14,9 +14,10 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common;
+import 'package:charts_flutter/src/color_util.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart'
-    show GestureDetector, GestureTapUpCallback, TapUpDetails, Theme;
+    show Colors, GestureDetector, GestureTapUpCallback, TapUpDetails, Theme;
 
 import '../../symbol_renderer.dart';
 import 'legend.dart' show TappableLegend;
@@ -63,7 +64,13 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
 
   Widget createLabel(BuildContext context, common.LegendEntry legendEntry,
       TappableLegend legend, bool isHidden) {
-    final TextStyle style = isHidden ? _getHiddenTextStyle(context) : null;
+
+    TextStyle style;
+    if (isHidden) {
+      style = _getHiddenTextStyle(context, legendEntry.labelTextColor);
+    } else {
+      style = legendEntry.labelTextColor != null ? TextStyle(color: ColorUtil.toDartColor(legendEntry.labelTextColor)) : null;
+    }
 
     return new GestureDetector(
         child: new Text(legendEntry.label, style: style),
@@ -119,12 +126,18 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
 
   /// Get style that is 26% opaque if the entry is hidden.
   ///
-  /// Use the color from the body 1 theme, but create a new style that only
-  /// specifies a color. This should keep anything else that this [Text] is
+  /// Use the the labelTextColor or the body 1 theme, but create a new style that
+  /// only specifies a color. This should keep anything else that this [Text] is
   /// inheriting intact.
-  TextStyle _getHiddenTextStyle(BuildContext context) {
-    final body1 = Theme.of(context).textTheme.body1;
-    final color = body1.color.withOpacity(0.26);
+  TextStyle _getHiddenTextStyle(BuildContext context, common.Color labelTextColor) {
+    Color color;
+    if (labelTextColor != null) {
+      color = ColorUtil.toDartColor(labelTextColor).withOpacity(0.26);
+    } else {
+      final body1 = Theme.of(context).textTheme.body1;
+      color = body1.color.withOpacity(0.26);
+    }
+
     return new TextStyle(inherit: true, color: color);
   }
 }

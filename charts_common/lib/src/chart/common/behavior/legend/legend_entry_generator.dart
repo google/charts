@@ -17,12 +17,17 @@ import 'legend_entry.dart';
 import '../../selection_model/selection_model.dart';
 import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
+import '../../../../common/color.dart';
 
 /// A strategy for generating a list of [LegendEntry] based on the series drawn.
 ///
 /// [T] the datum class type for chart.
 /// [D] the domain class type for the datum.
 abstract class LegendEntryGenerator<D> {
+  // Color of legend label text
+  Color get labelTextColor;
+  set labelTextColor(Color labelTextColor);
+
   /// Generates a list of legend entries based on the series drawn on the chart.
   ///
   /// [seriesList] Processed series list.
