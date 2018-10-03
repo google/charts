@@ -575,9 +575,13 @@ class _PointRendererElement<D> {
     radiusPx =
         _lerpDouble(previous.radiusPx, target.radiusPx, animationPercent);
 
-    strokeWidthPx =
-        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx);
+    if (target.strokeWidthPx != null && previous.strokeWidthPx != null) {
+      strokeWidthPx = (((target.strokeWidthPx - previous.strokeWidthPx) *
+              animationPercent) +
+          previous.strokeWidthPx);
+    } else {
+      strokeWidthPx = null;
+    }
   }
 
   /// Linear interpolation for doubles.
