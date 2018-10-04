@@ -16,12 +16,13 @@
 import 'package:charts_common/src/chart/line/line_renderer.dart';
 import 'package:charts_common/src/chart/line/line_renderer_config.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart'
-    show MutableSeries;
+    show MutableSeries, ImmutableSeries;
 import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/common/material_palette.dart'
     show MaterialPalette;
 import 'package:charts_common/src/data/series.dart' show Series;
 
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 /// Datum/Row for the chart.
@@ -34,6 +35,14 @@ class MyRow {
   final double strokeWidthPx;
   MyRow(this.campaignString, this.campaign, this.clickCount, this.color,
       this.dashPattern, this.strokeWidthPx);
+}
+
+class MockImmutableSeries<D> extends Mock implements ImmutableSeries<D> {
+  String _id;
+  MockImmutableSeries(this._id);
+
+  @override
+  String get id => _id;
 }
 
 void main() {
@@ -526,6 +535,105 @@ void main() {
       expect(segment.domainExtent.start, equals('MyCampaign1'));
       expect(segment.domainExtent.end, equals('MyOtherCampaign'));
       expect(segment.strokeWidthPx, equals(3.0));
+    });
+  });
+
+  group('Line merging', () {
+    List<ImmutableSeries<num>> series(List<String> keys) {
+      return keys.map((key) => MockImmutableSeries<num>(key)).toList();
+    }
+
+    test('simple beginning removal', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['b', 'c']));
+
+      // The series should still be there so that it can be animated out.
+      expect(tester.seriesKeys, equals(['a', 'b', 'c']));
+    });
+
+    test('simple middle removal', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['a', 'c']));
+
+      // The series should still be there so that it can be animated out.
+      expect(tester.seriesKeys, equals(['a', 'b', 'c']));
+    });
+
+    test('simple end removal', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['a', 'b']));
+
+      // The series should still be there so that it can be animated out.
+      expect(tester.seriesKeys, equals(['a', 'b', 'c']));
+    });
+
+    test('simple beginning addition', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['d', 'a', 'b', 'c']));
+
+      expect(tester.seriesKeys, equals(['d', 'a', 'b', 'c']));
+    });
+
+    test('simple middle addition', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['a', 'd', 'b', 'c']));
+
+      expect(tester.seriesKeys, equals(['a', 'd', 'b', 'c']));
+    });
+
+    test('simple end addition', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['a', 'b', 'c', 'd']));
+
+      expect(tester.seriesKeys, equals(['a', 'b', 'c', 'd']));
+    });
+
+    test('replacement begining', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['d', 'b', 'c']));
+
+      expect(tester.seriesKeys, equals(['a', 'd', 'b', 'c']));
+    });
+
+    test('replacement end', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['a', 'b', 'd']));
+
+      expect(tester.seriesKeys, equals(['a', 'b', 'c', 'd']));
+    });
+
+    test('full replacement', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c']);
+      tester.merge(series(['d', 'e', 'f']));
+
+      expect(tester.seriesKeys, equals(['a', 'b', 'c', 'd', 'e', 'f']));
+    });
+
+    test('mixed replacement', () {
+      final tester = LineRendererTester(LineRenderer<num>());
+
+      tester.setSeriesKeys(['a', 'b', 'c', 'd']);
+      tester.merge(series(['d', 'a', 'f', 'c']));
+
+      expect(tester.seriesKeys, equals(['d', 'a', 'b', 'f', 'c']));
     });
   });
 }
