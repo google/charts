@@ -69,6 +69,7 @@ class ChartCanvas implements common.ChartCanvas {
       common.Color fill,
       common.Color stroke,
       bool roundEndCaps,
+      bool roundLineJoin,
       double strokeWidthPx,
       List<int> dashPattern}) {
     _linePainter ??= new LinePainter();
@@ -80,6 +81,7 @@ class ChartCanvas implements common.ChartCanvas {
         fill: fill,
         stroke: stroke,
         roundEndCaps: roundEndCaps,
+        roundLineJoin: roundLineJoin,
         strokeWidthPx: strokeWidthPx,
         dashPattern: dashPattern);
   }

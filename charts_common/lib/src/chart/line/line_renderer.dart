@@ -175,7 +175,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             ..dashPattern = dashPattern
             ..domainExtent = new _Range<D>(domain, domain)
             ..strokeWidthPx = strokeWidthPx
-            ..styleKey = styleKey;
+            ..styleKey = styleKey
+            ..roundEndCaps = config.roundEndCaps
+            ..roundLineJoin = config.roundLineJoin;
 
           styleSegments.add(currentDetails);
           usedKeys.add(styleKey);
@@ -558,6 +560,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     final domainExtent = styleSegment.domainExtent;
     final strokeWidthPx = styleSegment.strokeWidthPx;
     final styleKey = styleSegment.styleKey;
+    final roundEndCaps = styleSegment.roundEndCaps;
+    final roundLineJoin = styleSegment.roundLineJoin;
 
     // Get a list of all positioned points for this series.
     final pointList = _createPointListForSeries(series, initializeFromZero);
@@ -591,7 +595,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         ..measureAxisPosition = measureAxis.getLocation(0.0)
         ..positionExtent = positionExtent
         ..strokeWidthPx = strokeWidthPx
-        ..styleKey = lineStyleKey);
+        ..styleKey = lineStyleKey
+        ..roundEndCaps = roundEndCaps
+        ..roundLineJoin = roundLineJoin);
     }
 
     // Get the area elements we are going to set up.
@@ -975,7 +981,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
                 dashPattern: line.dashPattern,
                 points: line.points,
                 stroke: line.color,
-                strokeWidthPx: line.strokeWidthPx);
+                strokeWidthPx: line.strokeWidthPx,
+                roundEndCaps: line.roundEndCaps,
+                roundLineJoin: line.roundLineJoin);
           }
         });
       }
@@ -1162,6 +1170,8 @@ class _LineRendererElement<D> {
   _Range<num> positionExtent;
   double strokeWidthPx;
   String styleKey;
+  bool roundEndCaps;
+  bool roundLineJoin;
 
   _LineRendererElement<D> clone() {
     return new _LineRendererElement<D>()
@@ -1173,7 +1183,9 @@ class _LineRendererElement<D> {
       ..measureAxisPosition = measureAxisPosition
       ..positionExtent = positionExtent
       ..strokeWidthPx = strokeWidthPx
-      ..styleKey = styleKey;
+      ..styleKey = styleKey
+      ..roundEndCaps = roundEndCaps
+      ..roundLineJoin = roundLineJoin;
   }
 
   void updateAnimationPercent(_LineRendererElement previous,

@@ -38,6 +38,7 @@ class LinePainter {
       common.Color fill,
       common.Color stroke,
       bool roundEndCaps,
+      bool roundLineJoin,
       double strokeWidthPx,
       List<int> dashPattern}) {
     if (points.isEmpty) {
@@ -72,6 +73,11 @@ class LinePainter {
       if (dashPattern == null || dashPattern.isEmpty) {
         if (roundEndCaps == true) {
           paint.strokeCap = StrokeCap.round;
+        }
+
+        // TODO: Add a golden image test.
+        if (roundLineJoin == true) {
+          paint.strokeJoin = StrokeJoin.round;
         }
 
         _drawSolidLine(canvas, paint, points);
