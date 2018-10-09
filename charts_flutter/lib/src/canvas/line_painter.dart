@@ -67,17 +67,12 @@ class LinePainter {
       if (strokeWidthPx != null) {
         paint.strokeWidth = strokeWidthPx;
       }
-      paint.strokeJoin = StrokeJoin.bevel;
+      paint.strokeJoin = StrokeJoin.round;
       paint.style = PaintingStyle.stroke;
 
       if (dashPattern == null || dashPattern.isEmpty) {
         if (roundEndCaps == true) {
           paint.strokeCap = StrokeCap.round;
-        }
-
-        // TODO: Add a golden image test.
-        if (roundLineJoin == true) {
-          paint.strokeJoin = StrokeJoin.round;
         }
 
         _drawSolidLine(canvas, paint, points);
