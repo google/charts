@@ -187,3 +187,4 @@ export 'src/symbol_renderer.dart' show CustomSymbolRenderer;
 export 'src/time_series_chart.dart';
 export 'src/user_managed_state.dart'
     show UserManagedState, UserManagedSelectionModel;
+export 'src/util/color.dart' show ColorUtil;

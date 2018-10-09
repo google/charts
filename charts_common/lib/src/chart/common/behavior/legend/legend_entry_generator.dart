@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'legend_entry.dart';
+import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../selection_model/selection_model.dart';
 import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
@@ -44,6 +45,9 @@ abstract class LegendEntryGenerator<D> {
 
   LegendDefaultMeasure get legendDefaultMeasure;
   set legendDefaultMeasure(LegendDefaultMeasure noSelectionMeasure);
+
+  TextStyleSpec get entryTextStyle;
+  set entryTextStyle(TextStyleSpec entryTextStyle);
 }
 
 /// Options for calculating what measures are shown when there is no selection.

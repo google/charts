@@ -70,7 +70,6 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   LegendCellPadding _cellPadding;
   LegendCellPadding _legendPadding;
 
-  TextStyleSpec _entryTextStyle;
   TextStyleSpec _titleTextStyle;
 
   LegendTapHandling _legendTapHandling = LegendTapHandling.hide;
@@ -85,9 +84,10 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     return (value == null) ? '' : _decimalPattern.format(value);
   }
 
-  Legend({this.selectionModelType, this.legendEntryGenerator}) {
+  Legend({this.selectionModelType, this.legendEntryGenerator, entryTextStyle}) {
     _lifecycleListener = new LifecycleListener(
         onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
+    legendEntryGenerator.entryTextStyle = entryTextStyle;
   }
 
   String get title => _title;
@@ -130,10 +130,10 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   LegendTapHandling get legendTapHandling => _legendTapHandling;
 
   /// Text style of the legend entry text.
-  TextStyleSpec get entryTextStyle => _entryTextStyle;
+  TextStyleSpec get entryTextStyle => legendEntryGenerator.entryTextStyle;
 
   set entryTextStyle(TextStyleSpec entryTextStyle) {
-    _entryTextStyle = entryTextStyle;
+    legendEntryGenerator.entryTextStyle = entryTextStyle;
   }
 
   /// Text style of the legend title text.

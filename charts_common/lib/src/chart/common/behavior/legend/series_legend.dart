@@ -15,6 +15,7 @@
 
 import 'package:meta/meta.dart' show protected;
 
+import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
 import '../../selection_model/selection_model.dart' show SelectionModelType;
@@ -45,11 +46,12 @@ class SeriesLegend<D> extends Legend<D> {
     MeasureFormatter secondaryMeasureFormatter,
     bool showMeasures,
     LegendDefaultMeasure legendDefaultMeasure,
+    TextStyleSpec entryTextStyle,
   }) : super(
-          selectionModelType: selectionModelType ?? SelectionModelType.info,
-          legendEntryGenerator:
-              legendEntryGenerator ?? new PerSeriesLegendEntryGenerator(),
-        ) {
+            selectionModelType: selectionModelType ?? SelectionModelType.info,
+            legendEntryGenerator:
+                legendEntryGenerator ?? new PerSeriesLegendEntryGenerator(),
+            entryTextStyle: entryTextStyle) {
     // Call the setters that include the setting for default.
     this.showMeasures = showMeasures;
     this.legendDefaultMeasure = legendDefaultMeasure;
