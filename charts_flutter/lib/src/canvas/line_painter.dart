@@ -38,7 +38,6 @@ class LinePainter {
       common.Color fill,
       common.Color stroke,
       bool roundEndCaps,
-      bool roundLineJoin,
       double strokeWidthPx,
       List<int> dashPattern}) {
     if (points.isEmpty) {

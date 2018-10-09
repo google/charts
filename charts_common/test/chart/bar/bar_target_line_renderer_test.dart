@@ -48,7 +48,6 @@ class MockCanvas extends Mock implements ChartCanvas {
       Color fill,
       Color stroke,
       bool roundEndCaps,
-      bool roundLineJoin,
       double strokeWidthPx,
       List<int> dashPattern}) {
     drawLinePointsList.add(points);

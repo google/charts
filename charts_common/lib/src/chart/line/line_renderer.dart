@@ -176,8 +176,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             ..domainExtent = new _Range<D>(domain, domain)
             ..strokeWidthPx = strokeWidthPx
             ..styleKey = styleKey
-            ..roundEndCaps = config.roundEndCaps
-            ..roundLineJoin = config.roundLineJoin;
+            ..roundEndCaps = config.roundEndCaps;
 
           styleSegments.add(currentDetails);
           usedKeys.add(styleKey);
@@ -561,7 +560,6 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     final strokeWidthPx = styleSegment.strokeWidthPx;
     final styleKey = styleSegment.styleKey;
     final roundEndCaps = styleSegment.roundEndCaps;
-    final roundLineJoin = styleSegment.roundLineJoin;
 
     // Get a list of all positioned points for this series.
     final pointList = _createPointListForSeries(series, initializeFromZero);
@@ -596,8 +594,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         ..positionExtent = positionExtent
         ..strokeWidthPx = strokeWidthPx
         ..styleKey = lineStyleKey
-        ..roundEndCaps = roundEndCaps
-        ..roundLineJoin = roundLineJoin);
+        ..roundEndCaps = roundEndCaps);
     }
 
     // Get the area elements we are going to set up.
@@ -982,8 +979,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
                 points: line.points,
                 stroke: line.color,
                 strokeWidthPx: line.strokeWidthPx,
-                roundEndCaps: line.roundEndCaps,
-                roundLineJoin: line.roundLineJoin);
+                roundEndCaps: line.roundEndCaps);
           }
         });
       }
@@ -1171,7 +1167,6 @@ class _LineRendererElement<D> {
   double strokeWidthPx;
   String styleKey;
   bool roundEndCaps;
-  bool roundLineJoin;
 
   _LineRendererElement<D> clone() {
     return new _LineRendererElement<D>()
@@ -1184,8 +1179,7 @@ class _LineRendererElement<D> {
       ..positionExtent = positionExtent
       ..strokeWidthPx = strokeWidthPx
       ..styleKey = styleKey
-      ..roundEndCaps = roundEndCaps
-      ..roundLineJoin = roundLineJoin;
+      ..roundEndCaps = roundEndCaps;
   }
 
   void updateAnimationPercent(_LineRendererElement previous,
