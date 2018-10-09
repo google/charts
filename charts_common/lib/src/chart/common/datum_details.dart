@@ -16,6 +16,7 @@
 import 'dart:math' show Point;
 
 import '../../common/color.dart' show Color;
+import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import 'processed_series.dart' show ImmutableSeries;
 
 typedef String DomainFormatter<D>(D domain);
@@ -104,6 +105,11 @@ class DatumDetails<D> {
   /// The radius of this [datum].
   final double radiusPx;
 
+  /// Renderer used to draw the shape of this datum.
+  ///
+  /// This is primarily used for point shapes on line and scatter plot charts.
+  final SymbolRenderer symbolRenderer;
+
   /// The stroke width of this [datum].
   final double strokeWidthPx;
 
@@ -136,6 +142,7 @@ class DatumDetails<D> {
       this.measureDistance,
       this.relativeDistance,
       this.radiusPx,
+      this.symbolRenderer,
       this.strokeWidthPx});
 
   factory DatumDetails.from(DatumDetails<D> other,
@@ -160,6 +167,7 @@ class DatumDetails<D> {
       double domainDistance,
       double measureDistance,
       double radiusPx,
+      SymbolRenderer symbolRenderer,
       double strokeWidthPx}) {
     return new DatumDetails<D>(
         datum: datum ?? other.datum,
@@ -185,6 +193,7 @@ class DatumDetails<D> {
         domainDistance: domainDistance ?? other.domainDistance,
         measureDistance: measureDistance ?? other.measureDistance,
         radiusPx: radiusPx ?? other.radiusPx,
+        symbolRenderer: symbolRenderer ?? other.symbolRenderer,
         strokeWidthPx: radiusPx ?? other.strokeWidthPx);
   }
 

@@ -227,7 +227,8 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
             ..fillColor = detail.fillColor
             ..radiusPx = radiusPx
             ..measureAxisPosition = measureAxis.getLocation(0.0)
-            ..strokeWidthPx = detail.strokeWidthPx);
+            ..strokeWidthPx = detail.strokeWidthPx
+            ..symbolRenderer = detail.symbolRenderer);
       }
 
       newSeriesMap[pointKey] = animatingPoint;
@@ -250,7 +251,8 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
         ..fillColor = detail.fillColor
         ..radiusPx = radiusPx
         ..measureAxisPosition = measureAxis.getLocation(0.0)
-        ..strokeWidthPx = detail.strokeWidthPx;
+        ..strokeWidthPx = detail.strokeWidthPx
+        ..symbolRenderer = detail.symbolRenderer;
 
       animatingPoint.setNewTarget(pointElement);
     }
@@ -502,9 +504,9 @@ class _LinePointLayoutView<D> extends LayoutView {
           pointElement.radiusPx * 2,
           pointElement.radiusPx * 2);
 
-      // Draw the highlight dot.
-      // TODO: Read custom symbol renderers from PointRenderer.
-      symbolRenderer.paint(canvas, bounds,
+      // Draw the highlight dot. Use the [SymbolRenderer] from the datum if one
+      // is defined.
+      (pointElement.symbolRenderer ?? symbolRenderer).paint(canvas, bounds,
           fillColor: pointElement.fillColor,
           strokeColor: pointElement.color,
           strokeWidthPx: pointElement.strokeWidthPx);
@@ -543,7 +545,7 @@ class _PointRendererElement<D> {
   double radiusPx;
   double measureAxisPosition;
   double strokeWidthPx;
-  String symbolRendererId;
+  SymbolRenderer symbolRenderer;
 
   _PointRendererElement<D> clone() {
     return new _PointRendererElement<D>()
@@ -553,7 +555,7 @@ class _PointRendererElement<D> {
       ..measureAxisPosition = this.measureAxisPosition
       ..radiusPx = this.radiusPx
       ..strokeWidthPx = this.strokeWidthPx
-      ..symbolRendererId = this.symbolRendererId;
+      ..symbolRenderer = this.symbolRenderer;
   }
 
   void updateAnimationPercent(_PointRendererElement previous,

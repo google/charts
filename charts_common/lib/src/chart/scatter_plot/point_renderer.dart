@@ -224,7 +224,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         num measureOffsetValue = measureOffsetFn(index);
 
         // Create a new point using the final location.
-        var point = getPoint(
+        final point = getPoint(
             datum,
             domainValue,
             domainLowerBoundValue,
@@ -237,7 +237,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
             measureOffsetValue,
             measureAxis);
 
-        var pointKey = '${domainValue}__${measureValue}';
+        final pointKey = '${domainValue}__${measureValue}';
 
         // If we already have an AnimatingPoint for that index, use it.
         var animatingPoint = pointList.firstWhere(
@@ -250,7 +250,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         // from 0.
         if (animatingPoint == null) {
           // Create a new point and have it animate in from axis.
-          var point = getPoint(
+          final point = getPoint(
               datum,
               domainValue,
               domainLowerBoundValue,
@@ -451,7 +451,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     }
 
     seriesPointMap.values.forEach((List<AnimatedPoint<D>> points) {
-      DatumPoint<D> nearestPoint;
+      PointRendererElement<D> nearestPoint;
       double nearestDomainDistance = _maxInitialDistance;
       double nearestMeasureDistance = _maxInitialDistance;
       double nearestRelativeDistance = _maxInitialDistance;
@@ -474,14 +474,14 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
           if ((distances.domainDistance < nearestDomainDistance) ||
               ((distances.domainDistance == nearestDomainDistance &&
                   distances.measureDistance < nearestMeasureDistance))) {
-            nearestPoint = p;
+            nearestPoint = point._currentPoint;
             nearestDomainDistance = distances.domainDistance;
             nearestMeasureDistance = distances.measureDistance;
             nearestRelativeDistance = distances.relativeDistance;
           }
         } else {
           if (distances.relativeDistance < nearestRelativeDistance) {
-            nearestPoint = p;
+            nearestPoint = point._currentPoint;
             nearestDomainDistance = distances.domainDistance;
             nearestMeasureDistance = distances.measureDistance;
             nearestRelativeDistance = distances.relativeDistance;
@@ -491,13 +491,27 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
       // Found a point, add it to the list.
       if (nearestPoint != null) {
+        var nearestSymbolRenderer;
+        if (nearestPoint.symbolRendererId == defaultSymbolRendererId) {
+          nearestSymbolRenderer = symbolRenderer;
+        } else {
+          final id = nearestPoint.symbolRendererId;
+          if (!config.customSymbolRenderers.containsKey(id)) {
+            throw new ArgumentError(
+                'Invalid custom symbol renderer id "${id}"');
+          }
+
+          nearestSymbolRenderer = config.customSymbolRenderers[id];
+        }
+
         nearest.add(new DatumDetails<D>(
-            datum: nearestPoint.datum,
-            domain: nearestPoint.domain,
-            series: nearestPoint.series,
+            datum: nearestPoint.point.datum,
+            domain: nearestPoint.point.domain,
+            series: nearestPoint.point.series,
             domainDistance: nearestDomainDistance,
             measureDistance: nearestMeasureDistance,
-            relativeDistance: nearestRelativeDistance));
+            relativeDistance: nearestRelativeDistance,
+            symbolRenderer: nearestSymbolRenderer));
       }
     });
 
@@ -581,10 +595,36 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         details.measureOffset,
         measureAxis);
 
+    final symbolRendererFn = series.getAttr(pointSymbolRendererFnKey);
+
+    // Get the ID of the [SymbolRenderer] for this point. An ID may be
+    // specified on the datum, or on the series. If neither is specified,
+    // fall back to the default.
+    String symbolRendererId;
+    if (symbolRendererFn != null) {
+      symbolRendererId = symbolRendererFn(details.index);
+    }
+    symbolRendererId ??= series.getAttr(pointSymbolRendererIdKey);
+    symbolRendererId ??= defaultSymbolRendererId;
+
+    // Now that we have the ID, get the configured [SymbolRenderer].
+    var nearestSymbolRenderer;
+    if (symbolRendererId == defaultSymbolRendererId) {
+      nearestSymbolRenderer = symbolRenderer;
+    } else {
+      final id = symbolRendererId;
+      if (!config.customSymbolRenderers.containsKey(id)) {
+        throw new ArgumentError('Invalid custom symbol renderer id "${id}"');
+      }
+
+      nearestSymbolRenderer = config.customSymbolRenderers[id];
+    }
+
     return new DatumDetails.from(details,
         chartPosition: new Point<double>(point.x, point.y),
         chartPositionLower: new Point<double>(point.xLower, point.yLower),
-        chartPositionUpper: new Point<double>(point.xUpper, point.yUpper));
+        chartPositionUpper: new Point<double>(point.xUpper, point.yUpper),
+        symbolRenderer: nearestSymbolRenderer);
   }
 }
 
