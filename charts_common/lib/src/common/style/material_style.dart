@@ -42,6 +42,7 @@ class MaterialStyle implements Style {
       GraphicsFactory graphicsFactory, LineStyleSpec spec) {
     return graphicsFactory.createLinePaint()
       ..color = spec?.color ?? MaterialPalette.gray.shadeDefault
+      ..dashPattern = spec?.dashPattern
       ..strokeWidth = spec?.thickness ?? 1;
   }
 
@@ -50,6 +51,7 @@ class MaterialStyle implements Style {
       GraphicsFactory graphicsFactory, LineStyleSpec spec) {
     return graphicsFactory.createLinePaint()
       ..color = spec?.color ?? MaterialPalette.gray.shadeDefault
+      ..dashPattern = spec?.dashPattern
       ..strokeWidth = spec?.thickness ?? 1;
   }
 
@@ -64,6 +66,7 @@ class MaterialStyle implements Style {
       GraphicsFactory graphicsFactory, LineStyleSpec spec) {
     return graphicsFactory.createLinePaint()
       ..color = spec?.color ?? MaterialPalette.gray.shade300
+      ..dashPattern = spec?.dashPattern
       ..strokeWidth = spec?.thickness ?? 1;
   }
 

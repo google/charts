@@ -156,6 +156,7 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
 
     canvas.drawLine(
       points: [lineStart, lineEnd],
+      dashPattern: lineStyle.dashPattern,
       fill: lineStyle.color,
       stroke: lineStyle.color,
       strokeWidthPx: lineStyle.strokeWidth.toDouble(),
