@@ -49,7 +49,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/pie_charts/simple_thumb.png)](example/pie_charts/simple) | Outside Label<br>[![](example/pie_charts/outside_label_thumb.png)](example/pie_charts/outside_label) | Donut<br>[![](example/pie_charts/donut_thumb.png)](example/pie_charts/donut) | Auto Label<br>[![](example/pie_charts/auto_label_thumb.png)](example/pie_charts/auto_label) |
+| Simple<br>[![](example/pie_charts/simple_thumb.png)](example/pie_charts/simple) | Outside Label<br>[![](example/pie_charts/outside_label_thumb.png)](example/pie_charts/outside_label) | Partial Pie<br>[![](example/pie_charts/partial_pie_thumb.png)](example/pie_charts/partial_pie) | Donut<br>[![](example/pie_charts/donut_thumb.png)](example/pie_charts/donut) |
+| Auto Label<br>[![](example/pie_charts/auto_label_thumb.png)](example/pie_charts/auto_label) | Gauge<br>[![](example/pie_charts/gauge_thumb.png)](example/pie_charts/gauge) | | |
 
 
 ### Axes
