@@ -36,6 +36,11 @@ class ArcRendererConfig<D> extends LayoutViewConfig
 
   final rendererAttributes = new RendererAttributes();
 
+  /// Total arc length, in radians.
+  ///
+  /// The default arcLength is 2π.
+  final double arcLength;
+
   /// If set, configures the arcWidth to be a percentage of the radius.
   final double arcRatio;
 
@@ -69,6 +74,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
 
   ArcRendererConfig(
       {this.customRendererId,
+      this.arcLength = 2 * pi,
       this.arcRendererDecorators = const [],
       this.arcRatio,
       this.arcWidth,

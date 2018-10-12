@@ -6,10 +6,10 @@ Example:
 
 ```
 /// Bar chart with example of a legend with customized position, justification,
-/// desired max rows, and padding. These options are shown as an example of how
-/// to use the customizations, they do not necessary have to be used together in
-/// this way. Choosing [end] as the position does not require the justification
-/// to also be [endDrawArea].
+/// desired max rows, padding, and entry text styles. These options are shown as
+/// an example of how to use the customizations, they do not necessary have to
+/// be used together in this way. Choosing [end] as the position does not
+/// require the justification to also be [endDrawArea].
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -58,6 +58,11 @@ class LegendOptions extends StatelessWidget {
           desiredMaxRows: 2,
           // This defines the padding around each legend entry.
           cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
+          // Render the legend entry text with custom styles.
+          entryTextStyle: charts.TextStyleSpec(
+              color: charts.Color(r: 127, g: 63, b: 191),
+              fontFamily: 'Georgia',
+              fontSize: 11),
         )
       ],
     );

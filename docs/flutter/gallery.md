@@ -49,7 +49,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/pie_charts/simple_thumb.png)](example/pie_charts/simple) | Outside Label<br>[![](example/pie_charts/outside_label_thumb.png)](example/pie_charts/outside_label) | Donut<br>[![](example/pie_charts/donut_thumb.png)](example/pie_charts/donut) | Auto Label<br>[![](example/pie_charts/auto_label_thumb.png)](example/pie_charts/auto_label) |
+| Simple<br>[![](example/pie_charts/simple_thumb.png)](example/pie_charts/simple) | Outside Label<br>[![](example/pie_charts/outside_label_thumb.png)](example/pie_charts/outside_label) | Partial Pie<br>[![](example/pie_charts/partial_pie_thumb.png)](example/pie_charts/partial_pie) | Donut<br>[![](example/pie_charts/donut_thumb.png)](example/pie_charts/donut) |
+| Auto Label<br>[![](example/pie_charts/auto_label_thumb.png)](example/pie_charts/auto_label) | Gauge<br>[![](example/pie_charts/gauge_thumb.png)](example/pie_charts/gauge) | | |
 
 
 ### Axes
@@ -60,6 +61,7 @@
 | Short Tick Length Axis<br>[![](example/axes/short_tick_length_axis_thumb.png)](example/axes/short_tick_length_axis) | Custom Font Size And Color<br>[![](example/axes/custom_font_size_and_color_thumb.png)](example/axes/custom_font_size_and_color) | Measure Axis Label Alignment<br>[![](example/axes/measure_axis_label_alignment_thumb.png)](example/axes/measure_axis_label_alignment) | Hidden Ticks And Labels Axis<br>[![](example/axes/hidden_ticks_and_labels_axis_thumb.png)](example/axes/hidden_ticks_and_labels_axis) |
 | Custom Axis Tick Formatters<br>[![](example/axes/custom_axis_tick_formatters_thumb.png)](example/axes/custom_axis_tick_formatters) | Custom Measure Tick Count<br>[![](example/axes/custom_measure_tick_count_thumb.png)](example/axes/custom_measure_tick_count) | Integer Only Measure Axis<br>[![](example/axes/integer_only_measure_axis_thumb.png)](example/axes/integer_only_measure_axis) | Nonzero Bound Measure Axis<br>[![](example/axes/nonzero_bound_measure_axis_thumb.png)](example/axes/nonzero_bound_measure_axis) |
 | Nonzero Bound Measure Axis<br>[![](example/axes/nonzero_bound_measure_axis_thumb.png)](example/axes/nonzero_bound_measure_axis) | Statically Provided Ticks<br>[![](example/axes/statically_provided_ticks_thumb.png)](example/axes/statically_provided_ticks) | Ordinal Initial Viewport<br>[![](example/axes/ordinal_initial_viewport_thumb.png)](example/axes/ordinal_initial_viewport) | Numeric Initial Viewport<br>[![](example/axes/numeric_initial_viewport_thumb.png)](example/axes/numeric_initial_viewport) |
+| Gridline Dash Pattern<br>[![](example/axes/gridline_dash_pattern_thumb.png)](example/axes/gridline_dash_pattern) | | | |
 
 
 ### Legends
@@ -80,9 +82,9 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Initial Selection<br>[![](example/behaviors/initial_selection_thumb.png)](example/behaviors/initial_selection) | Selection Bar Highlight<br>[![](example/behaviors/selection_bar_highlight_thumb.png)](example/behaviors/selection_bar_highlight) | Selection Line Highlight<br>[![](example/behaviors/selection_line_highlight_thumb.png)](example/behaviors/selection_line_highlight) | Selection Callback Example<br>[![](example/behaviors/selection_callback_example_thumb.png)](example/behaviors/selection_callback_example) |
-| Chart Title<br>[![](example/behaviors/chart_title_thumb.png)](example/behaviors/chart_title) | Slider<br>[![](example/behaviors/slider_thumb.png)](example/behaviors/slider) | Sliding Viewport On Selection<br>[![](example/behaviors/sliding_viewport_on_selection_thumb.png)](example/behaviors/sliding_viewport_on_selection) | Percent Of Domain<br>[![](example/behaviors/percent_of_domain_thumb.png)](example/behaviors/percent_of_domain) |
-| Percent Of Domain By Category<br>[![](example/behaviors/percent_of_domain_by_category_thumb.png)](example/behaviors/percent_of_domain_by_category) | Percent Of Series<br>[![](example/behaviors/percent_of_series_thumb.png)](example/behaviors/percent_of_series) | Initial Hint Animation<br>[![](example/behaviors/initial_hint_animation_thumb.png)](example/behaviors/initial_hint_animation) | |
+| Initial Selection<br>[![](example/behaviors/initial_selection_thumb.png)](example/behaviors/initial_selection) | Selection Bar Highlight<br>[![](example/behaviors/selection_bar_highlight_thumb.png)](example/behaviors/selection_bar_highlight) | Selection Line Highlight<br>[![](example/behaviors/selection_line_highlight_thumb.png)](example/behaviors/selection_line_highlight) | Selection User Managed<br>[![](example/behaviors/selection_user_managed_thumb.png)](example/behaviors/selection_user_managed) |
+| Selection Callback Example<br>[![](example/behaviors/selection_callback_example_thumb.png)](example/behaviors/selection_callback_example) | Chart Title<br>[![](example/behaviors/chart_title_thumb.png)](example/behaviors/chart_title) | Slider<br>[![](example/behaviors/slider_thumb.png)](example/behaviors/slider) | Sliding Viewport On Selection<br>[![](example/behaviors/sliding_viewport_on_selection_thumb.png)](example/behaviors/sliding_viewport_on_selection) |
+| Percent Of Domain<br>[![](example/behaviors/percent_of_domain_thumb.png)](example/behaviors/percent_of_domain) | Percent Of Domain By Category<br>[![](example/behaviors/percent_of_domain_by_category_thumb.png)](example/behaviors/percent_of_domain_by_category) | Percent Of Series<br>[![](example/behaviors/percent_of_series_thumb.png)](example/behaviors/percent_of_series) | Initial Hint Animation<br>[![](example/behaviors/initial_hint_animation_thumb.png)](example/behaviors/initial_hint_animation) |
 
 
 ### a11y

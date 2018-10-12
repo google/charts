@@ -87,12 +87,14 @@ class BaseChartState<D> extends State<BaseChart<D>>
   /// Builds the common chart canvas widget.
   Widget _buildChartContainer() {
     final chartContainer = new ChartContainer<D>(
-        oldChartWidget: _oldWidget,
-        chartWidget: widget,
-        chartState: this,
-        animationValue: _animationValue,
-        rtl: Directionality.of(context) == TextDirection.rtl,
-        rtlSpec: widget.rtlSpec);
+      oldChartWidget: _oldWidget,
+      chartWidget: widget,
+      chartState: this,
+      animationValue: _animationValue,
+      rtl: Directionality.of(context) == TextDirection.rtl,
+      rtlSpec: widget.rtlSpec,
+      userManagedState: widget.userManagedState,
+    );
     _oldWidget = widget;
 
     final desiredGestures = widget.getDesiredGestures(this);

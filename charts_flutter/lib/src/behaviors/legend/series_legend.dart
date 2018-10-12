@@ -23,7 +23,8 @@ import 'package:charts_common/common.dart' as common
         LegendDefaultMeasure,
         OutsideJustification,
         SeriesLegend,
-        SelectionModelType;
+        SelectionModelType,
+        TextStyleSpec;
 import 'package:collection/collection.dart' show ListEquality;
 import 'package:flutter/widgets.dart'
     show BuildContext, EdgeInsets, Widget, hashValues;
@@ -82,6 +83,9 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// legend and the series uses the secondary axis.
   final common.MeasureFormatter secondaryMeasureFormatter;
 
+  /// Styles for legend entry label text.
+  final common.TextStyleSpec entryTextStyle;
+
   static const defaultCellPadding = const EdgeInsets.all(8.0);
 
   final List<String> defaultHiddenSeries;
@@ -139,6 +143,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     common.LegendDefaultMeasure legendDefaultMeasure,
     common.MeasureFormatter measureFormatter,
     common.MeasureFormatter secondaryMeasureFormatter,
+    common.TextStyleSpec entryTextStyle,
   }) {
     // Set defaults if empty.
     position ??= defaultBehaviorPosition;
@@ -169,7 +174,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         legendDefaultMeasure:
             legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
         measureFormatter: measureFormatter,
-        secondaryMeasureFormatter: secondaryMeasureFormatter);
+        secondaryMeasureFormatter: secondaryMeasureFormatter,
+        entryTextStyle: entryTextStyle);
   }
 
   /// Create a legend with custom layout.
@@ -212,6 +218,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     common.LegendDefaultMeasure legendDefaultMeasure,
     common.MeasureFormatter measureFormatter,
     common.MeasureFormatter secondaryMeasureFormatter,
+    common.TextStyleSpec entryTextStyle,
   }) {
     // Set defaults if empty.
     position ??= defaultBehaviorPosition;
@@ -230,6 +237,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
           legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
       measureFormatter: measureFormatter,
       secondaryMeasureFormatter: secondaryMeasureFormatter,
+      entryTextStyle: entryTextStyle,
     );
   }
 
@@ -244,6 +252,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     this.legendDefaultMeasure,
     this.measureFormatter,
     this.secondaryMeasureFormatter,
+    this.entryTextStyle,
   });
 
   @override
@@ -270,7 +279,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         showMeasures == o.showMeasures &&
         legendDefaultMeasure == o.legendDefaultMeasure &&
         measureFormatter == o.measureFormatter &&
-        secondaryMeasureFormatter == o.secondaryMeasureFormatter;
+        secondaryMeasureFormatter == o.secondaryMeasureFormatter &&
+        entryTextStyle == o.entryTextStyle;
   }
 
   @override
@@ -285,7 +295,8 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         showMeasures,
         legendDefaultMeasure,
         measureFormatter,
-        secondaryMeasureFormatter);
+        secondaryMeasureFormatter,
+        entryTextStyle);
   }
 }
 
@@ -302,6 +313,7 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
           legendDefaultMeasure: config.legendDefaultMeasure,
         ) {
     super.defaultHiddenSeries = config.defaultHiddenSeries;
+    super.entryTextStyle = config.entryTextStyle;
   }
 
   @override

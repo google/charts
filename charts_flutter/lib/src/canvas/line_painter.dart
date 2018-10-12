@@ -66,7 +66,7 @@ class LinePainter {
       if (strokeWidthPx != null) {
         paint.strokeWidth = strokeWidthPx;
       }
-      paint.strokeJoin = StrokeJoin.bevel;
+      paint.strokeJoin = StrokeJoin.round;
       paint.style = PaintingStyle.stroke;
 
       if (dashPattern == null || dashPattern.isEmpty) {

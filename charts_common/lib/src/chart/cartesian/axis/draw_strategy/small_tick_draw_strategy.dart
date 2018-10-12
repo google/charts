@@ -150,6 +150,7 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
 
     canvas.drawLine(
       points: [tickStart, tickEnd],
+      dashPattern: lineStyle.dashPattern,
       fill: lineStyle.color,
       stroke: lineStyle.color,
       strokeWidthPx: lineStyle.strokeWidth.toDouble(),

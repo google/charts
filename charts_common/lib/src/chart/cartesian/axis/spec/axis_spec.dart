@@ -122,21 +122,23 @@ class TextStyleSpec {
 @immutable
 class LineStyleSpec {
   final Color color;
+  final List<int> dashPattern;
   final int thickness;
 
-  LineStyleSpec({this.color, this.thickness});
+  LineStyleSpec({this.color, this.dashPattern, this.thickness});
 
   @override
   bool operator ==(Object other) {
     return other is LineStyleSpec &&
         color == other.color &&
-        thickness == other.thickness &&
-        color == other.color;
+        dashPattern == other.dashPattern &&
+        thickness == other.thickness;
   }
 
   @override
   int get hashCode {
     int hashcode = color?.hashCode ?? 0;
+    hashcode = (hashcode * 37) + dashPattern?.hashCode ?? 0;
     hashcode = (hashcode * 37) + thickness?.hashCode ?? 0;
     return hashcode;
   }

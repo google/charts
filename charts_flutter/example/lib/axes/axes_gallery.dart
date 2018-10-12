@@ -20,9 +20,10 @@ import 'bar_secondary_axis_only.dart';
 import 'custom_axis_tick_formatters.dart';
 import 'custom_font_size_and_color.dart';
 import 'custom_measure_tick_count.dart';
+import 'gridline_dash_pattern.dart';
 import 'hidden_ticks_and_labels_axis.dart';
-import 'integer_only_measure_axis.dart';
 import 'horizontal_bar_secondary_axis.dart';
+import 'integer_only_measure_axis.dart';
 import 'measure_axis_label_alignment.dart';
 import 'numeric_initial_viewport.dart';
 import 'nonzero_bound_measure_axis.dart';
@@ -118,6 +119,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Numeric axis with initial viewport',
       subtitle: 'Initial viewport is set to a subset of the data',
       childBuilder: () => new NumericInitialViewport.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Gridline dash pattern',
+      subtitle: 'Timeseries with measure gridlines that have a dash pattern',
+      childBuilder: () => new GridlineDashPattern.withRandomData(),
     ),
   ];
 }

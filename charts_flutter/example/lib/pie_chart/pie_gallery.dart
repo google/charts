@@ -15,10 +15,12 @@
 
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
-import 'donut.dart';
 import 'auto_label.dart';
+import 'donut.dart';
+import 'gauge.dart';
 import 'simple.dart';
 import 'outside_label.dart';
+import 'partial_pie.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -36,6 +38,12 @@ List<GalleryScaffold> buildGallery() {
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.pie_chart),
+      title: 'Partial Pie Chart',
+      subtitle: 'That doesn\'t cover a full revolution',
+      childBuilder: () => new PartialPieChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart),
       title: 'Simple Donut Chart',
       subtitle: 'With a single series and a hole in the middle',
       childBuilder: () => new DonutPieChart.withRandomData(),
@@ -46,6 +54,12 @@ List<GalleryScaffold> buildGallery() {
       subtitle:
           'With a single series, a hole in the middle, and auto-positioned labels',
       childBuilder: () => new DonutAutoLabelChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart),
+      title: 'Gauge Chart',
+      subtitle: 'That doesn\'t cover a full revolution',
+      childBuilder: () => new GaugeChart.withRandomData(),
     ),
   ];
 }

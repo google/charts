@@ -16,7 +16,7 @@
 import 'dart:collection' show LinkedHashMap;
 import 'dart:math' show Rectangle, Point;
 
-import 'package:meta/meta.dart' show required;
+import 'package:meta/meta.dart' show required, visibleForTesting;
 
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
@@ -175,7 +175,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             ..dashPattern = dashPattern
             ..domainExtent = new _Range<D>(domain, domain)
             ..strokeWidthPx = strokeWidthPx
-            ..styleKey = styleKey;
+            ..styleKey = styleKey
+            ..roundEndCaps = config.roundEndCaps;
 
           styleSegments.add(currentDetails);
           usedKeys.add(styleKey);
@@ -259,6 +260,50 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     return (int i) => curOffsets[domainFn(i)];
   }
 
+  /// Merge the line map and the new series so that the new elements are mixed
+  /// with the previous ones.
+  ///
+  /// This is to deal with the issue that every new series added after the fact
+  /// would be be rendered on top of the old ones, no matter the order of the
+  /// new series list.
+  void _mergeIntoSeriesMap(List<ImmutableSeries<D>> seriesList) {
+    List<MapEntry<String, List<_AnimatedElements<D>>>> newLineMap = [];
+
+    seriesList.forEach((ImmutableSeries<D> series) {
+      final key = series.id;
+
+      // First, add all the series from the old map that have been removed from
+      // the new seriesList in the same order they appear, stopping at the first
+      // series that is still in the list. We need to maintain them in the same
+      // order animate them out smoothly.
+      bool checkNext = true;
+      while (checkNext && _seriesLineMap.isNotEmpty) {
+        final firstKey = _seriesLineMap.keys.first;
+        if (!seriesList.any((s) => s.id == firstKey)) {
+          newLineMap.add(MapEntry(firstKey, _seriesLineMap.remove(firstKey)));
+          checkNext = true;
+        } else {
+          checkNext = false;
+        }
+      }
+
+      // If it's a new key, we add it and move to the next one. If not, we
+      // remove it from the current list and add it to the new one.
+      if (!_seriesLineMap.containsKey(key)) {
+        newLineMap.add(MapEntry(key, []));
+      } else {
+        newLineMap.add(MapEntry(key, _seriesLineMap.remove(key)));
+      }
+    });
+
+    // Now whatever is left is stuff that has been removed. We still add it to
+    // the end and removed them as the map is modified in place.
+    newLineMap.addAll(_seriesLineMap.entries);
+    _seriesLineMap.clear();
+
+    _seriesLineMap.addEntries(newLineMap);
+  }
+
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
@@ -269,6 +314,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     // the measure axis.
     List<List<_DatumPoint<D>>> previousInitialPointList = [];
 
+    _mergeIntoSeriesMap(seriesList);
+
     seriesList.forEach((ImmutableSeries<D> series) {
       final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
       final lineKey = series.id;
@@ -277,7 +324,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       previousPointList.add([]);
       previousInitialPointList.add([]);
 
-      final elementsList = _seriesLineMap.putIfAbsent(lineKey, () => []);
+      final elementsList = _seriesLineMap[lineKey];
 
       final styleSegments = series.getAttr(styleSegmentsKey);
 
@@ -512,6 +559,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     final domainExtent = styleSegment.domainExtent;
     final strokeWidthPx = styleSegment.strokeWidthPx;
     final styleKey = styleSegment.styleKey;
+    final roundEndCaps = styleSegment.roundEndCaps;
 
     // Get a list of all positioned points for this series.
     final pointList = _createPointListForSeries(series, initializeFromZero);
@@ -545,7 +593,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         ..measureAxisPosition = measureAxis.getLocation(0.0)
         ..positionExtent = positionExtent
         ..strokeWidthPx = strokeWidthPx
-        ..styleKey = lineStyleKey);
+        ..styleKey = lineStyleKey
+        ..roundEndCaps = roundEndCaps);
     }
 
     // Get the area elements we are going to set up.
@@ -929,7 +978,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
                 dashPattern: line.dashPattern,
                 points: line.points,
                 stroke: line.color,
-                strokeWidthPx: line.strokeWidthPx);
+                strokeWidthPx: line.strokeWidthPx,
+                roundEndCaps: line.roundEndCaps);
           }
         });
       }
@@ -1116,6 +1166,7 @@ class _LineRendererElement<D> {
   _Range<num> positionExtent;
   double strokeWidthPx;
   String styleKey;
+  bool roundEndCaps;
 
   _LineRendererElement<D> clone() {
     return new _LineRendererElement<D>()
@@ -1127,7 +1178,8 @@ class _LineRendererElement<D> {
       ..measureAxisPosition = measureAxisPosition
       ..positionExtent = positionExtent
       ..strokeWidthPx = strokeWidthPx
-      ..styleKey = styleKey;
+      ..styleKey = styleKey
+      ..roundEndCaps = roundEndCaps;
   }
 
   void updateAnimationPercent(_LineRendererElement previous,
@@ -1497,5 +1549,22 @@ class _Range<D> {
   /// axis.
   void _includePointAsString(D value) {
     _end = value;
+  }
+}
+
+@visibleForTesting
+class LineRendererTester<D> {
+  final LineRenderer<D> renderer;
+
+  LineRendererTester(this.renderer);
+
+  Iterable<String> get seriesKeys => renderer._seriesLineMap.keys;
+
+  void setSeriesKeys(List<String> keys) {
+    renderer._seriesLineMap.addEntries(keys.map((key) => MapEntry(key, [])));
+  }
+
+  void merge(List<ImmutableSeries<D>> series) {
+    renderer._mergeIntoSeriesMap(series);
   }
 }

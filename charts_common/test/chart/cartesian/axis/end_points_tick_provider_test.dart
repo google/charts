@@ -143,6 +143,7 @@ void main() {
     final drawStrategy = new FakeDrawStrategy<num>(10, 10);
     when(scale.viewportDomain).thenReturn(new NumericExtents(10.0, 70.0));
     when(scale.rangeWidth).thenReturn(1000);
+    when(scale.domainStepSize).thenReturn(1000.0);
 
     final ticks = tickProvider.getTicks(
         context: context,
@@ -181,5 +182,56 @@ void main() {
     expect(ticks, hasLength(2));
     expect(ticks[0].value, equals('A'));
     expect(ticks[1].value, equals('D'));
+  });
+
+  test('dateTime_emptySeriesChoosesNoTicks', () {
+    final formatter = new DateTimeTickFormatter(dateTimeFactory);
+    final scale = new MockDateTimeScale();
+    tickProvider = new EndPointsTickProvider<DateTime>();
+
+    final drawStrategy = new FakeDrawStrategy<DateTime>(10, 10);
+    when(scale.viewportDomain).thenReturn(new DateTimeExtents(
+        start: new DateTime(2018, 8, 1), end: new DateTime(2018, 8, 11)));
+    when(scale.rangeWidth).thenReturn(1000);
+
+    // An un-configured axis has no domain step size, and its scale defaults to
+    // infinity.
+    when(scale.domainStepSize).thenReturn(double.infinity);
+
+    final ticks = tickProvider.getTicks(
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: <DateTime, String>{},
+        tickDrawStrategy: drawStrategy,
+        orientation: null);
+
+    expect(ticks, hasLength(0));
+  });
+
+  test('numeric_emptySeriesChoosesNoTicks', () {
+    final formatter = new NumericTickFormatter();
+    final scale = new MockNumericScale();
+    tickProvider = new EndPointsTickProvider<num>();
+
+    final drawStrategy = new FakeDrawStrategy<num>(10, 10);
+    when(scale.viewportDomain).thenReturn(new NumericExtents(10.0, 70.0));
+    when(scale.rangeWidth).thenReturn(1000);
+
+    // An un-configured axis has no domain step size, and its scale defaults to
+    // infinity.
+    when(scale.domainStepSize).thenReturn(double.infinity);
+
+    final ticks = tickProvider.getTicks(
+        context: context,
+        graphicsFactory: graphicsFactory,
+        scale: scale,
+        formatter: formatter,
+        formatterValueCache: <num, String>{},
+        tickDrawStrategy: drawStrategy,
+        orientation: null);
+
+    expect(ticks, hasLength(0));
   });
 }

@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common;
+import 'package:charts_flutter/src/util/color.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart'
     show GestureDetector, GestureTapUpCallback, TapUpDetails, Theme;
@@ -42,8 +43,7 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
     final materialSymbolSize = new Size(12.0, 12.0);
 
     final entryColor = legendEntry.color;
-    var color = new Color.fromARGB(
-        entryColor.a, entryColor.r, entryColor.g, entryColor.b);
+    var color = ColorUtil.toDartColor(entryColor);
 
     // Get the SymbolRendererBuilder wrapping a common.SymbolRenderer if needed.
     final SymbolRendererBuilder symbolRendererBuilder =
@@ -63,7 +63,8 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
 
   Widget createLabel(BuildContext context, common.LegendEntry legendEntry,
       TappableLegend legend, bool isHidden) {
-    final TextStyle style = isHidden ? _getHiddenTextStyle(context) : null;
+    TextStyle style =
+        _convertTextStyle(isHidden, context, legendEntry.textStyle);
 
     return new GestureDetector(
         child: new Text(legendEntry.label, style: style),
@@ -117,14 +118,27 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
     return this.runtimeType.hashCode;
   }
 
-  /// Get style that is 26% opaque if the entry is hidden.
+  /// Convert the charts common TextStlyeSpec into a standard TextStyle, while
+  /// reducing the color opacity to 26% if the entry is hidden.
   ///
-  /// Use the color from the body 1 theme, but create a new style that only
-  /// specifies a color. This should keep anything else that this [Text] is
-  /// inheriting intact.
-  TextStyle _getHiddenTextStyle(BuildContext context) {
-    final body1 = Theme.of(context).textTheme.body1;
-    final color = body1.color.withOpacity(0.26);
-    return new TextStyle(inherit: true, color: color);
+  /// For non-specified values, override the hidden text color to use the body 1
+  /// theme, but allow other properties of [Text] to be inherited.
+  TextStyle _convertTextStyle(
+      bool isHidden, BuildContext context, common.TextStyleSpec textStyle) {
+    Color color = textStyle?.color != null
+        ? ColorUtil.toDartColor(textStyle.color)
+        : null;
+    if (isHidden) {
+      // Use a default color for hidden legend entries if none is provided.
+      color ??= Theme.of(context).textTheme.body1.color;
+      color = color.withOpacity(0.26);
+    }
+
+    return new TextStyle(
+        inherit: true,
+        fontFamily: textStyle?.fontFamily,
+        fontSize:
+            textStyle?.fontSize != null ? textStyle.fontSize.toDouble() : null,
+        color: color);
   }
 }

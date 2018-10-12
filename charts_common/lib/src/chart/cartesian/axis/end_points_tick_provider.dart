@@ -41,24 +41,31 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
     TickHint<D> tickHint,
   }) {
     final ticks = <Tick<D>>[];
-    final start = _getStartValue(tickHint, scale);
-    final end = _getEndValue(tickHint, scale);
 
-    final labels = formatter.format([start, end], formatterValueCache,
-        stepSize: scale.domainStepSize);
+    // Check to see if the axis has been configured with some domain values.
+    //
+    // An un-configured axis has no domain step size, and its scale defaults to
+    // infinity.
+    if (scale.domainStepSize.abs() != double.infinity) {
+      final start = _getStartValue(tickHint, scale);
+      final end = _getEndValue(tickHint, scale);
 
-    ticks.add(new Tick(
-        value: start,
-        textElement: graphicsFactory.createTextElement(labels[0]),
-        locationPx: scale[start]));
+      final labels = formatter.format([start, end], formatterValueCache,
+          stepSize: scale.domainStepSize);
 
-    ticks.add(new Tick(
-        value: end,
-        textElement: graphicsFactory.createTextElement(labels[1]),
-        locationPx: scale[end]));
+      ticks.add(new Tick(
+          value: start,
+          textElement: graphicsFactory.createTextElement(labels[0]),
+          locationPx: scale[start]));
 
-    // Allow draw strategy to decorate the ticks.
-    tickDrawStrategy.decorateTicks(ticks);
+      ticks.add(new Tick(
+          value: end,
+          textElement: graphicsFactory.createTextElement(labels[1]),
+          locationPx: scale[end]));
+
+      // Allow draw strategy to decorate the ticks.
+      tickDrawStrategy.decorateTicks(ticks);
+    }
 
     return ticks;
   }

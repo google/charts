@@ -42,6 +42,7 @@ class MaterialStyle implements Style {
       GraphicsFactory graphicsFactory, LineStyleSpec spec) {
     return graphicsFactory.createLinePaint()
       ..color = spec?.color ?? MaterialPalette.gray.shadeDefault
+      ..dashPattern = spec?.dashPattern
       ..strokeWidth = spec?.thickness ?? 1;
   }
 
@@ -50,6 +51,7 @@ class MaterialStyle implements Style {
       GraphicsFactory graphicsFactory, LineStyleSpec spec) {
     return graphicsFactory.createLinePaint()
       ..color = spec?.color ?? MaterialPalette.gray.shadeDefault
+      ..dashPattern = spec?.dashPattern
       ..strokeWidth = spec?.thickness ?? 1;
   }
 
@@ -64,11 +66,18 @@ class MaterialStyle implements Style {
       GraphicsFactory graphicsFactory, LineStyleSpec spec) {
     return graphicsFactory.createLinePaint()
       ..color = spec?.color ?? MaterialPalette.gray.shade300
+      ..dashPattern = spec?.dashPattern
       ..strokeWidth = spec?.thickness ?? 1;
   }
 
   @override
   Color get arcLabelOutsideLeaderLine => MaterialPalette.gray.shade600;
+
+  @override
+  Color get legendEntryTextColor => MaterialPalette.gray.shade800;
+
+  @override
+  Color get legendTitleTextColor => MaterialPalette.gray.shade800;
 
   @override
   Color get linePointHighlighterColor => MaterialPalette.gray.shade600;

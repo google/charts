@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show cos, sin, Point;
+import 'dart:math' show cos, pi, sin, Point;
 import 'package:flutter/material.dart';
 import 'package:charts_common/common.dart' as common show Color;
 
@@ -60,18 +60,40 @@ class CircleSectorPainter {
 
     final centerOffset = new Offset(center.x, center.y);
 
+    final isFullCircle = startAngle != null &&
+        endAngle != null &&
+        endAngle - startAngle == 2 * pi;
+
+    final midpointAngle = (endAngle + startAngle) / 2;
+
     final path = new Path()
       ..moveTo(innerRadiusStartPoint.x, innerRadiusStartPoint.y);
 
     path.lineTo(radiusStartPoint.x, radiusStartPoint.y);
 
-    path.arcTo(new Rect.fromCircle(center: centerOffset, radius: radius),
-        startAngle, endAngle - startAngle, true);
+    // For full circles, draw the arc in two parts.
+    if (isFullCircle) {
+      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: radius),
+          startAngle, midpointAngle - startAngle, true);
+      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: radius),
+          midpointAngle, endAngle - midpointAngle, true);
+    } else {
+      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: radius),
+          startAngle, endAngle - startAngle, true);
+    }
 
     path.lineTo(innerRadiusEndPoint.x, innerRadiusEndPoint.y);
 
-    path.arcTo(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
-        endAngle, startAngle - endAngle, true);
+    // For full circles, draw the arc in two parts.
+    if (isFullCircle) {
+      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
+          endAngle, midpointAngle - endAngle, true);
+      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
+          midpointAngle, startAngle - midpointAngle, true);
+    } else {
+      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
+          endAngle, startAngle - endAngle, true);
+    }
 
     // Drawing two copies of this line segment, before and after the arcs,
     // ensures that the path actually gets closed correctly.

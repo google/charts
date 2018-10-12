@@ -16,6 +16,7 @@
 import 'dart:math' show Point;
 
 import '../../common/color.dart' show Color;
+import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import 'processed_series.dart' show ImmutableSeries;
 
 typedef String DomainFormatter<D>(D domain);
@@ -73,6 +74,12 @@ class DatumDetails<D> {
   /// The color of this [datum].
   final Color color;
 
+  /// Optional fill color of this [datum].
+  ///
+  /// If this is defined, then [color] will be used as a stroke color.
+  /// Otherwise, [color] will be used for the fill color.
+  final Color fillColor;
+
   /// The chart position of the (domain, measure) for the [datum] from a
   /// renderer.
   final Point<double> chartPosition;
@@ -98,6 +105,14 @@ class DatumDetails<D> {
   /// The radius of this [datum].
   final double radiusPx;
 
+  /// Renderer used to draw the shape of this datum.
+  ///
+  /// This is primarily used for point shapes on line and scatter plot charts.
+  final SymbolRenderer symbolRenderer;
+
+  /// The stroke width of this [datum].
+  final double strokeWidthPx;
+
   /// Optional formatter for [domain].
   DomainFormatter<D> domainFormatter;
 
@@ -119,13 +134,16 @@ class DatumDetails<D> {
       this.rawMeasureUpperBound,
       this.series,
       this.color,
+      this.fillColor,
       this.chartPosition,
       this.chartPositionLower,
       this.chartPositionUpper,
       this.domainDistance,
       this.measureDistance,
       this.relativeDistance,
-      this.radiusPx});
+      this.radiusPx,
+      this.symbolRenderer,
+      this.strokeWidthPx});
 
   factory DatumDetails.from(DatumDetails<D> other,
       {D datum,
@@ -142,12 +160,15 @@ class DatumDetails<D> {
       num rawMeasureUpperBound,
       ImmutableSeries<D> series,
       Color color,
+      Color fillColor,
       Point<double> chartPosition,
       Point<double> chartPositionLower,
       Point<double> chartPositionUpper,
       double domainDistance,
       double measureDistance,
-      double radiusPx}) {
+      double radiusPx,
+      SymbolRenderer symbolRenderer,
+      double strokeWidthPx}) {
     return new DatumDetails<D>(
         datum: datum ?? other.datum,
         index: index ?? other.index,
@@ -165,12 +186,15 @@ class DatumDetails<D> {
             rawMeasureUpperBound ?? other.rawMeasureUpperBound,
         series: series ?? other.series,
         color: color ?? other.color,
+        fillColor: fillColor ?? other.fillColor,
         chartPosition: chartPosition ?? other.chartPosition,
         chartPositionLower: chartPositionLower ?? other.chartPositionLower,
         chartPositionUpper: chartPositionUpper ?? other.chartPositionUpper,
         domainDistance: domainDistance ?? other.domainDistance,
         measureDistance: measureDistance ?? other.measureDistance,
-        radiusPx: radiusPx ?? other.radiusPx);
+        radiusPx: radiusPx ?? other.radiusPx,
+        symbolRenderer: symbolRenderer ?? other.symbolRenderer,
+        strokeWidthPx: radiusPx ?? other.strokeWidthPx);
   }
 
   String get formattedDomain =>

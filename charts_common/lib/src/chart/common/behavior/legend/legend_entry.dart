@@ -15,6 +15,7 @@
 
 import '../../../../common/color.dart';
 import '../../../../common/symbol_renderer.dart';
+import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../series_renderer.dart' show rendererKey;
 import '../../processed_series.dart' show ImmutableSeries;
 
@@ -29,6 +30,7 @@ class LegendEntry<D> {
   final int datumIndex;
   final D domain;
   final Color color;
+  final TextStyleSpec textStyle;
   double value;
   String formattedValue;
   bool isSelected;
@@ -66,6 +68,7 @@ class LegendEntry<D> {
       this.domain,
       this.value,
       this.color,
+      this.textStyle,
       this.isSelected = false,
       this.rowNumber,
       this.columnNumber,

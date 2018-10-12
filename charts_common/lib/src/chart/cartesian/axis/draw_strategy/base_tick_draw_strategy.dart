@@ -115,6 +115,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
 
     axisLineStyle = graphicsFactory.createLinePaint()
       ..color = axisLineStyleSpec?.color ?? labelStyle.color
+      ..dashPattern = axisLineStyleSpec?.dashPattern
       ..strokeWidth = axisLineStyleSpec?.thickness ?? 1;
 
     tickLabelAnchor = labelAnchor ?? TickLabelAnchor.centered;
@@ -297,6 +298,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       fill: axisLineStyle.color,
       stroke: axisLineStyle.color,
       strokeWidthPx: axisLineStyle.strokeWidth.toDouble(),
+      dashPattern: axisLineStyle.dashPattern,
     );
   }
 

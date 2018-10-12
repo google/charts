@@ -19,6 +19,7 @@ import 'package:meta/meta.dart' show protected;
 import 'package:intl/intl.dart';
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../../layout/layout_view.dart'
     show
         LayoutPosition,
@@ -30,7 +31,6 @@ import '../../../layout/layout_view.dart'
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../chart_canvas.dart' show ChartCanvas;
 import '../../chart_context.dart' show ChartContext;
-import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
 import '../../selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
@@ -42,155 +42,6 @@ import '../chart_behavior.dart'
         OutsideJustification;
 import 'legend_entry.dart';
 import 'legend_entry_generator.dart';
-import 'per_series_legend_entry_generator.dart';
-
-// TODO: Allows for hovering over a series in legend to highlight
-// corresponding series in draw area.
-
-/// Series legend behavior for charts.
-///
-/// By default this behavior creates a legend entry per series.
-class SeriesLegend<D> extends Legend<D> {
-  /// List of currently hidden series, by ID.
-  final _hiddenSeriesList = new Set<String>();
-
-  /// List of series IDs that should be hidden by default.
-  List<String> _defaultHiddenSeries;
-
-  /// Whether or not the series legend should show measures on datum selection.
-  bool _showMeasures;
-
-  SeriesLegend({
-    SelectionModelType selectionModelType,
-    LegendEntryGenerator<D> legendEntryGenerator,
-    MeasureFormatter measureFormatter,
-    MeasureFormatter secondaryMeasureFormatter,
-    bool showMeasures,
-    LegendDefaultMeasure legendDefaultMeasure,
-  }) : super(
-          selectionModelType: selectionModelType ?? SelectionModelType.info,
-          legendEntryGenerator:
-              legendEntryGenerator ?? new PerSeriesLegendEntryGenerator(),
-        ) {
-    // Call the setters that include the setting for default.
-    this.showMeasures = showMeasures;
-    this.legendDefaultMeasure = legendDefaultMeasure;
-    this.measureFormatter = measureFormatter;
-    this.secondaryMeasureFormatter = secondaryMeasureFormatter;
-  }
-
-  /// Sets a list of series IDs that should be hidden by default on first chart
-  /// draw.
-  ///
-  /// This will also reset the current list of hidden series, filling it in with
-  /// the new default list.
-  set defaultHiddenSeries(List<String> defaultHiddenSeries) {
-    _defaultHiddenSeries = defaultHiddenSeries;
-
-    _hiddenSeriesList.clear();
-
-    if (_defaultHiddenSeries != null) {
-      _defaultHiddenSeries.forEach((String seriesId) {
-        hideSeries(seriesId);
-      });
-    }
-  }
-
-  /// Gets a list of series IDs that should be hidden by default on first chart
-  /// draw.
-  List<String> get defaultHiddenSeries => _defaultHiddenSeries;
-
-  /// Whether or not the legend should show measures.
-  ///
-  /// By default this is false, measures are not shown. When set to true, the
-  /// default behavior is to show measure only if there is selected data.
-  /// Please set [legendDefaultMeasure] to something other than none to enable
-  /// showing measures when there is no selection.
-  ///
-  /// If [showMeasure] is set to null, it is changed to the default of false.
-  bool get showMeasures => _showMeasures;
-
-  set showMeasures(bool showMeasures) {
-    _showMeasures = showMeasures ?? false;
-  }
-
-  /// Option to show measures when selection is null.
-  ///
-  /// By default this is set to none, so no measures are shown when there is
-  /// no selection.
-  ///
-  /// If [legendDefaultMeasure] is set to null, it is changed to the default of
-  /// none.
-  LegendDefaultMeasure get legendDefaultMeasure =>
-      legendEntryGenerator.legendDefaultMeasure;
-
-  set legendDefaultMeasure(LegendDefaultMeasure legendDefaultMeasure) {
-    legendEntryGenerator.legendDefaultMeasure =
-        legendDefaultMeasure ?? LegendDefaultMeasure.none;
-  }
-
-  /// Formatter for measure values.
-  ///
-  /// This is optional. The default formatter formats measure values with
-  /// NumberFormat.decimalPattern. If the measure value is null, a dash is
-  /// returned.
-  set measureFormatter(MeasureFormatter formatter) {
-    legendEntryGenerator.measureFormatter =
-        formatter ?? _defaultLegendMeasureFormatter;
-  }
-
-  /// Formatter for measure values of series that uses the secondary axis.
-  ///
-  /// This is optional. The default formatter formats measure values with
-  /// NumberFormat.decimalPattern. If the measure value is null, a dash is
-  /// returned.
-  set secondaryMeasureFormatter(MeasureFormatter formatter) {
-    legendEntryGenerator.secondaryMeasureFormatter =
-        formatter ?? _defaultLegendMeasureFormatter;
-  }
-
-  /// Remove series IDs from the currently hidden list if those series have been
-  /// removed from the chart data. The goal is to allow any metric that is
-  /// removed from a chart, and later re-added to it, to be visible to the user.
-  @override
-  void onData(List<MutableSeries<D>> seriesList) {
-    // If a series was removed from the chart, remove it from our current list
-    // of hidden series.
-    final seriesIds = seriesList.map((MutableSeries<D> series) => series.id);
-
-    _hiddenSeriesList.removeWhere((String id) => !seriesIds.contains(id));
-  }
-
-  @override
-  void preProcessSeriesList(List<MutableSeries<D>> seriesList) {
-    seriesList.removeWhere((MutableSeries<D> series) {
-      return _hiddenSeriesList.contains(series.id);
-    });
-  }
-
-  /// Hides the data for a series on the chart by [seriesId].
-  ///
-  /// The entry in the legend for this series will be grayed out to indicate
-  /// that it is hidden.
-  @protected
-  void hideSeries(String seriesId) {
-    _hiddenSeriesList.add(seriesId);
-  }
-
-  /// Shows the data for a series on the chart by [seriesId].
-  ///
-  /// The entry in the legend for this series will be returned to its normal
-  /// color if it was previously hidden.
-  @protected
-  void showSeries(String seriesId) {
-    _hiddenSeriesList.removeWhere((String id) => id == seriesId);
-  }
-
-  /// Returns whether or not a given series [seriesId] is currently hidden.
-  bool isSeriesHidden(String seriesId) {
-    return _hiddenSeriesList.contains(seriesId);
-  }
-}
 
 /// Legend behavior for charts.
 ///
@@ -219,6 +70,8 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   LegendCellPadding _cellPadding;
   LegendCellPadding _legendPadding;
 
+  TextStyleSpec _titleTextStyle;
+
   LegendTapHandling _legendTapHandling = LegendTapHandling.hide;
 
   List<MutableSeries<D>> _currentSeriesList;
@@ -226,13 +79,15 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   static final _decimalPattern = new NumberFormat.decimalPattern();
 
   /// Default measure formatter for legends.
-  String _defaultLegendMeasureFormatter(num value) {
+  @protected
+  String defaultLegendMeasureFormatter(num value) {
     return (value == null) ? '' : _decimalPattern.format(value);
   }
 
-  Legend({this.selectionModelType, this.legendEntryGenerator}) {
+  Legend({this.selectionModelType, this.legendEntryGenerator, entryTextStyle}) {
     _lifecycleListener = new LifecycleListener(
         onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
+    legendEntryGenerator.entryTextStyle = entryTextStyle;
   }
 
   String get title => _title;
@@ -273,6 +128,20 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   }
 
   LegendTapHandling get legendTapHandling => _legendTapHandling;
+
+  /// Text style of the legend entry text.
+  TextStyleSpec get entryTextStyle => legendEntryGenerator.entryTextStyle;
+
+  set entryTextStyle(TextStyleSpec entryTextStyle) {
+    legendEntryGenerator.entryTextStyle = entryTextStyle;
+  }
+
+  /// Text style of the legend title text.
+  TextStyleSpec get titleTextStyle => _titleTextStyle;
+
+  set titleTextStyle(TextStyleSpec titleTextStyle) {
+    _titleTextStyle = titleTextStyle;
+  }
 
   /// Configures the behavior of the legend when the user taps/clicks on an
   /// entry. Defaults to no behavior.

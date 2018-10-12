@@ -95,6 +95,7 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
 
     canvas.drawLine(
       points: [start, end],
+      dashPattern: axisLineStyle.dashPattern,
       fill: axisLineStyle.color,
       stroke: axisLineStyle.color,
       strokeWidthPx: axisLineStyle.strokeWidth.toDouble(),

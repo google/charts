@@ -24,6 +24,8 @@ import 'percent_of_series.dart';
 import 'selection_bar_highlight.dart';
 import 'selection_line_highlight.dart';
 import 'selection_callback_example.dart';
+import 'selection_scatter_plot_highlight.dart';
+import 'selection_user_managed.dart';
 import 'slider.dart';
 import 'sliding_viewport_on_selection.dart';
 
@@ -43,9 +45,22 @@ List<GalleryScaffold> buildGallery() {
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.flag),
+      title: 'Selection Scatter Plot Highlight',
+      subtitle: 'Scatter plot chart with tap and drag activation',
+      childBuilder: () => new SelectionScatterPlotHighlight.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.flag),
       title: 'Selection Callback Example',
       subtitle: 'Timeseries that updates external components on selection',
       childBuilder: () => new SelectionCallbackExample.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.flag),
+      title: 'User managed selection',
+      subtitle:
+          'Example where selection can be set and cleared programmatically',
+      childBuilder: () => new SelectionUserManaged.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.insert_chart),

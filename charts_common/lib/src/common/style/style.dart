@@ -62,6 +62,12 @@ abstract class Style {
   /// Default color for outside label leader lines for [ArcLabelDecorator].
   Color get arcLabelOutsideLeaderLine;
 
+  /// Default color for entry text for [Legend].
+  Color get legendEntryTextColor;
+
+  /// Default color for title text for [Legend].
+  Color get legendTitleTextColor;
+
   /// Default color for [LinePointHighlighter].
   Color get linePointHighlighterColor;
 
