@@ -23,6 +23,7 @@ import 'percent_of_domain_by_category.dart';
 import 'percent_of_series.dart';
 import 'selection_bar_highlight.dart';
 import 'selection_line_highlight.dart';
+import 'selection_line_highlight_custom_shape.dart';
 import 'selection_callback_example.dart';
 import 'selection_scatter_plot_highlight.dart';
 import 'selection_user_managed.dart';
@@ -42,6 +43,13 @@ List<GalleryScaffold> buildGallery() {
       title: 'Selection Line Highlight',
       subtitle: 'Line chart with tap and drag activation',
       childBuilder: () => new SelectionLineHighlight.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.flag),
+      title: 'Selection Line Highlight Custom Shape',
+      subtitle: 'Line chart with tap and drag activation and a custom shape',
+      childBuilder: () =>
+          new SelectionLineHighlightCustomShape.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.flag),
