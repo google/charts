@@ -154,9 +154,14 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   set domainAxisSpec(AxisSpec axisSpec) =>
       axisSpec.configure(domainAxis, context, graphicsFactory);
 
-  Axis getMeasureAxis(String axisId) => axisId == Axis.secondaryMeasureAxisId
-      ? _secondaryMeasureAxis
-      : _primaryMeasureAxis;
+  /// Gets the measure axis matching the provided id.
+  ///
+  /// If none is provided, this returns the primary measure axis.
+  Axis getMeasureAxis({String axisId}) {
+    return axisId == Axis.secondaryMeasureAxisId
+        ? _secondaryMeasureAxis
+        : _primaryMeasureAxis;
+  }
 
   set primaryMeasureAxisSpec(AxisSpec axisSpec) =>
       axisSpec.configure(_primaryMeasureAxis, context, graphicsFactory);
@@ -172,8 +177,8 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
     // Setup the Axes
     s.setAttr(domainAxisKey, domainAxis);
-    s.setAttr(
-        measureAxisKey, getMeasureAxis(series.getAttribute(measureAxisIdKey)));
+    s.setAttr(measureAxisKey,
+        getMeasureAxis(axisId: series.getAttribute(measureAxisIdKey)));
 
     return s;
   }

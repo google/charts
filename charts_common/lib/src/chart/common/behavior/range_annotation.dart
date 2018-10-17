@@ -164,7 +164,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
           case RangeAnnotationAxisType.measure:
             // We expect an empty axisId to get us the primary measure axis.
-            axis = _chart.getMeasureAxis(annotation.axisId);
+            axis = _chart.getMeasureAxis(axisId: annotation.axisId);
             break;
         }
 
@@ -191,7 +191,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
         case RangeAnnotationAxisType.measure:
           // We expect an empty axisId to get us the primary measure axis.
-          axis = _chart.getMeasureAxis(annotation.axisId);
+          axis = _chart.getMeasureAxis(axisId: annotation.axisId);
           break;
       }
 

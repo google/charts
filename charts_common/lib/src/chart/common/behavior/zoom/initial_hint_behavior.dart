@@ -204,16 +204,17 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
     // after the tick provider generates the ticks. If we do not tell the axis
     // not to update the location of the measure axes, the measure axis will
     // change during the hint animation and make values jump back and forth.
-    _chart.getMeasureAxis(null).lockAxis = true;
-    _chart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis = true;
+    _chart.getMeasureAxis().lockAxis = true;
+    _chart.getMeasureAxis(axisId: Axis.secondaryMeasureAxisId)?.lockAxis = true;
   }
 
   /// Stop hint animation
   @protected
   void stopHintAnimation() {
     // When panning is completed, unlock the measure axis.
-    _chart.getMeasureAxis(null).lockAxis = false;
-    _chart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis = false;
+    _chart.getMeasureAxis().lockAxis = false;
+    _chart.getMeasureAxis(axisId: Axis.secondaryMeasureAxisId)?.lockAxis =
+        false;
   }
 
   /// Animation hint percent, to be returned by the native platform.
