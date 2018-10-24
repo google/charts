@@ -18,7 +18,7 @@ import 'package:charts_common/common.dart' as common
 import 'package:meta/meta.dart' show immutable;
 
 import '../chart_behavior.dart' show ChartBehavior, GestureType;
-import 'pan_behavior.dart' show FlutterPanBehavior;
+import 'pan_behavior.dart' show FlutterPanBehaviorMixin;
 
 @immutable
 class PanAndZoomBehavior extends ChartBehavior<common.PanAndZoomBehavior> {
@@ -59,6 +59,6 @@ class PanAndZoomBehavior extends ChartBehavior<common.PanAndZoomBehavior> {
 }
 
 /// Adds fling gesture support to [common.PanAndZoomBehavior], by way of
-/// [FlutterPanBehavior].
+/// [FlutterPanBehaviorMixin].
 class FlutterPanAndZoomBehavior<D> extends common.PanAndZoomBehavior<D>
-    with FlutterPanBehavior {}
+    with FlutterPanBehaviorMixin {}

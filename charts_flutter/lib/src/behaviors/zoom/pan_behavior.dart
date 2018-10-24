@@ -64,8 +64,13 @@ class PanBehavior extends ChartBehavior<common.PanBehavior> {
   }
 }
 
-/// Adds fling gesture support to [common.PanBehavior].
-class FlutterPanBehavior<D> extends common.PanBehavior<D>
+/// Class extending [common.PanBehavior] with fling gesture support.
+class FlutterPanBehavior<D> = common.PanBehavior<D>
+    with FlutterPanBehaviorMixin;
+
+/// Mixin that adds fling gesture support to [common.PanBehavior] or subclasses
+/// thereof.
+mixin FlutterPanBehaviorMixin<D> on common.PanBehavior<D>
     implements ChartStateBehavior {
   BaseChartState _chartState;
 
@@ -90,7 +95,7 @@ class FlutterPanBehavior<D> extends common.PanBehavior<D>
   static const minimumFlingVelocity = 300.0;
 
   @override
-  removeFrom(common.BaseChart chart) {
+  removeFrom(common.BaseChart<D> chart) {
     stopFlingAnimation();
     _chartState.disposeAnimationController(this);
     _flingAnimator = null;
