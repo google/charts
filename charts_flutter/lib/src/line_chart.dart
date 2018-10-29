@@ -13,10 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:collection' show LinkedHashMap;
+
 import 'package:charts_common/common.dart' as common
     show
         AxisSpec,
         LineChart,
+        NumericAxisSpec,
         RTLSpec,
         Series,
         LineRendererConfig,
@@ -37,6 +40,7 @@ class LineChart extends CartesianChart<num> {
     common.AxisSpec domainAxis,
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
+    LinkedHashMap<String, common.NumericAxisSpec> disjointMeasureAxes,
     common.LineRendererConfig<num> defaultRenderer,
     List<common.SeriesRendererConfig<num>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
@@ -53,6 +57,7 @@ class LineChart extends CartesianChart<num> {
           domainAxis: domainAxis,
           primaryMeasureAxis: primaryMeasureAxis,
           secondaryMeasureAxis: secondaryMeasureAxis,
+          disjointMeasureAxes: disjointMeasureAxes,
           defaultRenderer: defaultRenderer,
           customSeriesRenderers: customSeriesRenderers,
           behaviors: behaviors,
@@ -72,7 +77,8 @@ class LineChart extends CartesianChart<num> {
     return new common.LineChart(
         layoutConfig: layoutConfig?.commonLayoutConfig,
         primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
-        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis());
+        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
+        disjointMeasureAxes: createDisjointMeasureAxes());
   }
 
   @override

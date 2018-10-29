@@ -60,6 +60,23 @@ class NumericAxisSpec extends AxisSpec<num> {
             tickFormatterSpec: tickFormatterSpec,
             showAxisLine: showAxisLine);
 
+  factory NumericAxisSpec.from(
+    NumericAxisSpec other, {
+    RenderSpec<num> renderSpec,
+    TickProviderSpec tickProviderSpec,
+    TickFormatterSpec tickFormatterSpec,
+    bool showAxisLine,
+    NumericExtents viewport,
+  }) {
+    return new NumericAxisSpec(
+      renderSpec: renderSpec ?? other.renderSpec,
+      tickProviderSpec: tickProviderSpec ?? other.tickProviderSpec,
+      tickFormatterSpec: tickFormatterSpec ?? other.tickFormatterSpec,
+      showAxisLine: showAxisLine ?? other.showAxisLine,
+      viewport: viewport ?? other.viewport,
+    );
+  }
+
   @override
   configure(
       Axis<num> axis, ChartContext context, GraphicsFactory graphicsFactory) {

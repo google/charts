@@ -24,6 +24,7 @@ import 'gridline_dash_pattern.dart';
 import 'hidden_ticks_and_labels_axis.dart';
 import 'horizontal_bar_secondary_axis.dart';
 import 'integer_only_measure_axis.dart';
+import 'line_disjoint_axis.dart';
 import 'measure_axis_label_alignment.dart';
 import 'numeric_initial_viewport.dart';
 import 'nonzero_bound_measure_axis.dart';
@@ -125,6 +126,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Gridline dash pattern',
       subtitle: 'Timeseries with measure gridlines that have a dash pattern',
       childBuilder: () => new GridlineDashPattern.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Disjoint Measure Axes',
+      subtitle: 'Line chart with disjoint measure axes',
+      childBuilder: () => new DisjointMeasureAxisLineChart.withRandomData(),
     ),
   ];
 }

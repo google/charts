@@ -13,13 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable;
+import 'dart:collection' show LinkedHashMap;
+import 'package:meta/meta.dart' show immutable, protected;
 
 import 'package:charts_common/common.dart' as common
     show
         AxisSpec,
         BaseChart,
         CartesianChart,
+        NumericAxis,
+        NumericAxisSpec,
         RTLSpec,
         Series,
         SeriesRendererConfig;
@@ -34,6 +37,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   final common.AxisSpec domainAxis;
   final common.AxisSpec primaryMeasureAxis;
   final common.AxisSpec secondaryMeasureAxis;
+  final LinkedHashMap<String, common.NumericAxisSpec> disjointMeasureAxes;
   final bool flipVerticalAxis;
 
   CartesianChart(
@@ -43,6 +47,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     this.domainAxis,
     this.primaryMeasureAxis,
     this.secondaryMeasureAxis,
+    this.disjointMeasureAxes,
     common.SeriesRendererConfig<D> defaultRenderer,
     List<common.SeriesRendererConfig<D>> customSeriesRenderers,
     List<ChartBehavior> behaviors,
@@ -93,6 +98,28 @@ abstract class CartesianChart<D> extends BaseChart<D> {
         secondaryMeasureAxis != prev?.secondaryMeasureAxis) {
       chart.secondaryMeasureAxisSpec = secondaryMeasureAxis;
       chartState.markChartDirty();
+    }
+
+    if (disjointMeasureAxes != null &&
+        disjointMeasureAxes != prev?.disjointMeasureAxes) {
+      chart.disjointMeasureAxisSpecs = disjointMeasureAxes;
+      chartState.markChartDirty();
+    }
+  }
+
+  @protected
+  LinkedHashMap<String, common.NumericAxis> createDisjointMeasureAxes() {
+    if (disjointMeasureAxes != null) {
+      final disjointAxes = new LinkedHashMap<String, common.NumericAxis>();
+
+      disjointMeasureAxes
+          .forEach((String axisId, common.NumericAxisSpec axisSpec) {
+        disjointAxes[axisId] = axisSpec.createAxis();
+      });
+
+      return disjointAxes;
+    } else {
+      return null;
     }
   }
 }

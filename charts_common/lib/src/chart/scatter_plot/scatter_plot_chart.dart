@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:collection' show LinkedHashMap;
+
 import 'point_renderer.dart' show PointRenderer;
 import '../cartesian/axis/axis.dart' show NumericAxis;
 import '../cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
@@ -44,12 +46,14 @@ class ScatterPlotChart extends NumericCartesianChart {
       {bool vertical,
       LayoutConfig layoutConfig,
       NumericAxis primaryMeasureAxis,
-      NumericAxis secondaryMeasureAxis})
+      NumericAxis secondaryMeasureAxis,
+      LinkedHashMap<String, NumericAxis> disjointMeasureAxes})
       : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
             primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis);
+            secondaryMeasureAxis: secondaryMeasureAxis,
+            disjointMeasureAxes: disjointMeasureAxes);
 
   @override
   SeriesRenderer<num> makeDefaultRenderer() {
