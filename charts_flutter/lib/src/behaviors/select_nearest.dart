@@ -52,6 +52,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   final bool expandToDomain;
   final bool selectAcrossAllDrawAreaComponents;
   final bool selectClosestSeries;
+  final int maximumDomainDistancePx;
 
   SelectNearest._internal(
       {this.selectionModelType,
@@ -59,7 +60,8 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
       this.selectAcrossAllDrawAreaComponents = false,
       this.selectClosestSeries = true,
       this.eventTrigger,
-      this.desiredGestures});
+      this.desiredGestures,
+      this.maximumDomainDistancePx});
 
   factory SelectNearest(
       {common.SelectionModelType selectionModelType =
@@ -67,14 +69,16 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
       bool expandToDomain = true,
       bool selectAcrossAllDrawAreaComponents = false,
       bool selectClosestSeries = true,
-      common.SelectionTrigger eventTrigger = common.SelectionTrigger.tap}) {
+      common.SelectionTrigger eventTrigger = common.SelectionTrigger.tap,
+      int maximumDomainDistancePx}) {
     return new SelectNearest._internal(
         selectionModelType: selectionModelType,
         expandToDomain: expandToDomain,
         selectAcrossAllDrawAreaComponents: selectAcrossAllDrawAreaComponents,
         selectClosestSeries: selectClosestSeries,
         eventTrigger: eventTrigger,
-        desiredGestures: SelectNearest._getDesiredGestures(eventTrigger));
+        desiredGestures: SelectNearest._getDesiredGestures(eventTrigger),
+        maximumDomainDistancePx: maximumDomainDistancePx);
   }
 
   static Set<GestureType> _getDesiredGestures(
@@ -108,7 +112,8 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
         selectionModelType: selectionModelType,
         eventTrigger: eventTrigger,
         expandToDomain: expandToDomain,
-        selectClosestSeries: selectClosestSeries);
+        selectClosestSeries: selectClosestSeries,
+        maximumDomainDistancePx: maximumDomainDistancePx);
   }
 
   @override
@@ -124,7 +129,8 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
       return (selectionModelType == other.selectionModelType) &&
           (eventTrigger == other.eventTrigger) &&
           (expandToDomain == other.expandToDomain) &&
-          (selectClosestSeries == other.selectClosestSeries);
+          (selectClosestSeries == other.selectClosestSeries) &&
+          (maximumDomainDistancePx == other.maximumDomainDistancePx);
     } else {
       return false;
     }
@@ -135,6 +141,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
     hashcode = hashcode * 37 + eventTrigger.hashCode;
     hashcode = hashcode * 37 + expandToDomain.hashCode;
     hashcode = hashcode * 37 + selectClosestSeries.hashCode;
+    hashcode = hashcode * 37 + maximumDomainDistancePx.hashCode;
     return hashcode;
   }
 }
