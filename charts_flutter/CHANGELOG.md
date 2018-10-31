@@ -1,4 +1,4 @@
-# 0.5.0-dev
+# 0.5.0
 * SelectionModelConfig's listener parameter has been renamed to "changeListener". This is a breaking
 change. Please rename any existing uses of the "listener" parameter to "changeListener". This was
 named in order to add an additional listener "updateListener" that listens to any update requests,
