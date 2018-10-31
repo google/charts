@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle, min, max;
-import 'package:meta/meta.dart' show protected;
+import 'package:meta/meta.dart' show protected, visibleForTesting;
 
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/text_element.dart' show TextElement;
@@ -301,6 +301,8 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       _axisTicks.add(animatedTick);
     });
 
+    _axisTicks.sort();
+
     // Save a copy of the current scale to be used as the previous scale when
     // ticks are updated.
     _previousScale = _scale.copy();
@@ -498,7 +500,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 }
 
 class NumericAxis extends Axis<num> {
-  NumericAxis({NumericTickProvider tickProvider})
+  NumericAxis({TickProvider<num> tickProvider})
       : super(
           tickProvider: tickProvider ?? new NumericTickProvider(),
           tickFormatter: new NumericTickFormatter(),
@@ -568,4 +570,17 @@ class OrdinalViewport {
     hashcode = (hashcode * 37) + dataSize;
     return hashcode;
   }
+}
+
+@visibleForTesting
+class AxisTester<D> {
+  final Axis<D> _axis;
+
+  AxisTester(this._axis);
+
+  List<AxisTicks<D>> get axisTicks => _axis._axisTicks;
+
+  MutableScale<D> get scale => _axis._scale;
+
+  List<D> get axisValues => axisTicks.map((t) => t.value).toList();
 }

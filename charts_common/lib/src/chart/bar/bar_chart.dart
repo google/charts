@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:collection' show LinkedHashMap;
+
 import '../bar/bar_renderer.dart' show BarRenderer;
 import '../cartesian/axis/axis.dart' show NumericAxis;
 import '../cartesian/cartesian_chart.dart' show OrdinalCartesianChart;
@@ -24,12 +26,14 @@ class BarChart extends OrdinalCartesianChart {
       {bool vertical,
       LayoutConfig layoutConfig,
       NumericAxis primaryMeasureAxis,
-      NumericAxis secondaryMeasureAxis})
+      NumericAxis secondaryMeasureAxis,
+      LinkedHashMap<String, NumericAxis> disjointMeasureAxes})
       : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
             primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis);
+            secondaryMeasureAxis: secondaryMeasureAxis,
+            disjointMeasureAxes: disjointMeasureAxes);
 
   @override
   SeriesRenderer<String> makeDefaultRenderer() {

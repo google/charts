@@ -190,8 +190,8 @@ class PanBehavior<D> implements ChartBehavior<D> {
     // after the tick provider generates the ticks. If we do not tell the axis
     // not to update the location of the measure axes, we get a jittery effect
     // as the measure axes location changes ever so slightly during pan/zoom.
-    _chart.getMeasureAxis(null).lockAxis = true;
-    _chart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis = true;
+    _chart.getMeasureAxis().lockAxis = true;
+    _chart.getMeasureAxis(axisId: Axis.secondaryMeasureAxisId)?.lockAxis = true;
   }
 
   @protected
@@ -201,8 +201,9 @@ class PanBehavior<D> implements ChartBehavior<D> {
     // When panning stops, allow tick provider to update ticks, and then
     // request redraw.
     _domainAxisTickProvider.mode = PanningTickProviderMode.passThrough;
-    _chart.getMeasureAxis(null).lockAxis = false;
-    _chart.getMeasureAxis(Axis.secondaryMeasureAxisId)?.lockAxis = false;
+    _chart.getMeasureAxis().lockAxis = false;
+    _chart.getMeasureAxis(axisId: Axis.secondaryMeasureAxisId)?.lockAxis =
+        false;
     _chart.redraw();
 
     if (_panningCompletedCallback != null) {

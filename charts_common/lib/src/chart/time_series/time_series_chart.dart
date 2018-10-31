@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:collection' show LinkedHashMap;
+
 import '../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../cartesian/axis/time/date_time_axis.dart' show DateTimeAxis;
 import '../cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
@@ -36,6 +38,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
       LayoutConfig layoutConfig,
       NumericAxis primaryMeasureAxis,
       NumericAxis secondaryMeasureAxis,
+      LinkedHashMap<String, NumericAxis> disjointMeasureAxes,
       this.dateTimeFactory = const LocalDateTimeFactory()})
       : domainAxis = new DateTimeAxis(dateTimeFactory)
           ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
@@ -43,7 +46,8 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
             vertical: vertical,
             layoutConfig: layoutConfig,
             primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis);
+            secondaryMeasureAxis: secondaryMeasureAxis,
+            disjointMeasureAxes: disjointMeasureAxes);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);

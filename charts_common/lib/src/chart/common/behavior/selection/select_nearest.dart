@@ -86,6 +86,13 @@ class SelectNearest<D> implements ChartBehavior<D> {
   /// addition to the datum.
   final bool selectClosestSeries;
 
+  /// The farthest away a domain value can be from the mouse position on the
+  /// domain axis before we'll ignore the datum.
+  ///
+  /// This allows sparse data to not get selected until the mouse is some
+  /// reasonable distance. Defaults to no maximum distance.
+  final int maximumDomainDistancePx;
+
   BaseChart<D> _chart;
 
   bool _delaySelect = false;
@@ -95,7 +102,8 @@ class SelectNearest<D> implements ChartBehavior<D> {
       this.expandToDomain = true,
       this.selectAcrossAllSeriesRendererComponents = true,
       this.selectClosestSeries = true,
-      this.eventTrigger = SelectionTrigger.hover}) {
+      this.eventTrigger = SelectionTrigger.hover,
+      this.maximumDomainDistancePx}) {
     // Setup the appropriate gesture listening.
     switch (this.eventTrigger) {
       case SelectionTrigger.tap:
@@ -159,12 +167,15 @@ class SelectNearest<D> implements ChartBehavior<D> {
     if (details != null && details.isNotEmpty) {
       details.sort((a, b) => a.domainDistance.compareTo(b.domainDistance));
 
-      seriesDatumList = expandToDomain
-          ? _expandToDomain(details.first)
-          : [new SeriesDatum<D>(details.first.series, details.first.datum)];
+      if (maximumDomainDistancePx == null ||
+          details[0].domainDistance <= maximumDomainDistancePx) {
+        seriesDatumList = expandToDomain
+            ? _expandToDomain(details.first)
+            : [new SeriesDatum<D>(details.first.series, details.first.datum)];
 
-      if (selectClosestSeries && seriesList.isEmpty) {
-        seriesList.add(details.first.series);
+        if (selectClosestSeries && seriesList.isEmpty) {
+          seriesList.add(details.first.series);
+        }
       }
     }
 

@@ -308,7 +308,8 @@ class LayoutManagerImpl implements LayoutManager {
         maxHeight: useMax ? maxBottomHeight : bottomHeight,
         width: adjustedWidth,
         fullWidth: width);
-    bottomHeight = max(bottomSizes.total, config.topSpec.getMinPixels(height));
+    bottomHeight =
+        max(bottomSizes.total, config.bottomSpec.getMinPixels(height));
 
     var topSizes = new TopMarginLayoutStrategy().measure(topViews,
         maxHeight: useMax ? maxTopHeight : topHeight,

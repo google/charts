@@ -20,6 +20,7 @@ import 'axis.dart' show AxisOrientation;
 import 'scale.dart' show MutableScale;
 import 'numeric_scale.dart' show NumericScale;
 import 'tick.dart' show Tick;
+import 'time/date_time_scale.dart' show DateTimeScale;
 import 'spec/tick_spec.dart' show TickSpec;
 import 'tick_formatter.dart' show TickFormatter;
 import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
@@ -53,7 +54,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
     for (TickSpec<D> spec in tickSpec) {
       // When static ticks are being used with a numeric axis, extend the axis
       // with the values specified.
-      if (scale is NumericScale) {
+      if (scale is NumericScale || scale is DateTimeScale) {
         scale.addDomain(spec.value);
       }
 

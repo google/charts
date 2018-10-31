@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:collection' show LinkedHashMap;
+
 import '../line/line_renderer.dart' show LineRenderer;
 import '../cartesian/axis/axis.dart' show NumericAxis;
 import '../cartesian/cartesian_chart.dart' show NumericCartesianChart;
@@ -24,12 +26,14 @@ class LineChart extends NumericCartesianChart {
       {bool vertical,
       LayoutConfig layoutConfig,
       NumericAxis primaryMeasureAxis,
-      NumericAxis secondaryMeasureAxis})
+      NumericAxis secondaryMeasureAxis,
+      LinkedHashMap<String, NumericAxis> disjointMeasureAxes})
       : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
             primaryMeasureAxis: primaryMeasureAxis,
-            secondaryMeasureAxis: secondaryMeasureAxis);
+            secondaryMeasureAxis: secondaryMeasureAxis,
+            disjointMeasureAxes: disjointMeasureAxes);
 
   @override
   SeriesRenderer<num> makeDefaultRenderer() {

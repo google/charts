@@ -37,6 +37,21 @@ class AxisSpec<D> {
     this.showAxisLine,
   });
 
+  factory AxisSpec.from(
+    AxisSpec other, {
+    RenderSpec<D> renderSpec,
+    TickProviderSpec<D> tickProviderSpec,
+    TickFormatterSpec<D> tickFormatterSpec,
+    bool showAxisLine,
+  }) {
+    return new AxisSpec(
+      renderSpec: renderSpec ?? other.renderSpec,
+      tickProviderSpec: tickProviderSpec ?? other.tickProviderSpec,
+      tickFormatterSpec: tickFormatterSpec ?? other.tickFormatterSpec,
+      showAxisLine: showAxisLine ?? other.showAxisLine,
+    );
+  }
+
   configure(
       Axis<D> axis, ChartContext context, GraphicsFactory graphicsFactory) {
     if (showAxisLine != null) {

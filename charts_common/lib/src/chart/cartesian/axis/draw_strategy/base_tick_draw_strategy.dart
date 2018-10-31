@@ -394,10 +394,10 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
         return isRTL ? TextDirection.rtl : TextDirection.ltr;
       case TickLabelAnchor.inside:
         if (isFirst) {
-          return isRTL ? TextDirection.rtl : TextDirection.ltr;
+          return TextDirection.ltr;
         }
         if (isLast) {
-          return isRTL ? TextDirection.ltr : TextDirection.rtl;
+          return TextDirection.rtl;
         }
         return TextDirection.center;
       case TickLabelAnchor.centered:

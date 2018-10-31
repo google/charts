@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:collection' show LinkedHashMap;
+
 import 'package:charts_common/common.dart' as common
     show
         AxisSpec,
@@ -20,6 +22,7 @@ import 'package:charts_common/common.dart' as common
         BarGroupingType,
         BarRendererConfig,
         BarRendererDecorator,
+        NumericAxisSpec,
         RTLSpec,
         Series,
         SeriesRendererConfig;
@@ -44,6 +47,7 @@ class BarChart extends CartesianChart<String> {
     common.AxisSpec domainAxis,
     common.AxisSpec primaryMeasureAxis,
     common.AxisSpec secondaryMeasureAxis,
+    LinkedHashMap<String, common.NumericAxisSpec> disjointMeasureAxes,
     common.BarGroupingType barGroupingType,
     common.BarRendererConfig<String> defaultRenderer,
     List<common.SeriesRendererConfig<String>> customSeriesRenderers,
@@ -63,6 +67,7 @@ class BarChart extends CartesianChart<String> {
           domainAxis: domainAxis,
           primaryMeasureAxis: primaryMeasureAxis,
           secondaryMeasureAxis: secondaryMeasureAxis,
+          disjointMeasureAxes: disjointMeasureAxes,
           defaultRenderer: defaultRenderer ??
               new common.BarRendererConfig<String>(
                   groupingType: barGroupingType,
@@ -86,7 +91,8 @@ class BarChart extends CartesianChart<String> {
         vertical: vertical,
         layoutConfig: layoutConfig?.commonLayoutConfig,
         primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
-        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis());
+        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
+        disjointMeasureAxes: createDisjointMeasureAxes());
   }
 
   @override

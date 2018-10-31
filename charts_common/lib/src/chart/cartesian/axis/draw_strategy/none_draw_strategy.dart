@@ -25,7 +25,9 @@ import '../../../common/chart_canvas.dart' show ChartCanvas;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../../../layout/layout_view.dart' show ViewMeasuredSizes;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../../common/color.dart' show Color;
 import '../../../../common/line_style.dart' show LineStyle;
+import '../../../../common/text_style.dart' show TextStyle;
 import '../../../../common/style/style_factory.dart' show StyleFactory;
 
 import 'tick_draw_strategy.dart';
@@ -53,11 +55,15 @@ class NoneRenderSpec<D> extends RenderSpec<D> {
 
 class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
   LineStyle axisLineStyle;
+  TextStyle noneTextStyle;
 
   NoneDrawStrategy(ChartContext chartContext, GraphicsFactory graphicsFactory,
       {LineStyleSpec axisLineStyleSpec}) {
     axisLineStyle = StyleFactory.style
         .createAxisLineStyle(graphicsFactory, axisLineStyleSpec);
+    noneTextStyle = graphicsFactory.createTextPaint()
+      ..color = Color.transparent
+      ..fontSize = 0;
   }
 
   @override
@@ -65,7 +71,13 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
       new CollisionReport(ticksCollide: false, ticks: ticks);
 
   @override
-  void decorateTicks(List<Tick> ticks) {}
+  void decorateTicks(List<Tick> ticks) {
+    // Even though no text is rendered, the text style for each element should
+    // still be set to handle the case of the draw strategy being switched to
+    // a different draw strategy. The new draw strategy will try to animate
+    // the old ticks out and the text style property is used.
+    ticks.forEach((tick) => tick.textElement.textStyle = noneTextStyle);
+  }
 
   @override
   void drawAxisLine(ChartCanvas canvas, AxisOrientation orientation,

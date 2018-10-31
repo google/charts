@@ -62,12 +62,15 @@ void main() {
 
   SelectNearest<String> _makeBehavior(
       SelectionModelType selectionModelType, SelectionTrigger eventTrigger,
-      {bool expandToDomain, bool selectClosestSeries}) {
+      {bool expandToDomain,
+      bool selectClosestSeries,
+      int maximumDomainDistancePx}) {
     SelectNearest<String> behavior = new SelectNearest<String>(
         selectionModelType: selectionModelType,
         expandToDomain: expandToDomain,
         selectClosestSeries: selectClosestSeries,
-        eventTrigger: eventTrigger);
+        eventTrigger: eventTrigger,
+        maximumDomainDistancePx: maximumDomainDistancePx);
 
     behavior.attachTo(_chart);
 
@@ -409,6 +412,30 @@ void main() {
         new SeriesDatum(_series1, _details1.datum),
         new SeriesDatum(_series2, _details1Series2.datum)
       ], []));
+      verifyNoMoreInteractions(_hoverSelectionModel);
+      verifyNoMoreInteractions(_clickSelectionModel);
+    });
+
+    test('selection does not exceed maximumDomainDistancePx', () {
+      // Setup chart matches point with single domain single series.
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.hover,
+          expandToDomain: true,
+          selectClosestSeries: true,
+          maximumDomainDistancePx: 1);
+      Point<double> point = new Point(100.0, 100.0);
+      _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
+        _details1,
+        _details1Series2,
+      ], seriesList: [
+        _series1,
+        _series2
+      ]);
+
+      // Act
+      _chart.lastListener.onHover(point);
+
+      // Validate
+      verify(_hoverSelectionModel.updateSelection([], []));
       verifyNoMoreInteractions(_hoverSelectionModel);
       verifyNoMoreInteractions(_clickSelectionModel);
     });

@@ -54,7 +54,7 @@ class ConcreteChart extends CartesianChart {
   Axis get domainAxis => _domainAxis;
 
   @override
-  Axis getMeasureAxis(String axisId) => _primaryMeasureAxis;
+  Axis getMeasureAxis({String axisId}) => _primaryMeasureAxis;
 }
 
 class ConcreteNumericAxis extends Axis<num> {
@@ -105,14 +105,14 @@ void main() {
     _chart.domainAxis.autoViewport = true;
     _chart.domainAxis.resetDomains();
 
-    _chart.getMeasureAxis('').autoViewport = true;
-    _chart.getMeasureAxis('').resetDomains();
+    _chart.getMeasureAxis().autoViewport = true;
+    _chart.getMeasureAxis().resetDomains();
 
     _chart.draw(seriesList);
 
     _chart.domainAxis.layout(domainAxisBounds, drawBounds);
 
-    _chart.getMeasureAxis('').layout(measureAxisBounds, drawBounds);
+    _chart.getMeasureAxis().layout(measureAxisBounds, drawBounds);
 
     _chart.lastListener.onAxisConfigured();
   }
@@ -199,7 +199,7 @@ void main() {
           equals(true));
 
       // Verify measure annotations
-      expect(_chart.getMeasureAxis('').getLocation(11).round(), equals(33));
+      expect(_chart.getMeasureAxis().getLocation(11).round(), equals(33));
       expect(
           tester.doesAnnotationExist(
               startPosition: 0.0,

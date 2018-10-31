@@ -15,7 +15,7 @@
 
 import 'tick.dart' show Tick;
 
-class AxisTicks<D> extends Tick<D> {
+class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
   /// This tick is being animated out.
   bool _markedForRemoval;
 
@@ -104,5 +104,9 @@ class AxisTicks<D> extends Tick<D> {
     a ??= 0.0;
     b ??= 0.0;
     return a + (b - a) * t;
+  }
+
+  int compareTo(AxisTicks<D> other) {
+    return _targetLocation.compareTo(other._targetLocation);
   }
 }

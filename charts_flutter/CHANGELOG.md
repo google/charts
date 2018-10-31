@@ -3,6 +3,10 @@
 change. Please rename any existing uses of the "listener" parameter to "changeListener". This was
 named in order to add an additional listener "updateListener" that listens to any update requests,
 regardless if the selection model has changed.
+* CartesianChart's method getMeasureAxis(String axisId) has been changed to
+getMeasureAxis({String axisId) so that getting the primary measure axis will not need passing any id
+that does not match the secondary measure axis id. This affects users implementing custom behaviors
+using the existing method.
 
 # 0.4.0
 * Fixed export file to export ChartsBehavior in the Flutter library instead of the one that resides
