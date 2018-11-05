@@ -16,6 +16,7 @@
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'date_time_line_point.dart';
+import 'numeric_line_bar.dart';
 import 'numeric_line_point.dart';
 import 'ordinal_bar_line.dart';
 import 'scatter_plot_line.dart';
@@ -30,8 +31,14 @@ List<GalleryScaffold> buildGallery() {
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.show_chart),
-      title: 'Numeric Combo Chart',
+      title: 'Numeric Line Bar Combo Chart',
       subtitle: 'Numeric combo chart with lines and bars',
+      childBuilder: () => new NumericComboLineBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.show_chart),
+      title: 'Numeric Line Points Combo Chart',
+      subtitle: 'Numeric combo chart with lines and points',
       childBuilder: () => new NumericComboLinePointChart.withRandomData(),
     ),
     new GalleryScaffold(

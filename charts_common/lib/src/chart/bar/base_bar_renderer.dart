@@ -22,7 +22,8 @@ import 'base_bar_renderer_element.dart'
     show BaseAnimatedBar, BaseBarRendererElement;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
 import '../cartesian/axis/axis.dart'
-    show ImmutableAxis, domainAxisKey, measureAxisKey, OrdinalAxis;
+    show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
+import '../cartesian/axis/scale.dart' show RangeBandConfig;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
@@ -323,7 +324,13 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   void configureDomainAxes(List<MutableSeries<D>> seriesList) {
     super.configureDomainAxes(seriesList);
 
-    // TODO: tell axis that we some rangeBand configuration.
+    // Configure the domain axis to use a range band configuration.
+    if (seriesList.isNotEmpty) {
+      // Given that charts can only have one domain axis, just grab it from the
+      // first series.
+      final domainAxis = seriesList.first.getAttr(domainAxisKey);
+      domainAxis.setRangeBandConfig(new RangeBandConfig.styleAssignedPercent());
+    }
   }
 
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {

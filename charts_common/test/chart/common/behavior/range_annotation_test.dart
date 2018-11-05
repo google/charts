@@ -15,7 +15,6 @@
 
 import 'dart:math' show Rectangle;
 
-import 'package:charts_common/src/chart/cartesian/cartesian_chart.dart';
 import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
@@ -23,6 +22,7 @@ import 'package:charts_common/src/chart/cartesian/axis/linear/linear_scale.dart'
 import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/behavior/range_annotation.dart';
+import 'package:charts_common/src/chart/line/line_chart.dart';
 import 'package:charts_common/src/common/material_palette.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:mockito/mockito.dart';
@@ -30,8 +30,8 @@ import 'package:test/test.dart';
 
 class MockContext extends Mock implements ChartContext {}
 
-class ConcreteChart extends CartesianChart {
-  LifecycleListener lastListener;
+class ConcreteChart extends LineChart {
+  LifecycleListener<num> lastListener;
 
   Axis _domainAxis = new ConcreteNumericAxis();
 
@@ -166,7 +166,7 @@ void main() {
   group('RangeAnnotation', () {
     test('renders the annotations', () {
       // Setup
-      final behavior = new RangeAnnotation(_annotations1);
+      final behavior = new RangeAnnotation<num>(_annotations1);
       final tester = new RangeAnnotationTester(behavior);
       behavior.attachTo(_chart);
 
@@ -237,7 +237,7 @@ void main() {
 
     test('extends the domain axis when annotations fall outside the range', () {
       // Setup
-      final behavior = new RangeAnnotation(_annotations2);
+      final behavior = new RangeAnnotation<num>(_annotations2);
       final tester = new RangeAnnotationTester(behavior);
       behavior.attachTo(_chart);
 
@@ -279,7 +279,7 @@ void main() {
 
     test('cleans up', () {
       // Setup
-      final behavior = new RangeAnnotation(_annotations2);
+      final behavior = new RangeAnnotation<num>(_annotations2);
       behavior.attachTo(_chart);
 
       // Act

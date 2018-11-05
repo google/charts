@@ -42,7 +42,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Ordinal Bar Line<br>[![](example/combo_charts/ordinal_bar_line_thumb.png)](example/combo_charts/ordinal_bar_line) | Numeric Line Point<br>[![](example/combo_charts/numeric_line_point_thumb.png)](example/combo_charts/numeric_line_point) | Date Time Line Point<br>[![](example/combo_charts/date_time_line_point_thumb.png)](example/combo_charts/date_time_line_point) | Scatter Plot Line<br>[![](example/combo_charts/scatter_plot_line_thumb.png)](example/combo_charts/scatter_plot_line) |
+| Ordinal Bar Line<br>[![](example/combo_charts/ordinal_bar_line_thumb.png)](example/combo_charts/ordinal_bar_line) | Numeric Line Bar<br>[![](example/combo_charts/numeric_line_bar_thumb.png)](example/combo_charts/numeric_line_bar) | Numeric Line Point<br>[![](example/combo_charts/numeric_line_point_thumb.png)](example/combo_charts/numeric_line_point) | Date Time Line Point<br>[![](example/combo_charts/date_time_line_point_thumb.png)](example/combo_charts/date_time_line_point) |
+| Scatter Plot Line<br>[![](example/combo_charts/scatter_plot_line_thumb.png)](example/combo_charts/scatter_plot_line) | | | |
 
 
 ### Pie Charts

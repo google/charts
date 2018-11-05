@@ -33,7 +33,8 @@ import 'axis_tick.dart' show AxisTicks;
 import 'linear/linear_scale.dart' show LinearScale;
 import 'ordinal_tick_provider.dart' show OrdinalTickProvider;
 import 'numeric_tick_provider.dart' show NumericTickProvider;
-import 'scale.dart' show MutableScale, ScaleOutputExtent, Scale;
+import 'scale.dart'
+    show MutableScale, RangeBandConfig, ScaleOutputExtent, Scale;
 import 'numeric_extents.dart' show NumericExtents;
 import 'numeric_scale.dart' show NumericScale;
 import 'simple_ordinal_scale.dart' show SimpleOrdinalScale;
@@ -178,6 +179,10 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   bool get autoViewport => _autoViewport;
+
+  void setRangeBandConfig(RangeBandConfig rangeBandConfig) {
+    mutableScale.rangeBandConfig = rangeBandConfig;
+  }
 
   void addDomainValue(D domain) {
     if (lockAxis) {
