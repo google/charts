@@ -212,7 +212,7 @@ export 'src/common/line_style.dart' show LineStyle;
 export 'src/common/material_palette.dart' show MaterialPalette;
 export 'src/common/performance.dart' show Performance;
 export 'src/common/proxy_gesture_listener.dart' show ProxyGestureListener;
-export 'src/common/rtl_spec.dart' show RTLSpec, AxisPosition;
+export 'src/common/rtl_spec.dart' show AxisPosition, RTLSpec;
 export 'src/common/style/material_style.dart' show MaterialStyle;
 export 'src/common/style/style_factory.dart' show StyleFactory;
 export 'src/common/symbol_renderer.dart'

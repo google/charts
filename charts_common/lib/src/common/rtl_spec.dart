@@ -20,6 +20,7 @@ class RTLSpec {
     this.axisPosition: AxisPosition.reversed,
   });
 
+  // TODO: Rename AxisPosition to Direction
   /// The positions for primary and secondary measure axis.
   final AxisPosition axisPosition;
 }

@@ -16,6 +16,7 @@
 import 'package:charts_common/common.dart' as common
     show
         A11yNode,
+        AxisPosition,
         BaseChart,
         ChartContext,
         DateTimeFactory,
@@ -114,8 +115,10 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     config.chartWidget
         .updateCommonChart(_chart, config.oldChartWidget, _chartState);
 
-    _rtl = config.rtl;
     _rtlSpec = config.rtlSpec ?? const common.RTLSpec();
+    _rtl =
+        (_rtlSpec.axisPosition == common.AxisPosition.reversed) && config.rtl;
+
     common.Performance.timeEnd('chartsConfig');
 
     // If the configuration is changed more frequently than the threshold,
