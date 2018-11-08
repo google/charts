@@ -85,9 +85,13 @@ void main() {
   final _s2D2 = new MyRow(4, 22);
   final _s2D3 = new MyRow(5, 23);
 
+  const _dashPattern = const <int>[2, 3];
+
   List<RangeAnnotationSegment<num>> _annotations1;
 
   List<RangeAnnotationSegment<num>> _annotations2;
+
+  List<LineAnnotationSegment<num>> _annotations3;
 
   ConcreteChart _makeChart() {
     final chart = new ConcreteChart();
@@ -160,6 +164,16 @@ void main() {
           color: MaterialPalette.gray.shade200),
       new RangeAnnotationSegment(8, 10, RangeAnnotationAxisType.domain,
           color: MaterialPalette.gray.shade300),
+    ];
+
+    _annotations3 = [
+      new LineAnnotationSegment(1, RangeAnnotationAxisType.measure,
+          startLabel: 'Ann 1 Start', endLabel: 'Ann 1 End'),
+      new LineAnnotationSegment(4, RangeAnnotationAxisType.measure,
+          startLabel: 'Ann 2 Start',
+          endLabel: 'Ann 2 End',
+          color: MaterialPalette.gray.shade200,
+          dashPattern: _dashPattern),
     ];
   });
 
@@ -273,6 +287,44 @@ void main() {
               color: MaterialPalette.gray.shade300,
               labelAnchor: AnnotationLabelAnchor.end,
               labelDirection: AnnotationLabelDirection.vertical,
+              labelPosition: AnnotationLabelPosition.auto),
+          equals(true));
+    });
+
+    test('test dash pattern equality', () {
+      // Setup
+      final behavior = new RangeAnnotation<num>(_annotations3);
+      final tester = new RangeAnnotationTester(behavior);
+      behavior.attachTo(_chart);
+
+      final seriesList = [_series1, _series2];
+
+      // Act
+      _drawSeriesList(_chart, seriesList);
+
+      // Verify
+      expect(_chart.domainAxis.getLocation(2), equals(40.0));
+      expect(
+          tester.doesAnnotationExist(
+              startPosition: 0.0,
+              endPosition: 0.0,
+              color: MaterialPalette.gray.shade100,
+              startLabel: 'Ann 1 Start',
+              endLabel: 'Ann 1 End',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.horizontal,
+              labelPosition: AnnotationLabelPosition.auto),
+          equals(true));
+      expect(
+          tester.doesAnnotationExist(
+              startPosition: 13.64,
+              endPosition: 13.64,
+              color: MaterialPalette.gray.shade200,
+              dashPattern: _dashPattern,
+              startLabel: 'Ann 2 Start',
+              endLabel: 'Ann 2 End',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.horizontal,
               labelPosition: AnnotationLabelPosition.auto),
           equals(true));
     });
