@@ -38,7 +38,7 @@ import 'tick_draw_strategy.dart';
 class NoneRenderSpec<D> extends RenderSpec<D> {
   final LineStyleSpec axisLineStyle;
 
-  NoneRenderSpec({this.axisLineStyle});
+  const NoneRenderSpec({this.axisLineStyle});
 
   @override
   TickDrawStrategy<D> createDrawStrategy(
@@ -47,7 +47,8 @@ class NoneRenderSpec<D> extends RenderSpec<D> {
           axisLineStyleSpec: axisLineStyle);
 
   @override
-  bool operator ==(Object other) => other is NoneRenderSpec;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is NoneRenderSpec;
 
   @override
   int get hashCode => 0;

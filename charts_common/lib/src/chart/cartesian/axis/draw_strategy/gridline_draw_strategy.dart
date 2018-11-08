@@ -31,7 +31,7 @@ import 'tick_draw_strategy.dart' show TickDrawStrategy;
 
 @immutable
 class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
-  GridlineRendererSpec({
+  const GridlineRendererSpec({
     TextStyleSpec labelStyle,
     LineStyleSpec lineStyle,
     LineStyleSpec axisLineStyle,
@@ -68,7 +68,8 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
 
   @override
   bool operator ==(Object other) {
-    return other is GridlineRendererSpec && super == (other);
+    return identical(this, other) ||
+        (other is GridlineRendererSpec && super == (other));
   }
 
   @override

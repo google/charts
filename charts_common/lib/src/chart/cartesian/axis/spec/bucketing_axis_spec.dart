@@ -78,12 +78,12 @@ class BucketingAxisSpec extends NumericAxisSpec {
         super(
             renderSpec: renderSpec,
             tickProviderSpec:
-                tickProviderSpec ?? new BucketingNumericTickProviderSpec(),
+                tickProviderSpec ?? const BucketingNumericTickProviderSpec(),
             tickFormatterSpec: tickFormatterSpec ??
                 new BasicNumericTickFormatterSpec.fromNumberFormat(
                     new NumberFormat.percentPattern()),
             showAxisLine: showAxisLine,
-            viewport: viewport ??= const NumericExtents(0.0, 1.0));
+            viewport: viewport ?? const NumericExtents(0.0, 1.0));
 
   @override
   configure(
@@ -108,10 +108,11 @@ class BucketingAxisSpec extends NumericAxisSpec {
 
   @override
   bool operator ==(Object other) =>
-      other is BucketingAxisSpec &&
-      showBucket == other.showBucket &&
-      threshold == other.threshold &&
-      super == (other);
+      identical(this, other) ||
+      (other is BucketingAxisSpec &&
+          showBucket == other.showBucket &&
+          threshold == other.threshold &&
+          super == (other));
 
   @override
   int get hashCode {
@@ -138,7 +139,7 @@ class BucketingNumericTickProviderSpec extends BasicNumericTickProviderSpec {
   /// [desiredMaxTickCount] automatically choose the best tick
   ///     count to produce the 'nicest' ticks but make sure we don't have more
   ///     than this many.
-  BucketingNumericTickProviderSpec(
+  const BucketingNumericTickProviderSpec(
       {bool zeroBound,
       bool dataIsInWholeNumbers,
       int desiredTickCount,

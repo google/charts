@@ -52,7 +52,7 @@ abstract class BaseRenderSpec<D> implements RenderSpec<D> {
 
   final LineStyleSpec axisLineStyle;
 
-  BaseRenderSpec({
+  const BaseRenderSpec({
     this.labelStyle,
     this.labelAnchor,
     this.labelJustification,
@@ -64,14 +64,16 @@ abstract class BaseRenderSpec<D> implements RenderSpec<D> {
 
   @override
   bool operator ==(Object other) {
-    return other is BaseRenderSpec &&
-        labelStyle == other.labelStyle &&
-        labelAnchor == other.labelAnchor &&
-        labelJustification == other.labelJustification &&
-        labelOffsetFromTickPx == other.labelOffsetFromTickPx &&
-        labelOffsetFromAxisPx == other.labelOffsetFromAxisPx &&
-        minimumPaddingBetweenLabelsPx == other.minimumPaddingBetweenLabelsPx &&
-        axisLineStyle == other.axisLineStyle;
+    return identical(this, other) ||
+        (other is BaseRenderSpec &&
+            labelStyle == other.labelStyle &&
+            labelAnchor == other.labelAnchor &&
+            labelJustification == other.labelJustification &&
+            labelOffsetFromTickPx == other.labelOffsetFromTickPx &&
+            labelOffsetFromAxisPx == other.labelOffsetFromAxisPx &&
+            minimumPaddingBetweenLabelsPx ==
+                other.minimumPaddingBetweenLabelsPx &&
+            axisLineStyle == other.axisLineStyle);
   }
 
   @override

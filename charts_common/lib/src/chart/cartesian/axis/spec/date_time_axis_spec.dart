@@ -56,7 +56,7 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   ///     are formatted.
   /// [showAxisLine] override to force the axis to draw the axis
   ///     line.
-  DateTimeAxisSpec({
+  const DateTimeAxisSpec({
     RenderSpec<DateTime> renderSpec,
     DateTimeTickProviderSpec tickProviderSpec,
     DateTimeTickFormatterSpec tickFormatterSpec,
@@ -116,7 +116,7 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
   ///
   /// [includeTime] - flag that indicates whether the time should be
   /// included when choosing appropriate tick intervals.
-  AutoDateTimeTickProviderSpec({this.includeTime = true});
+  const AutoDateTimeTickProviderSpec({this.includeTime = true});
 
   @override
   AutoAdjustingDateTimeTickProvider createTickProvider(ChartContext context) {
@@ -141,7 +141,7 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
 @immutable
 class DayTickProviderSpec implements DateTimeTickProviderSpec {
   final List<int> increments;
-  DayTickProviderSpec({this.increments});
+  const DayTickProviderSpec({this.increments});
 
   /// Creates a [TickProviderSpec] that dynamically chooses ticks based on the
   /// extents of the data, limited to day increments.
@@ -168,7 +168,7 @@ class DayTickProviderSpec implements DateTimeTickProviderSpec {
 /// range.
 @immutable
 class DateTimeEndPointsTickProviderSpec implements DateTimeTickProviderSpec {
-  DateTimeEndPointsTickProviderSpec();
+  const DateTimeEndPointsTickProviderSpec();
 
   /// Creates a [TickProviderSpec] that dynamically chooses time ticks at the
   /// two end points of the axis range
@@ -186,7 +186,7 @@ class DateTimeEndPointsTickProviderSpec implements DateTimeTickProviderSpec {
 class StaticDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
   final List<TickSpec<DateTime>> tickSpecs;
 
-  StaticDateTimeTickProviderSpec(this.tickSpecs);
+  const StaticDateTimeTickProviderSpec(this.tickSpecs);
 
   @override
   StaticTickProvider<DateTime> createTickProvider(ChartContext context) =>
@@ -219,7 +219,8 @@ class TimeFormatterSpec {
   /// [noonFormat] [DateFormat] format string used only for formatting hours
   ///     in the event that you want to format noon differently than other
   ///     hours (ie: [10, 11, 12p, 1, 2, 3]).
-  TimeFormatterSpec({this.format, this.transitionFormat, this.noonFormat});
+  const TimeFormatterSpec(
+      {this.format, this.transitionFormat, this.noonFormat});
 
   @override
   bool operator ==(Object other) =>
@@ -255,7 +256,7 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
   /// There is a default formatter for each level that is configurable, but
   /// by specifying a level here it replaces the default for that particular
   /// granularity. This is useful for swapping out one or all of the formatters.
-  AutoDateTimeTickFormatterSpec(
+  const AutoDateTimeTickFormatterSpec(
       {this.minute, this.hour, this.day, this.month, this.year});
 
   @override
@@ -305,12 +306,13 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   bool operator ==(Object other) =>
-      other is AutoDateTimeTickFormatterSpec &&
-      minute == other.minute &&
-      hour == other.hour &&
-      day == other.day &&
-      month == other.month &&
-      year == other.year;
+      identical(this, other) ||
+      (other is AutoDateTimeTickFormatterSpec &&
+          minute == other.minute &&
+          hour == other.hour &&
+          day == other.day &&
+          month == other.month &&
+          year == other.year);
 
   @override
   int get hashCode {

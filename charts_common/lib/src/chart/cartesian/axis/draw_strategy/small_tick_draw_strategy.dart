@@ -34,7 +34,7 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
   final LineStyleSpec lineStyle;
   final int tickLengthPx;
 
-  SmallTickRendererSpec({
+  const SmallTickRendererSpec({
     TextStyleSpec labelStyle,
     this.lineStyle,
     LineStyleSpec axisLineStyle,
@@ -69,10 +69,11 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
 
   @override
   bool operator ==(Object other) {
-    return other is SmallTickRendererSpec &&
-        lineStyle == other.lineStyle &&
-        tickLengthPx == other.tickLengthPx &&
-        super == (other);
+    return identical(this, other) ||
+        (other is SmallTickRendererSpec &&
+            lineStyle == other.lineStyle &&
+            tickLengthPx == other.tickLengthPx &&
+            super == (other));
   }
 
   @override
