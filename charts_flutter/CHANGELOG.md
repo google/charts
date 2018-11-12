@@ -1,7 +1,7 @@
 # 0.5.0
-* SelectionModelConfig's listener parameter has been renamed to "changeListener". This is a breaking
-change. Please rename any existing uses of the "listener" parameter to "changeListener". This was
-named in order to add an additional listener "updateListener" that listens to any update requests,
+* SelectionModelConfig's listener parameter has been renamed to "changedListener". This is a breaking
+change. Please rename any existing uses of the "listener" parameter to "changedListener". This was
+named in order to add an additional listener "updatedListener" that listens to any update requests,
 regardless if the selection model has changed.
 * CartesianChart's method getMeasureAxis(String axisId) has been changed to
 getMeasureAxis({String axisId) so that getting the primary measure axis will not need passing any id
