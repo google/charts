@@ -16,16 +16,14 @@
 import 'package:charts_common/common.dart' as common
     show
         BehaviorPosition,
+        DatumLegend,
         InsideJustification,
         LegendEntry,
-        LegendTapHandling,
         MeasureFormatter,
         LegendDefaultMeasure,
         OutsideJustification,
-        SeriesLegend,
         SelectionModelType,
         TextStyleSpec;
-import 'package:collection/collection.dart' show ListEquality;
 import 'package:flutter/widgets.dart'
     show BuildContext, EdgeInsets, Widget, hashValues;
 import 'package:meta/meta.dart' show immutable;
@@ -37,9 +35,12 @@ import 'legend_content_builder.dart'
     show LegendContentBuilder, TabularLegendContentBuilder;
 import 'legend_layout.dart' show TabularLegendLayout;
 
-/// Series legend behavior for charts.
+/// Datum legend behavior for charts.
+///
+/// By default this behavior creates one legend entry per datum in the first
+/// series rendered on the chart.
 @immutable
-class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
+class DatumLegend extends ChartBehavior<common.DatumLegend> {
   static const defaultBehaviorPosition = common.BehaviorPosition.top;
   static const defaultOutsideJustification =
       common.OutsideJustification.startDrawArea;
@@ -88,8 +89,6 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
 
   static const defaultCellPadding = const EdgeInsets.all(8.0);
 
-  final List<String> defaultHiddenSeries;
-
   /// Create a new tabular layout legend.
   ///
   /// By default, the legend is place above the chart and horizontally aligned
@@ -118,9 +117,6 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// new row. By default there is no limit. The max columns created is the
   /// smaller of desiredMaxColumns and number of legend entries.
   ///
-  /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
-  /// first chart draw.
-  ///
   /// [showMeasures] show measure values for each series.
   ///
   /// [legendDefaultMeasure] if measure should show when there is no selection.
@@ -130,7 +126,7 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   ///
   /// [secondaryMeasureFormatter] formats measures if measures are shown for the
   /// series that uses secondary measure axis.
-  factory SeriesLegend({
+  factory DatumLegend({
     common.BehaviorPosition position,
     common.OutsideJustification outsideJustification,
     common.InsideJustification insideJustification,
@@ -138,7 +134,6 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     int desiredMaxRows,
     int desiredMaxColumns,
     EdgeInsets cellPadding,
-    List<String> defaultHiddenSeries,
     bool showMeasures,
     common.LegendDefaultMeasure legendDefaultMeasure,
     common.MeasureFormatter measureFormatter,
@@ -162,14 +157,13 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         : new TabularLegendLayout.verticalFirst(
             desiredMaxRows: desiredMaxRows, cellPadding: cellPadding);
 
-    return new SeriesLegend._internal(
+    return new DatumLegend._internal(
         contentBuilder:
             new TabularLegendContentBuilder(legendLayout: layoutBuilder),
         selectionModelType: common.SelectionModelType.info,
         position: position,
         outsideJustification: outsideJustification,
         insideJustification: insideJustification,
-        defaultHiddenSeries: defaultHiddenSeries,
         showMeasures: showMeasures ?? false,
         legendDefaultMeasure:
             legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
@@ -196,9 +190,6 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   /// the position is inside. Default to top of the chart, start of draw area.
   /// Start of draw area means left for LTR directionality, and right for RTL.
   ///
-  /// [defaultHiddenSeries] lists the IDs of series that should be hidden on
-  /// first chart draw.
-  ///
   /// [showMeasures] show measure values for each series.
   ///
   /// [legendDefaultMeasure] if measure should show when there is no selection.
@@ -208,12 +199,11 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   ///
   /// [secondaryMeasureFormatter] formats measures if measures are shown for the
   /// series that uses secondary measure axis.
-  factory SeriesLegend.customLayout(
+  factory DatumLegend.customLayout(
     LegendContentBuilder contentBuilder, {
     common.BehaviorPosition position,
     common.OutsideJustification outsideJustification,
     common.InsideJustification insideJustification,
-    List<String> defaultHiddenSeries,
     bool showMeasures,
     common.LegendDefaultMeasure legendDefaultMeasure,
     common.MeasureFormatter measureFormatter,
@@ -225,13 +215,12 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     outsideJustification ??= defaultOutsideJustification;
     insideJustification ??= defaultInsideJustification;
 
-    return new SeriesLegend._internal(
+    return new DatumLegend._internal(
       contentBuilder: contentBuilder,
       selectionModelType: common.SelectionModelType.info,
       position: position,
       outsideJustification: outsideJustification,
       insideJustification: insideJustification,
-      defaultHiddenSeries: defaultHiddenSeries,
       showMeasures: showMeasures ?? false,
       legendDefaultMeasure:
           legendDefaultMeasure ?? common.LegendDefaultMeasure.none,
@@ -241,13 +230,12 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     );
   }
 
-  SeriesLegend._internal({
+  DatumLegend._internal({
     this.contentBuilder,
     this.selectionModelType,
     this.position,
     this.outsideJustification,
     this.insideJustification,
-    this.defaultHiddenSeries,
     this.showMeasures,
     this.legendDefaultMeasure,
     this.measureFormatter,
@@ -256,12 +244,12 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
   });
 
   @override
-  common.SeriesLegend<D> createCommonBehavior<D>() =>
-      new _FlutterSeriesLegend<D>(this);
+  common.DatumLegend<D> createCommonBehavior<D>() =>
+      new _FlutterDatumLegend<D>(this);
 
   @override
-  void updateCommonBehavior(common.SeriesLegend commonBehavior) {
-    (commonBehavior as _FlutterSeriesLegend).config = this;
+  void updateCommonBehavior(common.DatumLegend commonBehavior) {
+    (commonBehavior as _FlutterDatumLegend).config = this;
   }
 
   /// All Legend behaviors get the same role ID, because you should only have
@@ -271,13 +259,12 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
 
   @override
   bool operator ==(Object o) {
-    return o is SeriesLegend &&
+    return o is DatumLegend &&
         selectionModelType == o.selectionModelType &&
         contentBuilder == o.contentBuilder &&
         position == o.position &&
         outsideJustification == o.outsideJustification &&
         insideJustification == o.insideJustification &&
-        new ListEquality().equals(defaultHiddenSeries, o.defaultHiddenSeries) &&
         showMeasures == o.showMeasures &&
         legendDefaultMeasure == o.legendDefaultMeasure &&
         measureFormatter == o.measureFormatter &&
@@ -293,7 +280,6 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
         position,
         outsideJustification,
         insideJustification,
-        defaultHiddenSeries,
         showMeasures,
         legendDefaultMeasure,
         measureFormatter,
@@ -303,18 +289,17 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
 }
 
 /// Flutter specific wrapper on the common Legend for building content.
-class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
+class _FlutterDatumLegend<D> extends common.DatumLegend<D>
     implements BuildableBehavior, TappableLegend {
-  SeriesLegend config;
+  DatumLegend config;
 
-  _FlutterSeriesLegend(this.config)
+  _FlutterDatumLegend(this.config)
       : super(
           selectionModelType: config.selectionModelType,
           measureFormatter: config.measureFormatter,
           secondaryMeasureFormatter: config.secondaryMeasureFormatter,
           legendDefaultMeasure: config.legendDefaultMeasure,
         ) {
-    super.defaultHiddenSeries = config.defaultHiddenSeries;
     super.entryTextStyle = config.entryTextStyle;
   }
 
@@ -349,34 +334,7 @@ class _FlutterSeriesLegend<D> extends common.SeriesLegend<D>
         .build(context, legendState, this, showMeasures: showMeasures);
   }
 
+  /// TODO: Maybe highlight the pie wedge.
   @override
-  onLegendEntryTapUp(common.LegendEntry detail) {
-    switch (legendTapHandling) {
-      case common.LegendTapHandling.hide:
-        _hideSeries(detail);
-        break;
-
-      case common.LegendTapHandling.none:
-      default:
-        break;
-    }
-  }
-
-  /// Handles tap events by hiding or un-hiding entries tapped in the legend.
-  ///
-  /// Tapping on a visible series in the legend will hide it. Tapping on a
-  /// hidden series will make it visible again.
-  void _hideSeries(common.LegendEntry detail) {
-    final seriesId = detail.series.id;
-
-    // Handle the event by toggling the hidden state of the target.
-    if (isSeriesHidden(seriesId)) {
-      showSeries(seriesId);
-    } else {
-      hideSeries(seriesId);
-    }
-
-    // Redraw the chart to actually hide hidden series.
-    chart.redraw(skipLayout: true, skipAnimation: false);
-  }
+  onLegendEntryTapUp(common.LegendEntry detail) {}
 }

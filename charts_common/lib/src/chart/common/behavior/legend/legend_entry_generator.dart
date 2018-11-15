@@ -21,7 +21,6 @@ import '../../processed_series.dart' show MutableSeries;
 
 /// A strategy for generating a list of [LegendEntry] based on the series drawn.
 ///
-/// [T] the datum class type for chart.
 /// [D] the domain class type for the datum.
 abstract class LegendEntryGenerator<D> {
   /// Generates a list of legend entries based on the series drawn on the chart.

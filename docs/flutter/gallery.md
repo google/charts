@@ -69,8 +69,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Legend Options<br>[![](example/legends/legend_options_thumb.png)](example/legends/legend_options) | Legend With Measures<br>[![](example/legends/legend_with_measures_thumb.png)](example/legends/legend_with_measures) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) |
-| Default Hidden Series Legend<br>[![](example/legends/default_hidden_series_legend_thumb.png)](example/legends/default_hidden_series_legend) | | | |
+| Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Series Legend Options<br>[![](example/legends/series_legend_options_thumb.png)](example/legends/series_legend_options) | Series Legend With Measures<br>[![](example/legends/series_legend_with_measures_thumb.png)](example/legends/series_legend_with_measures) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) |
+| Default Hidden Series Legend<br>[![](example/legends/default_hidden_series_legend_thumb.png)](example/legends/default_hidden_series_legend) | Simple Datum Legend<br>[![](example/legends/simple_datum_legend_thumb.png)](example/legends/simple_datum_legend) | Datum Legend Options<br>[![](example/legends/datum_legend_options_thumb.png)](example/legends/datum_legend_options) | Datum Legend With Measures<br>[![](example/legends/datum_legend_with_measures_thumb.png)](example/legends/datum_legend_with_measures) |
 
 
 ### Hovercards

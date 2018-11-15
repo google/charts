@@ -25,7 +25,6 @@ import '../../series_datum.dart' show SeriesDatum;
 
 /// A strategy for generating a list of [LegendEntry] per series drawn.
 ///
-/// [T] the datum class type for chart.
 /// [D] the domain class type for the datum.
 class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   TextStyleSpec entryTextStyle;
