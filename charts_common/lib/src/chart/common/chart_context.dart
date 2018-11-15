@@ -18,9 +18,26 @@ import '../../common/rtl_spec.dart' show RTLSpec;
 import '../common/behavior/a11y/a11y_node.dart' show A11yNode;
 
 abstract class ChartContext {
-  bool get rtl;
+  /// Flag indicating whether or not the chart's container was configured in
+  /// right to left mode.
+  ///
+  /// This should be set when the chart is created (or if its container ever
+  /// gets configured to the other direction setting).
+  ///
+  /// Any chart component that needs to know whether the chart axes should be
+  /// rendered right to left should read [isRtl].
+  bool get chartContainerIsRtl;
 
+  /// Configures the behavior of the chart when [chartContainerIsRtl] is true.
   RTLSpec get rtlSpec;
+
+  /// Gets whether or not the chart axes should be rendered in right to left
+  /// mode.
+  ///
+  /// This will only be true if the container for the chart component was
+  /// configured with the rtl direction setting ([chartContainerIsRtl] == true), and the chart's
+  /// [RTLSpec] is set to reverse the axis direction in rtl mode.
+  bool get isRtl;
 
   double get pixelsPerDp;
 

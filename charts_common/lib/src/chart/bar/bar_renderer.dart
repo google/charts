@@ -102,7 +102,7 @@ class BarRenderer<D>
           (bounds.left + (bounds.width / 2)).toDouble(), bounds.top.toDouble());
     } else {
       chartPosition = new Point<double>(
-          rtl ? bounds.left.toDouble() : bounds.right.toDouble(),
+          isRtl ? bounds.left.toDouble() : bounds.right.toDouble(),
           (bounds.top + (bounds.height / 2)).toDouble());
     }
 
@@ -258,10 +258,10 @@ class BarRenderer<D>
       bars,
       radius: cornerStrategy.getRadius(maxBarWidth),
       stackedBarPadding: _stackedBarPadding,
-      roundTopLeft: renderingVertically || rtl ? true : false,
-      roundTopRight: rtl ? false : true,
-      roundBottomLeft: rtl ? true : false,
-      roundBottomRight: renderingVertically || rtl ? false : true,
+      roundTopLeft: renderingVertically || isRtl ? true : false,
+      roundTopRight: isRtl ? false : true,
+      roundBottomLeft: isRtl ? true : false,
+      roundBottomRight: renderingVertically || isRtl ? false : true,
     );
 
     // If bar stack's range width is:
@@ -301,7 +301,7 @@ class BarRenderer<D>
         drawBounds: drawBounds,
         animationPercent: animationPercent,
         renderingVertically: renderingVertically,
-        rtl: rtl);
+        rtl: isRtl);
   }
 
   /// Calculate the clipping region for a rectangle that represents the full bar
@@ -361,7 +361,7 @@ class BarRenderer<D>
 
     // Flip bar group index for calculating location on the domain axis if RTL.
     final adjustedBarGroupIndex =
-        rtl ? numBarGroups - barGroupIndex - 1 : barGroupIndex;
+        isRtl ? numBarGroups - barGroupIndex - 1 : barGroupIndex;
 
     // Calculate the start and end of the bar, taking into account accumulated
     // padding for grouped bars.

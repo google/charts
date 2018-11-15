@@ -335,8 +335,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       //
       // TODO: Handle ordinal axes by looking at the next domains.
       if (styleSegments.length > 0 && !(domainAxis is OrdinalAxis)) {
-        final startPx = (rtl ? drawBounds.right : drawBounds.left).toDouble();
-        final endPx = (rtl ? drawBounds.left : drawBounds.right).toDouble();
+        final startPx = (isRtl ? drawBounds.right : drawBounds.left).toDouble();
+        final endPx = (isRtl ? drawBounds.left : drawBounds.right).toDouble();
 
         final startDomain = domainAxis.getDomain(startPx);
         final endDomain = domainAxis.getDomain(endPx);
@@ -903,7 +903,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   @override
   void onAttach(BaseChart<D> chart) {
     super.onAttach(chart);
-    // We only need the chart.context.rtl setting, but context is not yet
+    // We only need the chart.context.isRtl setting, but context is not yet
     // available when the default renderer is attached to the chart on chart
     // creation time, since chart onInit is called after the chart is created.
     _chart = chart;
@@ -996,11 +996,11 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     // In RTL mode, the domain range extent has start on the right side of the
     // chart. Adjust the calculated positions to define a regular left-anchored
     // [Rectangle]. Clamp both ends to be within the draw area.
-    final left = rtl
+    final left = isRtl
         ? clamp(extent.end, drawBounds.left, drawBounds.right)
         : clamp(extent.start, drawBounds.left, drawBounds.right);
 
-    final right = rtl
+    final right = isRtl
         ? clamp((extent.start), drawBounds.left, drawBounds.right)
         : clamp((extent.end), drawBounds.left, drawBounds.right);
 
@@ -1013,7 +1013,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             drawBoundBottomExtensionPx);
   }
 
-  bool get rtl => _chart?.context?.rtl ?? false;
+  bool get isRtl => _chart?.context?.isRtl ?? false;
 
   _DatumPoint<D> _getPoint(
       dynamic datum,

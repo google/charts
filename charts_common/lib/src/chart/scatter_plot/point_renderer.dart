@@ -309,7 +309,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   @override
   void onAttach(BaseChart<D> chart) {
     super.onAttach(chart);
-    // We only need the chart.context.rtl setting, but context is not yet
+    // We only need the chart.context.isRtl setting, but context is not yet
     // available when the default renderer is attached to the chart on chart
     // creation time, since chart onInit is called after the chart is created.
     _chart = chart;
@@ -344,7 +344,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
           decorator.decorate(point, canvas, graphicsFactory,
               drawBounds: componentBounds,
               animationPercent: animationPercent,
-              rtl: rtl);
+              rtl: isRtl);
         });
 
         // Skip points whose center lies outside the draw bounds. Those that lie
@@ -386,13 +386,13 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
           decorator.decorate(point, canvas, graphicsFactory,
               drawBounds: componentBounds,
               animationPercent: animationPercent,
-              rtl: rtl);
+              rtl: isRtl);
         });
       });
     });
   }
 
-  bool get rtl => _chart?.context?.rtl ?? false;
+  bool get isRtl => _chart?.context?.isRtl ?? false;
 
   @protected
   DatumPoint<D> getPoint(

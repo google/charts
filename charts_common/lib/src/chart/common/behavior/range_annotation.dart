@@ -328,7 +328,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   CartesianChart<D> chart;
 
-  bool get rtl => chart.context.rtl;
+  bool get isRtl => chart.context.isRtl;
 
   Rectangle<int> _drawAreaBounds;
   Rectangle<int> get drawBounds => _drawAreaBounds;
@@ -666,7 +666,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         }
 
         labelElement.textDirection =
-            rtl ? TextDirection.rtl : TextDirection.ltr;
+            isRtl ? TextDirection.rtl : TextDirection.ltr;
         break;
 
       case AnnotationLabelPosition.inside:
@@ -679,7 +679,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         }
 
         labelElement.textDirection =
-            rtl ? TextDirection.rtl : TextDirection.ltr;
+            isRtl ? TextDirection.rtl : TextDirection.ltr;
         break;
     }
 
@@ -745,7 +745,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         }
 
         labelElement.textDirection =
-            rtl ? TextDirection.rtl : TextDirection.ltr;
+            isRtl ? TextDirection.rtl : TextDirection.ltr;
         break;
 
       case AnnotationLabelPosition.inside:
@@ -758,7 +758,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         }
 
         labelElement.textDirection =
-            rtl ? TextDirection.rtl : TextDirection.ltr;
+            isRtl ? TextDirection.rtl : TextDirection.ltr;
         break;
     }
 
@@ -796,13 +796,13 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
             bounds.width / 2 -
             labelElement.measurement.horizontalSliceWidth / 2;
         labelElement.textDirection =
-            rtl ? TextDirection.rtl : TextDirection.ltr;
+            isRtl ? TextDirection.rtl : TextDirection.ltr;
         break;
 
       case AnnotationLabelAnchor.end:
       case AnnotationLabelAnchor.start:
         if (annotationElement.labelPosition == AnnotationLabelPosition.margin) {
-          final alignLeft = rtl
+          final alignLeft = isRtl
               ? (annotationElement.labelAnchor == AnnotationLabelAnchor.end)
               : (annotationElement.labelAnchor == AnnotationLabelAnchor.start);
 
@@ -814,7 +814,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
             labelElement.textDirection = TextDirection.ltr;
           }
         } else {
-          final alignLeft = rtl
+          final alignLeft = isRtl
               ? (annotationElement.labelAnchor == AnnotationLabelAnchor.end)
               : (annotationElement.labelAnchor == AnnotationLabelAnchor.start);
 
@@ -878,13 +878,13 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
             bounds.width / 2 -
             labelElement.measurement.verticalSliceWidth / 2;
         labelElement.textDirection =
-            rtl ? TextDirection.rtl : TextDirection.ltr;
+            isRtl ? TextDirection.rtl : TextDirection.ltr;
         break;
 
       case AnnotationLabelAnchor.end:
       case AnnotationLabelAnchor.start:
         if (annotationElement.labelPosition == AnnotationLabelPosition.margin) {
-          final alignLeft = rtl
+          final alignLeft = isRtl
               ? (annotationElement.labelAnchor == AnnotationLabelAnchor.end)
               : (annotationElement.labelAnchor == AnnotationLabelAnchor.start);
 
@@ -898,7 +898,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
             labelElement.textDirection = TextDirection.ltr;
           }
         } else {
-          final alignLeft = rtl
+          final alignLeft = isRtl
               ? (annotationElement.labelAnchor == AnnotationLabelAnchor.end)
               : (annotationElement.labelAnchor == AnnotationLabelAnchor.start);
 

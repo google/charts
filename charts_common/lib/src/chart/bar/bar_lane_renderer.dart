@@ -340,7 +340,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
   num _getMaxMeasureValue(ImmutableAxis<num> measureAxis) {
     final pos = (chart as CartesianChart).vertical
         ? chart.drawAreaBounds.top
-        : rtl ? chart.drawAreaBounds.left : chart.drawAreaBounds.right;
+        : isRtl ? chart.drawAreaBounds.left : chart.drawAreaBounds.right;
 
     return measureAxis.getDomain(pos.toDouble());
   }

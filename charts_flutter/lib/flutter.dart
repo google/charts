@@ -32,7 +32,7 @@ export 'package:charts_common/common.dart'
         AutoDateTimeTickFormatterSpec,
         AutoDateTimeTickProviderSpec,
         Axis,
-        AxisPosition,
+        AxisDirection,
         AxisSpec,
         BarGroupingType,
         BarLabelAnchor,

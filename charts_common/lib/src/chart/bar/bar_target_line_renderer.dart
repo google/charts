@@ -265,7 +265,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
 
     // Flip bar group index for calculating location on the domain axis if RTL.
     final adjustedBarGroupIndex =
-        rtl ? numBarGroups - barGroupIndex - 1 : barGroupIndex;
+        isRtl ? numBarGroups - barGroupIndex - 1 : barGroupIndex;
 
     // Calculate the start and end of the bar target line, taking into account
     // accumulated padding for grouped bars.

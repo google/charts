@@ -42,7 +42,6 @@ import '../common/selection_model/selection_model.dart' show SelectionModelType;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
 import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../common/rtl_spec.dart' show AxisPosition;
 import '../../data/series.dart' show Series;
 
 class NumericCartesianChart extends CartesianChart<num> {
@@ -296,50 +295,51 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       axis.resetDomains();
     });
 
-    final reverseAxisPosition = context != null &&
-        context.rtl &&
-        context.rtlSpec.axisPosition == AxisPosition.reversed;
+    final reverseAxisDirection = context != null && context.isRtl;
 
     if (vertical) {
       domainAxis
         ..axisOrientation = AxisOrientation.bottom
-        ..reverseOutputRange = reverseAxisPosition;
+        ..reverseOutputRange = reverseAxisDirection;
 
       _primaryMeasureAxis
-        ..axisOrientation =
-            (reverseAxisPosition ? AxisOrientation.right : AxisOrientation.left)
+        ..axisOrientation = (reverseAxisDirection
+            ? AxisOrientation.right
+            : AxisOrientation.left)
         ..reverseOutputRange = flipVerticalAxisOutput;
 
       _secondaryMeasureAxis
-        ..axisOrientation =
-            (reverseAxisPosition ? AxisOrientation.left : AxisOrientation.right)
+        ..axisOrientation = (reverseAxisDirection
+            ? AxisOrientation.left
+            : AxisOrientation.right)
         ..reverseOutputRange = flipVerticalAxisOutput;
 
       _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
         axis
-          ..axisOrientation = (reverseAxisPosition
+          ..axisOrientation = (reverseAxisDirection
               ? AxisOrientation.left
               : AxisOrientation.right)
           ..reverseOutputRange = flipVerticalAxisOutput;
       });
     } else {
       domainAxis
-        ..axisOrientation =
-            (reverseAxisPosition ? AxisOrientation.right : AxisOrientation.left)
+        ..axisOrientation = (reverseAxisDirection
+            ? AxisOrientation.right
+            : AxisOrientation.left)
         ..reverseOutputRange = flipVerticalAxisOutput;
 
       _primaryMeasureAxis
         ..axisOrientation = AxisOrientation.bottom
-        ..reverseOutputRange = reverseAxisPosition;
+        ..reverseOutputRange = reverseAxisDirection;
 
       _secondaryMeasureAxis
         ..axisOrientation = AxisOrientation.top
-        ..reverseOutputRange = reverseAxisPosition;
+        ..reverseOutputRange = reverseAxisDirection;
 
       _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
         axis
           ..axisOrientation = AxisOrientation.top
-          ..reverseOutputRange = reverseAxisPosition;
+          ..reverseOutputRange = reverseAxisDirection;
       });
     }
 

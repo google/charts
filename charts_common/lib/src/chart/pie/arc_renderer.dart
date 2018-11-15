@@ -359,7 +359,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         decorator.decorate(arcElementsList, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: animationPercent,
-            rtl: rtl);
+            rtl: isRtl);
       });
 
       // Draw the arcs.
@@ -375,12 +375,12 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         decorator.decorate(arcElementsList, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: animationPercent,
-            rtl: rtl);
+            rtl: isRtl);
       });
     });
   }
 
-  bool get rtl => _chart?.context?.rtl ?? false;
+  bool get isRtl => _chart?.context?.isRtl ?? false;
 
   /// Gets a bounding box for the largest center content card that can fit
   /// inside the hole of the chart.

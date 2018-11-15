@@ -16,7 +16,7 @@
 import 'package:charts_common/common.dart' as common
     show
         A11yNode,
-        AxisPosition,
+        AxisDirection,
         BaseChart,
         ChartContext,
         DateTimeFactory,
@@ -75,7 +75,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   common.BaseChart<D> _chart;
   List<common.Series<dynamic, D>> _seriesList;
   ChartState _chartState;
-  bool _rtl;
+  bool _chartContainerIsRtl = false;
   common.RTLSpec _rtlSpec;
   common.DateTimeFactory _dateTimeFactory;
   bool _exploreMode = false;
@@ -116,8 +116,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
         .updateCommonChart(_chart, config.oldChartWidget, _chartState);
 
     _rtlSpec = config.rtlSpec ?? const common.RTLSpec();
-    _rtl =
-        (_rtlSpec.axisPosition == common.AxisPosition.reversed) && config.rtl;
+    _chartContainerIsRtl = config.rtl ?? false;
 
     common.Performance.timeEnd('chartsConfig');
 
@@ -287,10 +286,15 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   double get pixelsPerDp => 1.0;
 
   @override
-  bool get rtl => _rtl;
+  bool get chartContainerIsRtl => _chartContainerIsRtl;
 
   @override
   common.RTLSpec get rtlSpec => _rtlSpec;
+
+  @override
+  bool get isRtl =>
+      _chartContainerIsRtl &&
+      _rtlSpec?.axisDirection == common.AxisDirection.reversed;
 
   @override
   common.DateTimeFactory get dateTimeFactory => _dateTimeFactory;
@@ -299,7 +303,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   common.ProxyGestureListener get gestureProxy => _chart.gestureProxy;
 
   TextDirection get textDirection =>
-      rtl ? TextDirection.rtl : TextDirection.ltr;
+      _chartContainerIsRtl ? TextDirection.rtl : TextDirection.ltr;
 
   @override
   void enableA11yExploreMode(List<common.A11yNode> nodes,

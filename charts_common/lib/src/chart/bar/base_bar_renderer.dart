@@ -268,7 +268,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         // this datum in the series (instead of precede it). The first datum is
         // physically positioned on the canvas to the right of all the rest of
         // the bar group data that follows it.
-        final previousBarWeights = rtl
+        final previousBarWeights = isRtl
             ? barWeights.getRange(barGroupIndex + 1, numBarGroups)
             : barWeights.getRange(0, barGroupIndex);
 
@@ -526,7 +526,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   @override
   void onAttach(BaseChart<D> chart) {
     super.onAttach(chart);
-    // We only need the chart.context.rtl setting, but context is not yet
+    // We only need the chart.context.isRtl setting, but context is not yet
     // available when the default renderer is attached to the chart on chart
     // creation time, since chart onInit is called after the chart is created.
     this.chart = chart;
@@ -748,7 +748,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         : seriesList;
   }
 
-  bool get rtl => chart.context.rtl;
+  bool get isRtl => chart.context.isRtl;
 }
 
 /// Iterable wrapping the seriesList that returns the ReversedSeriesItertor.

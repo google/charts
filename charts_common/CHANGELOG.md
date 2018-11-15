@@ -1,3 +1,7 @@
+# 0.6.0-dev
+* The AxisPosition enum in RTLSpec was refactored to AxisDirection to better reflect its effect on
+swapping the positions of all start and end components, and not just positioning the measure axes.
+
 # 0.5.0
 * SelectionModelConfig's listener parameter has been renamed to "changeListener". This is a breaking
 change. Please rename any existing uses of the "listener" parameter to "changeListener". This was

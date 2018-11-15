@@ -415,7 +415,7 @@ class _LinePointLayoutView<D> extends LayoutView {
 
     final drawBounds = chart.drawableLayoutAreaBounds;
 
-    final rtl = chart.context.rtl;
+    final rtl = chart.context.isRtl;
 
     // Draw the follow lines first, below all of the highlight shapes.
     for (_PointRendererElement<D> pointElement in points) {

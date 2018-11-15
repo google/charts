@@ -97,7 +97,8 @@ void main() {
     final chart = new ConcreteChart();
 
     final context = new MockContext();
-    when(context.rtl).thenReturn(false);
+    when(context.chartContainerIsRtl).thenReturn(false);
+    when(context.isRtl).thenReturn(false);
     chart.context = context;
 
     return chart;
