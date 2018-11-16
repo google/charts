@@ -295,6 +295,8 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
     _componentBounds = componentBounds;
     _drawAreaBounds = drawAreaBounds;
+
+    updateLegend();
   }
 
   @override
