@@ -138,7 +138,8 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       double barGroupWeight,
       int numBarGroups,
       double strokeWidthPx,
-      bool measureIsNull}) {
+      bool measureIsNull,
+      bool measureIsNegative}) {
     return new _AnimatedBarTargetLine(
         key: key, datum: datum, series: series, domainValue: domainValue)
       ..setNewTarget(makeBarRendererElement(
@@ -159,7 +160,8 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
           previousBarGroupWeight: previousBarGroupWeight,
           barGroupWeight: barGroupWeight,
           numBarGroups: numBarGroups,
-          measureIsNull: measureIsNull));
+          measureIsNull: measureIsNull,
+          measureIsNegative: measureIsNegative));
   }
 
   /// Generates a [_BarTargetLineRendererElement] to represent the rendering
@@ -183,7 +185,8 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       double previousBarGroupWeight,
       double barGroupWeight,
       int numBarGroups,
-      bool measureIsNull}) {
+      bool measureIsNull,
+      bool measureIsNegative}) {
     return new _BarTargetLineRendererElement()
       ..color = color
       ..dashPattern = dashPattern
@@ -193,6 +196,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       ..roundEndCaps = details.roundEndCaps
       ..strokeWidthPx = strokeWidthPx
       ..measureIsNull = measureIsNull
+      ..measureIsNegative = measureIsNegative
       ..points = _getTargetLinePoints(
           domainValue,
           domainAxis,

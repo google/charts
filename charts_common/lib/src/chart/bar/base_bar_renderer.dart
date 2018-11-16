@@ -364,6 +364,10 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         BaseBarRendererElement details = elementsList[barIndex];
         D domainValue = domainFn(barIndex);
 
+        final measureValue = measureFn(barIndex);
+        final measureIsNull = measureValue == null;
+        final measureIsNegative = !measureIsNull && measureValue < 0;
+
         // Each bar should be stored in barStackMap in a structure that mirrors
         // the visual rendering of the bars. Thus, they should be grouped by
         // domain value, series category (by way of the stack keys that were
@@ -372,6 +376,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         var barStackMapKey = domainValue.toString() +
             '__' +
             seriesStackKey +
+            '__' +
+            (measureIsNegative ? 'pos' : 'neg') +
             '__' +
             barGroupIndex.toString();
 
@@ -382,9 +388,6 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         // If we already have an AnimatingBarfor that index, use it.
         var animatingBar = barStackList.firstWhere((B bar) => bar.key == barKey,
             orElse: () => null);
-
-        final measureValue = measureFn(barIndex);
-        final measureIsNull = measureValue == null;
 
         // If we don't have any existing bar element, create a new bar and have
         // it animate in from the domain axis.
@@ -415,7 +418,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
                 measureAxis: measureAxis,
                 numBarGroups: barGroupCount,
                 strokeWidthPx: details.strokeWidthPx,
-                measureIsNull: measureIsNull);
+                measureIsNull: measureIsNull,
+                measureIsNegative: measureIsNegative);
 
             barStackList.add(animatingBar);
           }
@@ -459,7 +463,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             measureAxis: measureAxis,
             numBarGroups: barGroupCount,
             strokeWidthPx: details.strokeWidthPx,
-            measureIsNull: measureValue == null);
+            measureIsNull: measureIsNull,
+            measureIsNegative: measureIsNegative);
 
         animatingBar.setNewTarget(barElement);
       }
@@ -499,7 +504,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
-      bool measureIsNull});
+      bool measureIsNull,
+      bool measureIsNegative});
 
   /// Generates a [BaseBarRendererElement] to represent the rendering data for
   /// one bar on the chart.
@@ -521,7 +527,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
-      bool measureIsNull});
+      bool measureIsNull,
+      bool measureIsNegative});
 
   @override
   void onAttach(BaseChart<D> chart) {

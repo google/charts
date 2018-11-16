@@ -142,7 +142,8 @@ class BarRenderer<D>
       double previousBarGroupWeight,
       double barGroupWeight,
       int numBarGroups,
-      bool measureIsNull}) {
+      bool measureIsNull,
+      bool measureIsNegative}) {
     return new AnimatedBar<D>(
         key: key, datum: datum, series: series, domainValue: domainValue)
       ..setNewTarget(makeBarRendererElement(
@@ -163,7 +164,8 @@ class BarRenderer<D>
           previousBarGroupWeight: previousBarGroupWeight,
           barGroupWeight: barGroupWeight,
           numBarGroups: numBarGroups,
-          measureIsNull: measureIsNull));
+          measureIsNull: measureIsNull,
+          measureIsNegative: measureIsNegative));
   }
 
   /// Generates a [BarRendererElement] to represent the rendering data for one
@@ -187,7 +189,8 @@ class BarRenderer<D>
       double previousBarGroupWeight,
       double barGroupWeight,
       int numBarGroups,
-      bool measureIsNull}) {
+      bool measureIsNull,
+      bool measureIsNegative}) {
     return new BarRendererElement<D>()
       ..color = color
       ..dashPattern = dashPattern
@@ -197,6 +200,7 @@ class BarRenderer<D>
       ..roundPx = details.roundPx
       ..strokeWidthPx = strokeWidthPx
       ..measureIsNull = measureIsNull
+      ..measureIsNegative = measureIsNegative
       ..bounds = _getBarBounds(
           domainValue,
           domainAxis,
@@ -224,19 +228,29 @@ class BarRenderer<D>
     // Find the max bar width from each segment to calculate corner radius.
     int maxBarWidth = 0;
 
+    var measureIsNegative = false;
+
     for (var bar in barElements) {
       var bounds = bar.bounds;
+
+      measureIsNegative = measureIsNegative || bar.measureIsNegative;
 
       if (bar != unmodifiedBar) {
         bounds = renderingVertically
             ? new Rectangle<int>(
                 bar.bounds.left,
-                bar.bounds.top,
+                max(
+                    0,
+                    bar.bounds.top +
+                        (measureIsNegative ? _stackedBarPadding : 0)),
                 bar.bounds.width,
                 max(0, bar.bounds.height - _stackedBarPadding),
               )
             : new Rectangle<int>(
-                bar.bounds.left,
+                max(
+                    0,
+                    bar.bounds.left +
+                        (measureIsNegative ? _stackedBarPadding : 0)),
                 bar.bounds.top,
                 max(0, bar.bounds.width - _stackedBarPadding),
                 bar.bounds.height,
@@ -254,14 +268,37 @@ class BarRenderer<D>
           maxBarWidth, (renderingVertically ? bounds.width : bounds.height));
     }
 
+    var roundTopLeft;
+    var roundTopRight;
+    var roundBottomLeft;
+    var roundBottomRight;
+
+    if (measureIsNegative) {
+      // Negative bars should be rounded towards the negative axis direction.
+      // In vertical mode, this is the bottom. In horizontal mode, this is the
+      // left side of the chart for LTR, or the right side for RTL.
+      roundTopLeft = !renderingVertically && !isRtl ? true : false;
+      roundTopRight = !renderingVertically && isRtl ? true : false;
+      roundBottomLeft = renderingVertically || !isRtl ? true : false;
+      roundBottomRight = renderingVertically || isRtl ? true : false;
+    } else {
+      // Positive bars should be rounded towards the positive axis direction.
+      // In vertical mode, this is the top. In horizontal mode, this is the
+      // right side of the chart for LTR, or the left side for RTL.
+      roundTopLeft = renderingVertically || isRtl ? true : false;
+      roundTopRight = isRtl ? false : true;
+      roundBottomLeft = isRtl ? true : false;
+      roundBottomRight = renderingVertically || isRtl ? false : true;
+    }
+
     final barStack = new CanvasBarStack(
       bars,
       radius: cornerStrategy.getRadius(maxBarWidth),
       stackedBarPadding: _stackedBarPadding,
-      roundTopLeft: renderingVertically || isRtl ? true : false,
-      roundTopRight: isRtl ? false : true,
-      roundBottomLeft: isRtl ? true : false,
-      roundBottomRight: renderingVertically || isRtl ? false : true,
+      roundTopLeft: roundTopLeft,
+      roundTopRight: roundTopRight,
+      roundBottomLeft: roundBottomLeft,
+      roundBottomRight: roundBottomRight,
     );
 
     // If bar stack's range width is:
@@ -383,9 +420,17 @@ class BarRenderer<D>
 
     // Calculate measure locations. Stacked bars should have their
     // offset calculated previously.
-    int measureStart = measureAxis.getLocation(measureOffsetValue).round();
-    int measureEnd =
-        measureAxis.getLocation(measureValue + measureOffsetValue).round();
+    int measureStart;
+    int measureEnd;
+    if (measureValue < 0) {
+      measureEnd = measureAxis.getLocation(measureOffsetValue).round();
+      measureStart =
+          measureAxis.getLocation(measureValue + measureOffsetValue).round();
+    } else {
+      measureStart = measureAxis.getLocation(measureOffsetValue).round();
+      measureEnd =
+          measureAxis.getLocation(measureValue + measureOffsetValue).round();
+    }
 
     var bounds;
     if (this.renderingVertically) {

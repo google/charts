@@ -29,6 +29,7 @@ abstract class BaseBarRendererElement {
   num measureOffsetPlusMeasure;
   double strokeWidthPx;
   bool measureIsNull;
+  bool measureIsNegative;
 
   BaseBarRendererElement();
 
@@ -47,6 +48,7 @@ abstract class BaseBarRendererElement {
     measureOffsetPlusMeasure = other.measureOffsetPlusMeasure;
     strokeWidthPx = other.strokeWidthPx;
     measureIsNull = other.measureIsNull;
+    measureIsNegative = other.measureIsNegative;
   }
 
   void updateAnimationPercent(BaseBarRendererElement previous,
@@ -55,6 +57,7 @@ abstract class BaseBarRendererElement {
     fillColor = getAnimatedColor(
         previous.fillColor, target.fillColor, animationPercent);
     measureIsNull = target.measureIsNull;
+    measureIsNegative = target.measureIsNegative;
   }
 }
 
