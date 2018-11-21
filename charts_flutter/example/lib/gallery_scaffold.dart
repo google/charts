@@ -52,7 +52,7 @@ class _GalleryScaffoldState extends State<GalleryScaffold> {
       appBar: new AppBar(title: new Text(widget.title)),
       body: new Padding(
           padding: const EdgeInsets.all(8.0),
-          child: new ListView(children: <Widget>[
+          child: new Column(children: <Widget>[
             new SizedBox(height: 250.0, child: widget.childBuilder()),
           ])),
       floatingActionButton: new FloatingActionButton(

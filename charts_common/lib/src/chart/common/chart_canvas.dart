@@ -95,8 +95,16 @@ abstract class ChartCanvas {
       double strokeWidthPx});
 
   /// Renders a simple rectangle.
+  ///
+  /// [drawAreaBounds] if specified and if the bounds of the rectangle exceed
+  /// the draw area bounds on the top, the first x pixels (decided by the native
+  /// platform) exceeding the draw area will apply a gradient to transparent
+  /// with anything exceeding the x pixels to be transparent.
   void drawRect(Rectangle<num> bounds,
-      {Color fill, Color stroke, double strokeWidthPx});
+      {Color fill,
+      Color stroke,
+      double strokeWidthPx,
+      Rectangle<num> drawAreaBounds});
 
   /// Renders a rounded rectangle.
   void drawRRect(Rectangle<num> bounds,
@@ -112,7 +120,13 @@ abstract class ChartCanvas {
   ///
   /// The first bar of the stack is expected to be the "base" bar. This would
   /// be the bottom most bar for a vertically rendered bar.
-  void drawBarStack(CanvasBarStack canvasBarStack);
+  ///
+  /// [drawAreaBounds] if specified and if the bounds of the rectangle exceed
+  /// the draw area bounds on the top, the first x pixels (decided by the native
+  /// platform) exceeding the draw area will apply a gradient to transparent
+  /// with anything exceeding the x pixels to be transparent.
+  void drawBarStack(CanvasBarStack canvasBarStack,
+      {Rectangle<num> drawAreaBounds});
 
   void drawText(TextElement textElement, int offsetX, int offsetY,
       {double rotation = 0.0});

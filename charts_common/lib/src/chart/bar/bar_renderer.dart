@@ -327,7 +327,7 @@ class BarRenderer<D>
       canvas.setClipBounds(clipBounds);
     }
 
-    canvas.drawBarStack(barStack);
+    canvas.drawBarStack(barStack, drawAreaBounds: componentBounds);
 
     if (barOutsideBounds) {
       canvas.resetClipBounds();
@@ -354,14 +354,14 @@ class BarRenderer<D>
       // the viewport, but any bar decorations above the bar can still show.
       left = max(componentBounds.left, barStackRect.left);
       right = min(componentBounds.right, barStackRect.right);
-      top = componentBounds.top;
-      bottom = componentBounds.bottom;
+      top = barStackRect.top;
+      bottom = barStackRect.bottom;
     } else {
       // Only clip at the top and bottom so that the bar's height stays within
       // the viewport, but any bar decorations to the right of the bar can still
       // show.
-      left = componentBounds.left;
-      right = componentBounds.right;
+      left = barStackRect.left;
+      right = barStackRect.right;
       top = max(componentBounds.top, barStackRect.top);
       bottom = min(componentBounds.bottom, barStackRect.bottom);
     }
