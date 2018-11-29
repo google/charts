@@ -396,6 +396,12 @@ class BarRenderer<D>
     int spacingLoss = (_barGroupInnerPadding * (numBarGroups - 1));
     int barWidth = ((domainWidth - spacingLoss) * barGroupWeight).round();
 
+    // Make sure that bars are at least one pixel wide, so that they will always
+    // be visible on the chart. Ideally we should do something clever with the
+    // size of the chart, and the density and periodicity of the data, but this
+    // at least ensures that dense charts still have visible data.
+    barWidth = max(1, barWidth);
+
     // Flip bar group index for calculating location on the domain axis if RTL.
     final adjustedBarGroupIndex =
         isRtl ? numBarGroups - barGroupIndex - 1 : barGroupIndex;
