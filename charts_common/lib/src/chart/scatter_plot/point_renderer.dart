@@ -74,7 +74,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
   @protected
-  final seriesPointMap = new LinkedHashMap<String, List<AnimatedPoint<D>>>();
+  var seriesPointMap = new LinkedHashMap<String, List<AnimatedPoint<D>>>();
 
   // Store a list of lines that exist in the series data.
   //
@@ -190,7 +190,13 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
+    // Build a list of sorted series IDs as we iterate through the list, used
+    // later for sorting.
+    final sortedSeriesIds = [];
+
     seriesList.forEach((ImmutableSeries<D> series) {
+      sortedSeriesIds.add(series.id);
+
       final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
       final domainFn = series.domainFn;
       final domainLowerBoundFn = series.domainLowerBoundFn;
@@ -237,7 +243,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
             measureOffsetValue,
             measureAxis);
 
-        final pointKey = '${domainValue}__${measureValue}';
+        final pointKey = '${series.id}__${domainValue}__${measureValue}';
 
         // If we already have an AnimatingPoint for that index, use it.
         var animatingPoint = pointList.firstWhere(
@@ -295,6 +301,12 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         animatingPoint.setNewTarget(pointElement);
       }
     });
+
+    // Sort the renderer elements to be in the same order as the series list.
+    // They may get disordered between chart draw cycles if a behavior adds or
+    // removes series from the list (e.g. click to hide on legends).
+    seriesPointMap = new LinkedHashMap.fromIterable(sortedSeriesIds,
+        key: (k) => k, value: (k) => seriesPointMap[k]);
 
     // Animate out points that don't exist anymore.
     seriesPointMap.forEach((String key, List<AnimatedPoint<D>> points) {
