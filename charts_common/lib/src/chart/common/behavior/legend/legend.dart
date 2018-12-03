@@ -76,6 +76,10 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   List<MutableSeries<D>> _currentSeriesList;
 
+  /// Save this in order to check if series list have changed and regenerate
+  /// the legend entries.
+  List<MutableSeries<D>> _postProcessSeriesList;
+
   static final _decimalPattern = new NumberFormat.decimalPattern();
 
   /// Default measure formatter for legends.
@@ -170,7 +174,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   void preProcessSeriesList(List<MutableSeries<D>> seriesList) {}
 
   /// Build LegendEntries from list of series.
-  void _postProcess(_) {
+  void _postProcess(List<MutableSeries<D>> seriesList) {
     // Get the selection model directly from chart on post process.
     //
     // This is because if initial selection is set as a behavior, it will be
@@ -179,15 +183,19 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     // generated.
     final selectionModel = chart.getSelectionModel(selectionModelType);
 
-    // Only update entries if the selection model is different because post
+    // Update entries if the selection model is different because post
     // process is called on each draw cycle, so this is called on each animation
     // frame and we don't want to update and request the native platform to
     // rebuild if nothing has changed.
-    if (legendState._selectionModel != selectionModel) {
+    //
+    // Also update legend entries if the series list has changed.
+    if (legendState._selectionModel != selectionModel ||
+        _postProcessSeriesList != seriesList) {
       legendState._legendEntries =
           legendEntryGenerator.getLegendEntries(_currentSeriesList);
 
       legendState._selectionModel = selectionModel;
+      _postProcessSeriesList = seriesList;
       _updateLegendEntries();
     }
   }
