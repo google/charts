@@ -64,8 +64,6 @@ class CircleSectorPainter {
         endAngle != null &&
         endAngle - startAngle == 2 * pi;
 
-    final midpointAngle = (endAngle + startAngle) / 2;
-
     final path = new Path()
       ..moveTo(innerRadiusStartPoint.x, innerRadiusStartPoint.y);
 
@@ -73,10 +71,8 @@ class CircleSectorPainter {
 
     // For full circles, draw the arc in two parts.
     if (isFullCircle) {
-      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: radius),
-          startAngle, midpointAngle - startAngle, true);
-      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: radius),
-          midpointAngle, endAngle - midpointAngle, true);
+      path.addArc(new Rect.fromCircle(center: centerOffset, radius: radius),
+          startAngle, endAngle - startAngle);
     } else {
       path.arcTo(new Rect.fromCircle(center: centerOffset, radius: radius),
           startAngle, endAngle - startAngle, true);
@@ -86,10 +82,8 @@ class CircleSectorPainter {
 
     // For full circles, draw the arc in two parts.
     if (isFullCircle) {
-      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
-          endAngle, midpointAngle - endAngle, true);
-      path.arcTo(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
-          midpointAngle, startAngle - midpointAngle, true);
+      path.addArc(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
+          endAngle, startAngle - endAngle);
     } else {
       path.arcTo(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
           endAngle, startAngle - endAngle, true);
