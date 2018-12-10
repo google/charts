@@ -80,6 +80,9 @@ class DatumDetails<D> {
   /// Otherwise, [color] will be used for the fill color.
   final Color fillColor;
 
+  /// Optional dash pattern of this [datum].
+  final List<int> dashPattern;
+
   /// The chart position of the (domain, measure) for the [datum] from a
   /// renderer.
   final Point<double> chartPosition;
@@ -135,6 +138,7 @@ class DatumDetails<D> {
       this.series,
       this.color,
       this.fillColor,
+      this.dashPattern,
       this.chartPosition,
       this.chartPositionLower,
       this.chartPositionUpper,
@@ -161,6 +165,7 @@ class DatumDetails<D> {
       ImmutableSeries<D> series,
       Color color,
       Color fillColor,
+      List<int> dashPattern,
       Point<double> chartPosition,
       Point<double> chartPositionLower,
       Point<double> chartPositionUpper,
@@ -187,6 +192,7 @@ class DatumDetails<D> {
         series: series ?? other.series,
         color: color ?? other.color,
         fillColor: fillColor ?? other.fillColor,
+        dashPattern: dashPattern ?? other.dashPattern,
         chartPosition: chartPosition ?? other.chartPosition,
         chartPositionLower: chartPositionLower ?? other.chartPositionLower,
         chartPositionUpper: chartPositionUpper ?? other.chartPositionUpper,

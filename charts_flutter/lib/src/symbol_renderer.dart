@@ -56,7 +56,8 @@ abstract class CustomSymbolRenderer extends common.SymbolRenderer
 
   @override
   void paint(common.ChartCanvas canvas, Rectangle<num> bounds,
-      {common.Color fillColor,
+      {List<int> dashPattern,
+      common.Color fillColor,
       common.Color strokeColor,
       double strokeWidthPx}) {
     // Intentionally ignored (never called).
