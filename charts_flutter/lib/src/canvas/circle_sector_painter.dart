@@ -69,7 +69,6 @@ class CircleSectorPainter {
 
     path.lineTo(radiusStartPoint.x, radiusStartPoint.y);
 
-    // For full circles, draw the arc in two parts.
     if (isFullCircle) {
       path.addArc(new Rect.fromCircle(center: centerOffset, radius: radius),
           startAngle, endAngle - startAngle);
@@ -80,7 +79,6 @@ class CircleSectorPainter {
 
     path.lineTo(innerRadiusEndPoint.x, innerRadiusEndPoint.y);
 
-    // For full circles, draw the arc in two parts.
     if (isFullCircle) {
       path.addArc(new Rect.fromCircle(center: centerOffset, radius: innerRadius),
           endAngle, startAngle - endAngle);
