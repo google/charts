@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Rectangle;
+import 'dart:math' show Rectangle, pi;
 import 'package:meta/meta.dart' show required;
 import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../common/chart_canvas.dart' show ChartCanvas;
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../common/text_element.dart' show TextDirection;
+import '../../common/text_element.dart' show TextDirection, TextElement;
 import '../../common/text_style.dart' show TextStyle;
 import '../../data/series.dart' show AccessorFn;
 import 'bar_renderer.dart' show ImmutableBarRendererElement;
@@ -67,9 +67,6 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       @required double animationPercent,
       @required bool renderingVertically,
       bool rtl: false}) {
-    // TODO: Decorator not yet available for vertical charts.
-    assert(renderingVertically == false);
-
     // Only decorate the bars when animation is at 100%.
     if (animationPercent != 1.0) {
       return;
@@ -111,6 +108,8 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       final totalPadding = labelPadding * 2;
       final insideBarWidth = bounds.width - totalPadding;
       final outsideBarWidth = drawBounds.width - bounds.width - totalPadding;
+      final insideBarHeight = bounds.height - totalPadding;
+      final outsideBarHeight = drawBounds.height - bounds.height - totalPadding;
 
       final labelElement = graphicsFactory.createTextElement(label);
       var calculatedLabelPosition = labelPosition;
@@ -122,67 +121,138 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         // length of the text fits and the space. This is because if the bar has
         // more space than the outside, it makes more sense to place the label
         // inside the bar, even if the entire label does not fit.
-        calculatedLabelPosition = (insideBarWidth >= outsideBarWidth ||
-                labelElement.measurement.horizontalSliceWidth < insideBarWidth)
-            ? BarLabelPosition.inside
-            : BarLabelPosition.outside;
+        if (renderingVertically) {
+          calculatedLabelPosition = (insideBarHeight >= outsideBarHeight ||
+                  labelElement.measurement.verticalSliceWidth < insideBarHeight)
+              ? BarLabelPosition.inside
+              : BarLabelPosition.outside;
+        } else {
+          calculatedLabelPosition = (insideBarWidth >= outsideBarWidth ||
+                  labelElement.measurement.horizontalSliceWidth <
+                      insideBarWidth)
+              ? BarLabelPosition.inside
+              : BarLabelPosition.outside;
+        }
       }
 
       // Set the max width and text style.
       if (calculatedLabelPosition == BarLabelPosition.inside) {
         labelElement.textStyle = datumInsideLabelStyle;
-        labelElement.maxWidth = insideBarWidth;
+        labelElement.maxWidth =
+            renderingVertically ? insideBarHeight : insideBarWidth;
       } else {
         // calculatedLabelPosition == LabelPosition.outside
         labelElement.textStyle = datumOutsideLabelStyle;
-        labelElement.maxWidth = outsideBarWidth;
+        labelElement.maxWidth =
+            renderingVertically ? outsideBarHeight : outsideBarWidth;
       }
 
       // Only calculate and draw label if there's actually space for the label.
       if (labelElement.maxWidth > 0) {
         // Calculate the start position of label based on [labelAnchor].
-        int labelX;
-        if (calculatedLabelPosition == BarLabelPosition.inside) {
-          switch (labelAnchor) {
-            case BarLabelAnchor.middle:
-              labelX = (bounds.left +
-                      bounds.width / 2 -
-                      labelElement.measurement.horizontalSliceWidth / 2)
-                  .round();
-              labelElement.textDirection =
-                  rtl ? TextDirection.rtl : TextDirection.ltr;
-              break;
 
-            case BarLabelAnchor.end:
-            case BarLabelAnchor.start:
-              final alignLeft = rtl
-                  ? (labelAnchor == BarLabelAnchor.end)
-                  : (labelAnchor == BarLabelAnchor.start);
+        final int labelX = renderingVertically
+            ? _calculateOffsetXVertical(bounds, labelElement)
+            : _calculateOffsetX(
+                bounds, labelElement, calculatedLabelPosition, rtl);
+        final int labelY = renderingVertically
+            ? _calculateOffsetYVertical(
+                bounds, labelElement, calculatedLabelPosition, rtl)
+            : _calculateOffsetY(bounds, labelElement);
 
-              if (alignLeft) {
-                labelX = bounds.left + labelPadding;
-                labelElement.textDirection = TextDirection.ltr;
-              } else {
-                labelX = bounds.right - labelPadding;
-                labelElement.textDirection = TextDirection.rtl;
-              }
-              break;
-          }
-        } else {
-          // calculatedLabelPosition == LabelPosition.outside
-          labelX = bounds.right + labelPadding;
-          labelElement.textDirection = TextDirection.ltr;
-        }
-
-        // Center the label inside the bar.
-        final labelY = (bounds.top +
-                (bounds.bottom - bounds.top) / 2 -
-                labelElement.measurement.verticalSliceWidth / 2)
-            .round();
-
-        canvas.drawText(labelElement, labelX, labelY);
+        canvas.drawText(labelElement, labelX, labelY,
+            rotation: renderingVertically ? 3 * pi / 2 : 0);
       }
     }
+  }
+
+  int _calculateOffsetXVertical(
+      Rectangle<int> bounds, TextElement labelElement) {
+    return (bounds.left +
+            (bounds.width) / 2 -
+            labelElement.measurement.verticalSliceWidth / 2)
+        .round();
+  }
+
+  int _calculateOffsetX(Rectangle<int> bounds, TextElement labelElement,
+      BarLabelPosition calculatedLabelPosition, bool rtl) {
+    int result = 0;
+    if (calculatedLabelPosition == BarLabelPosition.inside) {
+      switch (labelAnchor) {
+        case BarLabelAnchor.middle:
+          result = (bounds.left +
+                  bounds.width / 2 -
+                  labelElement.measurement.horizontalSliceWidth / 2)
+              .round();
+          labelElement.textDirection =
+              rtl ? TextDirection.rtl : TextDirection.ltr;
+          break;
+
+        case BarLabelAnchor.end:
+        case BarLabelAnchor.start:
+          final alignLeft = rtl
+              ? (labelAnchor == BarLabelAnchor.end)
+              : (labelAnchor == BarLabelAnchor.start);
+
+          if (alignLeft) {
+            result = bounds.left + labelPadding;
+            labelElement.textDirection = TextDirection.ltr;
+          } else {
+            result = bounds.right - labelPadding;
+            labelElement.textDirection = TextDirection.rtl;
+          }
+          break;
+      }
+    } else {
+      // calculatedLabelPosition == LabelPosition.outside
+      result = bounds.right + labelPadding;
+      labelElement.textDirection = TextDirection.ltr;
+    }
+    return result;
+  }
+
+  int _calculateOffsetY(Rectangle<int> bounds, TextElement labelElement) {
+    return (bounds.top +
+            (bounds.bottom - bounds.top) / 2 -
+            labelElement.measurement.verticalSliceWidth / 2)
+        .round();
+  }
+
+  int _calculateOffsetYVertical(Rectangle<int> bounds, TextElement labelElement,
+      BarLabelPosition calculatedLabelPosition, bool rtl) {
+    int result = 0;
+    if (calculatedLabelPosition == BarLabelPosition.inside) {
+      switch (labelAnchor) {
+        case BarLabelAnchor.middle:
+          result = (bounds.bottom +
+                  bounds.height / 2 -
+                  labelElement.measurement.horizontalSliceWidth / 2)
+              .round();
+          labelElement.textDirection =
+              rtl ? TextDirection.rtl : TextDirection.ltr;
+          break;
+        case BarLabelAnchor.end:
+        case BarLabelAnchor.start:
+          final alignLeft = rtl
+              ? (labelAnchor == BarLabelAnchor.end)
+              : (labelAnchor == BarLabelAnchor.start);
+
+          if (alignLeft) {
+            result = bounds.bottom - labelPadding;
+            labelElement.textDirection = TextDirection.ltr;
+          } else {
+            result = bounds.top + labelPadding;
+            labelElement.textDirection = TextDirection.rtl;
+          }
+          break;
+      }
+    } else {
+      // calculatedLabelPosition == LabelPosition.outside
+      result = bounds.top - labelPadding;
+      labelElement.textDirection = TextDirection.ltr;
+    }
+
+    return result;
   }
 
   // Helper function that converts [TextStyleSpec] to [TextStyle].
