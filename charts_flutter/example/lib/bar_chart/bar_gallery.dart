@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:example/bar_chart/vertical_bar_label.dart';
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
 import 'custom_rounded_bars.dart';
@@ -47,6 +48,12 @@ List<GalleryScaffold> buildGallery() {
       title: 'Stacked Bar Chart',
       subtitle: 'Stacked bar chart with multiple series',
       childBuilder: () => new StackedBarChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.insert_chart),
+      title: 'Vertical Bar Chart with Bar Labels',
+      subtitle: 'Vertical bar chart with a single series and bar labels',
+      childBuilder: () => new VerticalBarLabelChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.insert_chart),
