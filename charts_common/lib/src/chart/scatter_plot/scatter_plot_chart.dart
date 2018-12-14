@@ -20,10 +20,8 @@ import '../cartesian/axis/axis.dart' show NumericAxis;
 import '../cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 import '../cartesian/cartesian_chart.dart' show NumericCartesianChart;
-import '../common/chart_context.dart' show ChartContext;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
-import '../../common/graphics_factory.dart' show GraphicsFactory;
 
 /// A scatter plot draws series data as a collection of points in a two
 /// dimensional Cartesian space, plotting two variables from each datum at a
@@ -62,7 +60,7 @@ class ScatterPlotChart extends NumericCartesianChart {
   }
 
   @override
-  void initDomainAxis(ChartContext context, GraphicsFactory graphicsFactory) {
+  void initDomainAxis() {
     domainAxis.tickDrawStrategy = new GridlineRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
   }

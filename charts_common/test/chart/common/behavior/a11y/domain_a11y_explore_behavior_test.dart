@@ -31,12 +31,12 @@ class FakeCartesianChart extends CartesianChart<String> {
   @override
   Rectangle<int> drawAreaBounds;
 
-  @override
-  Axis domainAxis;
-
   void callFireOnPostprocess(List<MutableSeries<String>> seriesList) {
     fireOnPostprocess(seriesList);
   }
+
+  @override
+  initDomainAxis() {}
 }
 
 void main() {

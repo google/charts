@@ -104,7 +104,16 @@ abstract class BaseChart<D> {
       _layoutManager.applyToViews(
           (LayoutView view) => view.graphicsFactory = graphicsFactory);
     }
+
+    configurationChanged();
   }
+
+  /// Finish configuring components that require context and graphics factory.
+  ///
+  /// Some components require context and graphics factory to be set again when
+  /// configuration has changed but the configuration is set prior to the
+  /// chart first calling init with the context.
+  void configurationChanged() {}
 
   int get chartWidth => _chartWidth;
 

@@ -148,6 +148,10 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
       }
     }
 
+    if (_chartState.chartIsDirty) {
+      _chart.configurationChanged();
+    }
+
     // If series list changes or other configuration changed that triggered the
     // _chartState.configurationChanged flag to be set (such as axis, behavior,
     // and renderer changes). Otherwise, the chart only requests repainting and

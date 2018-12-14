@@ -45,68 +45,48 @@ import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../data/series.dart' show Series;
 
 class NumericCartesianChart extends CartesianChart<num> {
-  final NumericAxis _domainAxis;
-
   NumericCartesianChart(
       {bool vertical,
       LayoutConfig layoutConfig,
       NumericAxis primaryMeasureAxis,
       NumericAxis secondaryMeasureAxis,
       LinkedHashMap<String, NumericAxis> disjointMeasureAxes})
-      : _domainAxis = new NumericAxis()
-          ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
-        super(
+      : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
+            domainAxis: new NumericAxis(),
             primaryMeasureAxis: primaryMeasureAxis,
             secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
-
-  void init(ChartContext context, GraphicsFactory graphicsFactory) {
-    super.init(context, graphicsFactory);
-    _domainAxis.context = context;
-    initDomainAxis(context, graphicsFactory);
-    addView(_domainAxis);
-  }
+            disjointMeasureAxes: disjointMeasureAxes) {}
 
   @protected
-  void initDomainAxis(ChartContext context, GraphicsFactory graphicsFactory) {
+  void initDomainAxis() {
     _domainAxis.tickDrawStrategy = new SmallTickRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
   }
-
-  @override
-  Axis get domainAxis => _domainAxis;
 }
 
 class OrdinalCartesianChart extends CartesianChart<String> {
-  final OrdinalAxis _domainAxis;
-
   OrdinalCartesianChart(
       {bool vertical,
       LayoutConfig layoutConfig,
       NumericAxis primaryMeasureAxis,
       NumericAxis secondaryMeasureAxis,
       LinkedHashMap<String, NumericAxis> disjointMeasureAxes})
-      : _domainAxis = new OrdinalAxis()
-          ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis,
-        super(
+      : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
+            domainAxis: new OrdinalAxis(),
             primaryMeasureAxis: primaryMeasureAxis,
             secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes);
+            disjointMeasureAxes: disjointMeasureAxes) {}
 
-  void init(ChartContext context, GraphicsFactory graphicsFactory) {
-    super.init(context, graphicsFactory);
-    _domainAxis.context = context;
-    _domainAxis.tickDrawStrategy = new SmallTickRendererSpec<String>()
-        .createDrawStrategy(context, graphicsFactory);
-    addView(_domainAxis);
+  @protected
+  void initDomainAxis() {
+    _domainAxis
+      ..tickDrawStrategy = new SmallTickRendererSpec<String>()
+          .createDrawStrategy(context, graphicsFactory);
   }
-
-  @override
-  Axis get domainAxis => _domainAxis;
 }
 
 abstract class CartesianChart<D> extends BaseChart<D> {
@@ -118,6 +98,31 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   );
 
   bool vertical;
+
+  /// The current domain axis for this chart.
+  Axis<D> _domainAxis;
+
+  /// Temporarily stores the new domain axis that is passed in the constructor
+  /// and the new domain axis created when [domainAxisSpec] is set to a new
+  /// spec.
+  ///
+  /// This step is necessary because the axis cannot be fully configured until
+  /// [context] is available. [configurationChanged] is called after [context]
+  /// is available and [_newDomainAxis] will be set to [_domainAxis] and then
+  /// reset back to null.
+  Axis<D> _newDomainAxis;
+
+  /// The current domain axis spec that was used to configure [_domainAxis].
+  ///
+  /// This is kept to check if the axis spec has changed when [domainAxisSpec]
+  /// is set.
+  AxisSpec<D> _domainAxisSpec;
+
+  /// Temporarily stores the new domain axis spec that is passed in when
+  /// [domainAxisSpec] is set and is different from [_domainAxisSpec]. This spec
+  /// is then applied to the new domain axis when [configurationChanged] is
+  /// called.
+  AxisSpec<D> _newDomainAxisSpec;
 
   final Axis<num> _primaryMeasureAxis;
 
@@ -135,10 +140,13 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   CartesianChart(
       {bool vertical,
       LayoutConfig layoutConfig,
+      Axis<D> domainAxis,
       NumericAxis primaryMeasureAxis,
       NumericAxis secondaryMeasureAxis,
       LinkedHashMap<String, NumericAxis> disjointMeasureAxes})
       : vertical = vertical ?? true,
+        // [domainAxis] will be set to the new axis in [configurationChanged].
+        _newDomainAxis = domainAxis,
         _primaryMeasureAxis = primaryMeasureAxis ?? new NumericAxis(),
         _secondaryMeasureAxis = secondaryMeasureAxis ?? new NumericAxis(),
         _disjointMeasureAxes =
@@ -172,10 +180,52 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     });
   }
 
-  Axis get domainAxis;
+  Axis get domainAxis => _domainAxis;
 
-  set domainAxisSpec(AxisSpec axisSpec) =>
-      axisSpec.configure(domainAxis, context, graphicsFactory);
+  /// Allows the chart to configure the domain axis when it is created.
+  @protected
+  void initDomainAxis();
+
+  /// Create a new domain axis and save the new spec to be applied during
+  /// [configurationChanged].
+  set domainAxisSpec(AxisSpec axisSpec) {
+    if (_domainAxisSpec != axisSpec) {
+      _newDomainAxis = createDomainAxisFromSpec(axisSpec);
+      _newDomainAxisSpec = axisSpec;
+    }
+  }
+
+  /// Creates the domain axis spec from provided axis spec.
+  @protected
+  Axis<D> createDomainAxisFromSpec(AxisSpec<D> axisSpec) {
+    return axisSpec.createAxis();
+  }
+
+  @override
+  void configurationChanged() {
+    if (_newDomainAxis != null) {
+      if (_domainAxis != null) {
+        removeView(_domainAxis);
+      }
+
+      _domainAxis = _newDomainAxis;
+      _domainAxis
+        ..context = context
+        ..layoutPaintOrder = LayoutViewPaintOrder.domainAxis;
+
+      initDomainAxis();
+
+      addView(_domainAxis);
+
+      _newDomainAxis = null;
+    }
+
+    if (_newDomainAxisSpec != null) {
+      _domainAxisSpec = _newDomainAxisSpec;
+      _newDomainAxisSpec.configure(_domainAxis, context, graphicsFactory);
+      _newDomainAxisSpec = null;
+    }
+  }
 
   /// Gets the measure axis matching the provided id.
   ///
@@ -198,6 +248,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     return axis;
   }
 
+  // TODO: Change measure axis spec to create new measure axis.
   /// Sets the primary measure axis for the chart, rendered on the start side of
   /// the domain axis.
   set primaryMeasureAxisSpec(AxisSpec axisSpec) {
