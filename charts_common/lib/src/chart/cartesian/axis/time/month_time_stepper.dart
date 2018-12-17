@@ -53,7 +53,12 @@ class MonthTimeStepper extends BaseTimeStepper {
   @override
   DateTime getStepTimeBeforeInclusive(DateTime time, int tickIncrement) {
     final monthRemainder = time.month % tickIncrement;
-    final newMonth = (time.month - monthRemainder) % DateTime.monthsPerYear;
+    var newMonth = (time.month - monthRemainder) % DateTime.monthsPerYear;
+    // Handles the last month of the year (December) edge case.
+    // Ex. When month is December and increment is 1
+    if (time.month == DateTime.monthsPerYear && newMonth == 0) {
+      newMonth = DateTime.monthsPerYear;
+    }
     final newYear =
         time.year - (monthRemainder / DateTime.monthsPerYear).floor();
 
