@@ -80,6 +80,13 @@ class DatumDetails<D> {
   /// Otherwise, [color] will be used for the fill color.
   final Color fillColor;
 
+  /// Optional area color of this [datum].
+  ///
+  /// This color is used for supplemental information on the series, such as
+  /// confidence intervals or area skirts. If not provided, then some variation
+  /// of the main [color] will be used (e.g. 10% opacity).
+  final Color areaColor;
+
   /// Optional dash pattern of this [datum].
   final List<int> dashPattern;
 
@@ -138,6 +145,7 @@ class DatumDetails<D> {
       this.series,
       this.color,
       this.fillColor,
+      this.areaColor,
       this.dashPattern,
       this.chartPosition,
       this.chartPositionLower,
@@ -165,6 +173,7 @@ class DatumDetails<D> {
       ImmutableSeries<D> series,
       Color color,
       Color fillColor,
+      Color areaColor,
       List<int> dashPattern,
       Point<double> chartPosition,
       Point<double> chartPositionLower,
@@ -192,6 +201,7 @@ class DatumDetails<D> {
         series: series ?? other.series,
         color: color ?? other.color,
         fillColor: fillColor ?? other.fillColor,
+        areaColor: areaColor ?? other.areaColor,
         dashPattern: dashPattern ?? other.dashPattern,
         chartPosition: chartPosition ?? other.chartPosition,
         chartPositionLower: chartPositionLower ?? other.chartPositionLower,

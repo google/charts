@@ -26,9 +26,9 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Points<br>[![](example/line_charts/points_thumb.png)](example/line_charts/points) | Stacked Area<br>[![](example/line_charts/stacked_area_thumb.png)](example/line_charts/stacked_area) | Area And Line<br>[![](example/line_charts/area_and_line_thumb.png)](example/line_charts/area_and_line) |
-| Simple Nulls<br>[![](example/line_charts/simple_nulls_thumb.png)](example/line_charts/simple_nulls) | Stacked Area Nulls<br>[![](example/line_charts/stacked_area_nulls_thumb.png)](example/line_charts/stacked_area_nulls) | Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) | Segments<br>[![](example/line_charts/segments_thumb.png)](example/line_charts/segments) |
-| Line Annotation<br>[![](example/line_charts/line_annotation_thumb.png)](example/line_charts/line_annotation) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | Range Annotation Margin<br>[![](example/line_charts/range_annotation_margin_thumb.png)](example/line_charts/range_annotation_margin) | |
+| Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Points<br>[![](example/line_charts/points_thumb.png)](example/line_charts/points) | Stacked Area<br>[![](example/line_charts/stacked_area_thumb.png)](example/line_charts/stacked_area) | Stacked Area Custom Color<br>[![](example/line_charts/stacked_area_custom_color_thumb.png)](example/line_charts/stacked_area_custom_color) |
+| Area And Line<br>[![](example/line_charts/area_and_line_thumb.png)](example/line_charts/area_and_line) | Simple Nulls<br>[![](example/line_charts/simple_nulls_thumb.png)](example/line_charts/simple_nulls) | Stacked Area Nulls<br>[![](example/line_charts/stacked_area_nulls_thumb.png)](example/line_charts/stacked_area_nulls) | Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) |
+| Segments<br>[![](example/line_charts/segments_thumb.png)](example/line_charts/segments) | Line Annotation<br>[![](example/line_charts/line_annotation_thumb.png)](example/line_charts/line_annotation) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | Range Annotation Margin<br>[![](example/line_charts/range_annotation_margin_thumb.png)](example/line_charts/range_annotation_margin) |
 
 
 ### Scatter Plot Charts

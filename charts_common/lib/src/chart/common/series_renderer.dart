@@ -300,6 +300,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     final rawMeasureLowerBoundFn = series.rawMeasureLowerBoundFn;
     final rawMeasureUpperBoundFn = series.rawMeasureUpperBoundFn;
     final colorFn = series.colorFn;
+    final areaColorFn = series.areaColorFn ?? colorFn;
     final fillColorFn = series.fillColorFn ?? colorFn;
     final radiusPxFn = series.radiusPxFn;
     final strokeWidthPxFn = series.strokeWidthPxFn;
@@ -331,6 +332,9 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     var fillColor = fillColorFn(index);
     fillColor ??= color;
 
+    // Area color is entirely optional.
+    final areaColor = areaColorFn(index);
+
     var radiusPx = radiusPxFn != null ? radiusPxFn(index) : null;
     radiusPx = radiusPx?.toDouble();
 
@@ -353,6 +357,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         series: series,
         color: color,
         fillColor: fillColor,
+        areaColor: areaColor,
         radiusPx: radiusPx,
         strokeWidthPx: strokeWidthPx);
 

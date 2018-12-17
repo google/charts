@@ -43,6 +43,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<num> rawMeasureLowerBoundFn;
   AccessorFn<num> rawMeasureUpperBoundFn;
 
+  AccessorFn<Color> areaColorFn;
   AccessorFn<Color> colorFn;
   AccessorFn<List<int>> dashPatternFn;
   AccessorFn<Color> fillColorFn;
@@ -87,6 +88,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
       }
     }
 
+    areaColorFn = series.areaColorFn;
     colorFn = series.colorFn;
     dashPatternFn = series.dashPatternFn;
     fillColorFn = series.fillColorFn;
@@ -123,6 +125,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
     seriesMeasureTotal = other.seriesMeasureTotal;
 
+    areaColorFn = other.areaColorFn;
     colorFn = other.colorFn;
     dashPatternFn = other.dashPatternFn;
     fillColorFn = other.fillColorFn;
@@ -176,6 +179,7 @@ abstract class ImmutableSeries<D> {
   AccessorFn<num> get rawMeasureLowerBoundFn;
   AccessorFn<num> get rawMeasureUpperBoundFn;
 
+  AccessorFn<Color> get areaColorFn;
   AccessorFn<Color> get colorFn;
   AccessorFn<List<int>> get dashPatternFn;
   AccessorFn<Color> get fillColorFn;
