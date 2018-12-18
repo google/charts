@@ -75,6 +75,14 @@ abstract class BaseChart<D> {
   final _behaviorRoleMap = <String, ChartBehavior<D>>{};
   final _behaviorStack = <ChartBehavior<D>>[];
 
+  final _behaviorTappableMap = <String, ChartBehavior<D>>{};
+
+  /// Whether or not the chart will respond to tap events.
+  ///
+  /// This will generally be true if there is a behavior attached to the chart
+  /// that does something with tap events, such as "click to select data."
+  bool get isTappable => _behaviorTappableMap.isNotEmpty;
+
   final _gestureProxy = new ProxyGestureListener();
 
   final _selectionModels = <SelectionModelType, MutableSelectionModel<D>>{};
@@ -316,10 +324,35 @@ abstract class BaseChart<D> {
       _behaviorRoleMap.remove(role);
     }
 
+    // Make sure the removed behavior is no longer registered for tap events.
+    unregisterTappable(behavior);
+
     final wasAttached = _behaviorStack.remove(behavior);
     behavior.removeFrom(this);
 
     return wasAttached;
+  }
+
+  /// Tells the chart that this behavior responds to tap events.
+  ///
+  /// This should only be called after [behavior] has been attached to the chart
+  /// via [addBehavior].
+  void registerTappable(ChartBehavior<D> behavior) {
+    final role = behavior.role;
+
+    if (role != null &&
+        _behaviorRoleMap[role] == behavior &&
+        _behaviorTappableMap[role] != behavior) {
+      _behaviorTappableMap[role] = behavior;
+    }
+  }
+
+  /// Tells the chart that this behavior no longer responds to tap events.
+  void unregisterTappable(ChartBehavior<D> behavior) {
+    final role = behavior?.role;
+    if (role != null && _behaviorTappableMap[role] == behavior) {
+      _behaviorTappableMap.remove(role);
+    }
   }
 
   /// Returns a list of behaviors that have been added.

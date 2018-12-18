@@ -258,11 +258,26 @@ class SelectNearest<D> implements ChartBehavior<D> {
   void attachTo(BaseChart<D> chart) {
     _chart = chart;
     chart.addGestureListener(_listener);
+
+    // TODO: Update this dynamically based on tappable location.
+    switch (this.eventTrigger) {
+      case SelectionTrigger.tap:
+      case SelectionTrigger.tapAndDrag:
+      case SelectionTrigger.pressHold:
+      case SelectionTrigger.longPressHold:
+        chart.registerTappable(this);
+        break;
+      case SelectionTrigger.hover:
+      default:
+        chart.unregisterTappable(this);
+        break;
+    }
   }
 
   @override
   void removeFrom(BaseChart<D> chart) {
     chart.removeGestureListener(_listener);
+    chart.unregisterTappable(this);
     _chart = null;
   }
 

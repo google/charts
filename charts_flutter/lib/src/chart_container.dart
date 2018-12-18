@@ -301,6 +301,9 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
       _rtlSpec?.axisDirection == common.AxisDirection.reversed;
 
   @override
+  bool get isTappable => _chart.isTappable;
+
+  @override
   common.DateTimeFactory get dateTimeFactory => _dateTimeFactory;
 
   /// Gets the chart's gesture listener.

@@ -39,6 +39,12 @@ abstract class ChartContext {
   /// [RTLSpec] is set to reverse the axis direction in rtl mode.
   bool get isRtl;
 
+  /// Whether or not the chart will respond to tap events.
+  ///
+  /// This will generally be true if there is a behavior attached to the chart
+  /// that does something with tap events, such as "click to select data."
+  bool get isTappable;
+
   double get pixelsPerDp;
 
   DateTimeFactory get dateTimeFactory;
