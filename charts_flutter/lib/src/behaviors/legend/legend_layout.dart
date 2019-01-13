@@ -26,6 +26,9 @@ abstract class LegendLayout {
 class TabularLegendLayout implements LegendLayout {
   /// No limit for max rows or max columns.
   static const _noLimit = -1;
+  
+  /// Default EdgeInsets for padding rows to the max column count
+  static const defaultCellPadding = const EdgeInsets.all(8.0);
 
   final bool isHorizontalFirst;
   final int desiredMaxRows;
@@ -132,7 +135,7 @@ class TabularLegendLayout implements LegendLayout {
   }
 
   Table _buildTableFromRows(List<TableRow> rows) {
-    final padWidget = Padding(padding: cellPadding);
+    final padWidget = Padding(padding: cellPadding ?? defaultCellPadding);
 
     // Pad rows to the max column count, because each TableRow in a table is
     // required to have the same number of children.
