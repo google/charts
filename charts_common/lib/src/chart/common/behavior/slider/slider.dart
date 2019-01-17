@@ -415,8 +415,9 @@ class Slider<D> implements ChartBehavior<D> {
   /// [skipAnimation] controls whether or not the slider will animate. Animation
   /// is disabled by default.
   void moveSliderToDomain(D domain, {bool skipAnimation: true}) {
-    // Nothing to do if we are asked to move to the current location.
-    if (domain == _domainValue) {
+    // Nothing to do if we are unattached to a chart or asked to move to the
+    // current location.
+    if (_chart == null || domain == _domainValue) {
       return;
     }
 
