@@ -67,6 +67,11 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   //
   // Renderer methods
   //
+  /// Symbol annotations do not use any measure axes, or draw anything in the
+  /// main draw area associated with them.
+  @override
+  void configureMeasureAxes(List<MutableSeries<D>> seriesList) {}
+
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
     var localConfig = (config as SymbolAnnotationRendererConfig);
