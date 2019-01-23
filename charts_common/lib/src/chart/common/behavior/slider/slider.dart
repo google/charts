@@ -69,6 +69,9 @@ class Slider<D> implements ChartBehavior<D> {
   /// Renderer for the handle. Defaults to a rectangle.
   SymbolRenderer _handleRenderer;
 
+  /// Custom role ID for this slider
+  String _roleId;
+
   /// Whether or not the slider will snap onto the nearest datum (by domain
   /// distance) when dragged.
   final bool snapToDatum;
@@ -120,6 +123,11 @@ class Slider<D> implements ChartBehavior<D> {
   /// [onChangeCallback] will be called when the position of the slider
   /// changes during a drag event.
   ///
+  /// [roleId] optional custom role ID for the slider. This can be used to allow
+  /// multiple [Slider] behaviors on the same chart. Normally, there can only be
+  /// one slider (per event trigger type) on a chart. This setting allows for
+  /// configuring multiple independent sliders.
+  ///
   /// [snapToDatum] configures the slider to snap snap onto the nearest datum
   /// (by domain distance) when dragged. By default, the slider can be
   /// positioned anywhere along the domain axis.
@@ -130,9 +138,11 @@ class Slider<D> implements ChartBehavior<D> {
       SymbolRenderer handleRenderer,
       D initialDomainValue,
       SliderListenerCallback<D> onChangeCallback,
+      String roleId,
       this.snapToDatum = false,
       SliderStyle style}) {
     _handleRenderer = handleRenderer ?? new RectSymbolRenderer();
+    _roleId = roleId ?? '';
     _style = style ?? new SliderStyle();
 
     _domainValue = initialDomainValue;
@@ -227,7 +237,7 @@ class Slider<D> implements ChartBehavior<D> {
     // instead of the mouse point.
     if (snapToDatum) {
       final details = _chart.getNearestDatumDetailPerSeries(chartPoint, true);
-      if (details.length > 0 && details[0].chartPosition.x != null) {
+      if (details.isNotEmpty && details[0].chartPosition.x != null) {
         // Only trigger an animating draw cycle if we need to move the slider.
         if (_domainValue != details[0].domain) {
           _moveSliderToDomain(details[0].domain);
@@ -322,6 +332,7 @@ class Slider<D> implements ChartBehavior<D> {
     _sliderEventListener.onChange(
         new Point<int>(_domainCenterPoint.x, _domainCenterPoint.y),
         _domainValue,
+        _roleId,
         dragState);
   }
 
@@ -348,7 +359,8 @@ class Slider<D> implements ChartBehavior<D> {
       // Clamp the position to the edge of the viewport.
       final position = clamp(point.x, viewBounds.left, viewBounds.right);
 
-      positionChanged = (position != _previousDomainCenterPoint);
+      positionChanged = (_previousDomainCenterPoint != null &&
+          position != _previousDomainCenterPoint.x);
 
       // Reset the domain value if the position was outside of the chart.
       _domainValue = _chart.domainAxis.getDomain(position.toDouble());
@@ -414,7 +426,7 @@ class Slider<D> implements ChartBehavior<D> {
   ///
   /// [skipAnimation] controls whether or not the slider will animate. Animation
   /// is disabled by default.
-  void moveSliderToDomain(D domain, {bool skipAnimation: true}) {
+  void moveSliderToDomain(D domain, {bool skipAnimation = true}) {
     // Nothing to do if we are unattached to a chart or asked to move to the
     // current location.
     if (_chart == null || domain == _domainValue) {
@@ -460,7 +472,7 @@ class Slider<D> implements ChartBehavior<D> {
   }
 
   @override
-  String get role => 'Slider-${eventTrigger.toString()}';
+  String get role => 'Slider-${eventTrigger.toString()}-${_roleId}';
 }
 
 /// Style configuration for a [Slider] behavior.
@@ -724,8 +736,8 @@ class SliderEventListener<D> {
 /// [domain] is the domain value at the slider position.
 ///
 /// [dragState] indicates the current state of a drag event.
-typedef SliderListenerCallback<D>(
-    Point<int> point, D domain, SliderListenerDragState dragState);
+typedef SliderListenerCallback<D>(Point<int> point, D domain, String roleId,
+    SliderListenerDragState dragState);
 
 /// Describes the current state of a slider change as a result of a drag event.
 ///

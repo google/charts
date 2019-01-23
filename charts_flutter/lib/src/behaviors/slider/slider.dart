@@ -60,6 +60,9 @@ class Slider extends ChartBehavior<common.Slider> {
   /// The callback will be given the current domain position of the slider.
   final common.SliderListenerCallback onChangeCallback;
 
+  /// Custom role ID for this slider
+  final String roleId;
+
   /// Whether or not the slider will snap onto the nearest datum (by domain
   /// distance) when dragged.
   final bool snapToDatum;
@@ -74,6 +77,7 @@ class Slider extends ChartBehavior<common.Slider> {
       {this.eventTrigger,
       this.onChangeCallback,
       this.initialDomainValue,
+      this.roleId,
       this.snapToDatum,
       this.style,
       this.handleRenderer,
@@ -100,6 +104,7 @@ class Slider extends ChartBehavior<common.Slider> {
       {common.SelectionTrigger eventTrigger,
       common.SymbolRenderer handleRenderer,
       dynamic initialDomainValue,
+      String roleId,
       common.SliderListenerCallback onChangeCallback,
       bool snapToDatum = false,
       common.SliderStyle style}) {
@@ -112,6 +117,7 @@ class Slider extends ChartBehavior<common.Slider> {
         handleRenderer: handleRenderer,
         initialDomainValue: initialDomainValue,
         onChangeCallback: onChangeCallback,
+        roleId: roleId,
         snapToDatum: snapToDatum,
         style: style,
         desiredGestures: Slider._getDesiredGestures(eventTrigger));
@@ -145,6 +151,7 @@ class Slider extends ChartBehavior<common.Slider> {
       handleRenderer: handleRenderer,
       initialDomainValue: initialDomainValue as D,
       onChangeCallback: onChangeCallback,
+      roleId: roleId,
       snapToDatum: snapToDatum,
       style: style);
 
@@ -161,13 +168,14 @@ class Slider extends ChartBehavior<common.Slider> {
         handleRenderer == o.handleRenderer &&
         initialDomainValue == o.initialDomainValue &&
         onChangeCallback == o.onChangeCallback &&
+        roleId == o.roleId &&
         snapToDatum == o.snapToDatum &&
         style == o.style;
   }
 
   @override
   int get hashCode {
-    return hashValues(
-        eventTrigger, handleRenderer, initialDomainValue, snapToDatum, style);
+    return hashValues(eventTrigger, handleRenderer, initialDomainValue, roleId,
+        snapToDatum, style);
   }
 }
