@@ -127,6 +127,16 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
       final symbolRendererFn = series.getAttr(pointSymbolRendererFnKey);
 
+      // Add a key function to help animate points moved in position in the
+      // series data between chart draw cycles. Ideally we should require the
+      // user to provide a key function, but this at least provides some
+      // smoothing when adding/removing data.
+      if (series.keyFn == null) {
+        series.keyFn = (int index) =>
+            '${series.id}__${series.domainFn(index)}__' +
+            '${series.measureFn(index)}';
+      }
+
       for (var index = 0; index < series.data.length; index++) {
         // Default to the configured radius if none was returned by the
         // accessor function.
@@ -207,6 +217,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       final measureUpperBoundFn = series.measureUpperBoundFn;
       final measureOffsetFn = series.measureOffsetFn;
       final seriesKey = series.id;
+      final keyFn = series.keyFn;
 
       var pointList = seriesPointMap.putIfAbsent(seriesKey, () => []);
 
@@ -243,7 +254,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
             measureOffsetValue,
             measureAxis);
 
-        final pointKey = '${series.id}__${domainValue}__${measureValue}';
+        final pointKey = keyFn(index);
 
         // If we already have an AnimatingPoint for that index, use it.
         var animatingPoint = pointList.firstWhere(

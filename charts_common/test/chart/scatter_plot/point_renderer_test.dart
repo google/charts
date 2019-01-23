@@ -88,6 +88,8 @@ void main() {
       // Validate Desktop series.
       var series = numericSeriesList[0];
 
+      var keyFn = series.keyFn;
+
       var elementsList = series.getAttr(pointElementsKey);
       expect(elementsList.length, equals(4));
 
@@ -105,6 +107,11 @@ void main() {
       expect(elementsList[1].symbolRendererId, equals(defaultSymbolRendererId));
       expect(elementsList[2].symbolRendererId, equals(defaultSymbolRendererId));
       expect(elementsList[3].symbolRendererId, equals(defaultSymbolRendererId));
+
+      expect(keyFn(0), equals('Desktop__0__5'));
+      expect(keyFn(1), equals('Desktop__10__25'));
+      expect(keyFn(2), equals('Desktop__12__75'));
+      expect(keyFn(3), equals('Desktop__13__225'));
     });
 
     test('with numeric data and missing radiusPxFn', () {

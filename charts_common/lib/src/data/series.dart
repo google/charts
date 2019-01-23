@@ -27,6 +27,15 @@ class Series<T, D> {
 
   final List<T> data;
 
+  /// [keyFn] defines a globally unique identifier for each datum.
+  ///
+  /// The key for each datum is used during chart animation to smoothly
+  /// transition data still in the series to its new state.
+  ///
+  /// Note: This is currently an optional function that is not fully used by all
+  /// series renderers yet.
+  final AccessorFn<String> keyFn;
+
   final AccessorFn<D> domainFn;
   final AccessorFn<D> domainLowerBoundFn;
   final AccessorFn<D> domainUpperBoundFn;
@@ -77,6 +86,7 @@ class Series<T, D> {
       TypedAccessorFn<T, D> domainUpperBoundFn,
       TypedAccessorFn<T, Color> fillColorFn,
       TypedAccessorFn<T, FillPatternType> fillPatternFn,
+      TypedAccessorFn<T, String> keyFn,
       TypedAccessorFn<T, String> labelAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn,
@@ -174,6 +184,7 @@ class Series<T, D> {
     this.domainUpperBoundFn,
     this.fillColorFn,
     this.fillPatternFn,
+    this.keyFn,
     this.labelAccessorFn,
     this.insideLabelStyleAccessorFn,
     this.outsideLabelStyleAccessorFn,

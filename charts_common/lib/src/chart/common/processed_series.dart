@@ -32,6 +32,8 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
   List data;
 
+  AccessorFn<String> keyFn;
+
   AccessorFn<D> domainFn;
   AccessorFn<D> domainLowerBoundFn;
   AccessorFn<D> domainUpperBoundFn;
@@ -65,6 +67,8 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     overlaySeries = series.overlaySeries;
 
     data = series.data;
+    keyFn = series.keyFn;
+
     domainFn = series.domainFn;
     domainLowerBoundFn = series.domainLowerBoundFn;
     domainUpperBoundFn = series.domainUpperBoundFn;
@@ -110,6 +114,8 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     seriesIndex = other.seriesIndex;
 
     data = other.data;
+    keyFn = other.keyFn;
+
     domainFn = other.domainFn;
     domainLowerBoundFn = other.domainLowerBoundFn;
     domainUpperBoundFn = other.domainUpperBoundFn;
@@ -167,6 +173,15 @@ abstract class ImmutableSeries<D> {
   num get seriesMeasureTotal;
 
   List get data;
+
+  /// [keyFn] defines a globally unique identifier for each datum.
+  ///
+  /// The key for each datum is used during chart animation to smoothly
+  /// transition data still in the series to its new state.
+  ///
+  /// Note: This is currently an optional function that is not fully used by all
+  /// series renderers yet.
+  AccessorFn<String> keyFn;
 
   AccessorFn<D> get domainFn;
   AccessorFn<D> get domainLowerBoundFn;
