@@ -93,4 +93,7 @@ class MaterialStyle implements Style {
 
   @override
   Color get sliderStrokeColor => MaterialPalette.gray.shade600;
+
+  @override
+  Color get chartBackgroundColor => MaterialPalette.white;
 }

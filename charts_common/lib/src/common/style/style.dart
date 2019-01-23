@@ -28,7 +28,9 @@ import '../palette.dart';
 /// Get or set the [Style] that is used for the app using [StyleFactory.style].
 abstract class Style {
   Color get black;
+
   Color get transparent;
+
   Color get white;
 
   /// Gets list with [count] of palettes.
@@ -82,4 +84,7 @@ abstract class Style {
 
   /// Default stroke color for [Slider].
   Color get sliderStrokeColor;
+
+  /// Default background color for the chart.
+  Color get chartBackgroundColor;
 }
