@@ -83,7 +83,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
       this.startAngle = -pi / 2,
       this.strokeWidthPx = 2.0,
       this.symbolRenderer})
-      : this.stroke = StyleFactory.style.white,
+      : this.stroke = StyleFactory.style.arcStrokeColor,
         this.noDataColor = StyleFactory.style.noDataColor;
 
   @override
