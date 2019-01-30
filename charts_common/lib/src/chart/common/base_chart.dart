@@ -40,7 +40,7 @@ typedef BehaviorCreator = ChartBehavior<D> Function<D>();
 abstract class BaseChart<D> {
   ChartContext context;
 
-  @protected
+  /// Internal use only.
   GraphicsFactory graphicsFactory;
 
   LayoutManager _layoutManager;

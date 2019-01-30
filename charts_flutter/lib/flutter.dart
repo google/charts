@@ -74,6 +74,7 @@ export 'package:charts_common/common.dart'
         ExploreModeTrigger,
         FillPatternType,
         GestureListener,
+        GraphicsFactory,
         GridlineRendererSpec,
         ImmutableSeries,
         InsideJustification,

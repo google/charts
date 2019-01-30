@@ -22,6 +22,7 @@ import 'package:charts_common/common.dart' as common
         CanvasPie,
         Color,
         FillPatternType,
+        GraphicsFactory,
         StyleFactory,
         TextElement,
         TextDirection;
@@ -38,6 +39,7 @@ class ChartCanvas implements common.ChartCanvas {
   static const double rect_top_gradient_pixels = 5;
 
   final Canvas canvas;
+  final common.GraphicsFactory graphicsFactory;
   final _paint = new Paint();
 
   CircleSectorPainter _circleSectorPainter;
@@ -46,7 +48,7 @@ class ChartCanvas implements common.ChartCanvas {
   PointPainter _pointPainter;
   PolygonPainter _polygonPainter;
 
-  ChartCanvas(this.canvas);
+  ChartCanvas(this.canvas, this.graphicsFactory);
 
   @override
   void drawCircleSector(Point center, double radius, double innerRadius,

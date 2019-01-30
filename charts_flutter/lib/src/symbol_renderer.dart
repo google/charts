@@ -18,6 +18,7 @@ import 'package:charts_common/common.dart' as common
     show ChartCanvas, Color, SymbolRenderer;
 import 'package:flutter/widgets.dart';
 import 'chart_canvas.dart' show ChartCanvas;
+import 'graphics_factory.dart' show GraphicsFactory;
 
 /// Flutter widget responsible for painting a common SymbolRenderer from the
 /// chart.
@@ -38,7 +39,8 @@ class SymbolRendererCanvas implements SymbolRendererBuilder {
     return new SizedBox.fromSize(
         size: size,
         child: new CustomPaint(
-            painter: new _SymbolCustomPaint(commonSymbolRenderer, color)));
+            painter:
+                new _SymbolCustomPaint(context, commonSymbolRenderer, color)));
   }
 }
 
@@ -78,10 +80,11 @@ abstract class SymbolRendererBuilder {
 /// The Widget which fulfills the guts of [SymbolRendererCanvas] actually
 /// painting the symbol to a canvas using [CustomPainter].
 class _SymbolCustomPaint extends CustomPainter {
+  final BuildContext context;
   final common.SymbolRenderer symbolRenderer;
   final Color color;
 
-  _SymbolCustomPaint(this.symbolRenderer, this.color);
+  _SymbolCustomPaint(this.context, this.symbolRenderer, this.color);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -89,7 +92,8 @@ class _SymbolCustomPaint extends CustomPainter {
         new Rectangle<num>(0, 0, size.width.toInt(), size.height.toInt());
     final commonColor = new common.Color(
         r: color.red, g: color.green, b: color.blue, a: color.alpha);
-    symbolRenderer.paint(new ChartCanvas(canvas), bounds,
+    symbolRenderer.paint(
+        new ChartCanvas(canvas, GraphicsFactory(context)), bounds,
         fillColor: commonColor, strokeColor: commonColor);
   }
 

@@ -16,9 +16,13 @@
 import 'dart:math' show Point, Rectangle;
 import 'canvas_shapes.dart' show CanvasBarStack, CanvasPie;
 import '../../common/color.dart' show Color;
+import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/text_element.dart' show TextElement;
 
 abstract class ChartCanvas {
+  /// Get [GraphicsFactory] for creating native graphics elements.
+  GraphicsFactory get graphicsFactory;
+
   /// Set the name of the view doing the rendering for debugging purposes,
   /// or null when we believe rendering is complete.
   set drawingView(String viewName);

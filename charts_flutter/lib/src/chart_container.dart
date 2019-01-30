@@ -377,7 +377,7 @@ class ChartContainerCustomPaint extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     common.Performance.time('chartsPaint');
-    final chartsCanvas = new ChartCanvas(canvas);
+    final chartsCanvas = new ChartCanvas(canvas, chart.graphicsFactory);
     chart.paint(chartsCanvas);
     common.Performance.timeEnd('chartsPaint');
   }
