@@ -447,9 +447,13 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       final rawMeasure = series.rawMeasureFn(datumIndex);
       final color = series.colorFn(datumIndex);
 
+      final domainPosition = series.getAttr(domainAxisKey).getLocation(domain);
+      final measurePosition =
+          series.getAttr(measureAxisKey).getLocation(measure);
+
       final chartPosition = new Point<double>(
-          series.getAttr(domainAxisKey).getLocation(domain),
-          series.getAttr(measureAxisKey).getLocation(measure));
+          vertical ? domainPosition : measurePosition,
+          vertical ? measurePosition : domainPosition);
 
       entries.add(new DatumDetails(
           datum: datum,
