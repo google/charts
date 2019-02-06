@@ -175,6 +175,7 @@ export 'src/chart/layout/layout_view.dart'
     show
         LayoutPosition,
         LayoutView,
+        LayoutViewConfig,
         LayoutViewPaintOrder,
         LayoutViewPositionOrder,
         ViewMargin,
