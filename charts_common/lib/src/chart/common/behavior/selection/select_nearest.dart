@@ -173,8 +173,24 @@ class SelectNearest<D> implements ChartBehavior<D> {
             ? _expandToDomain(details.first)
             : [new SeriesDatum<D>(details.first.series, details.first.datum)];
 
+        // Filter out points from overlay series.
+        seriesDatumList
+            .removeWhere((SeriesDatum<D> datum) => datum.series.overlaySeries);
+
         if (selectClosestSeries && seriesList.isEmpty) {
-          seriesList.add(details.first.series);
+          if (details.first.series.overlaySeries) {
+            // If the closest "details" was from an overlay series, grab the
+            // closest remaining series instead. In this case, we need to sort a
+            // copy of the list by domain distance because we do not want to
+            // re-order the actual return values here.
+            final sortedSeriesDatumList =
+                new List<SeriesDatum<D>>.from(seriesDatumList);
+            sortedSeriesDatumList.sort((a, b) =>
+                a.datum.domainDistance.compareTo(b.datum.domainDistance));
+            seriesList.add(sortedSeriesDatumList.first.series);
+          } else {
+            seriesList.add(details.first.series);
+          }
         }
       }
     }

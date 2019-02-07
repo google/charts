@@ -416,6 +416,34 @@ void main() {
       verifyNoMoreInteractions(_clickSelectionModel);
     });
 
+    test('does not include overlay series', () {
+      // Setup chart with an overlay series.
+      _series2.overlaySeries = true;
+
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.hover,
+          expandToDomain: true, selectClosestSeries: true);
+      Point<double> point = new Point(100.0, 100.0);
+      _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
+        _details1,
+        _details1Series2,
+      ], seriesList: [
+        _series1,
+        _series2
+      ]);
+
+      // Act
+      _chart.lastListener.onHover(point);
+
+      // Validate
+      verify(_hoverSelectionModel.updateSelection([
+        new SeriesDatum(_series1, _details1.datum),
+      ], [
+        _series1
+      ]));
+      verifyNoMoreInteractions(_hoverSelectionModel);
+      verifyNoMoreInteractions(_clickSelectionModel);
+    });
+
     test('selection does not exceed maximumDomainDistancePx', () {
       // Setup chart matches point with single domain single series.
       _makeBehavior(SelectionModelType.info, SelectionTrigger.hover,
