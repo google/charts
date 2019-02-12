@@ -16,6 +16,7 @@
 import 'dart:math' show Rectangle;
 import 'package:charts_common/common.dart' as common
     show
+        LayoutViewPaintOrder,
         RectSymbolRenderer,
         SelectionTrigger,
         Slider,
@@ -51,6 +52,12 @@ class Slider extends ChartBehavior<common.Slider> {
   ///       the data.
   final common.SelectionTrigger eventTrigger;
 
+  /// The order to paint slider on the canvas.
+  ///
+  /// The smaller number is drawn first.  This value should be relative to
+  /// LayoutPaintViewOrder.slider (e.g. LayoutViewPaintOrder.slider + 1).
+  final int layoutPaintOrder;
+
   /// Initial domain position of the slider, in domain units.
   final dynamic initialDomainValue;
 
@@ -81,7 +88,8 @@ class Slider extends ChartBehavior<common.Slider> {
       this.snapToDatum,
       this.style,
       this.handleRenderer,
-      this.desiredGestures});
+      this.desiredGestures,
+      this.layoutPaintOrder});
 
   /// Constructs a [Slider].
   ///
@@ -100,6 +108,10 @@ class Slider extends ChartBehavior<common.Slider> {
   /// positioned anywhere along the domain axis.
   ///
   /// [style] configures the color and sizing of the slider line and handle.
+  ///
+  /// [layoutPaintOrder] configures the order in which the behavior should be
+  /// painted. This value should be relative to LayoutPaintViewOrder.slider.
+  /// (e.g. LayoutViewPaintOrder.slider + 1).
   factory Slider(
       {common.SelectionTrigger eventTrigger,
       common.SymbolRenderer handleRenderer,
@@ -107,7 +119,8 @@ class Slider extends ChartBehavior<common.Slider> {
       String roleId,
       common.SliderListenerCallback onChangeCallback,
       bool snapToDatum = false,
-      common.SliderStyle style}) {
+      common.SliderStyle style,
+      int layoutPaintOrder = common.LayoutViewPaintOrder.slider}) {
     eventTrigger ??= common.SelectionTrigger.tapAndDrag;
     handleRenderer ??= new common.RectSymbolRenderer();
     // Default the handle size large enough to tap on a mobile device.
@@ -120,7 +133,8 @@ class Slider extends ChartBehavior<common.Slider> {
         roleId: roleId,
         snapToDatum: snapToDatum,
         style: style,
-        desiredGestures: Slider._getDesiredGestures(eventTrigger));
+        desiredGestures: Slider._getDesiredGestures(eventTrigger),
+        layoutPaintOrder: layoutPaintOrder);
   }
 
   static Set<GestureType> _getDesiredGestures(
@@ -170,12 +184,13 @@ class Slider extends ChartBehavior<common.Slider> {
         onChangeCallback == o.onChangeCallback &&
         roleId == o.roleId &&
         snapToDatum == o.snapToDatum &&
-        style == o.style;
+        style == o.style &&
+        layoutPaintOrder == o.layoutPaintOrder;
   }
 
   @override
   int get hashCode {
     return hashValues(eventTrigger, handleRenderer, initialDomainValue, roleId,
-        snapToDatum, style);
+        snapToDatum, style, layoutPaintOrder);
   }
 }

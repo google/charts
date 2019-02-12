@@ -56,6 +56,12 @@ class Slider<D> implements ChartBehavior<D> {
 
   SliderEventListener<D> _sliderEventListener;
 
+  /// The order to paint slider on the canvas.
+  ///
+  /// The smaller number is drawn first.  This value should be relative to
+  /// LayoutPaintViewOrder.slider (e.g. LayoutViewPaintOrder.slider + 1).
+  int layoutPaintOrder;
+
   /// Type of input event for the slider.
   ///
   /// Input event types:
@@ -133,6 +139,10 @@ class Slider<D> implements ChartBehavior<D> {
   /// positioned anywhere along the domain axis.
   ///
   /// [style] configures the color and sizing of the slider line and handle.
+  ///
+  /// [layoutPaintOrder] configures the order in which the behavior should be
+  /// painted. This value should be relative to LayoutPaintViewOrder.slider.
+  /// (e.g. LayoutViewPaintOrder.slider + 1).
   Slider(
       {this.eventTrigger = SelectionTrigger.tapAndDrag,
       SymbolRenderer handleRenderer,
@@ -140,7 +150,8 @@ class Slider<D> implements ChartBehavior<D> {
       SliderListenerCallback<D> onChangeCallback,
       String roleId,
       this.snapToDatum = false,
-      SliderStyle style}) {
+      SliderStyle style,
+      this.layoutPaintOrder = LayoutViewPaintOrder.slider}) {
     _handleRenderer = handleRenderer ?? new RectSymbolRenderer();
     _roleId = roleId ?? '';
     _style = style ?? new SliderStyle();
@@ -455,8 +466,7 @@ class Slider<D> implements ChartBehavior<D> {
     assert(_chart.vertical);
 
     _view = new _SliderLayoutView<D>(
-        layoutPaintOrder: LayoutViewPaintOrder.slider,
-        handleRenderer: _handleRenderer);
+        layoutPaintOrder: layoutPaintOrder, handleRenderer: _handleRenderer);
 
     chart.addView(_view);
     chart.addGestureListener(_gestureListener);
