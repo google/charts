@@ -380,7 +380,8 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
       if (!bounds.containsPoint(chartPoint)) {
         return false;
       }
-    } else if (!componentBounds.containsPoint(chartPoint)) {
+    } else if (componentBounds == null ||
+        !componentBounds.containsPoint(chartPoint)) {
       return false;
     }
 

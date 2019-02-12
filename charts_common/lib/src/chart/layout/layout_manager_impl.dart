@@ -115,10 +115,16 @@ class LayoutManagerImpl implements LayoutManager {
     final drawableViews =
         _views.where((LayoutView view) => view.isSeriesRenderer);
 
-    var componentBounds = drawableViews.first.componentBounds;
+    var componentBounds = drawableViews?.first?.componentBounds;
 
-    for (LayoutView view in drawableViews.skip(1)) {
-      componentBounds = componentBounds.boundingBox(view.componentBounds);
+    if (componentBounds != null) {
+      for (LayoutView view in drawableViews.skip(1)) {
+        if (view.componentBounds != null) {
+          componentBounds = componentBounds.boundingBox(view.componentBounds);
+        }
+      }
+    } else {
+      componentBounds = new Rectangle(0, 0, 0, 0);
     }
 
     return componentBounds;
