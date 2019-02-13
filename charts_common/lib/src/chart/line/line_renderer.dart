@@ -351,7 +351,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       // data (e.g. null measure) at the ends of the series data.
       //
       // TODO: Handle ordinal axes by looking at the next domains.
-      if (styleSegments.length > 0 && !(domainAxis is OrdinalAxis)) {
+      if (styleSegments.isNotEmpty && !(domainAxis is OrdinalAxis)) {
         final startPx = (isRtl ? drawBounds.right : drawBounds.left).toDouble();
         final endPx = (isRtl ? drawBounds.left : drawBounds.right).toDouble();
 

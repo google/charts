@@ -42,7 +42,7 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
       GraphicsFactory graphicsFactory,
       {@required Rectangle drawBounds,
       @required double animationPercent,
-      bool rtl: false}) {
+      bool rtl = false}) {
     final points = computeBoundedPointsForElement(pointElement, drawBounds);
 
     if (points == null) {

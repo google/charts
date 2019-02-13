@@ -241,7 +241,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     @required Map<num, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
-    bool viewportExtensionEnabled: false,
+    bool viewportExtensionEnabled = false,
     TickHint<num> tickHint,
   }) {
     List<Tick<num>> ticks;

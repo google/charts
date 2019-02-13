@@ -53,9 +53,9 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   BarLabelDecorator(
       {TextStyleSpec insideLabelStyleSpec,
       TextStyleSpec outsideLabelStyleSpec,
-      this.labelPosition: _defaultLabelPosition,
-      this.labelPadding: _defaultLabelPadding,
-      this.labelAnchor: _defaultLabelAnchor})
+      this.labelPosition = _defaultLabelPosition,
+      this.labelPadding = _defaultLabelPadding,
+      this.labelAnchor = _defaultLabelAnchor})
       : insideLabelStyleSpec = insideLabelStyleSpec ?? _defaultInsideLabelStyle,
         outsideLabelStyleSpec =
             outsideLabelStyleSpec ?? _defaultOutsideLabelStyle;
@@ -66,7 +66,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       {@required Rectangle drawBounds,
       @required double animationPercent,
       @required bool renderingVertically,
-      bool rtl: false}) {
+      bool rtl = false}) {
     // TODO: Decorator not yet available for vertical charts.
     assert(renderingVertically == false);
 

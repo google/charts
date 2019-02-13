@@ -44,7 +44,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
     @required Map<D, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
-    bool viewportExtensionEnabled: false,
+    bool viewportExtensionEnabled = false,
     TickHint<D> tickHint,
   }) {
     final ticks = <Tick<D>>[];

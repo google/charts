@@ -28,5 +28,5 @@ abstract class BarRendererDecorator<D> {
       {@required Rectangle drawBounds,
       @required double animationPercent,
       @required bool renderingVertically,
-      bool rtl: false});
+      bool rtl = false});
 }

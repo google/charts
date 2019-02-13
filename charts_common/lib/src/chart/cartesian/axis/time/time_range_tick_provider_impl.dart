@@ -31,7 +31,7 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
   final requiredMinimumTicks;
   final TimeStepper timeStepper;
 
-  TimeRangeTickProviderImpl(this.timeStepper, {this.requiredMinimumTicks: 3});
+  TimeRangeTickProviderImpl(this.timeStepper, {this.requiredMinimumTicks = 3});
 
   @override
   bool providesSufficientTicksForRange(DateTimeExtents domainExtents) {
@@ -72,7 +72,7 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
     @required Map<DateTime, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
-    bool viewportExtensionEnabled: false,
+    bool viewportExtensionEnabled = false,
     TickHint<DateTime> tickHint,
   }) {
     List<Tick<DateTime>> currentTicks;

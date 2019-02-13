@@ -98,7 +98,7 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
     @required Map<DateTime, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
-    bool viewportExtensionEnabled: false,
+    bool viewportExtensionEnabled = false,
     TickHint<DateTime> tickHint,
   }) {
     List<TimeRangeTickProvider> tickProviders;

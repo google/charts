@@ -260,7 +260,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     seriesList.forEach((MutableSeries<D> series) {
       series.setAttr(barGroupCountKey, numBarGroups);
 
-      if (barWeights.length > 0) {
+      if (barWeights.isNotEmpty) {
         final barGroupIndex = series.getAttr(barGroupIndexKey);
         final barWeight = barWeights[barGroupIndex];
 
@@ -272,7 +272,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             ? barWeights.getRange(barGroupIndex + 1, numBarGroups)
             : barWeights.getRange(0, barGroupIndex);
 
-        final previousBarWeight = previousBarWeights.length > 0
+        final previousBarWeight = previousBarWeights.isNotEmpty
             ? previousBarWeights.reduce((a, b) => a + b)
             : 0.0;
 

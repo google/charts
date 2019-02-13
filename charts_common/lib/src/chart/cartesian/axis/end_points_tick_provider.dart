@@ -72,7 +72,7 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
 
   /// Get the start value from the scale.
   D _getStartValue(TickHint<D> tickHint, MutableScale<D> scale) {
-    var start = null;
+    var start;
 
     if (tickHint != null) {
       start = tickHint.start;
@@ -91,7 +91,7 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
 
   /// Get the end value from the scale.
   D _getEndValue(TickHint<D> tickHint, MutableScale<D> scale) {
-    var end = null;
+    var end;
 
     if (tickHint != null) {
       end = tickHint.end;

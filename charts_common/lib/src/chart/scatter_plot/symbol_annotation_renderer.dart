@@ -51,7 +51,6 @@ import 'symbol_annotation_renderer_config.dart'
 class SymbolAnnotationRenderer<D> extends PointRenderer<D>
     implements LayoutView {
   Rectangle<int> _componentBounds;
-  Rectangle<int> _drawAreaBounds;
   GraphicsFactory _graphicsFactory;
 
   CartesianChart<D> _chart;
@@ -254,7 +253,6 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
     _componentBounds = componentBounds;
-    _drawAreaBounds = drawAreaBounds;
 
     super.layout(componentBounds, drawAreaBounds);
   }

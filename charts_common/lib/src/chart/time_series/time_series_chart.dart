@@ -44,7 +44,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
             domainAxis: new DateTimeAxis(dateTimeFactory),
             primaryMeasureAxis: primaryMeasureAxis,
             secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes) {}
+            disjointMeasureAxes: disjointMeasureAxes);
 
   @override
   void initDomainAxis() {

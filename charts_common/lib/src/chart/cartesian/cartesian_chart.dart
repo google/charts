@@ -57,7 +57,7 @@ class NumericCartesianChart extends CartesianChart<num> {
             domainAxis: new NumericAxis(),
             primaryMeasureAxis: primaryMeasureAxis,
             secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes) {}
+            disjointMeasureAxes: disjointMeasureAxes);
 
   @protected
   void initDomainAxis() {
@@ -79,7 +79,7 @@ class OrdinalCartesianChart extends CartesianChart<String> {
             domainAxis: new OrdinalAxis(),
             primaryMeasureAxis: primaryMeasureAxis,
             secondaryMeasureAxis: secondaryMeasureAxis,
-            disjointMeasureAxes: disjointMeasureAxes) {}
+            disjointMeasureAxes: disjointMeasureAxes);
 
   @protected
   void initDomainAxis() {

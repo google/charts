@@ -37,7 +37,7 @@ class OrdinalTickProvider extends BaseTickProvider<String> {
     @required Map<String, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
-    bool viewportExtensionEnabled: false,
+    bool viewportExtensionEnabled = false,
     TickHint<String> tickHint,
   }) {
     return createTicks(scale.domain.domains,

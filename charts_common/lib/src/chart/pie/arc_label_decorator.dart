@@ -72,9 +72,9 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       {TextStyleSpec insideLabelStyleSpec,
       TextStyleSpec outsideLabelStyleSpec,
       ArcLabelLeaderLineStyleSpec leaderLineStyleSpec,
-      this.labelPosition: _defaultLabelPosition,
-      this.labelPadding: _defaultLabelPadding,
-      this.showLeaderLines: _defaultShowLeaderLines,
+      this.labelPosition = _defaultLabelPosition,
+      this.labelPadding = _defaultLabelPadding,
+      this.showLeaderLines = _defaultShowLeaderLines,
       Color leaderLineColor})
       : insideLabelStyleSpec = insideLabelStyleSpec ?? _defaultInsideLabelStyle,
         outsideLabelStyleSpec =
@@ -86,7 +86,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       GraphicsFactory graphicsFactory,
       {@required Rectangle drawBounds,
       @required double animationPercent,
-      bool rtl: false}) {
+      bool rtl = false}) {
     // Only decorate the arcs when animation is at 100%.
     if (animationPercent != 1.0) {
       return;

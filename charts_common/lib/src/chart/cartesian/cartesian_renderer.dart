@@ -52,7 +52,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @override
   void configureDomainAxes(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
-      if (series.data.length == 0) {
+      if (series.data.isEmpty) {
         return;
       }
 
@@ -100,7 +100,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @override
   void configureMeasureAxes(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
-      if (series.data.length == 0) {
+      if (series.data.isEmpty) {
         return;
       }
 
@@ -151,7 +151,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @visibleForTesting
   int findNearestViewportStart(
       Axis domainAxis, AccessorFn<D> domainFn, List data) {
-    if (data.length == 0) {
+    if (data.isEmpty) {
       return null;
     }
 
@@ -207,7 +207,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @visibleForTesting
   int findNearestViewportEnd(
       Axis domainAxis, AccessorFn<D> domainFn, List data) {
-    if (data.length == 0) {
+    if (data.isEmpty) {
       return null;
     }
 

@@ -59,7 +59,7 @@ class PanningTickProvider<D> implements TickProvider<D> {
     @required Map<D, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
-    bool viewportExtensionEnabled: false,
+    bool viewportExtensionEnabled = false,
     TickHint<D> tickHint,
   }) {
     if (_mode == PanningTickProviderMode.stepSizeLocked) {

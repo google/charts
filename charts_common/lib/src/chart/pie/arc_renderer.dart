@@ -101,7 +101,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
       var measures = [];
 
-      if (series.data.length == 0) {
+      if (series.data.isEmpty) {
         // If the series has no data, generate an empty arc element that
         // occupies the entire chart.
         //
@@ -183,7 +183,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
       var elementsList = series.getAttr(arcElementsKey);
 
-      if (series.data.length == 0) {
+      if (series.data.isEmpty) {
         // If the series is empty, set up the "no data" arc element. This should
         // occupy the entire chart, and use the chart style's no data color.
         final details = elementsList[0];

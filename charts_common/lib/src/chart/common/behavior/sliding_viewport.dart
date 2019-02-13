@@ -30,7 +30,7 @@ class SlidingViewport<D> implements ChartBehavior<D> {
 
   CartesianChart<D> _chart;
 
-  SlidingViewport([this.selectionModelType = SelectionModelType.info]) {}
+  SlidingViewport([this.selectionModelType = SelectionModelType.info]);
 
   void _selectionChanged(SelectionModel selectionModel) {
     if (selectionModel.hasAnySelection == false) {

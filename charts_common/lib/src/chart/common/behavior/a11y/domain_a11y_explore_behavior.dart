@@ -30,7 +30,6 @@ typedef String VocalizationCallback<D>(List<SeriesDatum<D>> seriesDatums);
 
 /// A simple vocalization that returns the domain value to string.
 String domainVocalization<D>(List<SeriesDatum<D>> seriesDatums) {
-  final datum = seriesDatums.first.datum;
   final datumIndex = seriesDatums.first.index;
   final domainFn = seriesDatums.first.series.domainFn;
   final domain = domainFn(datumIndex);
