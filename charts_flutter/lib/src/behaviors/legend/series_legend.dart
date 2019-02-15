@@ -264,8 +264,10 @@ class SeriesLegend extends ChartBehavior<common.SeriesLegend> {
     (commonBehavior as _FlutterSeriesLegend).config = this;
   }
 
+  /// All Legend behaviors get the same role ID, because you should only have
+  /// one legend on a chart.
   @override
-  String get role => 'legend-${selectionModelType.toString()}';
+  String get role => 'legend';
 
   @override
   bool operator ==(Object o) {

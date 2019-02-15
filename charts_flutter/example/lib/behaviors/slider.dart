@@ -108,7 +108,7 @@ class _SliderCallbackState extends State<SliderLine> {
   Point<int> _sliderPosition;
 
   // Handles callbacks when the user drags the slider.
-  _onSliderChange(Point<int> point, dynamic domain,
+  _onSliderChange(Point<int> point, dynamic domain, String roleId,
       charts.SliderListenerDragState dragState) {
     // Request a build.
     void rebuild(_) {
@@ -146,6 +146,11 @@ class _SliderCallbackState extends State<SliderLine> {
             //
             // [onChangeCallback] will be called when the position of the slider
             // changes during a drag event.
+            //
+            // [roleId] optional custom role ID for the slider. This can be used to
+            // allow multiple [Slider] behaviors on the same chart. Normally, there can
+            // only be one slider (per event trigger type) on a chart. This setting
+            // allows for configuring multiple independent sliders.
             //
             // [snapToDatum] configures the slider to snap snap onto the nearest
             // datum (by domain distance) when dragged. By default, the slider

@@ -13,15 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'legend_entry.dart';
 import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
-import '../../selection_model/selection_model.dart';
 import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
+import '../../selection_model/selection_model.dart';
+import 'legend_entry.dart';
 
 /// A strategy for generating a list of [LegendEntry] based on the series drawn.
 ///
-/// [T] the datum class type for chart.
 /// [D] the domain class type for the datum.
 abstract class LegendEntryGenerator<D> {
   /// Generates a list of legend entries based on the series drawn on the chart.
@@ -38,15 +37,19 @@ abstract class LegendEntryGenerator<D> {
       SelectionModel<D> selectionModel, List<MutableSeries<D>> seriesList);
 
   MeasureFormatter get measureFormatter;
+
   set measureFormatter(MeasureFormatter formatter);
 
   MeasureFormatter get secondaryMeasureFormatter;
+
   set secondaryMeasureFormatter(MeasureFormatter formatter);
 
   LegendDefaultMeasure get legendDefaultMeasure;
+
   set legendDefaultMeasure(LegendDefaultMeasure noSelectionMeasure);
 
   TextStyleSpec get entryTextStyle;
+
   set entryTextStyle(TextStyleSpec entryTextStyle);
 }
 

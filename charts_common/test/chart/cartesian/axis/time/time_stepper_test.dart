@@ -391,6 +391,54 @@ void main() {
             new DateTime(2017, 4),
           ]));
     });
+
+    test('step before would allow ticks to include last month of the year', () {
+      final stepper = new MonthTimeStepper(dateTimeFactory);
+      final time = new DateTime(2017, 10);
+
+      expect(stepper.getStepTimeBeforeInclusive(time, 1),
+          equals(new DateTime(2017, 10)));
+
+      // Months - 3, 6, 9, 12
+      expect(stepper.getStepTimeBeforeInclusive(time, 3),
+          equals(new DateTime(2017, 9)));
+
+      // Months - 6, 12
+      expect(stepper.getStepTimeBeforeInclusive(time, 6),
+          equals(new DateTime(2017, 6)));
+    });
+
+    test('step before for January', () {
+      final stepper = new MonthTimeStepper(dateTimeFactory);
+      final time = new DateTime(2017, 1);
+
+      expect(stepper.getStepTimeBeforeInclusive(time, 1),
+          equals(new DateTime(2017, 1)));
+
+      // Months - 3, 6, 9, 12
+      expect(stepper.getStepTimeBeforeInclusive(time, 3),
+          equals(new DateTime(2016, 12)));
+
+      // Months - 6, 12
+      expect(stepper.getStepTimeBeforeInclusive(time, 6),
+          equals(new DateTime(2016, 12)));
+    });
+
+    test('step before for December', () {
+      final stepper = new MonthTimeStepper(dateTimeFactory);
+      final time = new DateTime(2017, 12);
+
+      expect(stepper.getStepTimeBeforeInclusive(time, 1),
+          equals(new DateTime(2017, 12)));
+
+      // Months - 3, 6, 9, 12
+      expect(stepper.getStepTimeBeforeInclusive(time, 3),
+          equals(new DateTime(2017, 12)));
+
+      // Months - 6, 12
+      expect(stepper.getStepTimeBeforeInclusive(time, 6),
+          equals(new DateTime(2017, 12)));
+    });
   });
 
   group('Year stepper', () {

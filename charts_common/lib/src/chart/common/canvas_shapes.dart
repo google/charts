@@ -14,8 +14,9 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle, min, max, Point;
-import 'chart_canvas.dart' show FillPatternType;
+
 import '../../common/color.dart' show Color;
+import 'chart_canvas.dart' show FillPatternType;
 
 /// A rectangle to be painted by [ChartCanvas].
 class CanvasRect {

@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import '../../common/color.dart' show Color;
 import '../common/chart_canvas.dart' show getAnimatedColor, FillPatternType;
 import '../common/processed_series.dart' show ImmutableSeries;
-import '../../common/color.dart' show Color;
 
 abstract class BaseBarRendererElement {
   int barStackIndex;
@@ -29,6 +29,7 @@ abstract class BaseBarRendererElement {
   num measureOffsetPlusMeasure;
   double strokeWidthPx;
   bool measureIsNull;
+  bool measureIsNegative;
 
   BaseBarRendererElement();
 
@@ -47,6 +48,7 @@ abstract class BaseBarRendererElement {
     measureOffsetPlusMeasure = other.measureOffsetPlusMeasure;
     strokeWidthPx = other.strokeWidthPx;
     measureIsNull = other.measureIsNull;
+    measureIsNegative = other.measureIsNegative;
   }
 
   void updateAnimationPercent(BaseBarRendererElement previous,
@@ -55,6 +57,7 @@ abstract class BaseBarRendererElement {
     fillColor = getAnimatedColor(
         previous.fillColor, target.fillColor, animationPercent);
     measureIsNull = target.measureIsNull;
+    measureIsNegative = target.measureIsNegative;
   }
 }
 

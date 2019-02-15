@@ -93,8 +93,7 @@ class Color {
   String toString() => rgbaHexString;
 
   /// Converts the character into a #RGBA hex string.
-  String get rgbaHexString =>
-      '#${_get2CharHex(r)}${_get2CharHex(g)}' +
+  String get rgbaHexString => '#${_get2CharHex(r)}${_get2CharHex(g)}'
       '${_get2CharHex(b)}${_get2CharHex(a)}';
 
   /// Converts the character into a #RGB hex string.

@@ -15,9 +15,9 @@
 
 import '../base_chart.dart' show BaseChart, LifecycleListener;
 import '../processed_series.dart' show MutableSeries;
-import '../series_datum.dart' show SeriesDatumConfig;
 import '../selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
+import '../series_datum.dart' show SeriesDatumConfig;
 import 'chart_behavior.dart' show ChartBehavior;
 
 /// Behavior that sets initial selection.

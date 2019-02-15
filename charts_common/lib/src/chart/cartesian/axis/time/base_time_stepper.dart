@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import '../../../../common/date_time_factory.dart';
 import 'date_time_extents.dart' show DateTimeExtents;
 import 'time_stepper.dart'
     show TimeStepper, TimeStepIteratorFactory, TimeStepIterator;
-import '../../../../common/date_time_factory.dart';
 
 /// A base stepper for operating with DateTimeFactory and time range steps.
 abstract class BaseTimeStepper implements TimeStepper {

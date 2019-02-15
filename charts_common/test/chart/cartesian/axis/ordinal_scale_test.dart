@@ -46,7 +46,7 @@ void main() {
     });
 
     test('invalid domain does not throw exception', () {
-      scale['e'];
+      expect(scale['e'], 0);
     });
 
     test('invalid domain can translate is false', () {

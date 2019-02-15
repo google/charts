@@ -17,14 +17,16 @@
 class RTLSpec {
   /// Creates [RTLSpec]. If no parameters are specified, the defaults are used.
   const RTLSpec({
-    this.axisPosition: AxisPosition.reversed,
+    this.axisDirection = AxisDirection.reversed,
   });
 
-  /// The positions for primary and secondary measure axis.
-  final AxisPosition axisPosition;
+  /// Direction of the domain axis when the chart container is configured for
+  /// RTL mode.
+  final AxisDirection axisDirection;
 }
 
-/// Determines the positions of the primary and secondary measure axis.
+/// Direction of the domain axis when the chart container is configured for
+/// RTL mode.
 ///
 /// [normal] Vertically rendered charts will have the primary measure axis on
 /// the left and secondary measure axis on the right. Domain axis is on the left
@@ -39,7 +41,7 @@ class RTLSpec {
 /// rendered charts will have the primary measure axis on the top and secondary
 /// measure axis on the left. Measure output range is flipped and grows from the
 /// right to the left.
-enum AxisPosition {
+enum AxisDirection {
   normal,
   reversed,
 }

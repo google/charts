@@ -51,7 +51,6 @@ import 'symbol_annotation_renderer_config.dart'
 class SymbolAnnotationRenderer<D> extends PointRenderer<D>
     implements LayoutView {
   Rectangle<int> _componentBounds;
-  Rectangle<int> _drawAreaBounds;
   GraphicsFactory _graphicsFactory;
 
   CartesianChart<D> _chart;
@@ -67,6 +66,11 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   //
   // Renderer methods
   //
+  /// Symbol annotations do not use any measure axes, or draw anything in the
+  /// main draw area associated with them.
+  @override
+  void configureMeasureAxes(List<MutableSeries<D>> seriesList) {}
+
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
     var localConfig = (config as SymbolAnnotationRendererConfig);
@@ -83,7 +87,12 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
       var maxRadius = 0.0;
       for (var index = 0; index < series.data.length; index++) {
-        maxRadius = max(maxRadius, series.radiusPxFn(index));
+        // Default to the configured radius if none was returned by the
+        // accessor function.
+        var radiusPx = series.radiusPxFn(index);
+        radiusPx ??= config.radiusPx;
+
+        maxRadius = max(maxRadius, radiusPx);
       }
 
       final rowInnerHeight = maxRadius * 2;
@@ -98,6 +107,15 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
       series.measureFn = (int index) => 0;
       series.measureOffsetFn = (int index) => 0;
+
+      // Override the key function to allow for range annotations that start at
+      // the same point. This is a necessary hack because every annotation has a
+      // measure value of 0, so the key generated in [PointRenderer] is not
+      // unique enough.
+      series.keyFn ??=
+          (int index) => '${series.id}__${series.domainFn(index)}__'
+              '${series.domainLowerBoundFn(index)}__'
+              '${series.domainUpperBoundFn(index)}';
 
       _seriesInfo[seriesKey] = new _SeriesInfo<D>(
         rowHeight: rowHeight,
@@ -233,7 +251,6 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
     _componentBounds = componentBounds;
-    _drawAreaBounds = drawAreaBounds;
 
     super.layout(componentBounds, drawAreaBounds);
   }

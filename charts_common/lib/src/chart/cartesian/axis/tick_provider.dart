@@ -14,13 +14,14 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show required;
-import '../../common/chart_context.dart' show ChartContext;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
+import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import 'scale.dart' show MutableScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart' show TickFormatter;
-import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 
 /// A strategy for selecting values for axis ticks based on the domain values.
 ///
@@ -46,7 +47,7 @@ abstract class TickProvider<D> {
     @required Map<D, String> formatterValueCache,
     @required TickDrawStrategy tickDrawStrategy,
     @required AxisOrientation orientation,
-    bool viewportExtensionEnabled: false,
+    bool viewportExtensionEnabled = false,
     TickHint<D> tickHint,
   });
 }

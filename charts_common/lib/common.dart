@@ -122,6 +122,7 @@ export 'src/chart/common/behavior/legend/legend.dart'
 export 'src/chart/common/behavior/legend/legend_entry.dart' show LegendEntry;
 export 'src/chart/common/behavior/legend/legend_entry_generator.dart'
     show LegendEntryGenerator, LegendDefaultMeasure;
+export 'src/chart/common/behavior/legend/datum_legend.dart' show DatumLegend;
 export 'src/chart/common/behavior/legend/series_legend.dart' show SeriesLegend;
 export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter, LinePointHighlighterFollowLineType;
@@ -145,7 +146,12 @@ export 'src/chart/common/behavior/selection/select_nearest.dart'
 export 'src/chart/common/behavior/selection/selection_trigger.dart'
     show SelectionTrigger;
 export 'src/chart/common/behavior/slider/slider.dart'
-    show Slider, SliderListenerCallback, SliderListenerDragState, SliderStyle;
+    show
+        Slider,
+        SliderHandlePosition,
+        SliderListenerCallback,
+        SliderListenerDragState,
+        SliderStyle;
 export 'src/chart/common/behavior/zoom/initial_hint_behavior.dart'
     show InitialHintBehavior;
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
@@ -160,7 +166,8 @@ export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
-export 'src/chart/common/processed_series.dart' show ImmutableSeries;
+export 'src/chart/common/processed_series.dart'
+    show ImmutableSeries, MutableSeries;
 export 'src/chart/common/series_datum.dart' show SeriesDatum, SeriesDatumConfig;
 export 'src/chart/common/selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType, SelectionModelListener;
@@ -172,6 +179,8 @@ export 'src/chart/layout/layout_config.dart' show LayoutConfig, MarginSpec;
 export 'src/chart/layout/layout_view.dart'
     show
         LayoutPosition,
+        LayoutView,
+        LayoutViewConfig,
         LayoutViewPaintOrder,
         LayoutViewPositionOrder,
         ViewMargin,
@@ -212,7 +221,7 @@ export 'src/common/line_style.dart' show LineStyle;
 export 'src/common/material_palette.dart' show MaterialPalette;
 export 'src/common/performance.dart' show Performance;
 export 'src/common/proxy_gesture_listener.dart' show ProxyGestureListener;
-export 'src/common/rtl_spec.dart' show RTLSpec, AxisPosition;
+export 'src/common/rtl_spec.dart' show AxisDirection, RTLSpec;
 export 'src/common/style/material_style.dart' show MaterialStyle;
 export 'src/common/style/style_factory.dart' show StyleFactory;
 export 'src/common/symbol_renderer.dart'

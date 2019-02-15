@@ -26,9 +26,9 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Points<br>[![](example/line_charts/points_thumb.png)](example/line_charts/points) | Stacked Area<br>[![](example/line_charts/stacked_area_thumb.png)](example/line_charts/stacked_area) | Area And Line<br>[![](example/line_charts/area_and_line_thumb.png)](example/line_charts/area_and_line) |
-| Simple Nulls<br>[![](example/line_charts/simple_nulls_thumb.png)](example/line_charts/simple_nulls) | Stacked Area Nulls<br>[![](example/line_charts/stacked_area_nulls_thumb.png)](example/line_charts/stacked_area_nulls) | Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) | Segments<br>[![](example/line_charts/segments_thumb.png)](example/line_charts/segments) |
-| Line Annotation<br>[![](example/line_charts/line_annotation_thumb.png)](example/line_charts/line_annotation) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | Range Annotation Margin<br>[![](example/line_charts/range_annotation_margin_thumb.png)](example/line_charts/range_annotation_margin) | |
+| Simple<br>[![](example/line_charts/simple_thumb.png)](example/line_charts/simple) | Points<br>[![](example/line_charts/points_thumb.png)](example/line_charts/points) | Stacked Area<br>[![](example/line_charts/stacked_area_thumb.png)](example/line_charts/stacked_area) | Stacked Area Custom Color<br>[![](example/line_charts/stacked_area_custom_color_thumb.png)](example/line_charts/stacked_area_custom_color) |
+| Area And Line<br>[![](example/line_charts/area_and_line_thumb.png)](example/line_charts/area_and_line) | Simple Nulls<br>[![](example/line_charts/simple_nulls_thumb.png)](example/line_charts/simple_nulls) | Stacked Area Nulls<br>[![](example/line_charts/stacked_area_nulls_thumb.png)](example/line_charts/stacked_area_nulls) | Dash Pattern<br>[![](example/line_charts/dash_pattern_thumb.png)](example/line_charts/dash_pattern) |
+| Segments<br>[![](example/line_charts/segments_thumb.png)](example/line_charts/segments) | Line Annotation<br>[![](example/line_charts/line_annotation_thumb.png)](example/line_charts/line_annotation) | Range Annotation<br>[![](example/line_charts/range_annotation_thumb.png)](example/line_charts/range_annotation) | Range Annotation Margin<br>[![](example/line_charts/range_annotation_margin_thumb.png)](example/line_charts/range_annotation_margin) |
 
 
 ### Scatter Plot Charts
@@ -42,7 +42,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Ordinal Bar Line<br>[![](example/combo_charts/ordinal_bar_line_thumb.png)](example/combo_charts/ordinal_bar_line) | Numeric Line Point<br>[![](example/combo_charts/numeric_line_point_thumb.png)](example/combo_charts/numeric_line_point) | Date Time Line Point<br>[![](example/combo_charts/date_time_line_point_thumb.png)](example/combo_charts/date_time_line_point) | Scatter Plot Line<br>[![](example/combo_charts/scatter_plot_line_thumb.png)](example/combo_charts/scatter_plot_line) |
+| Ordinal Bar Line<br>[![](example/combo_charts/ordinal_bar_line_thumb.png)](example/combo_charts/ordinal_bar_line) | Numeric Line Bar<br>[![](example/combo_charts/numeric_line_bar_thumb.png)](example/combo_charts/numeric_line_bar) | Numeric Line Point<br>[![](example/combo_charts/numeric_line_point_thumb.png)](example/combo_charts/numeric_line_point) | Date Time Line Point<br>[![](example/combo_charts/date_time_line_point_thumb.png)](example/combo_charts/date_time_line_point) |
+| Scatter Plot Line<br>[![](example/combo_charts/scatter_plot_line_thumb.png)](example/combo_charts/scatter_plot_line) | | | |
 
 
 ### Pie Charts
@@ -68,8 +69,8 @@
 
 | | | | |
 | --- | --- | --- | --- |
-| Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Legend Options<br>[![](example/legends/legend_options_thumb.png)](example/legends/legend_options) | Legend With Measures<br>[![](example/legends/legend_with_measures_thumb.png)](example/legends/legend_with_measures) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) |
-| Default Hidden Series Legend<br>[![](example/legends/default_hidden_series_legend_thumb.png)](example/legends/default_hidden_series_legend) | | | |
+| Simple Series Legend<br>[![](example/legends/simple_series_legend_thumb.png)](example/legends/simple_series_legend) | Series Legend Options<br>[![](example/legends/series_legend_options_thumb.png)](example/legends/series_legend_options) | Series Legend With Measures<br>[![](example/legends/series_legend_with_measures_thumb.png)](example/legends/series_legend_with_measures) | Legend Custom Symbol<br>[![](example/legends/legend_custom_symbol_thumb.png)](example/legends/legend_custom_symbol) |
+| Default Hidden Series Legend<br>[![](example/legends/default_hidden_series_legend_thumb.png)](example/legends/default_hidden_series_legend) | Simple Datum Legend<br>[![](example/legends/simple_datum_legend_thumb.png)](example/legends/simple_datum_legend) | Datum Legend Options<br>[![](example/legends/datum_legend_options_thumb.png)](example/legends/datum_legend_options) | Datum Legend With Measures<br>[![](example/legends/datum_legend_with_measures_thumb.png)](example/legends/datum_legend_with_measures) |
 
 
 ### Hovercards

@@ -17,30 +17,30 @@ import 'dart:math' show Rectangle, Point;
 
 import 'package:meta/meta.dart' show protected;
 
+import '../../common/gesture_listener.dart' show GestureListener;
+import '../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../common/proxy_gesture_listener.dart' show ProxyGestureListener;
+import '../../data/series.dart' show Series;
+import '../layout/layout_config.dart' show LayoutConfig;
+import '../layout/layout_manager.dart' show LayoutManager;
+import '../layout/layout_manager_impl.dart' show LayoutManagerImpl;
+import '../layout/layout_view.dart' show LayoutView;
 import 'behavior/chart_behavior.dart' show ChartBehavior;
 import 'chart_canvas.dart' show ChartCanvas;
 import 'chart_context.dart' show ChartContext;
 import 'datum_details.dart' show DatumDetails;
 import 'processed_series.dart' show MutableSeries;
-import 'series_datum.dart' show SeriesDatum;
-import 'series_renderer.dart' show SeriesRenderer, rendererIdKey, rendererKey;
-import '../layout/layout_view.dart' show LayoutView;
-import '../layout/layout_config.dart' show LayoutConfig;
-import '../layout/layout_manager.dart' show LayoutManager;
-import '../layout/layout_manager_impl.dart' show LayoutManagerImpl;
-import '../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../data/series.dart' show Series;
-import '../../common/gesture_listener.dart' show GestureListener;
-import '../../common/proxy_gesture_listener.dart' show ProxyGestureListener;
 import 'selection_model/selection_model.dart'
     show MutableSelectionModel, SelectionModelType;
+import 'series_datum.dart' show SeriesDatum;
+import 'series_renderer.dart' show SeriesRenderer, rendererIdKey, rendererKey;
 
 typedef BehaviorCreator = ChartBehavior<D> Function<D>();
 
 abstract class BaseChart<D> {
   ChartContext context;
 
-  @protected
+  /// Internal use only.
   GraphicsFactory graphicsFactory;
 
   LayoutManager _layoutManager;
@@ -69,11 +69,19 @@ abstract class BaseChart<D> {
   Set<String> _usingRenderers = new Set<String>();
   Map<String, List<MutableSeries<D>>> _rendererToSeriesList;
 
-  var _seriesRenderers = <String, SeriesRenderer<D>>{};
+  final _seriesRenderers = <String, SeriesRenderer<D>>{};
 
   /// Map of named chart behaviors attached to this chart.
   final _behaviorRoleMap = <String, ChartBehavior<D>>{};
   final _behaviorStack = <ChartBehavior<D>>[];
+
+  final _behaviorTappableMap = <String, ChartBehavior<D>>{};
+
+  /// Whether or not the chart will respond to tap events.
+  ///
+  /// This will generally be true if there is a behavior attached to the chart
+  /// that does something with tap events, such as "click to select data."
+  bool get isTappable => _behaviorTappableMap.isNotEmpty;
 
   final _gestureProxy = new ProxyGestureListener();
 
@@ -104,7 +112,16 @@ abstract class BaseChart<D> {
       _layoutManager.applyToViews(
           (LayoutView view) => view.graphicsFactory = graphicsFactory);
     }
+
+    configurationChanged();
   }
+
+  /// Finish configuring components that require context and graphics factory.
+  ///
+  /// Some components require context and graphics factory to be set again when
+  /// configuration has changed but the configuration is set prior to the
+  /// chart first calling init with the context.
+  void configurationChanged() {}
 
   int get chartWidth => _chartWidth;
 
@@ -307,10 +324,35 @@ abstract class BaseChart<D> {
       _behaviorRoleMap.remove(role);
     }
 
+    // Make sure the removed behavior is no longer registered for tap events.
+    unregisterTappable(behavior);
+
     final wasAttached = _behaviorStack.remove(behavior);
     behavior.removeFrom(this);
 
     return wasAttached;
+  }
+
+  /// Tells the chart that this behavior responds to tap events.
+  ///
+  /// This should only be called after [behavior] has been attached to the chart
+  /// via [addBehavior].
+  void registerTappable(ChartBehavior<D> behavior) {
+    final role = behavior.role;
+
+    if (role != null &&
+        _behaviorRoleMap[role] == behavior &&
+        _behaviorTappableMap[role] != behavior) {
+      _behaviorTappableMap[role] = behavior;
+    }
+  }
+
+  /// Tells the chart that this behavior no longer responds to tap events.
+  void unregisterTappable(ChartBehavior<D> behavior) {
+    final role = behavior?.role;
+    if (role != null && _behaviorTappableMap[role] == behavior) {
+      _behaviorTappableMap.remove(role);
+    }
   }
 
   /// Returns a list of behaviors that have been added.
@@ -359,8 +401,11 @@ abstract class BaseChart<D> {
   Rectangle<int> get drawAreaBounds => _layoutManager.drawAreaBounds;
 
   int get marginBottom => _layoutManager.marginBottom;
+
   int get marginLeft => _layoutManager.marginLeft;
+
   int get marginRight => _layoutManager.marginRight;
+
   int get marginTop => _layoutManager.marginTop;
 
   /// Returns the combined bounds of the chart draw area and all layout
@@ -377,8 +422,8 @@ abstract class BaseChart<D> {
       selectionModel.clearSelection(notifyListeners: false);
     }
 
-    var processedSeriesList = new List<MutableSeries<D>>.from(
-        seriesList.map((Series<dynamic, D> series) => makeSeries(series)));
+    var processedSeriesList =
+        new List<MutableSeries<D>>.from(seriesList.map(makeSeries));
 
     // Allow listeners to manipulate the seriesList.
     fireOnDraw(processedSeriesList);

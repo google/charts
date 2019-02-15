@@ -43,7 +43,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
   /// [tickFormatterSpec] spec used to configure how the tick labels are
   ///     formatted.
   /// [showAxisLine] override to force the axis to draw the axis line.
-  OrdinalAxisSpec({
+  const OrdinalAxisSpec({
     RenderSpec<String> renderSpec,
     OrdinalTickProviderSpec tickProviderSpec,
     OrdinalTickFormatterSpec tickFormatterSpec,
@@ -70,9 +70,10 @@ class OrdinalAxisSpec extends AxisSpec<String> {
 
   @override
   bool operator ==(Object other) {
-    return other is OrdinalAxisSpec &&
-        viewport == other.viewport &&
-        super == (other);
+    return identical(this, other) ||
+        (other is OrdinalAxisSpec &&
+            viewport == other.viewport &&
+            super == (other));
   }
 
   @override
@@ -89,7 +90,7 @@ abstract class OrdinalTickFormatterSpec extends TickFormatterSpec<String> {}
 
 @immutable
 class BasicOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
-  BasicOrdinalTickProviderSpec();
+  const BasicOrdinalTickProviderSpec();
 
   @override
   OrdinalTickProvider createTickProvider(ChartContext context) =>
@@ -107,7 +108,7 @@ class BasicOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
 class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   final List<TickSpec<String>> tickSpecs;
 
-  StaticOrdinalTickProviderSpec(this.tickSpecs);
+  const StaticOrdinalTickProviderSpec(this.tickSpecs);
 
   @override
   StaticTickProvider<String> createTickProvider(ChartContext context) =>
@@ -115,7 +116,8 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
 
   @override
   bool operator ==(Object other) =>
-      other is StaticOrdinalTickProviderSpec && tickSpecs == other.tickSpecs;
+      identical(this, other) ||
+      (other is StaticOrdinalTickProviderSpec && tickSpecs == other.tickSpecs);
 
   @override
   int get hashCode => tickSpecs.hashCode;
@@ -123,7 +125,7 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
 
 @immutable
 class BasicOrdinalTickFormatterSpec implements OrdinalTickFormatterSpec {
-  BasicOrdinalTickFormatterSpec();
+  const BasicOrdinalTickFormatterSpec();
 
   @override
   OrdinalTickFormatter createTickFormatter(ChartContext context) =>

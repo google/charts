@@ -1,6 +1,6 @@
 # Legend With Measures Legends Example
 
-![](legend_with_measures_full.png)
+![](series_legend_with_measures_full.png)
 
 Example:
 

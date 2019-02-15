@@ -146,6 +146,7 @@ void main() {
       renderer = new LineRenderer<num>(
           config: new LineRendererConfig(strokeWidthPx: 2.0));
 
+      renderer.configureSeries(numericSeriesList);
       renderer.preprocessSeries(numericSeriesList);
 
       expect(numericSeriesList.length, equals(3));
@@ -209,6 +210,7 @@ void main() {
       renderer = new LineRenderer<num>(
           config: new LineRendererConfig(stacked: true, strokeWidthPx: 2.0));
 
+      renderer.configureSeries(numericSeriesList);
       renderer.preprocessSeries(numericSeriesList);
 
       expect(numericSeriesList.length, equals(3));
@@ -302,6 +304,7 @@ void main() {
       renderer = new LineRenderer<num>(
           config: new LineRendererConfig(strokeWidthPx: 2.0));
 
+      renderer.configureSeries(numericSeriesList);
       renderer.preprocessSeries(numericSeriesList);
 
       expect(numericSeriesList.length, equals(3));
@@ -438,6 +441,7 @@ void main() {
       renderer = new LineRenderer<num>(
           config: new LineRendererConfig(strokeWidthPx: 2.0));
 
+      renderer.configureSeries(numericSeriesList);
       renderer.preprocessSeries(numericSeriesList);
 
       expect(numericSeriesList.length, equals(1));
@@ -493,6 +497,7 @@ void main() {
       renderer = new LineRenderer<String>(
           config: new LineRendererConfig(strokeWidthPx: 2.0));
 
+      renderer.configureSeries(ordinalSeriesList);
       renderer.preprocessSeries(ordinalSeriesList);
 
       expect(ordinalSeriesList.length, equals(3));

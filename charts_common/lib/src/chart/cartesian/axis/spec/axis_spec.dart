@@ -15,13 +15,13 @@
 
 import 'package:meta/meta.dart' show immutable;
 
-import '../../../common/chart_context.dart' show ChartContext;
 import '../../../../common/color.dart' show Color;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
-import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
+import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis;
-import '../tick_provider.dart' show TickProvider;
+import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import '../tick_formatter.dart' show TickFormatter;
+import '../tick_provider.dart' show TickProvider;
 
 @immutable
 class AxisSpec<D> {
@@ -30,7 +30,7 @@ class AxisSpec<D> {
   final TickProviderSpec<D> tickProviderSpec;
   final TickFormatterSpec<D> tickFormatterSpec;
 
-  AxisSpec({
+  const AxisSpec({
     this.renderSpec,
     this.tickProviderSpec,
     this.tickFormatterSpec,
@@ -77,11 +77,12 @@ class AxisSpec<D> {
 
   @override
   bool operator ==(Object other) =>
-      other is AxisSpec &&
-      renderSpec == other.renderSpec &&
-      tickProviderSpec == other.tickProviderSpec &&
-      tickFormatterSpec == other.tickFormatterSpec &&
-      showAxisLine == other.showAxisLine;
+      identical(this, other) ||
+      (other is AxisSpec &&
+          renderSpec == other.renderSpec &&
+          tickProviderSpec == other.tickProviderSpec &&
+          tickFormatterSpec == other.tickFormatterSpec &&
+          showAxisLine == other.showAxisLine);
 
   @override
   int get hashCode {
@@ -105,6 +106,8 @@ abstract class TickFormatterSpec<D> {
 
 @immutable
 abstract class RenderSpec<D> {
+  const RenderSpec();
+
   TickDrawStrategy<D> createDrawStrategy(
       ChartContext context, GraphicsFactory graphicFactory);
 }
@@ -115,14 +118,15 @@ class TextStyleSpec {
   final int fontSize;
   final Color color;
 
-  TextStyleSpec({this.fontFamily, this.fontSize, this.color});
+  const TextStyleSpec({this.fontFamily, this.fontSize, this.color});
 
   @override
   bool operator ==(Object other) {
-    return other is TextStyleSpec &&
-        fontFamily == other.fontFamily &&
-        fontSize == other.fontSize &&
-        color == other.color;
+    return identical(this, other) ||
+        (other is TextStyleSpec &&
+            fontFamily == other.fontFamily &&
+            fontSize == other.fontSize &&
+            color == other.color);
   }
 
   @override
@@ -140,14 +144,15 @@ class LineStyleSpec {
   final List<int> dashPattern;
   final int thickness;
 
-  LineStyleSpec({this.color, this.dashPattern, this.thickness});
+  const LineStyleSpec({this.color, this.dashPattern, this.thickness});
 
   @override
   bool operator ==(Object other) {
-    return other is LineStyleSpec &&
-        color == other.color &&
-        dashPattern == other.dashPattern &&
-        thickness == other.thickness;
+    return identical(this, other) ||
+        (other is LineStyleSpec &&
+            color == other.color &&
+            dashPattern == other.dashPattern &&
+            thickness == other.thickness);
   }
 
   @override

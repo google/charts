@@ -70,9 +70,7 @@ class SeriesLegend<D> extends Legend<D> {
     _hiddenSeriesList.clear();
 
     if (_defaultHiddenSeries != null) {
-      _defaultHiddenSeries.forEach((String seriesId) {
-        hideSeries(seriesId);
-      });
+      _defaultHiddenSeries.forEach(hideSeries);
     }
   }
 
