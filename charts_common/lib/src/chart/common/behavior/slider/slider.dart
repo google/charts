@@ -384,13 +384,26 @@ class Slider<D> implements ChartBehavior<D> {
             position.round(), (viewBounds.top + viewBounds.height / 2).round());
       }
 
+      num handleReferenceY;
+      switch (_style.handlePosition) {
+        case SliderHandlePosition.middle:
+          handleReferenceY = _domainCenterPoint.y;
+          break;
+        case SliderHandlePosition.top:
+          handleReferenceY = viewBounds.top;
+          break;
+        default:
+          throw new ArgumentError('Slider does not support the handle position '
+              '"${_style.handlePosition}"');
+      }
+
       // Move the slider handle along the domain axis.
       _handleBounds = new Rectangle<int>(
           (_domainCenterPoint.x -
                   _style.handleSize.width / 2 +
                   _style.handleOffset.x)
               .round(),
-          (_domainCenterPoint.y -
+          (handleReferenceY -
                   _style.handleSize.height / 2 +
                   _style.handleOffset.y)
               .round(),
@@ -496,6 +509,9 @@ class SliderStyle {
   /// center of the slider line.
   Point<double> handleOffset;
 
+  /// The vertical position for the slider handle.
+  SliderHandlePosition handlePosition;
+
   /// Specifies the size of the slider handle.
   Rectangle<int> handleSize;
 
@@ -510,6 +526,7 @@ class SliderStyle {
       this.handleOffset = const Point<double>(0.0, 0.0),
       this.handleSize = const Rectangle<int>(0, 0, 10, 20),
       Color strokeColor,
+      this.handlePosition = SliderHandlePosition.middle,
       this.strokeWidthPx = 2.0}) {
     this.fillColor = fillColor ?? StyleFactory.style.sliderFillColor;
     this.strokeColor = strokeColor ?? StyleFactory.style.sliderStrokeColor;
@@ -522,7 +539,8 @@ class SliderStyle {
         handleOffset == o.handleOffset &&
         handleSize == o.handleSize &&
         strokeWidthPx == o.strokeWidthPx &&
-        strokeColor == o.strokeColor;
+        strokeColor == o.strokeColor &&
+        handlePosition == o.handlePosition;
   }
 
   @override
@@ -532,15 +550,26 @@ class SliderStyle {
     hashcode = (hashcode * 37) + handleSize?.hashCode ?? 0;
     hashcode = (hashcode * 37) + strokeWidthPx?.hashCode ?? 0;
     hashcode = (hashcode * 37) + strokeColor?.hashCode ?? 0;
+    hashcode = (hashcode * 37) + handlePosition?.hashCode ?? 0;
     return hashcode;
   }
 }
+
+/// Describes the vertical position of the slider handle on the slider.
+///
+/// [middle] indicates the handle should be half-way between the top and bottom
+/// of the chart in the middle of the slider line.
+///
+/// [top] indicates the slider should be rendered relative to the top of the
+/// chart.
+enum SliderHandlePosition { middle, top }
 
 /// Layout view component for [Slider].
 class _SliderLayoutView<D> extends LayoutView {
   final LayoutViewConfig layoutConfig;
 
   Rectangle<int> _drawAreaBounds;
+
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
   GraphicsFactory _graphicsFactory;
