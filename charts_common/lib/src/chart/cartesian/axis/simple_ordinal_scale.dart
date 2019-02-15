@@ -100,7 +100,7 @@ class SimpleOrdinalScale implements OrdinalScale {
   set stepSizeConfig(StepSizeConfig config) {
     if (config != null && config.type != StepSizeType.autoDetect) {
       throw new ArgumentError(
-          "Ordinal scales only support StepSizeConfig of type Auto");
+          'Ordinal scales only support StepSizeConfig of type Auto');
     }
     // Nothing is set because only auto is supported.
   }

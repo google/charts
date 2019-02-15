@@ -33,9 +33,9 @@ class MockContext extends Mock implements ChartContext {}
 class ConcreteChart extends LineChart {
   LifecycleListener<num> lastListener;
 
-  Axis _domainAxis = new ConcreteNumericAxis();
+  final _domainAxis = new ConcreteNumericAxis();
 
-  Axis _primaryMeasureAxis = new ConcreteNumericAxis();
+  final _primaryMeasureAxis = new ConcreteNumericAxis();
 
   @override
   addLifecycleListener(LifecycleListener listener) {

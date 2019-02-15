@@ -14,17 +14,18 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show required;
-import '../../common/chart_context.dart' show ChartContext;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
-import 'scale.dart' show MutableScale;
-import 'numeric_scale.dart' show NumericScale;
-import 'tick.dart' show Tick;
-import 'time/date_time_scale.dart' show DateTimeScale;
-import 'spec/tick_spec.dart' show TickSpec;
-import 'tick_formatter.dart' show TickFormatter;
 import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
+import 'numeric_scale.dart' show NumericScale;
+import 'scale.dart' show MutableScale;
+import 'spec/tick_spec.dart' show TickSpec;
+import 'tick.dart' show Tick;
+import 'tick_formatter.dart' show TickFormatter;
 import 'tick_provider.dart' show TickProvider, TickHint;
+import 'time/date_time_scale.dart' show DateTimeScale;
 
 /// A strategy that uses the ticks provided and only assigns positioning.
 ///
@@ -97,7 +98,8 @@ class StaticTickProvider<D> extends TickProvider<D> {
   }
 
   @override
-  bool operator ==(o) => o is StaticTickProvider && tickSpec == o.tickSpec;
+  bool operator ==(other) =>
+      other is StaticTickProvider && tickSpec == other.tickSpec;
 
   @override
   int get hashCode => tickSpec.hashCode;

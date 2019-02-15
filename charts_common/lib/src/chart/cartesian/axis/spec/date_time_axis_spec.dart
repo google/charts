@@ -19,20 +19,20 @@ import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis;
+import '../end_points_tick_provider.dart' show EndPointsTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../time/auto_adjusting_date_time_tick_provider.dart'
     show AutoAdjustingDateTimeTickProvider;
 import '../time/date_time_axis.dart' show DateTimeAxis;
 import '../time/date_time_extents.dart' show DateTimeExtents;
+import '../time/date_time_tick_formatter.dart' show DateTimeTickFormatter;
+import '../time/day_time_stepper.dart' show DayTimeStepper;
+import '../time/hour_tick_formatter.dart' show HourTickFormatter;
 import '../time/time_range_tick_provider_impl.dart'
     show TimeRangeTickProviderImpl;
-import '../time/day_time_stepper.dart' show DayTimeStepper;
-import '../time/date_time_tick_formatter.dart' show DateTimeTickFormatter;
-import '../time/hour_tick_formatter.dart' show HourTickFormatter;
 import '../time/time_tick_formatter.dart' show TimeTickFormatter;
 import '../time/time_tick_formatter_impl.dart'
     show CalendarField, TimeTickFormatterImpl;
-import '../end_points_tick_provider.dart' show EndPointsTickProvider;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
@@ -141,6 +141,7 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
 @immutable
 class DayTickProviderSpec implements DateTimeTickProviderSpec {
   final List<int> increments;
+
   const DayTickProviderSpec({this.increments});
 
   /// Creates a [TickProviderSpec] that dynamically chooses ticks based on the

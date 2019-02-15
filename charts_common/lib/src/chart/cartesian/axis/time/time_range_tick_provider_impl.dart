@@ -14,21 +14,22 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show required;
+
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show AxisOrientation;
-import '../tick.dart' show Tick;
 import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
+import '../tick.dart' show Tick;
 import '../tick_formatter.dart' show TickFormatter;
 import '../tick_provider.dart' show TickHint;
-import 'date_time_scale.dart' show DateTimeScale;
 import 'date_time_extents.dart' show DateTimeExtents;
+import 'date_time_scale.dart' show DateTimeScale;
 import 'time_range_tick_provider.dart' show TimeRangeTickProvider;
 import 'time_stepper.dart' show TimeStepper;
 
 // Contains all the common code for the time range tick providers.
 class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
-  final requiredMinimumTicks;
+  final int requiredMinimumTicks;
   final TimeStepper timeStepper;
 
   TimeRangeTickProviderImpl(this.timeStepper, {this.requiredMinimumTicks = 3});

@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import '../../../../data/series.dart' show AttributeKey;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../behavior/chart_behavior.dart' show ChartBehavior;
 import '../../processed_series.dart' show MutableSeries;
-import '../../../../data/series.dart' show AttributeKey;
 
 const percentInjectedKey =
     const AttributeKey<bool>('PercentInjector.percentInjected');

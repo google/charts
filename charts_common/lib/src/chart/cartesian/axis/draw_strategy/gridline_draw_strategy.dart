@@ -13,20 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable, required;
 import 'dart:math';
 
-import '../../../../common/style/style_factory.dart' show StyleFactory;
+import 'package:meta/meta.dart' show immutable, required;
+
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../../common/line_style.dart' show LineStyle;
+import '../../../../common/style/style_factory.dart' show StyleFactory;
 import '../../../common/chart_canvas.dart' show ChartCanvas;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show AxisOrientation;
 import '../spec/axis_spec.dart'
     show TextStyleSpec, LineStyleSpec, TickLabelAnchor, TickLabelJustification;
-import 'small_tick_draw_strategy.dart' show SmallTickRendererSpec;
 import '../tick.dart' show Tick;
 import 'base_tick_draw_strategy.dart' show BaseTickDrawStrategy;
+import 'small_tick_draw_strategy.dart' show SmallTickRendererSpec;
 import 'tick_draw_strategy.dart' show TickDrawStrategy;
 
 @immutable
@@ -54,8 +55,8 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
 
   @override
   TickDrawStrategy<D> createDrawStrategy(
-          ChartContext chartContext, GraphicsFactory graphicsFactory) =>
-      new GridlineTickDrawStrategy<D>(chartContext, graphicsFactory,
+          ChartContext context, GraphicsFactory graphicsFactory) =>
+      new GridlineTickDrawStrategy<D>(context, graphicsFactory,
           tickLengthPx: tickLengthPx,
           lineStyleSpec: lineStyle,
           labelStyleSpec: labelStyle,

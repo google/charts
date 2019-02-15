@@ -122,10 +122,10 @@ class SelectionModel<D> {
       _selectedDatum.isNotEmpty || selectedSeries.isNotEmpty;
 
   @override
-  bool operator ==(Object o) {
-    return o is SelectionModel &&
-        new ListEquality().equals(_selectedDatum, o.selectedDatum) &&
-        new ListEquality().equals(_selectedSeries, o.selectedSeries);
+  bool operator ==(Object other) {
+    return other is SelectionModel &&
+        new ListEquality().equals(_selectedDatum, other.selectedDatum) &&
+        new ListEquality().equals(_selectedSeries, other.selectedSeries);
   }
 
   @override

@@ -17,23 +17,23 @@ import 'dart:math' show Rectangle, Point;
 
 import 'package:meta/meta.dart' show protected;
 
+import '../../common/gesture_listener.dart' show GestureListener;
+import '../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../common/proxy_gesture_listener.dart' show ProxyGestureListener;
+import '../../data/series.dart' show Series;
+import '../layout/layout_config.dart' show LayoutConfig;
+import '../layout/layout_manager.dart' show LayoutManager;
+import '../layout/layout_manager_impl.dart' show LayoutManagerImpl;
+import '../layout/layout_view.dart' show LayoutView;
 import 'behavior/chart_behavior.dart' show ChartBehavior;
 import 'chart_canvas.dart' show ChartCanvas;
 import 'chart_context.dart' show ChartContext;
 import 'datum_details.dart' show DatumDetails;
 import 'processed_series.dart' show MutableSeries;
-import 'series_datum.dart' show SeriesDatum;
-import 'series_renderer.dart' show SeriesRenderer, rendererIdKey, rendererKey;
-import '../layout/layout_view.dart' show LayoutView;
-import '../layout/layout_config.dart' show LayoutConfig;
-import '../layout/layout_manager.dart' show LayoutManager;
-import '../layout/layout_manager_impl.dart' show LayoutManagerImpl;
-import '../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../data/series.dart' show Series;
-import '../../common/gesture_listener.dart' show GestureListener;
-import '../../common/proxy_gesture_listener.dart' show ProxyGestureListener;
 import 'selection_model/selection_model.dart'
     show MutableSelectionModel, SelectionModelType;
+import 'series_datum.dart' show SeriesDatum;
+import 'series_renderer.dart' show SeriesRenderer, rendererIdKey, rendererKey;
 
 typedef BehaviorCreator = ChartBehavior<D> Function<D>();
 
@@ -69,7 +69,7 @@ abstract class BaseChart<D> {
   Set<String> _usingRenderers = new Set<String>();
   Map<String, List<MutableSeries<D>>> _rendererToSeriesList;
 
-  var _seriesRenderers = <String, SeriesRenderer<D>>{};
+  final _seriesRenderers = <String, SeriesRenderer<D>>{};
 
   /// Map of named chart behaviors attached to this chart.
   final _behaviorRoleMap = <String, ChartBehavior<D>>{};
@@ -401,8 +401,11 @@ abstract class BaseChart<D> {
   Rectangle<int> get drawAreaBounds => _layoutManager.drawAreaBounds;
 
   int get marginBottom => _layoutManager.marginBottom;
+
   int get marginLeft => _layoutManager.marginLeft;
+
   int get marginRight => _layoutManager.marginRight;
+
   int get marginTop => _layoutManager.marginTop;
 
   /// Returns the combined bounds of the chart draw area and all layout
@@ -419,8 +422,8 @@ abstract class BaseChart<D> {
       selectionModel.clearSelection(notifyListeners: false);
     }
 
-    var processedSeriesList = new List<MutableSeries<D>>.from(
-        seriesList.map((Series<dynamic, D> series) => makeSeries(series)));
+    var processedSeriesList =
+        new List<MutableSeries<D>>.from(seriesList.map(makeSeries));
 
     // Allow listeners to manipulate the seriesList.
     fireOnDraw(processedSeriesList);

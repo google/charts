@@ -14,9 +14,9 @@
 // limitations under the License.
 
 import 'dart:math' show cos, min, sin, pi, Point, Rectangle;
+
 import 'package:meta/meta.dart' show immutable, required;
-import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
-import '../common/chart_canvas.dart' show ChartCanvas;
+
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/style/style_factory.dart' show StyleFactory;
@@ -24,6 +24,8 @@ import '../../common/text_element.dart'
     show MaxWidthStrategy, TextDirection, TextElement;
 import '../../common/text_style.dart' show TextStyle;
 import '../../data/series.dart' show AccessorFn;
+import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
+import '../common/chart_canvas.dart' show ChartCanvas;
 import 'arc_renderer.dart' show ArcRendererElementList;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
@@ -101,8 +103,8 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
 
     // Track the Y position of the previous outside label for collision
     // detection purposes.
-    var previousOutsideLabelY;
-    var previousLabelLeftOfChart;
+    num previousOutsideLabelY;
+    bool previousLabelLeftOfChart;
 
     for (var element in arcElements.arcs) {
       final labelFn = element.series.labelAccessorFn;

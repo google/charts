@@ -147,9 +147,7 @@ void main() {
         measureDistance: 20.0);
   });
 
-  tearDown(() {
-    resetMockitoState();
-  });
+  tearDown(resetMockitoState);
 
   group('SelectNearest trigger handling', () {
     test('single series selects detail', () {

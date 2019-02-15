@@ -14,10 +14,12 @@
 // limitations under the License.
 
 import 'dart:math' show Point, Rectangle;
+
 import 'package:meta/meta.dart' show protected, required;
-import '../common/chart_canvas.dart' show ChartCanvas;
+
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/symbol_renderer.dart';
+import '../common/chart_canvas.dart' show ChartCanvas;
 import 'point_renderer.dart' show PointRendererElement;
 import 'point_renderer_decorator.dart' show PointRendererDecorator;
 

@@ -16,8 +16,8 @@
 import '../../../../common/color.dart';
 import '../../../../common/symbol_renderer.dart';
 import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
-import '../../series_renderer.dart' show rendererKey;
 import '../../processed_series.dart' show ImmutableSeries;
+import '../../series_renderer.dart' show rendererKey;
 
 /// Holder for the information used for a legend row.
 ///

@@ -112,12 +112,10 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
       // the same point. This is a necessary hack because every annotation has a
       // measure value of 0, so the key generated in [PointRenderer] is not
       // unique enough.
-      if (series.keyFn == null) {
-        series.keyFn = (int index) =>
-            '${series.id}__${series.domainFn(index)}__' +
-            '${series.domainLowerBoundFn(index)}__' +
-            '${series.domainUpperBoundFn(index)}';
-      }
+      series.keyFn ??=
+          (int index) => '${series.id}__${series.domainFn(index)}__'
+              '${series.domainLowerBoundFn(index)}__'
+              '${series.domainUpperBoundFn(index)}';
 
       _seriesInfo[seriesKey] = new _SeriesInfo<D>(
         rowHeight: rowHeight,

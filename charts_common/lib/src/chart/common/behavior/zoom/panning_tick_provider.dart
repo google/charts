@@ -14,15 +14,16 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show required;
-import '../../../common/chart_context.dart' show ChartContext;
+
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../cartesian/axis/axis.dart' show AxisOrientation;
-import '../../../cartesian/axis/tick_formatter.dart' show TickFormatter;
-import '../../../cartesian/axis/tick_provider.dart' show TickProvider, TickHint;
-import '../../../cartesian/axis/scale.dart' show MutableScale;
-import '../../../cartesian/axis/tick.dart' show Tick;
 import '../../../cartesian/axis/draw_strategy/tick_draw_strategy.dart'
     show TickDrawStrategy;
+import '../../../cartesian/axis/scale.dart' show MutableScale;
+import '../../../cartesian/axis/tick.dart' show Tick;
+import '../../../cartesian/axis/tick_formatter.dart' show TickFormatter;
+import '../../../cartesian/axis/tick_provider.dart' show TickProvider, TickHint;
+import '../../../common/chart_context.dart' show ChartContext;
 
 enum PanningTickProviderMode {
   /// Return cached ticks.

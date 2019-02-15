@@ -19,6 +19,11 @@ import 'dart:math' show min, Point, Rectangle;
 import 'package:meta/meta.dart' show protected, required;
 import 'package:vector_math/vector_math.dart' show Vector2;
 
+import '../../common/color.dart' show Color;
+import '../../common/math.dart' show distanceBetweenPointAndLineSegment;
+import '../../common/symbol_renderer.dart'
+    show CircleSymbolRenderer, SymbolRenderer;
+import '../../data/series.dart' show AccessorFn, AttributeKey, TypedAccessorFn;
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
@@ -28,10 +33,6 @@ import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../common/series_datum.dart' show SeriesDatum;
 import '../layout/layout_view.dart' show LayoutViewPaintOrder;
-import '../../common/color.dart' show Color;
-import '../../common/math.dart' show distanceBetweenPointAndLineSegment;
-import '../../common/symbol_renderer.dart' show CircleSymbolRenderer;
-import '../../data/series.dart' show AccessorFn, AttributeKey, TypedAccessorFn;
 import 'comparison_points_decorator.dart' show ComparisonPointsDecorator;
 import 'point_renderer_config.dart' show PointRendererConfig;
 import 'point_renderer_decorator.dart' show PointRendererDecorator;
@@ -131,11 +132,9 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       // series data between chart draw cycles. Ideally we should require the
       // user to provide a key function, but this at least provides some
       // smoothing when adding/removing data.
-      if (series.keyFn == null) {
-        series.keyFn = (int index) =>
-            '${series.id}__${series.domainFn(index)}__' +
-            '${series.measureFn(index)}';
-      }
+      series.keyFn ??=
+          (int index) => '${series.id}__${series.domainFn(index)}__'
+              '${series.measureFn(index)}';
 
       for (var index = 0; index < series.data.length; index++) {
         // Default to the configured radius if none was returned by the
@@ -143,7 +142,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         var radiusPx = series.radiusPxFn(index);
         radiusPx ??= config.radiusPx;
 
-        var boundsLineRadiusPx;
+        num boundsLineRadiusPx;
         if (boundsLineRadiusPxFn != null) {
           boundsLineRadiusPx = (boundsLineRadiusPxFn is TypedAccessorFn)
               ? (boundsLineRadiusPxFn as TypedAccessorFn)(
@@ -514,7 +513,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
       // Found a point, add it to the list.
       if (nearestPoint != null) {
-        var nearestSymbolRenderer;
+        SymbolRenderer nearestSymbolRenderer;
         if (nearestPoint.symbolRendererId == defaultSymbolRendererId) {
           nearestSymbolRenderer = symbolRenderer;
         } else {
@@ -631,7 +630,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     symbolRendererId ??= defaultSymbolRendererId;
 
     // Now that we have the ID, get the configured [SymbolRenderer].
-    var nearestSymbolRenderer;
+    SymbolRenderer nearestSymbolRenderer;
     if (symbolRendererId == defaultSymbolRendererId) {
       nearestSymbolRenderer = symbolRenderer;
     } else {
@@ -652,7 +651,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 }
 
 class DatumPoint<D> extends Point<double> {
-  final datum;
+  final Object datum;
   final D domain;
   final ImmutableSeries<D> series;
 
@@ -737,7 +736,7 @@ class PointRendererElement<D> {
             previousPoint.xUpper
         : null;
 
-    var y;
+    double y;
     if (targetPoint.y != null && previousPoint.y != null) {
       y = ((targetPoint.y - previousPoint.y) * animationPercent) +
           previousPoint.y;

@@ -15,16 +15,17 @@
 
 import 'package:meta/meta.dart';
 
+import '../../common/symbol_renderer.dart' show SymbolRenderer;
+import '../../data/series.dart' show AccessorFn;
+import '../common/base_chart.dart' show BaseChart;
+import '../common/processed_series.dart' show MutableSeries;
+import '../common/series_renderer.dart' show BaseSeriesRenderer, SeriesRenderer;
 import 'axis/axis.dart' show Axis, domainAxisKey, measureAxisKey;
 import 'cartesian_chart.dart' show CartesianChart;
-import '../common/base_chart.dart' show BaseChart;
-import '../common/series_renderer.dart' show BaseSeriesRenderer, SeriesRenderer;
-import '../common/processed_series.dart' show MutableSeries;
-import '../../data/series.dart' show AccessorFn;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
 
 abstract class CartesianRenderer<D> extends SeriesRenderer<D> {
   void configureDomainAxes(List<MutableSeries<D>> seriesList);
+
   void configureMeasureAxes(List<MutableSeries<D>> seriesList);
 }
 

@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import '../base_chart.dart' show BaseChart;
 import '../../cartesian/cartesian_chart.dart' show CartesianChart;
+import '../base_chart.dart' show BaseChart;
 import '../selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
 import 'chart_behavior.dart' show ChartBehavior;

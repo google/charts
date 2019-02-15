@@ -14,13 +14,15 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
+
 import 'package:meta/meta.dart' show required;
+
 import '../../../cartesian/axis/axis.dart' show ImmutableAxis, domainAxisKey;
 import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../processed_series.dart' show MutableSeries;
-import '../../series_datum.dart' show SeriesDatum;
 import '../../selection_model/selection_model.dart' show SelectionModelType;
+import '../../series_datum.dart' show SeriesDatum;
 import 'a11y_explore_behavior.dart'
     show A11yExploreBehavior, ExploreModeTrigger;
 import 'a11y_node.dart' show A11yNode, OnFocus;
@@ -74,7 +76,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
         final datum = series.data[index];
         D domain = series.domainFn(index);
 
-        domainSeriesDatum[domain] ??= new List<SeriesDatum<D>>();
+        domainSeriesDatum[domain] ??= <SeriesDatum<D>>[];
         domainSeriesDatum[domain].add(new SeriesDatum<D>(series, datum));
       }
     }

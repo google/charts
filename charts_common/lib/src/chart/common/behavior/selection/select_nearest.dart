@@ -15,14 +15,14 @@
 
 import 'dart:math';
 
-import 'selection_trigger.dart' show SelectionTrigger;
-import '../../base_chart.dart' show BaseChart;
-import '../../datum_details.dart' show DatumDetails;
-import '../../behavior/chart_behavior.dart' show ChartBehavior;
-import '../../processed_series.dart' show ImmutableSeries;
-import '../../series_datum.dart' show SeriesDatum;
-import '../../selection_model/selection_model.dart' show SelectionModelType;
 import '../../../../common/gesture_listener.dart' show GestureListener;
+import '../../base_chart.dart' show BaseChart;
+import '../../behavior/chart_behavior.dart' show ChartBehavior;
+import '../../datum_details.dart' show DatumDetails;
+import '../../processed_series.dart' show ImmutableSeries;
+import '../../selection_model/selection_model.dart' show SelectionModelType;
+import '../../series_datum.dart' show SeriesDatum;
+import 'selection_trigger.dart' show SelectionTrigger;
 
 /// Chart behavior that listens to the given eventTrigger and updates the
 /// specified [SelectionModel]. This is used to pair input events to behaviors

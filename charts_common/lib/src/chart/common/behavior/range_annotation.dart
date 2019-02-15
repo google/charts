@@ -15,14 +15,17 @@
 
 import 'dart:collection' show LinkedHashMap;
 import 'dart:math' show pi, Point, Rectangle;
+
 import 'package:meta/meta.dart';
 
-import '../../cartesian/axis/axis.dart' show ImmutableAxis;
+import '../../../common/color.dart' show Color;
+import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../common/style/style_factory.dart' show StyleFactory;
+import '../../../common/text_element.dart'
+    show MaxWidthStrategy, TextDirection, TextElement;
+import '../../../common/text_style.dart' show TextStyle;
+import '../../cartesian/axis/axis.dart' show Axis, ImmutableAxis;
 import '../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
-import '../base_chart.dart' show BaseChart, LifecycleListener;
-import '../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
-import '../processed_series.dart' show MutableSeries;
-import 'chart_behavior.dart' show ChartBehavior;
 import '../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../layout/layout_view.dart'
     show
@@ -32,12 +35,10 @@ import '../../layout/layout_view.dart'
         LayoutViewPaintOrder,
         LayoutViewPositionOrder,
         ViewMeasuredSizes;
-import '../../../common/color.dart' show Color;
-import '../../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../../common/style/style_factory.dart' show StyleFactory;
-import '../../../common/text_element.dart'
-    show MaxWidthStrategy, TextDirection, TextElement;
-import '../../../common/text_style.dart' show TextStyle;
+import '../base_chart.dart' show BaseChart, LifecycleListener;
+import '../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
+import '../processed_series.dart' show MutableSeries;
+import 'chart_behavior.dart' show ChartBehavior;
 
 /// Chart behavior that annotates domain ranges with a solid fill color.
 ///
@@ -94,7 +95,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
-  final _annotationMap = new LinkedHashMap<String, _AnimatedAnnotation<D>>();
+  final _annotationMap = LinkedHashMap<String, _AnimatedAnnotation<D>>();
 
   // Store a list of annotations that exist in the current annotation list.
   //
@@ -155,7 +156,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       final domainAxis = _chart.domainAxis;
 
       annotations.forEach((AnnotationSegment annotation) {
-        var axis;
+        Axis axis;
 
         switch (annotation.axisType) {
           case RangeAnnotationAxisType.domain:
@@ -182,7 +183,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
     _currentKeys.clear();
 
     annotations.forEach((AnnotationSegment annotation) {
-      var axis;
+      Axis axis;
 
       switch (annotation.axisType) {
         case RangeAnnotationAxisType.domain:
@@ -331,6 +332,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
   bool get isRtl => chart.context.isRtl;
 
   Rectangle<int> _drawAreaBounds;
+
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
   GraphicsFactory _graphicsFactory;

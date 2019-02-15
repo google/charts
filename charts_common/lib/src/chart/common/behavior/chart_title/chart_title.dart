@@ -14,12 +14,14 @@
 // limitations under the License.
 
 import 'dart:math';
+
 import 'package:meta/meta.dart';
 
-import '../../base_chart.dart' show BaseChart, LifecycleListener;
-import '../../behavior/chart_behavior.dart'
-    show BehaviorPosition, ChartBehavior, OutsideJustification;
-import '../../chart_canvas.dart' show ChartCanvas;
+import '../../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../../common/style/style_factory.dart' show StyleFactory;
+import '../../../../common/text_element.dart'
+    show MaxWidthStrategy, TextDirection, TextElement;
+import '../../../../common/text_style.dart' show TextStyle;
 import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../../layout/layout_view.dart'
     show
@@ -29,11 +31,10 @@ import '../../../layout/layout_view.dart'
         LayoutViewPaintOrder,
         LayoutViewPositionOrder,
         ViewMeasuredSizes;
-import '../../../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../../../common/style/style_factory.dart' show StyleFactory;
-import '../../../../common/text_element.dart'
-    show MaxWidthStrategy, TextDirection, TextElement;
-import '../../../../common/text_style.dart' show TextStyle;
+import '../../base_chart.dart' show BaseChart, LifecycleListener;
+import '../../behavior/chart_behavior.dart'
+    show BehaviorPosition, ChartBehavior, OutsideJustification;
+import '../../chart_canvas.dart' show ChartCanvas;
 
 /// Chart behavior that adds title text to a chart. An optional second line of
 /// text may be rendered as a sub-title.
@@ -256,6 +257,7 @@ class ChartTitle<D> implements ChartBehavior<D> {
 /// Layout view component for [ChartTitle].
 class _ChartTitleLayoutView<D> extends LayoutView {
   LayoutViewConfig _layoutConfig;
+
   LayoutViewConfig get layoutConfig => _layoutConfig;
 
   /// Stores all of the configured properties of the behavior.

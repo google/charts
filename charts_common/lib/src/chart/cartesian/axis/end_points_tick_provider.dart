@@ -14,9 +14,9 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show required;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
-import 'time/date_time_scale.dart' show DateTimeScale;
 import 'axis.dart' show AxisOrientation;
 import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import 'numeric_scale.dart' show NumericScale;
@@ -25,6 +25,7 @@ import 'scale.dart' show MutableScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart' show TickFormatter;
 import 'tick_provider.dart' show BaseTickProvider, TickHint;
+import 'time/date_time_scale.dart' show DateTimeScale;
 
 /// Tick provider that provides ticks at the two end points of the axis range.
 class EndPointsTickProvider<D> extends BaseTickProvider<D> {
@@ -72,7 +73,7 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
 
   /// Get the start value from the scale.
   D _getStartValue(TickHint<D> tickHint, MutableScale<D> scale) {
-    var start;
+    Object start;
 
     if (tickHint != null) {
       start = tickHint.start;
@@ -91,7 +92,7 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
 
   /// Get the end value from the scale.
   D _getEndValue(TickHint<D> tickHint, MutableScale<D> scale) {
-    var end;
+    Object end;
 
     if (tickHint != null) {
       end = tickHint.end;

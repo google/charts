@@ -17,9 +17,9 @@ import 'dart:math' show Rectangle, Point, min;
 
 import 'package:meta/meta.dart' show protected;
 
+import '../chart/common/chart_canvas.dart' show ChartCanvas;
 import 'color.dart' show Color;
 import 'style/style_factory.dart' show StyleFactory;
-import '../chart/common/chart_canvas.dart' show ChartCanvas;
 
 /// Strategy for rendering a symbol.
 abstract class BaseSymbolRenderer {

@@ -15,23 +15,24 @@
 
 import 'dart:collection' show LinkedHashMap, HashSet;
 import 'dart:math' show Point, Rectangle, max;
+
 import 'package:meta/meta.dart' show protected, required;
 
-import 'base_bar_renderer_config.dart' show BaseBarRendererConfig;
-import 'base_bar_renderer_element.dart'
-    show BaseAnimatedBar, BaseBarRendererElement;
-import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
-import '../cartesian/axis/axis.dart'
-    show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
-import '../cartesian/axis/scale.dart' show RangeBandConfig;
-import '../common/base_chart.dart' show BaseChart;
-import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
-import '../common/datum_details.dart' show DatumDetails;
-import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../../common/color.dart' show Color;
 import '../../common/math.dart' show clamp;
 import '../../common/symbol_renderer.dart' show RoundedRectSymbolRenderer;
 import '../../data/series.dart' show AttributeKey;
+import '../cartesian/axis/axis.dart'
+    show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
+import '../cartesian/axis/scale.dart' show RangeBandConfig;
+import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
+import '../common/base_chart.dart' show BaseChart;
+import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
+import '../common/datum_details.dart' show DatumDetails;
+import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import 'base_bar_renderer_config.dart' show BaseBarRendererConfig;
+import 'base_bar_renderer_element.dart'
+    show BaseAnimatedBar, BaseBarRendererElement;
 
 const barGroupIndexKey = const AttributeKey<int>('BarRenderer.barGroupIndex');
 
@@ -100,11 +101,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   ImmutableAxis<D> _prevDomainAxis;
 
   BaseBarRenderer(
-      {@required BaseBarRendererConfig config,
-      String rendererId,
-      int layoutPaintOrder})
-      : this.config = config,
-        super(
+      {@required this.config, String rendererId, int layoutPaintOrder})
+      : super(
           rendererId: rendererId,
           layoutPaintOrder: layoutPaintOrder,
           symbolRenderer:
@@ -292,7 +290,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
     if (config.weightPattern != null) {
       if (numBarGroups > config.weightPattern.length) {
-        throw new ArgumentError('Number of series exceeds length of weight ' +
+        throw new ArgumentError('Number of series exceeds length of weight '
             'pattern ${config.weightPattern}');
       }
 
@@ -561,7 +559,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         _currentKeys.remove(key);
       }
       _currentGroupsStackKeys.forEach((domain, keys) {
-        keys.removeWhere((key) => keysToRemove.contains(key));
+        keys.removeWhere(keysToRemove.contains);
       });
     }
 
@@ -792,6 +790,7 @@ class _ReversedSeriesIterator<S extends ImmutableSeries> extends Iterator<S> {
     categoryAndSeriesIndexMap
         .forEach((_, indices) => _visitIndex.addAll(indices.reversed));
   }
+
   @override
   bool moveNext() {
     _current = (_current == null) ? 0 : _current + 1;

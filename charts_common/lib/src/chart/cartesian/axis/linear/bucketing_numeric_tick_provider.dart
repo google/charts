@@ -18,12 +18,12 @@ import 'package:meta/meta.dart' show required;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show AxisOrientation;
-import '../numeric_scale.dart' show NumericScale;
 import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
+import '../numeric_scale.dart' show NumericScale;
+import '../numeric_tick_provider.dart' show NumericTickProvider;
 import '../tick.dart' show Tick;
 import '../tick_formatter.dart' show SimpleTickFormatterBase, TickFormatter;
 import '../tick_provider.dart' show TickHint;
-import '../numeric_tick_provider.dart' show NumericTickProvider;
 
 /// Tick provider that generates ticks for a [BucketingNumericAxis].
 ///

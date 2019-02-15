@@ -30,13 +30,12 @@ class TypedRegistry {
 }
 
 class TypedKey<R> {
-  final String unique_key;
-  const TypedKey(this.unique_key);
+  final String uniqueKey;
+  const TypedKey(this.uniqueKey);
 
   @override
-  int get hashCode => unique_key.hashCode;
+  int get hashCode => uniqueKey.hashCode;
 
   @override
-  bool operator ==(other) =>
-      other is TypedKey && unique_key == other.unique_key;
+  bool operator ==(other) => other is TypedKey && uniqueKey == other.uniqueKey;
 }

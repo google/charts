@@ -14,12 +14,16 @@
 // limitations under the License.
 
 import 'dart:math';
+
 import 'package:meta/meta.dart';
 
-import '../selection/selection_trigger.dart' show SelectionTrigger;
-import '../../base_chart.dart' show BaseChart, LifecycleListener;
-import '../../behavior/chart_behavior.dart' show ChartBehavior;
-import '../../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
+import '../../../../common/color.dart' show Color;
+import '../../../../common/gesture_listener.dart' show GestureListener;
+import '../../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../../common/math.dart' show clamp;
+import '../../../../common/style/style_factory.dart' show StyleFactory;
+import '../../../../common/symbol_renderer.dart'
+    show RectSymbolRenderer, SymbolRenderer;
 import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../../layout/layout_view.dart'
     show
@@ -29,13 +33,10 @@ import '../../../layout/layout_view.dart'
         LayoutViewPaintOrder,
         LayoutViewPositionOrder,
         ViewMeasuredSizes;
-import '../../../../common/color.dart' show Color;
-import '../../../../common/gesture_listener.dart' show GestureListener;
-import '../../../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../../../common/math.dart' show clamp;
-import '../../../../common/symbol_renderer.dart'
-    show RectSymbolRenderer, SymbolRenderer;
-import '../../../../common/style/style_factory.dart' show StyleFactory;
+import '../../base_chart.dart' show BaseChart, LifecycleListener;
+import '../../behavior/chart_behavior.dart' show ChartBehavior;
+import '../../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
+import '../selection/selection_trigger.dart' show SelectionTrigger;
 
 /// Chart behavior that adds a slider widget to a chart. When the slider is
 /// dropped after drag, it will report its domain position and nearest datum
@@ -188,7 +189,7 @@ class Slider<D> implements ChartBehavior<D> {
             onDragEnd: _onDragEnd);
         break;
       default:
-        throw new ArgumentError('Slider does not support the event trigger ' +
+        throw new ArgumentError('Slider does not support the event trigger '
             '"${this.eventTrigger}"');
         break;
     }
@@ -539,8 +540,7 @@ class SliderStyle {
         handleOffset == o.handleOffset &&
         handleSize == o.handleSize &&
         strokeWidthPx == o.strokeWidthPx &&
-        strokeColor == o.strokeColor &&
-        handlePosition == o.handlePosition;
+        strokeColor == o.strokeColor;
   }
 
   @override

@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable, protected, required;
 import 'dart:math';
 
-import '../../../../common/line_style.dart' show LineStyle;
+import 'package:meta/meta.dart' show immutable, protected, required;
+
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../../common/line_style.dart' show LineStyle;
 import '../../../../common/style/style_factory.dart' show StyleFactory;
 import '../../../../common/text_element.dart' show TextDirection;
 import '../../../../common/text_style.dart' show TextStyle;

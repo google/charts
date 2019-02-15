@@ -15,12 +15,12 @@
 
 import 'dart:math' show pi;
 
+import '../../common/color.dart' show Color;
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/symbol_renderer.dart';
-import '../../common/color.dart' show Color;
-import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
+import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import 'arc_renderer.dart' show ArcRenderer;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 

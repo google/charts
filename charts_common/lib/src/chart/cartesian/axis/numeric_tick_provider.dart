@@ -14,16 +14,18 @@
 // limitations under the License.
 
 import 'dart:math' show log, log10e, max, min, pow;
+
 import 'package:meta/meta.dart' show required;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
-import '../../common/unitconverter/unit_converter.dart' show UnitConverter;
 import '../../common/unitconverter/identity_converter.dart'
     show IdentityConverter;
+import '../../common/unitconverter/unit_converter.dart' show UnitConverter;
 import 'axis.dart' show AxisOrientation;
+import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import 'numeric_extents.dart' show NumericExtents;
 import 'numeric_scale.dart' show NumericScale;
-import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart' show TickFormatter;
 import 'tick_provider.dart' show BaseTickProvider, TickHint;
@@ -432,9 +434,9 @@ class NumericTickProvider extends BaseTickProvider<num> {
           !(low < 0 &&
               high > 0 &&
               (negativeRegionCount == 0 || positiveRegionCount == 0)),
-          'Numeric tick provider cannot generate ${tickCount} ' +
-              'ticks when the axis range contains both positive and negative ' +
-              'values. A minimum of three ticks are required to include zero.');
+          'Numeric tick provider cannot generate ${tickCount} '
+          'ticks when the axis range contains both positive and negative '
+          'values. A minimum of three ticks are required to include zero.');
 
       // Determine the "favored" axis direction (the one which will control the
       // ticks based on having a greater value / regions).

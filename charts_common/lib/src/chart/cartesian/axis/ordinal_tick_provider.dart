@@ -14,13 +14,14 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show required;
-import '../../common/chart_context.dart' show ChartContext;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
+import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import 'ordinal_scale.dart' show OrdinalScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart' show TickFormatter;
-import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import 'tick_provider.dart' show BaseTickProvider, TickHint;
 
 /// A strategy for selecting ticks to draw given ordinal domain values.
@@ -50,7 +51,7 @@ class OrdinalTickProvider extends BaseTickProvider<String> {
   }
 
   @override
-  bool operator ==(o) => o is OrdinalTickProvider;
+  bool operator ==(other) => other is OrdinalTickProvider;
 
   @override
   int get hashCode => 31;

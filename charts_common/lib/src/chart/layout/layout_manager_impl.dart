@@ -13,12 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
 import 'dart:math' show Point, Rectangle, max;
-import 'layout_view.dart' show LayoutView, LayoutPosition;
+
+import 'package:meta/meta.dart' show required;
+
 import 'layout_config.dart' show LayoutConfig;
 import 'layout_manager.dart';
 import 'layout_margin_strategy.dart';
+import 'layout_view.dart' show LayoutView, LayoutPosition;
 
 /// Default Layout manager for [LayoutView]s.
 class LayoutManagerImpl implements LayoutManager {

@@ -15,18 +15,18 @@
 
 import 'dart:collection' show LinkedHashMap;
 
-import '../cartesian/cartesian_chart.dart' show CartesianChart;
-import '../cartesian/axis/time/date_time_axis.dart' show DateTimeAxis;
+import '../../common/date_time_factory.dart'
+    show DateTimeFactory, LocalDateTimeFactory;
+import '../cartesian/axis/axis.dart' show Axis, NumericAxis;
 import '../cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
-import '../cartesian/axis/axis.dart' show Axis, NumericAxis;
 import '../cartesian/axis/spec/axis_spec.dart' show AxisSpec;
 import '../cartesian/axis/spec/date_time_axis_spec.dart' show DateTimeAxisSpec;
+import '../cartesian/axis/time/date_time_axis.dart' show DateTimeAxis;
+import '../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../common/series_renderer.dart' show SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig;
 import '../line/line_renderer.dart' show LineRenderer;
-import '../../common/date_time_factory.dart'
-    show DateTimeFactory, LocalDateTimeFactory;
 
 class TimeSeriesChart extends CartesianChart<DateTime> {
   final DateTimeFactory dateTimeFactory;

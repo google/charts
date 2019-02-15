@@ -15,8 +15,20 @@
 
 import 'dart:collection' show LinkedHashMap;
 import 'dart:math' show Point;
+
 import 'package:meta/meta.dart' show protected;
 
+import '../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../data/series.dart' show Series;
+import '../bar/bar_renderer.dart' show BarRenderer;
+import '../common/base_chart.dart' show BaseChart;
+import '../common/chart_context.dart' show ChartContext;
+import '../common/datum_details.dart' show DatumDetails;
+import '../common/processed_series.dart' show MutableSeries;
+import '../common/selection_model/selection_model.dart' show SelectionModelType;
+import '../common/series_renderer.dart' show SeriesRenderer;
+import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import 'axis/axis.dart'
     show
         Axis,
@@ -26,23 +38,12 @@ import 'axis/axis.dart'
         domainAxisKey,
         measureAxisIdKey,
         measureAxisKey;
-import 'axis/spec/axis_spec.dart' show AxisSpec;
+import 'axis/draw_strategy/gridline_draw_strategy.dart'
+    show GridlineRendererSpec;
 import 'axis/draw_strategy/none_draw_strategy.dart' show NoneDrawStrategy;
 import 'axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
-import 'axis/draw_strategy/gridline_draw_strategy.dart'
-    show GridlineRendererSpec;
-import '../bar/bar_renderer.dart' show BarRenderer;
-import '../common/base_chart.dart' show BaseChart;
-import '../common/chart_context.dart' show ChartContext;
-import '../common/datum_details.dart' show DatumDetails;
-import '../common/processed_series.dart' show MutableSeries;
-import '../common/series_renderer.dart' show SeriesRenderer;
-import '../common/selection_model/selection_model.dart' show SelectionModelType;
-import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
-import '../layout/layout_view.dart' show LayoutViewPaintOrder;
-import '../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../data/series.dart' show Series;
+import 'axis/spec/axis_spec.dart' show AxisSpec;
 
 class NumericCartesianChart extends CartesianChart<num> {
   NumericCartesianChart(
@@ -149,8 +150,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
         _newDomainAxis = domainAxis,
         _primaryMeasureAxis = primaryMeasureAxis ?? new NumericAxis(),
         _secondaryMeasureAxis = secondaryMeasureAxis ?? new NumericAxis(),
-        _disjointMeasureAxes =
-            disjointMeasureAxes ?? new LinkedHashMap<String, NumericAxis>(),
+        _disjointMeasureAxes = disjointMeasureAxes ?? <String, NumericAxis>{},
         super(layoutConfig: layoutConfig ?? _defaultLayoutConfig) {
     // As a convenience for chart configuration, set the paint order on any axis
     // that is missing one.
@@ -241,9 +241,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     }
 
     // If no valid axisId was provided, fall back to primary axis.
-    if (axis == null) {
-      axis = _primaryMeasureAxis;
-    }
+    axis ??= _primaryMeasureAxis;
 
     return axis;
   }

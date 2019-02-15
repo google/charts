@@ -14,12 +14,14 @@
 // limitations under the License.
 
 import 'dart:math' show Point, Rectangle, max;
+
 import 'package:meta/meta.dart';
-import 'base_chart.dart' show BaseChart;
-import 'chart_canvas.dart' show ChartCanvas;
-import 'datum_details.dart' show DatumDetails;
-import 'processed_series.dart' show ImmutableSeries, MutableSeries;
-import 'series_datum.dart' show SeriesDatum;
+
+import '../../common/color.dart' show Color;
+import '../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../common/style/style_factory.dart' show StyleFactory;
+import '../../common/symbol_renderer.dart' show SymbolRenderer;
+import '../../data/series.dart' show AttributeKey;
 import '../layout/layout_view.dart'
     show
         LayoutPosition,
@@ -27,11 +29,11 @@ import '../layout/layout_view.dart'
         LayoutViewConfig,
         LayoutViewPositionOrder,
         ViewMeasuredSizes;
-import '../../common/color.dart' show Color;
-import '../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
-import '../../common/style/style_factory.dart' show StyleFactory;
-import '../../data/series.dart' show AttributeKey;
+import 'base_chart.dart' show BaseChart;
+import 'chart_canvas.dart' show ChartCanvas;
+import 'datum_details.dart' show DatumDetails;
+import 'processed_series.dart' show ImmutableSeries, MutableSeries;
+import 'series_datum.dart' show SeriesDatum;
 
 /// Unique identifier used to associate custom series renderers on a chart with
 /// one or more series of data.
@@ -54,11 +56,13 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// the [SymbolRenderer] has to be a Flutter wrapped version to support
   /// building widget based symbols.
   SymbolRenderer get symbolRenderer;
+
   set symbolRenderer(SymbolRenderer symbolRenderer);
 
   /// Unique identifier for this renderer. Any [Series] on a chart with a
   /// matching  [rendererIdKey] will be drawn by this renderer.
   String get rendererId;
+
   set rendererId(String rendererId);
 
   /// Handles any setup of the renderer that needs to be deferred until it is
@@ -135,6 +139,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   SymbolRenderer symbolRenderer;
 
   Rectangle<int> _drawAreaBounds;
+
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
   GraphicsFactory _graphicsFactory;

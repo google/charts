@@ -13,16 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable;
 import 'package:intl/intl.dart';
+import 'package:meta/meta.dart' show immutable;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
-import '../numeric_extents.dart' show NumericExtents;
 import '../axis.dart' show Axis, NumericAxis;
 import '../linear/bucketing_numeric_axis.dart' show BucketingNumericAxis;
 import '../linear/bucketing_numeric_tick_provider.dart'
     show BucketingNumericTickProvider;
+import '../numeric_extents.dart' show NumericExtents;
 import 'axis_spec.dart' show AxisSpec, RenderSpec;
 import 'numeric_axis_spec.dart'
     show

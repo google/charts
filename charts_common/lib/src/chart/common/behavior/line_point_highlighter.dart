@@ -15,17 +15,16 @@
 
 import 'dart:collection' show LinkedHashMap;
 import 'dart:math' show max, min, Point, Rectangle;
+
 import 'package:meta/meta.dart';
 
+import '../../../common/color.dart' show Color;
+import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../common/style/style_factory.dart' show StyleFactory;
+import '../../../common/symbol_renderer.dart'
+    show CircleSymbolRenderer, SymbolRenderer;
 import '../../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
-import '../base_chart.dart' show BaseChart, LifecycleListener;
-import '../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
-import '../datum_details.dart' show DatumDetails;
-import '../processed_series.dart' show ImmutableSeries;
-import '../selection_model/selection_model.dart'
-    show SelectionModel, SelectionModelType;
-import 'chart_behavior.dart' show ChartBehavior;
 import '../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../layout/layout_view.dart'
     show
@@ -34,11 +33,13 @@ import '../../layout/layout_view.dart'
         LayoutViewConfig,
         LayoutViewPaintOrder,
         ViewMeasuredSizes;
-import '../../../common/color.dart' show Color;
-import '../../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../../common/symbol_renderer.dart'
-    show CircleSymbolRenderer, SymbolRenderer;
-import '../../../common/style/style_factory.dart' show StyleFactory;
+import '../base_chart.dart' show BaseChart, LifecycleListener;
+import '../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
+import '../datum_details.dart' show DatumDetails;
+import '../processed_series.dart' show ImmutableSeries;
+import '../selection_model/selection_model.dart'
+    show SelectionModel, SelectionModelType;
+import 'chart_behavior.dart' show ChartBehavior;
 
 /// Chart behavior that monitors the specified [SelectionModel] and renders a
 /// dot for selected data.
@@ -105,7 +106,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was provided by the selection model.
-  var _seriesPointMap = new LinkedHashMap<String, _AnimatedPoint<D>>();
+  var _seriesPointMap = LinkedHashMap<String, _AnimatedPoint<D>>();
 
   // Store a list of points that exist in the series data.
   //
@@ -185,7 +186,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     // Create a new map each time to ensure that we have it sorted in the
     // selection model order. This preserves the "nearestDetail" ordering, so
     // that we render follow lines in the proper place.
-    final newSeriesMap = new LinkedHashMap<String, _AnimatedPoint<D>>();
+    final newSeriesMap = <String, _AnimatedPoint<D>>{};
 
     for (DatumDetails<D> detail in selectedDatumDetails) {
       if (detail == null) {
@@ -285,6 +286,7 @@ class _LinePointLayoutView<D> extends LayoutView {
   final List<int> dashPattern;
 
   Rectangle<int> _drawAreaBounds;
+
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
   final bool drawFollowLinesAcrossChart;
@@ -429,8 +431,8 @@ class _LinePointLayoutView<D> extends LayoutView {
       // Draw the horizontal follow line.
       if (shouldShowHorizontalFollowLine &&
           !paintedHorizontalLinePositions.contains(roundedY)) {
-        var leftBound;
-        var rightBound;
+        int leftBound;
+        int rightBound;
 
         if (drawFollowLinesAcrossChart) {
           // RTL and LTR both go across the whole draw area.

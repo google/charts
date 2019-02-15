@@ -14,9 +14,11 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
+
 import 'package:meta/meta.dart' show required;
-import '../common/chart_canvas.dart' show ChartCanvas;
+
 import '../../common/graphics_factory.dart' show GraphicsFactory;
+import '../common/chart_canvas.dart' show ChartCanvas;
 import 'point_renderer.dart' show PointRendererElement;
 
 /// Decorates points after the points have already been painted.

@@ -18,6 +18,9 @@ import 'dart:math' show atan2, cos, max, sin, pi, Point, Rectangle;
 
 import 'package:meta/meta.dart' show required;
 
+import '../../common/color.dart' show Color;
+import '../../common/style/style_factory.dart' show StyleFactory;
+import '../../data/series.dart' show AttributeKey;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/canvas_shapes.dart' show CanvasPieSlice, CanvasPie;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
@@ -25,9 +28,6 @@ import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../common/series_datum.dart' show SeriesDatum;
 import '../common/series_renderer.dart' show BaseSeriesRenderer;
-import '../../common/color.dart' show Color;
-import '../../common/style/style_factory.dart' show StyleFactory;
-import '../../data/series.dart' show AttributeKey;
 import 'arc_renderer_config.dart' show ArcRendererConfig;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
@@ -327,7 +327,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         }
       });
 
-      keysToRemove.forEach((String key) => _seriesArcMap.remove(key));
+      keysToRemove.forEach(_seriesArcMap.remove);
     }
 
     _seriesArcMap.forEach((String key, _AnimatedArcList<D> arcList) {
@@ -438,7 +438,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   ///
   /// [key] the key in the current animated arc list.
   Point<double> _getChartPosition(String seriesId, String key) {
-    var chartPosition;
+    Point<double> chartPosition;
 
     final arcList = _seriesArcMap[seriesId];
 
@@ -551,9 +551,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       final colorPalette = colorPalettes[0].makeShades(maxMissing);
 
       seriesList.forEach((MutableSeries series) {
-        if (series.colorFn == null) {
-          series.colorFn = (index) => colorPalette[index];
-        }
+        series.colorFn ??= (index) => colorPalette[index];
       });
     }
   }

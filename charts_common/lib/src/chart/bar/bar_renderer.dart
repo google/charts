@@ -14,8 +14,17 @@
 // limitations under the License.
 
 import 'dart:math' show max, min, Point, Rectangle;
+
 import 'package:meta/meta.dart' show protected, required;
 
+import '../../common/color.dart' show Color;
+import '../cartesian/axis/axis.dart'
+    show ImmutableAxis, domainAxisKey, measureAxisKey;
+import '../common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
+import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
+import '../common/datum_details.dart' show DatumDetails;
+import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
+import '../common/series_datum.dart' show SeriesDatum;
 import 'bar_renderer_config.dart' show BarRendererConfig, CornerStrategy;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import 'base_bar_renderer.dart'
@@ -27,14 +36,6 @@ import 'base_bar_renderer.dart'
         barGroupWeightKey;
 import 'base_bar_renderer_element.dart'
     show BaseAnimatedBar, BaseBarRendererElement;
-import '../cartesian/axis/axis.dart'
-    show ImmutableAxis, domainAxisKey, measureAxisKey;
-import '../common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
-import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
-import '../common/datum_details.dart' show DatumDetails;
-import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
-import '../common/series_datum.dart' show SeriesDatum;
-import '../../common/color.dart' show Color;
 
 /// Renders series data as a series of bars.
 class BarRenderer<D>
@@ -95,7 +96,7 @@ class BarRenderer<D>
         barGroupWeight,
         numBarGroups);
 
-    var chartPosition;
+    Point<double> chartPosition;
 
     if (renderingVertically) {
       chartPosition = new Point<double>(
@@ -268,10 +269,10 @@ class BarRenderer<D>
           maxBarWidth, (renderingVertically ? bounds.width : bounds.height));
     }
 
-    var roundTopLeft;
-    var roundTopRight;
-    var roundBottomLeft;
-    var roundBottomRight;
+    bool roundTopLeft;
+    bool roundTopRight;
+    bool roundBottomLeft;
+    bool roundBottomRight;
 
     if (measureIsNegative) {
       // Negative bars should be rounded towards the negative axis direction.
@@ -438,7 +439,7 @@ class BarRenderer<D>
           measureAxis.getLocation(measureValue + measureOffsetValue).round();
     }
 
-    var bounds;
+    Rectangle<int> bounds;
     if (this.renderingVertically) {
       // Rectangle clamps to zero width/height
       bounds = new Rectangle<int>(domainStart, measureEnd,
@@ -457,8 +458,11 @@ class BarRenderer<D>
 
 abstract class ImmutableBarRendererElement<D> {
   ImmutableSeries<D> get series;
+
   dynamic get datum;
+
   int get index;
+
   Rectangle<int> get bounds;
 }
 
@@ -547,6 +551,6 @@ class AnimatedBar<D> extends BaseAnimatedBar<D, BarRendererElement<D>> {
   }
 
   @override
-  BarRendererElement<D> clone(BarRendererElement other) =>
-      new BarRendererElement<D>.clone(other);
+  BarRendererElement<D> clone(BarRendererElement bar) =>
+      new BarRendererElement<D>.clone(bar);
 }

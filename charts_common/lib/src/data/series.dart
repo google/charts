@@ -14,10 +14,11 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart';
+
 import '../chart/cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
+import '../chart/common/chart_canvas.dart' show FillPatternType;
 import '../common/color.dart' show Color;
 import '../common/typed_registry.dart' show TypedRegistry, TypedKey;
-import '../chart/common/chart_canvas.dart' show FillPatternType;
 
 class Series<T, D> {
   final String id;

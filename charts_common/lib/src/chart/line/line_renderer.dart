@@ -18,6 +18,9 @@ import 'dart:math' show Rectangle, Point;
 
 import 'package:meta/meta.dart' show required, visibleForTesting;
 
+import '../../common/color.dart' show Color;
+import '../../common/math.dart' show clamp;
+import '../../data/series.dart' show AttributeKey;
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
@@ -28,9 +31,6 @@ import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../common/series_datum.dart' show SeriesDatum;
 import '../scatter_plot/point_renderer.dart' show PointRenderer;
 import '../scatter_plot/point_renderer_config.dart' show PointRendererConfig;
-import '../../common/color.dart' show Color;
-import '../../common/math.dart' show clamp;
-import '../../data/series.dart' show AttributeKey;
 import 'line_renderer_config.dart' show LineRendererConfig;
 
 const styleSegmentsKey = const AttributeKey<List<_LineRendererElement>>(
@@ -59,8 +59,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
-  final _seriesLineMap =
-      new LinkedHashMap<String, List<_AnimatedElements<D>>>();
+  final _seriesLineMap = <String, List<_AnimatedElements<D>>>{};
 
   // Store a list of lines that exist in the series data.
   //
@@ -164,7 +163,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         // Compare strokeWidthPx to 2 decimals of precision. Any less and you
         // can't see any difference in the canvas anyways.
         final strokeWidthPxRounded = (strokeWidthPx * 100).round() / 100;
-        var styleKey = '${series.id}__${styleSegmentsIndex}__${color}' +
+        var styleKey = '${series.id}__${styleSegmentsIndex}__${color}'
             '__${dashPattern}__${strokeWidthPxRounded}';
 
         if (styleKey != previousSegmentKey) {
@@ -174,7 +173,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (usedKeys.isNotEmpty && usedKeys.contains(styleKey)) {
             styleSegmentsIndex++;
 
-            styleKey = '${series.id}__${styleSegmentsIndex}__${color}' +
+            styleKey = '${series.id}__${styleSegmentsIndex}__${color}'
                 '__${dashPattern}__${strokeWidthPxRounded}';
           }
 
@@ -722,8 +721,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     final areaSegments = <List<_DatumPoint<D>>>[];
     final boundsSegments = <List<_DatumPoint<D>>>[];
 
-    var startPointIndex;
-    var endPointIndex;
+    int startPointIndex;
+    int endPointIndex;
 
     // Only build bound segments for this series if it has bounds functions.
     final seriesHasMeasureBounds = series.measureUpperBoundFn != null &&
@@ -929,7 +928,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         }
       });
 
-      keysToRemove.forEach((String key) => _seriesLineMap.remove(key));
+      keysToRemove.forEach(_seriesLineMap.remove);
     }
 
     _seriesLineMap.forEach((String key, List<_AnimatedElements<D>> elements) {
@@ -1074,8 +1073,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
           final domainDistance = (p.x - chartPoint.x).abs();
 
-          var measureDistance;
-          var relativeDistance;
+          double measureDistance;
+          double relativeDistance;
 
           if (p.y != null) {
             measureDistance = (p.y - chartPoint.y).abs();
@@ -1214,7 +1213,7 @@ class _LineRendererElement<D> {
       final x = ((targetPoint.x - previousPoint.x) * animationPercent) +
           previousPoint.x;
 
-      var y;
+      double y;
       if (targetPoint.y != null && previousPoint.y != null) {
         y = ((targetPoint.y - previousPoint.y) * animationPercent) +
             previousPoint.y;
@@ -1363,7 +1362,7 @@ class _AreaRendererElement<D> {
       final x = ((targetPoint.x - previousPoint.x) * animationPercent) +
           previousPoint.x;
 
-      var y;
+      double y;
       if (targetPoint.y != null && previousPoint.y != null) {
         y = ((targetPoint.y - previousPoint.y) * animationPercent) +
             previousPoint.y;
@@ -1542,7 +1541,7 @@ class _Range<D> {
     } else if (value is String) {
       _includePointAsString(value);
     } else {
-      throw ('Unsupported object type for LineRenderer domain value: ' +
+      throw ('Unsupported object type for LineRenderer domain value: '
           '${value.runtimeType}');
     }
   }
