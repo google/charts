@@ -16,6 +16,7 @@
 import 'dart:math' show Point, Rectangle;
 import 'package:flutter/material.dart';
 import 'package:charts_common/common.dart' as common show Color;
+import 'package:charts_flutter/src/util/monotonex.dart';
 
 /// Draws a simple line.
 ///
@@ -37,7 +38,8 @@ class PolygonPainter {
       Rectangle<num> clipBounds,
       common.Color fill,
       common.Color stroke,
-      double strokeWidthPx}) {
+      double strokeWidthPx,
+      bool smoothLine}) {
     if (points.isEmpty) {
       return;
     }
@@ -75,18 +77,40 @@ class PolygonPainter {
       }
 
       if (fillColor != null) {
-        paint.color = fillColor;
         paint.style = PaintingStyle.fill;
+        paint.color = fillColor;
       }
 
-      final path = new Path()
-        ..moveTo(points.first.x.toDouble(), points.first.y.toDouble());
+      final path = new Path();
+      if (smoothLine) {
+        if (points[0].y == points[1].y && points[1].x == points[2].x) {
+          path.moveTo(points.last.x.toDouble(), points.last.y.toDouble());
+          path.lineTo(points[0].x.toDouble(), points[0].y.toDouble());
+          path.lineTo(points[1].x.toDouble(), points[1].y.toDouble());
+          path.lineTo(points[2].x.toDouble(), points[2].y.toDouble());
+          MonotoneX.addCurve(path,points.sublist(2));
+        } else {
+          path.moveTo(points.last.x.toDouble(), points.last.y.toDouble());
+          path.lineTo(points[0].x.toDouble(), points[0].y.toDouble());
 
-      for (var point in points) {
-        path.lineTo(point.x.toDouble(), point.y.toDouble());
+          MonotoneX.addCurve(path,
+              points.sublist(0, points.length ~/ 2).reversed.toList(), true);
+          path.lineTo(points[points.length ~/ 2].x,
+              points[points.length ~/ 2].y.toDouble());
+
+          MonotoneX.addCurve(path, points.sublist(points.length ~/ 2));
+
+          path.lineTo(points.last.x.toDouble(), points.last.y.toDouble());
+        }
+      } else {
+        path.moveTo(points.first.x.toDouble(), points.first.y.toDouble());
+        for (var point in points) {
+          path.lineTo(point.x.toDouble(), point.y.toDouble());
+        }
       }
 
       canvas.drawPath(path, paint);
+      paint.shader = null;
     }
 
     if (clipBounds != null) {
