@@ -14,18 +14,18 @@
 // limitations under the License.
 
 import 'dart:collection' show HashSet;
-import 'legend_entry.dart';
-import 'legend_entry_generator.dart';
-import '../../selection_model/selection_model.dart';
+
 import '../../../cartesian/axis/axis.dart' show Axis, measureAxisIdKey;
 import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
+import '../../selection_model/selection_model.dart';
 import '../../series_datum.dart' show SeriesDatum;
+import 'legend_entry.dart';
+import 'legend_entry_generator.dart';
 
 /// A strategy for generating a list of [LegendEntry] per series drawn.
 ///
-/// [T] the datum class type for chart.
 /// [D] the domain class type for the datum.
 class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   TextStyleSpec entryTextStyle;
@@ -171,12 +171,12 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   }
 
   @override
-  bool operator ==(Object o) {
-    return o is PerSeriesLegendEntryGenerator &&
-        measureFormatter == o.measureFormatter &&
-        secondaryMeasureFormatter == o.secondaryMeasureFormatter &&
-        legendDefaultMeasure == o.legendDefaultMeasure &&
-        entryTextStyle == o.entryTextStyle;
+  bool operator ==(Object other) {
+    return other is PerSeriesLegendEntryGenerator &&
+        measureFormatter == other.measureFormatter &&
+        secondaryMeasureFormatter == other.secondaryMeasureFormatter &&
+        legendDefaultMeasure == other.legendDefaultMeasure &&
+        entryTextStyle == other.entryTextStyle;
   }
 
   @override

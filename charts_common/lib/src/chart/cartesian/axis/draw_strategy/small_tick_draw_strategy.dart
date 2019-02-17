@@ -13,8 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable, required;
 import 'dart:math';
+
+import 'package:meta/meta.dart' show immutable, required;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../../common/line_style.dart' show LineStyle;
@@ -34,7 +35,7 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
   final LineStyleSpec lineStyle;
   final int tickLengthPx;
 
-  SmallTickRendererSpec({
+  const SmallTickRendererSpec({
     TextStyleSpec labelStyle,
     this.lineStyle,
     LineStyleSpec axisLineStyle,
@@ -55,8 +56,8 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
 
   @override
   TickDrawStrategy<D> createDrawStrategy(
-          ChartContext chartContext, GraphicsFactory graphicsFactory) =>
-      new SmallTickDrawStrategy<D>(chartContext, graphicsFactory,
+          ChartContext context, GraphicsFactory graphicsFactory) =>
+      new SmallTickDrawStrategy<D>(context, graphicsFactory,
           tickLengthPx: tickLengthPx,
           lineStyleSpec: lineStyle,
           labelStyleSpec: labelStyle,
@@ -69,10 +70,11 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
 
   @override
   bool operator ==(Object other) {
-    return other is SmallTickRendererSpec &&
-        lineStyle == other.lineStyle &&
-        tickLengthPx == other.tickLengthPx &&
-        super == (other);
+    return identical(this, other) ||
+        (other is SmallTickRendererSpec &&
+            lineStyle == other.lineStyle &&
+            tickLengthPx == other.tickLengthPx &&
+            super == (other));
   }
 
   @override

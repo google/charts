@@ -13,12 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import '../../../../common/date_time_factory.dart' show DateTimeFactory;
+import '../linear/linear_scale.dart' show LinearScale;
 import '../numeric_extents.dart' show NumericExtents;
-import 'date_time_extents.dart' show DateTimeExtents;
 import '../scale.dart'
     show MutableScale, StepSizeConfig, RangeBandConfig, ScaleOutputExtent;
-import '../linear/linear_scale.dart' show LinearScale;
-import '../../../../common/date_time_factory.dart' show DateTimeFactory;
+import 'date_time_extents.dart' show DateTimeExtents;
 
 /// [DateTimeScale] is a wrapper for [LinearScale].
 /// [DateTime] values are converted to millisecondsSinceEpoch and passed to the

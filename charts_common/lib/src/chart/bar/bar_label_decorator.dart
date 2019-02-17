@@ -14,14 +14,16 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
+
 import 'package:meta/meta.dart' show required;
-import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
-import '../common/chart_canvas.dart' show ChartCanvas;
+
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/text_element.dart' show TextDirection;
 import '../../common/text_style.dart' show TextStyle;
 import '../../data/series.dart' show AccessorFn;
+import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
+import '../common/chart_canvas.dart' show ChartCanvas;
 import 'bar_renderer.dart' show ImmutableBarRendererElement;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 
@@ -53,9 +55,9 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   BarLabelDecorator(
       {TextStyleSpec insideLabelStyleSpec,
       TextStyleSpec outsideLabelStyleSpec,
-      this.labelPosition: _defaultLabelPosition,
-      this.labelPadding: _defaultLabelPadding,
-      this.labelAnchor: _defaultLabelAnchor})
+      this.labelPosition = _defaultLabelPosition,
+      this.labelPadding = _defaultLabelPadding,
+      this.labelAnchor = _defaultLabelAnchor})
       : insideLabelStyleSpec = insideLabelStyleSpec ?? _defaultInsideLabelStyle,
         outsideLabelStyleSpec =
             outsideLabelStyleSpec ?? _defaultOutsideLabelStyle;
@@ -66,7 +68,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       {@required Rectangle drawBounds,
       @required double animationPercent,
       @required bool renderingVertically,
-      bool rtl: false}) {
+      bool rtl = false}) {
     // TODO: Decorator not yet available for vertical charts.
     assert(renderingVertically == false);
 

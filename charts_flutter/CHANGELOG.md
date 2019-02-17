@@ -1,3 +1,16 @@
+# 0.6.0
+* Bars can now be rendered on line charts.
+* Negative measure values will now be rendered on bar charts as a separate stack from the positive
+values.
+* Added a Datum Legend, which displays one entry per value in the first series on the chart. This is
+ useful for pie and scatter plot charts.
+* The AxisPosition enum in RTLSpec was refactored to AxisDirection to better reflect its effect on
+swapping the positions of all start and end components, and not just positioning the measure axes.
+* Added custom colors for line renderer area skirts and confidence intervals. A new "areaColorFn"
+has been added to Series, and corresponding data to the datum. We could not use the fillColorFn for
+these elements, because that color is already applied to the internal section of points on line
+charts (including highlighter behaviors).
+
 # 0.5.0
 * SelectionModelConfig's listener parameter has been renamed to "changeListener". This is a breaking
 change. Please rename any existing uses of the "listener" parameter to "changeListener". This was

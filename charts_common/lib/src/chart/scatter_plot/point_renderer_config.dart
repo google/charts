@@ -14,9 +14,9 @@
 // limitations under the License.
 
 import '../../common/symbol_renderer.dart';
-import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
+import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import 'point_renderer.dart' show PointRenderer, pointSymbolRendererIdKey;
 import 'point_renderer_decorator.dart' show PointRendererDecorator;
 

@@ -43,7 +43,7 @@ void main() {
         id: 'closest',
         data: [_closestDatumClosestSeries, _otherDatumClosestSeries],
         domainFn: (dynamic d, _) => d.id,
-        measureFn: (dynamic, __) => 0));
+        measureFn: (_, __) => 0));
     _closestDatumClosestSeriesPair =
         new SeriesDatum<String>(_closestSeries, _closestDatumClosestSeries);
     _otherDatumClosestSeriesPair =
@@ -55,7 +55,7 @@ void main() {
         id: 'other',
         data: [_closestDatumOtherSeries, _otherDatumOtherSeries],
         domainFn: (dynamic d, _) => d.id,
-        measureFn: (dynamic, __) => 0));
+        measureFn: (_, __) => 0));
     _closestDatumOtherSeriesPair =
         new SeriesDatum<String>(_otherSeries, _closestDatumOtherSeries);
     _otherDatumOtherSeriesPair =

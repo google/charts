@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:ui' as ui show Shader;
 import 'dart:math' show Point, Rectangle;
 import 'package:charts_flutter/src/util/monotonex.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,8 @@ class LinePainter {
       bool smoothLine,
       bool roundEndCaps,
       double strokeWidthPx,
-      List<int> dashPattern}) {
+      List<int> dashPattern,
+      ui.Shader shader}) {
     if (points.isEmpty) {
       return;
     }
@@ -58,6 +60,9 @@ class LinePainter {
     }
 
     paint.color = new Color.fromARGB(stroke.a, stroke.r, stroke.g, stroke.b);
+    if (shader != null) {
+      paint.shader = shader;
+    }
 
     // If the line has a single point, draw a circle.
     if (points.length == 1) {

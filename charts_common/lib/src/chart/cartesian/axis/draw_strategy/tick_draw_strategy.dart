@@ -13,8 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
 import 'dart:math';
+
+import 'package:meta/meta.dart' show required;
 
 import '../../../common/chart_canvas.dart' show ChartCanvas;
 import '../../../layout/layout_view.dart' show ViewMeasuredSizes;

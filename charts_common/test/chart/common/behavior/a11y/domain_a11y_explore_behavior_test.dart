@@ -31,12 +31,12 @@ class FakeCartesianChart extends CartesianChart<String> {
   @override
   Rectangle<int> drawAreaBounds;
 
-  @override
-  Axis domainAxis;
-
   void callFireOnPostprocess(List<MutableSeries<String>> seriesList) {
     fireOnPostprocess(seriesList);
   }
+
+  @override
+  initDomainAxis() {}
 }
 
 void main() {
@@ -70,7 +70,8 @@ void main() {
   test('creates nodes for vertically drawn charts', () {
     // A LTR chart
     final context = new MockContext();
-    when(context.rtl).thenReturn(false);
+    when(context.chartContainerIsRtl).thenReturn(false);
+    when(context.isRtl).thenReturn(false);
     chart.context = context;
     // Drawn vertically
     chart.vertical = true;
@@ -96,7 +97,8 @@ void main() {
   test('creates nodes for vertically drawn RTL charts', () {
     // A RTL chart
     final context = new MockContext();
-    when(context.rtl).thenReturn(true);
+    when(context.chartContainerIsRtl).thenReturn(true);
+    when(context.isRtl).thenReturn(true);
     chart.context = context;
     // Drawn vertically
     chart.vertical = true;
@@ -122,7 +124,8 @@ void main() {
   test('creates nodes for horizontally drawn charts', () {
     // A LTR chart
     final context = new MockContext();
-    when(context.rtl).thenReturn(false);
+    when(context.chartContainerIsRtl).thenReturn(false);
+    when(context.isRtl).thenReturn(false);
     chart.context = context;
     // Drawn horizontally
     chart.vertical = false;
@@ -148,7 +151,8 @@ void main() {
   test('creates nodes for horizontally drawn RTL charts', () {
     // A LTR chart
     final context = new MockContext();
-    when(context.rtl).thenReturn(true);
+    when(context.chartContainerIsRtl).thenReturn(true);
+    when(context.isRtl).thenReturn(true);
     chart.context = context;
     // Drawn horizontally
     chart.vertical = false;
@@ -174,7 +178,8 @@ void main() {
   test('nodes ordered correctly with a series missing a domain', () {
     // A LTR chart
     final context = new MockContext();
-    when(context.rtl).thenReturn(false);
+    when(context.chartContainerIsRtl).thenReturn(false);
+    when(context.isRtl).thenReturn(false);
     chart.context = context;
     // Drawn vertically
     chart.vertical = true;
@@ -214,7 +219,8 @@ void main() {
 
     // A LTR chart
     final context = new MockContext();
-    when(context.rtl).thenReturn(false);
+    when(context.chartContainerIsRtl).thenReturn(false);
+    when(context.isRtl).thenReturn(false);
     chart.context = context;
     // Drawn vertically
     chart.vertical = true;

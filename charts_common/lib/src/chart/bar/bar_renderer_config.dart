@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'base_bar_renderer_config.dart'
-    show BarGroupingType, BaseBarRendererConfig;
-import 'bar_renderer.dart' show BarRenderer;
-import 'bar_renderer_decorator.dart' show BarRendererDecorator;
+import '../../common/symbol_renderer.dart';
 import '../common/chart_canvas.dart' show FillPatternType;
 import '../layout/layout_view.dart' show LayoutViewPaintOrder;
-import '../../common/symbol_renderer.dart';
+import 'bar_renderer.dart' show BarRenderer;
+import 'bar_renderer_decorator.dart' show BarRendererDecorator;
+import 'base_bar_renderer_config.dart'
+    show BarGroupingType, BaseBarRendererConfig;
 
 /// Configuration for a bar renderer.
 class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
@@ -60,14 +60,14 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   }
 
   @override
-  bool operator ==(o) {
-    if (identical(this, o)) {
+  bool operator ==(other) {
+    if (identical(this, other)) {
       return true;
     }
-    if (!(o is BarRendererConfig)) {
+    if (!(other is BarRendererConfig)) {
       return false;
     }
-    return o.cornerStrategy == cornerStrategy && super == (o);
+    return other.cornerStrategy == cornerStrategy && super == (other);
   }
 
   @override
@@ -86,6 +86,7 @@ abstract class CornerStrategy {
 /// Strategy for constant corner radius.
 class ConstCornerStrategy implements CornerStrategy {
   final int radius;
+
   const ConstCornerStrategy(this.radius);
 
   @override

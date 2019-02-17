@@ -101,8 +101,8 @@ class LinearScaleDomainInfo {
 
   /// Returns the extent based on the current domain range and overrides.
   NumericExtents get extent {
-    var tmpDomainStart;
-    var tmpDomainEnd;
+    num tmpDomainStart;
+    num tmpDomainEnd;
     if (domainOverride != null) {
       // override was set.
       tmpDomainStart = domainOverride.min;

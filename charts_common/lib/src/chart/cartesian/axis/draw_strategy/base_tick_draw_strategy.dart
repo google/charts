@@ -13,12 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable, protected, required;
 import 'dart:math';
 
-import '../../../../common/line_style.dart' show LineStyle;
+import 'package:meta/meta.dart' show immutable, protected, required;
+
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../../../common/rtl_spec.dart' show AxisPosition;
+import '../../../../common/line_style.dart' show LineStyle;
 import '../../../../common/style/style_factory.dart' show StyleFactory;
 import '../../../../common/text_element.dart' show TextDirection;
 import '../../../../common/text_style.dart' show TextStyle;
@@ -52,7 +52,7 @@ abstract class BaseRenderSpec<D> implements RenderSpec<D> {
 
   final LineStyleSpec axisLineStyle;
 
-  BaseRenderSpec({
+  const BaseRenderSpec({
     this.labelStyle,
     this.labelAnchor,
     this.labelJustification,
@@ -64,14 +64,16 @@ abstract class BaseRenderSpec<D> implements RenderSpec<D> {
 
   @override
   bool operator ==(Object other) {
-    return other is BaseRenderSpec &&
-        labelStyle == other.labelStyle &&
-        labelAnchor == other.labelAnchor &&
-        labelJustification == other.labelJustification &&
-        labelOffsetFromTickPx == other.labelOffsetFromTickPx &&
-        labelOffsetFromAxisPx == other.labelOffsetFromAxisPx &&
-        minimumPaddingBetweenLabelsPx == other.minimumPaddingBetweenLabelsPx &&
-        axisLineStyle == other.axisLineStyle;
+    return identical(this, other) ||
+        (other is BaseRenderSpec &&
+            labelStyle == other.labelStyle &&
+            labelAnchor == other.labelAnchor &&
+            labelJustification == other.labelJustification &&
+            labelOffsetFromTickPx == other.labelOffsetFromTickPx &&
+            labelOffsetFromAxisPx == other.labelOffsetFromAxisPx &&
+            minimumPaddingBetweenLabelsPx ==
+                other.minimumPaddingBetweenLabelsPx &&
+            axisLineStyle == other.axisLineStyle);
   }
 
   @override
@@ -202,7 +204,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
         // the value also.
         final textDirection = _normalizeHorizontalAnchor(
             tickLabelAnchor,
-            chartContext.rtl,
+            chartContext.isRtl,
             identical(tick, ticks.first),
             identical(tick, ticks.last));
         final adjustedWidth =
@@ -311,8 +313,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       @required bool isLast}) {
     final locationPx = tick.locationPx;
     final measurement = tick.textElement.measurement;
-    final isRTL = chartContext.rtl &&
-        chartContext.rtlSpec.axisPosition == AxisPosition.reversed;
+    final isRtl = chartContext.isRtl;
 
     int x = 0;
     int y = 0;
@@ -328,7 +329,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
               labelOffsetFromAxisPx;
 
       final direction =
-          _normalizeHorizontalAnchor(tickLabelAnchor, isRTL, isFirst, isLast);
+          _normalizeHorizontalAnchor(tickLabelAnchor, isRtl, isFirst, isLast);
       tick.textElement.textDirection = direction;
 
       switch (direction) {
@@ -386,12 +387,12 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   TextDirection _normalizeHorizontalAnchor(
-      TickLabelAnchor anchor, bool isRTL, bool isFirst, bool isLast) {
+      TickLabelAnchor anchor, bool isRtl, bool isFirst, bool isLast) {
     switch (anchor) {
       case TickLabelAnchor.before:
-        return isRTL ? TextDirection.ltr : TextDirection.rtl;
+        return isRtl ? TextDirection.ltr : TextDirection.rtl;
       case TickLabelAnchor.after:
-        return isRTL ? TextDirection.rtl : TextDirection.ltr;
+        return isRtl ? TextDirection.rtl : TextDirection.ltr;
       case TickLabelAnchor.inside:
         if (isFirst) {
           return TextDirection.ltr;

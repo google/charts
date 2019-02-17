@@ -14,12 +14,13 @@
 // limitations under the License.
 
 import 'package:collection/collection.dart' show ListEquality;
+
+import '../../common/symbol_renderer.dart'
+    show SymbolRenderer, RoundedRectSymbolRenderer;
 import '../common/chart_canvas.dart' show FillPatternType;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
 import '../layout/layout_view.dart' show LayoutViewConfig;
-import '../../common/symbol_renderer.dart'
-    show SymbolRenderer, RoundedRectSymbolRenderer;
 
 /// Shared configuration for bar chart renderers.
 ///
@@ -107,22 +108,22 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       groupingType == BarGroupingType.groupedStacked;
 
   @override
-  bool operator ==(o) {
-    if (identical(this, o)) {
+  bool operator ==(other) {
+    if (identical(this, other)) {
       return true;
     }
-    if (!(o is BaseBarRendererConfig)) {
+    if (!(other is BaseBarRendererConfig)) {
       return false;
     }
-    return o.customRendererId == customRendererId &&
-        o.dashPattern == dashPattern &&
-        o.fillPattern == fillPattern &&
-        o.groupingType == groupingType &&
-        o.minBarLengthPx == minBarLengthPx &&
-        o.stackHorizontalSeparator == stackHorizontalSeparator &&
-        o.strokeWidthPx == strokeWidthPx &&
-        o.symbolRenderer == symbolRenderer &&
-        new ListEquality().equals(o.weightPattern, weightPattern);
+    return other.customRendererId == customRendererId &&
+        other.dashPattern == dashPattern &&
+        other.fillPattern == fillPattern &&
+        other.groupingType == groupingType &&
+        other.minBarLengthPx == minBarLengthPx &&
+        other.stackHorizontalSeparator == stackHorizontalSeparator &&
+        other.strokeWidthPx == strokeWidthPx &&
+        other.symbolRenderer == symbolRenderer &&
+        new ListEquality().equals(other.weightPattern, weightPattern);
   }
 
   int get hashcode {

@@ -32,7 +32,7 @@ export 'package:charts_common/common.dart'
         AutoDateTimeTickFormatterSpec,
         AutoDateTimeTickProviderSpec,
         Axis,
-        AxisPosition,
+        AxisDirection,
         AxisSpec,
         BarGroupingType,
         BarLabelAnchor,
@@ -74,6 +74,7 @@ export 'package:charts_common/common.dart'
         ExploreModeTrigger,
         FillPatternType,
         GestureListener,
+        GraphicsFactory,
         GridlineRendererSpec,
         ImmutableSeries,
         InsideJustification,
@@ -165,6 +166,7 @@ export 'src/behaviors/domain_highlighter.dart' show DomainHighlighter;
 export 'src/behaviors/initial_selection.dart' show InitialSelection;
 export 'src/behaviors/calculation/percent_injector.dart' show PercentInjector;
 export 'src/behaviors/chart_title/chart_title.dart' show ChartTitle;
+export 'src/behaviors/legend/datum_legend.dart' show DatumLegend;
 export 'src/behaviors/legend/legend_content_builder.dart'
     show LegendContentBuilder, TabularLegendContentBuilder;
 export 'src/behaviors/legend/legend_layout.dart'

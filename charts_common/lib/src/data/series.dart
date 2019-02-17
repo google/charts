@@ -14,10 +14,11 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart';
+
 import '../chart/cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
+import '../chart/common/chart_canvas.dart' show FillPatternType;
 import '../common/color.dart' show Color;
 import '../common/typed_registry.dart' show TypedRegistry, TypedKey;
-import '../chart/common/chart_canvas.dart' show FillPatternType;
 
 class Series<T, D> {
   final String id;
@@ -27,6 +28,15 @@ class Series<T, D> {
 
   final List<T> data;
 
+  /// [keyFn] defines a globally unique identifier for each datum.
+  ///
+  /// The key for each datum is used during chart animation to smoothly
+  /// transition data still in the series to its new state.
+  ///
+  /// Note: This is currently an optional function that is not fully used by all
+  /// series renderers yet.
+  final AccessorFn<String> keyFn;
+
   final AccessorFn<D> domainFn;
   final AccessorFn<D> domainLowerBoundFn;
   final AccessorFn<D> domainUpperBoundFn;
@@ -34,6 +44,14 @@ class Series<T, D> {
   final AccessorFn<num> measureLowerBoundFn;
   final AccessorFn<num> measureUpperBoundFn;
   final AccessorFn<num> measureOffsetFn;
+
+  /// [areaColorFn] returns the area color for a given data value. If not
+  /// provided, then some variation of the main [colorFn] will be used (e.g.
+  /// 10% opacity).
+  ///
+  /// This color is used for supplemental information on the series, such as
+  /// confidence intervals or area skirts.
+  final AccessorFn<Color> areaColorFn;
 
   /// [colorFn] returns the rendered stroke color for a given data value.
   final AccessorFn<Color> colorFn;
@@ -62,12 +80,14 @@ class Series<T, D> {
       @required TypedAccessorFn<T, D> domainFn,
       @required TypedAccessorFn<T, num> measureFn,
       String displayName,
+      TypedAccessorFn<T, Color> areaColorFn,
       TypedAccessorFn<T, Color> colorFn,
       TypedAccessorFn<T, List<int>> dashPatternFn,
       TypedAccessorFn<T, D> domainLowerBoundFn,
       TypedAccessorFn<T, D> domainUpperBoundFn,
       TypedAccessorFn<T, Color> fillColorFn,
       TypedAccessorFn<T, FillPatternType> fillPatternFn,
+      TypedAccessorFn<T, String> keyFn,
       TypedAccessorFn<T, String> labelAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn,
@@ -81,6 +101,9 @@ class Series<T, D> {
     // Wrap typed accessors.
     final _domainFn = (int index) => domainFn(data[index], index);
     final _measureFn = (int index) => measureFn(data[index], index);
+    final _areaColorFn = areaColorFn == null
+        ? null
+        : (int index) => areaColorFn(data[index], index);
     final _colorFn =
         colorFn == null ? null : (int index) => colorFn(data[index], index);
     final _dashPatternFn = dashPatternFn == null
@@ -129,6 +152,7 @@ class Series<T, D> {
       domainFn: _domainFn,
       measureFn: _measureFn,
       displayName: displayName,
+      areaColorFn: _areaColorFn,
       colorFn: _colorFn,
       dashPatternFn: _dashPatternFn,
       domainLowerBoundFn: _domainLowerBoundFn,
@@ -154,12 +178,14 @@ class Series<T, D> {
     @required this.domainFn,
     @required this.measureFn,
     this.displayName,
+    this.areaColorFn,
     this.colorFn,
     this.dashPatternFn,
     this.domainLowerBoundFn,
     this.domainUpperBoundFn,
     this.fillColorFn,
     this.fillPatternFn,
+    this.keyFn,
     this.labelAccessorFn,
     this.insideLabelStyleAccessorFn,
     this.outsideLabelStyleAccessorFn,

@@ -18,6 +18,9 @@ import 'dart:math' show Rectangle, Point;
 
 import 'package:meta/meta.dart' show required, visibleForTesting;
 
+import '../../common/color.dart' show Color;
+import '../../common/math.dart' show clamp;
+import '../../data/series.dart' show AttributeKey;
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
@@ -28,9 +31,6 @@ import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../common/series_datum.dart' show SeriesDatum;
 import '../scatter_plot/point_renderer.dart' show PointRenderer;
 import '../scatter_plot/point_renderer_config.dart' show PointRendererConfig;
-import '../../common/color.dart' show Color;
-import '../../common/math.dart' show clamp;
-import '../../data/series.dart' show AttributeKey;
 import 'line_renderer_config.dart' show LineRendererConfig;
 
 const styleSegmentsKey = const AttributeKey<List<_LineRendererElement>>(
@@ -59,8 +59,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
-  final _seriesLineMap =
-      new LinkedHashMap<String, List<_AnimatedElements<D>>>();
+  final _seriesLineMap = <String, List<_AnimatedElements<D>>>{};
 
   // Store a list of lines that exist in the series data.
   //
@@ -97,6 +96,20 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   void configureSeries(List<MutableSeries<D>> seriesList) {
     assignMissingColors(seriesList, emptyCategoryUsesSinglePalette: false);
 
+    seriesList.forEach((MutableSeries series) {
+      // Add a default area color function which applies the configured
+      // areaOpacity value to the datum's current color.
+      series.areaColorFn ??= (int index) {
+        final color = series.colorFn(index);
+
+        return new Color(
+            r: color.r,
+            g: color.g,
+            b: color.b,
+            a: (color.a * config.areaOpacity).round());
+      };
+    });
+
     if (config.includePoints) {
       _pointRenderer.configureSeries(seriesList);
     }
@@ -112,6 +125,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
     seriesList.forEach((MutableSeries<D> series) {
       final colorFn = series.colorFn;
+      final areaColorFn = series.areaColorFn;
       final domainFn = series.domainFn;
       final measureFn = series.measureFn;
       final strokeWidthPxFn = series.strokeWidthPxFn;
@@ -137,6 +151,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         }
 
         final color = colorFn(index);
+        final areaColor = areaColorFn(index);
         final dashPattern = dashPatternFn(index);
         final strokeWidthPx = strokeWidthPxFn != null
             ? strokeWidthPxFn(index).toDouble()
@@ -148,7 +163,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         // Compare strokeWidthPx to 2 decimals of precision. Any less and you
         // can't see any difference in the canvas anyways.
         final strokeWidthPxRounded = (strokeWidthPx * 100).round() / 100;
-        var styleKey = '${series.id}__${styleSegmentsIndex}__${color}' +
+        var styleKey = '${series.id}__${styleSegmentsIndex}__${color}'
             '__${dashPattern}__${strokeWidthPxRounded}';
 
         if (styleKey != previousSegmentKey) {
@@ -158,7 +173,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (usedKeys.isNotEmpty && usedKeys.contains(styleKey)) {
             styleSegmentsIndex++;
 
-            styleKey = '${series.id}__${styleSegmentsIndex}__${color}' +
+            styleKey = '${series.id}__${styleSegmentsIndex}__${color}'
                 '__${dashPattern}__${strokeWidthPxRounded}';
           }
 
@@ -172,6 +187,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           // Create a new style segment.
           currentDetails = new _LineRendererElement<D>()
             ..color = color
+            ..areaColor = areaColor
             ..dashPattern = dashPattern
             ..domainExtent = new _Range<D>(domain, domain)
             ..strokeWidthPx = strokeWidthPx
@@ -334,9 +350,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       // data (e.g. null measure) at the ends of the series data.
       //
       // TODO: Handle ordinal axes by looking at the next domains.
-      if (styleSegments.length > 0 && !(domainAxis is OrdinalAxis)) {
-        final startPx = (rtl ? drawBounds.right : drawBounds.left).toDouble();
-        final endPx = (rtl ? drawBounds.left : drawBounds.right).toDouble();
+      if (styleSegments.isNotEmpty && !(domainAxis is OrdinalAxis)) {
+        final startPx = (isRtl ? drawBounds.right : drawBounds.left).toDouble();
+        final endPx = (isRtl ? drawBounds.left : drawBounds.right).toDouble();
 
         final startDomain = domainAxis.getDomain(startPx);
         final endDomain = domainAxis.getDomain(endPx);
@@ -555,6 +571,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
 
     final color = styleSegment.color;
+    final areaColor = styleSegment.areaColor;
     final dashPattern = styleSegment.dashPattern;
     final domainExtent = styleSegment.domainExtent;
     final strokeWidthPx = styleSegment.strokeWidthPx;
@@ -588,6 +605,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       lineElements.add(new _LineRendererElement<D>()
         ..points = linePointList
         ..color = color
+        ..areaColor = areaColor
         ..dashPattern = dashPattern
         ..domainExtent = domainExtent
         ..measureAxisPosition = measureAxis.getLocation(0.0)
@@ -600,13 +618,6 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     // Get the area elements we are going to set up.
     final areaElements = <_AreaRendererElement<D>>[];
     if (config.includeArea) {
-      // Apply opacity to the series color for the area skirt.
-      Color areaColor = new Color(
-          r: color.r,
-          g: color.g,
-          b: color.b,
-          a: (color.a * config.areaOpacity).round());
-
       for (var index = 0; index < areaSegments.length; index++) {
         final areaPointList = areaSegments[index];
 
@@ -616,7 +627,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
         areaElements.add(new _AreaRendererElement<D>()
           ..points = areaPointList
-          ..color = areaColor
+          ..color = color
+          ..areaColor = areaColor
           ..domainExtent = domainExtent
           ..measureAxisPosition = measureAxis.getLocation(0.0)
           ..positionExtent = positionExtent
@@ -627,14 +639,6 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     // Create the bounds element
     final boundsElements = <_AreaRendererElement<D>>[];
     if (_hasMeasureBounds) {
-      // Apply opacity to the series color for the bounds color.
-      // TODO: Allow setting for different color for bounds.
-      Color areaColor = new Color(
-          r: color.r,
-          g: color.g,
-          b: color.b,
-          a: (color.a * config.areaOpacity).round());
-
       // Update the set of bounds that still exist in the series data.
       for (var index = 0; index < boundsSegment.length; index++) {
         final boundsPointList = boundsSegment[index];
@@ -644,7 +648,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
         boundsElements.add(new _AreaRendererElement<D>()
           ..points = boundsPointList
-          ..color = areaColor
+          ..color = color
+          ..areaColor = areaColor
           ..domainExtent = domainExtent
           ..measureAxisPosition = measureAxis.getLocation(0.0)
           ..positionExtent = positionExtent
@@ -716,8 +721,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     final areaSegments = <List<_DatumPoint<D>>>[];
     final boundsSegments = <List<_DatumPoint<D>>>[];
 
-    var startPointIndex;
-    var endPointIndex;
+    int startPointIndex;
+    int endPointIndex;
 
     // Only build bound segments for this series if it has bounds functions.
     final seriesHasMeasureBounds = series.measureUpperBoundFn != null &&
@@ -903,7 +908,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   @override
   void onAttach(BaseChart<D> chart) {
     super.onAttach(chart);
-    // We only need the chart.context.rtl setting, but context is not yet
+    // We only need the chart.context.isRtl setting, but context is not yet
     // available when the default renderer is attached to the chart on chart
     // creation time, since chart onInit is called after the chart is created.
     _chart = chart;
@@ -923,7 +928,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         }
       });
 
-      keysToRemove.forEach((String key) => _seriesLineMap.remove(key));
+      keysToRemove.forEach(_seriesLineMap.remove);
     }
 
     _seriesLineMap.forEach((String key, List<_AnimatedElements<D>> elements) {
@@ -939,7 +944,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (area != null) {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(area.positionExtent),
-                fill: area.color,
+                fill: area.areaColor != null ? area.areaColor : area.color,
                 points: area.points,
                 smoothLine: config.smoothLine
             );
@@ -959,7 +964,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (bound != null) {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(bound.positionExtent),
-                fill: bound.color,
+                fill: bound.areaColor != null ? bound.areaColor : bound.color,
                 points: bound.points);
           }
         });
@@ -999,11 +1004,11 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     // In RTL mode, the domain range extent has start on the right side of the
     // chart. Adjust the calculated positions to define a regular left-anchored
     // [Rectangle]. Clamp both ends to be within the draw area.
-    final left = rtl
+    final left = isRtl
         ? clamp(extent.end, drawBounds.left, drawBounds.right)
         : clamp(extent.start, drawBounds.left, drawBounds.right);
 
-    final right = rtl
+    final right = isRtl
         ? clamp((extent.start), drawBounds.left, drawBounds.right)
         : clamp((extent.end), drawBounds.left, drawBounds.right);
 
@@ -1016,7 +1021,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             drawBoundBottomExtensionPx);
   }
 
-  bool get rtl => _chart?.context?.rtl ?? false;
+  bool get isRtl => _chart?.context?.isRtl ?? false;
 
   _DatumPoint<D> _getPoint(
       dynamic datum,
@@ -1071,8 +1076,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
           final domainDistance = (p.x - chartPoint.x).abs();
 
-          var measureDistance;
-          var relativeDistance;
+          double measureDistance;
+          double relativeDistance;
 
           if (p.y != null) {
             measureDistance = (p.y - chartPoint.y).abs();
@@ -1163,6 +1168,7 @@ class _DatumPoint<D> extends Point<double> {
 class _LineRendererElement<D> {
   List<_DatumPoint<D>> points;
   Color color;
+  Color areaColor;
   List<int> dashPattern;
   _Range<D> domainExtent;
   double measureAxisPosition;
@@ -1175,6 +1181,8 @@ class _LineRendererElement<D> {
     return new _LineRendererElement<D>()
       ..points = new List<_DatumPoint<D>>.from(points)
       ..color = color != null ? new Color.fromOther(color: color) : null
+      ..areaColor =
+          areaColor != null ? new Color.fromOther(color: areaColor) : null
       ..dashPattern =
           dashPattern != null ? new List<int>.from(dashPattern) : null
       ..domainExtent = domainExtent
@@ -1208,7 +1216,7 @@ class _LineRendererElement<D> {
       final x = ((targetPoint.x - previousPoint.x) * animationPercent) +
           previousPoint.x;
 
-      var y;
+      double y;
       if (targetPoint.y != null && previousPoint.y != null) {
         y = ((targetPoint.y - previousPoint.y) * animationPercent) +
             previousPoint.y;
@@ -1231,6 +1239,11 @@ class _LineRendererElement<D> {
     }
 
     color = getAnimatedColor(previous.color, target.color, animationPercent);
+
+    if (areaColor != null) {
+      areaColor = getAnimatedColor(
+          previous.areaColor, target.areaColor, animationPercent);
+    }
 
     strokeWidthPx =
         (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
@@ -1311,6 +1324,7 @@ class _AnimatedLine<D> {
 class _AreaRendererElement<D> {
   List<_DatumPoint<D>> points;
   Color color;
+  Color areaColor;
   _Range<D> domainExtent;
   double measureAxisPosition;
   _Range<num> positionExtent;
@@ -1320,6 +1334,8 @@ class _AreaRendererElement<D> {
     return new _AreaRendererElement<D>()
       ..points = new List<_DatumPoint<D>>.from(points)
       ..color = color != null ? new Color.fromOther(color: color) : null
+      ..areaColor =
+          areaColor != null ? new Color.fromOther(color: areaColor) : null
       ..domainExtent = domainExtent
       ..measureAxisPosition = measureAxisPosition
       ..positionExtent = positionExtent
@@ -1349,7 +1365,7 @@ class _AreaRendererElement<D> {
       final x = ((targetPoint.x - previousPoint.x) * animationPercent) +
           previousPoint.x;
 
-      var y;
+      double y;
       if (targetPoint.y != null && previousPoint.y != null) {
         y = ((targetPoint.y - previousPoint.y) * animationPercent) +
             previousPoint.y;
@@ -1372,6 +1388,11 @@ class _AreaRendererElement<D> {
     }
 
     color = getAnimatedColor(previous.color, target.color, animationPercent);
+
+    if (areaColor != null) {
+      areaColor = getAnimatedColor(
+          previous.areaColor, target.areaColor, animationPercent);
+    }
   }
 }
 
@@ -1523,7 +1544,7 @@ class _Range<D> {
     } else if (value is String) {
       _includePointAsString(value);
     } else {
-      throw ('Unsupported object type for LineRenderer domain value: ' +
+      throw ('Unsupported object type for LineRenderer domain value: '
           '${value.runtimeType}');
     }
   }

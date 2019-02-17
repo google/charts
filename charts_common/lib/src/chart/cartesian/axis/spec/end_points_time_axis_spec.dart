@@ -40,7 +40,7 @@ class EndPointsTimeAxisSpec extends DateTimeAxisSpec {
   ///     are formatted.
   /// [showAxisLine] override to force the axis to draw the axis
   ///     line.
-  EndPointsTimeAxisSpec({
+  const EndPointsTimeAxisSpec({
     RenderSpec<DateTime> renderSpec,
     DateTimeTickProviderSpec tickProviderSpec,
     DateTimeTickFormatterSpec tickFormatterSpec,
@@ -49,16 +49,17 @@ class EndPointsTimeAxisSpec extends DateTimeAxisSpec {
     bool usingBarRenderer = false,
   }) : super(
             renderSpec: renderSpec ??
-                new SmallTickRendererSpec<DateTime>(
+                const SmallTickRendererSpec<DateTime>(
                     labelAnchor: TickLabelAnchor.inside,
                     labelOffsetFromTickPx: 0),
             tickProviderSpec:
-                tickProviderSpec ?? new DateTimeEndPointsTickProviderSpec(),
+                tickProviderSpec ?? const DateTimeEndPointsTickProviderSpec(),
             tickFormatterSpec: tickFormatterSpec,
             showAxisLine: showAxisLine,
             viewport: viewport);
 
   @override
   bool operator ==(Object other) =>
-      other is EndPointsTimeAxisSpec && super == (other);
+      identical(this, other) ||
+      (other is EndPointsTimeAxisSpec && super == (other));
 }

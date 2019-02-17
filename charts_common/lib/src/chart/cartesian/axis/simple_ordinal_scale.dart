@@ -100,7 +100,7 @@ class SimpleOrdinalScale implements OrdinalScale {
   set stepSizeConfig(StepSizeConfig config) {
     if (config != null && config.type != StepSizeType.autoDetect) {
       throw new ArgumentError(
-          "Ordinal scales only support StepSizeConfig of type Auto");
+          'Ordinal scales only support StepSizeConfig of type Auto');
     }
     // Nothing is set because only auto is supported.
   }
@@ -130,13 +130,20 @@ class SimpleOrdinalScale implements OrdinalScale {
 
   @override
   String reverse(double pixelLocation) {
-    final index = (pixelLocation -
+    final index = ((pixelLocation -
             viewportTranslatePx -
             _range.start -
             _cachedRangeBandShift) /
-        _cachedStepSizePixels;
+        _cachedStepSizePixels);
+
     // The last pixel belongs in the last step even if it tries to round up.
-    return _domain.getDomainAtIndex(min(index.round(), domain.size - 1));
+    //
+    // Index may be less than 0 when [pixelLocation] is less than the width of
+    // the range band shift. This may happen on the far left side of the chart,
+    // where we want the first datum anyways. Wrapping the result in "max(0, x)"
+    // cuts off these negative values.
+    return _domain
+        .getDomainAtIndex(max(0, min(index.round(), domain.size - 1)));
   }
 
   @override

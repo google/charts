@@ -15,7 +15,6 @@
 
 import 'dart:math' show Rectangle;
 
-import 'package:charts_common/src/chart/cartesian/cartesian_chart.dart';
 import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
@@ -23,6 +22,7 @@ import 'package:charts_common/src/chart/cartesian/axis/linear/linear_scale.dart'
 import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/behavior/range_annotation.dart';
+import 'package:charts_common/src/chart/line/line_chart.dart';
 import 'package:charts_common/src/common/material_palette.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:mockito/mockito.dart';
@@ -30,12 +30,12 @@ import 'package:test/test.dart';
 
 class MockContext extends Mock implements ChartContext {}
 
-class ConcreteChart extends CartesianChart {
-  LifecycleListener lastListener;
+class ConcreteChart extends LineChart {
+  LifecycleListener<num> lastListener;
 
-  Axis _domainAxis = new ConcreteNumericAxis();
+  final _domainAxis = new ConcreteNumericAxis();
 
-  Axis _primaryMeasureAxis = new ConcreteNumericAxis();
+  final _primaryMeasureAxis = new ConcreteNumericAxis();
 
   @override
   addLifecycleListener(LifecycleListener listener) {
@@ -85,15 +85,20 @@ void main() {
   final _s2D2 = new MyRow(4, 22);
   final _s2D3 = new MyRow(5, 23);
 
+  const _dashPattern = const <int>[2, 3];
+
   List<RangeAnnotationSegment<num>> _annotations1;
 
   List<RangeAnnotationSegment<num>> _annotations2;
+
+  List<LineAnnotationSegment<num>> _annotations3;
 
   ConcreteChart _makeChart() {
     final chart = new ConcreteChart();
 
     final context = new MockContext();
-    when(context.rtl).thenReturn(false);
+    when(context.chartContainerIsRtl).thenReturn(false);
+    when(context.isRtl).thenReturn(false);
     chart.context = context;
 
     return chart;
@@ -161,12 +166,22 @@ void main() {
       new RangeAnnotationSegment(8, 10, RangeAnnotationAxisType.domain,
           color: MaterialPalette.gray.shade300),
     ];
+
+    _annotations3 = [
+      new LineAnnotationSegment(1, RangeAnnotationAxisType.measure,
+          startLabel: 'Ann 1 Start', endLabel: 'Ann 1 End'),
+      new LineAnnotationSegment(4, RangeAnnotationAxisType.measure,
+          startLabel: 'Ann 2 Start',
+          endLabel: 'Ann 2 End',
+          color: MaterialPalette.gray.shade200,
+          dashPattern: _dashPattern),
+    ];
   });
 
   group('RangeAnnotation', () {
     test('renders the annotations', () {
       // Setup
-      final behavior = new RangeAnnotation(_annotations1);
+      final behavior = new RangeAnnotation<num>(_annotations1);
       final tester = new RangeAnnotationTester(behavior);
       behavior.attachTo(_chart);
 
@@ -237,7 +252,7 @@ void main() {
 
     test('extends the domain axis when annotations fall outside the range', () {
       // Setup
-      final behavior = new RangeAnnotation(_annotations2);
+      final behavior = new RangeAnnotation<num>(_annotations2);
       final tester = new RangeAnnotationTester(behavior);
       behavior.attachTo(_chart);
 
@@ -277,9 +292,47 @@ void main() {
           equals(true));
     });
 
+    test('test dash pattern equality', () {
+      // Setup
+      final behavior = new RangeAnnotation<num>(_annotations3);
+      final tester = new RangeAnnotationTester(behavior);
+      behavior.attachTo(_chart);
+
+      final seriesList = [_series1, _series2];
+
+      // Act
+      _drawSeriesList(_chart, seriesList);
+
+      // Verify
+      expect(_chart.domainAxis.getLocation(2), equals(40.0));
+      expect(
+          tester.doesAnnotationExist(
+              startPosition: 0.0,
+              endPosition: 0.0,
+              color: MaterialPalette.gray.shade100,
+              startLabel: 'Ann 1 Start',
+              endLabel: 'Ann 1 End',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.horizontal,
+              labelPosition: AnnotationLabelPosition.auto),
+          equals(true));
+      expect(
+          tester.doesAnnotationExist(
+              startPosition: 13.64,
+              endPosition: 13.64,
+              color: MaterialPalette.gray.shade200,
+              dashPattern: _dashPattern,
+              startLabel: 'Ann 2 Start',
+              endLabel: 'Ann 2 End',
+              labelAnchor: AnnotationLabelAnchor.end,
+              labelDirection: AnnotationLabelDirection.horizontal,
+              labelPosition: AnnotationLabelPosition.auto),
+          equals(true));
+    });
+
     test('cleans up', () {
       // Setup
-      final behavior = new RangeAnnotation(_annotations2);
+      final behavior = new RangeAnnotation<num>(_annotations2);
       behavior.attachTo(_chart);
 
       // Act

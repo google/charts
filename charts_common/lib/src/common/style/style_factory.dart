@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'style.dart' show Style;
 import 'material_style.dart' show MaterialStyle;
+import 'style.dart' show Style;
 
 class StyleFactory {
   static final StyleFactory _styleFactory = new StyleFactory._internal();

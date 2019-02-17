@@ -14,9 +14,9 @@
 // limitations under the License.
 
 import '../../common/symbol_renderer.dart';
-import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
+import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import 'line_renderer.dart' show LineRenderer;
 
 /// Configuration for a line renderer.
@@ -77,7 +77,7 @@ class LineRendererConfig<D> extends LayoutViewConfig
       {this.customRendererId,
       this.radiusPx = 3.5,
       this.stacked = false,
-      double strokeWidthPx = 2.0,
+      this.strokeWidthPx = 2.0,
       this.dashPattern,
       this.includeLine = true,
       this.includePoints = false,
@@ -87,8 +87,7 @@ class LineRendererConfig<D> extends LayoutViewConfig
       this.smoothLine = false,
       this.roundEndCaps = false,
       SymbolRenderer symbolRenderer})
-      : this.strokeWidthPx = strokeWidthPx,
-        this.symbolRenderer = symbolRenderer ?? new LineSymbolRenderer();
+      : this.symbolRenderer = symbolRenderer ?? new LineSymbolRenderer();
 
   @override
   LineRenderer<D> build() {
