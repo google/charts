@@ -106,6 +106,8 @@ export 'src/chart/common/behavior/a11y/a11y_explore_behavior.dart'
 export 'src/chart/common/behavior/a11y/a11y_node.dart' show A11yNode;
 export 'src/chart/common/behavior/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior, VocalizationCallback;
+export 'src/chart/common/behavior/a11y/keyboard_domain_navigator.dart'
+    show KeyboardDomainNavigator;
 export 'src/chart/common/behavior/chart_behavior.dart'
     show
         BehaviorPosition,
