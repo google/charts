@@ -215,7 +215,9 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
     // to do a linear seach to find the domain.
     final firstDomain = details.first.domain;
 
-    if (_domains[_currentIndex] == firstDomain) {
+    if (0 <= _currentIndex &&
+        _currentIndex <= _domains.length - 1 &&
+        _domains[_currentIndex] == firstDomain) {
       return _currentIndex;
     }
 
