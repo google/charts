@@ -879,4 +879,27 @@ void main() {
       expect(renderer.paintBarCallCount, equals(3));
     });
   });
+
+  group('renderer configuration', () {
+    test('NoCornerStrategy always equals', () {
+      final strategyOne = NoCornerStrategy();
+      final strategyTwo = NoCornerStrategy();
+
+      expect(strategyOne, equals(strategyTwo));
+    });
+
+    test('CornerStrategy with same radius is equals', () {
+      final strategyOne = ConstCornerStrategy(1);
+      final strategyTwo = ConstCornerStrategy(1);
+
+      expect(strategyOne, equals(strategyTwo));
+    });
+
+    test('CornerStrategy with different radius is not equal', () {
+      final strategyOne = ConstCornerStrategy(1);
+      final strategyTwo = ConstCornerStrategy(2);
+
+      expect(strategyOne, isNot(equals(strategyTwo)));
+    });
+  });
 }

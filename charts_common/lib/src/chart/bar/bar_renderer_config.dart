@@ -91,9 +91,29 @@ class ConstCornerStrategy implements CornerStrategy {
 
   @override
   int getRadius(_) => radius;
+
+  @override
+  bool operator ==(other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (!(other is ConstCornerStrategy)) {
+      return false;
+    }
+    return other.radius == radius;
+  }
+
+  @override
+  int get hashCode => radius.hashCode;
 }
 
 /// Strategy for no corner radius.
 class NoCornerStrategy extends ConstCornerStrategy {
   const NoCornerStrategy() : super(0);
+
+  @override
+  bool operator ==(other) => (other is NoCornerStrategy) ? true : false;
+
+  @override
+  int get hashCode => 31;
 }
