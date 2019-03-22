@@ -14,6 +14,7 @@
 // limitations under the License.
 
 export 'src/chart/bar/bar_chart.dart' show BarChart;
+export 'src/chart/bar/bar_error_decorator.dart' show BarErrorDecorator;
 export 'src/chart/bar/bar_label_decorator.dart'
     show BarLabelAnchor, BarLabelDecorator, BarLabelPosition;
 export 'src/chart/bar/bar_lane_renderer_config.dart' show BarLaneRendererConfig;
