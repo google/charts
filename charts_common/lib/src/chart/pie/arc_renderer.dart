@@ -167,7 +167,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         : (bounds.width / 2).toDouble();
 
     if (config.arcRatio != null) {
-      if (0 < config.arcRatio || config.arcRatio > 1) {
+      if (config.arcRatio < 0 || config.arcRatio > 1) {
         throw new ArgumentError('arcRatio must be between 0 and 1');
       }
     }
