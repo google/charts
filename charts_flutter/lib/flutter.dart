@@ -169,6 +169,8 @@ export 'src/behaviors/chart_title/chart_title.dart' show ChartTitle;
 export 'src/behaviors/legend/datum_legend.dart' show DatumLegend;
 export 'src/behaviors/legend/legend_content_builder.dart'
     show LegendContentBuilder, TabularLegendContentBuilder;
+export 'src/behaviors/legend/legend_entry_layout.dart'
+    show LegendEntryLayout, SimpleLegendEntryLayout;
 export 'src/behaviors/legend/legend_layout.dart'
     show LegendLayout, TabularLegendLayout;
 export 'src/behaviors/legend/series_legend.dart' show SeriesLegend;
