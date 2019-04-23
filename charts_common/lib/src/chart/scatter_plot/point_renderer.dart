@@ -253,6 +253,13 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
             measureOffsetValue,
             measureAxis);
 
+        // Don't process points which are located outside the draw bounds.
+        // Otherwise we have performance issue from >300/400 items in one series.
+        // This 'update' method is called many times during swipe actions
+        // (via onDragUpdate) which makes the performance even harder. As a result
+        // it takes too much time for (all points) x (all series) x (all onDragUpdate calls)
+        if (!componentBounds.containsPoint(point)) continue;
+
         final pointKey = keyFn(index);
 
         // If we already have an AnimatingPoint for that index, use it.

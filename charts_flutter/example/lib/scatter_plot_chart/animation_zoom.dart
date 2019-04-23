@@ -52,8 +52,9 @@ class ScatterPlotAnimationZoomChart extends StatelessWidget {
 
     final makeRadius = (int value) => (random.nextInt(value) + 2).toDouble();
 
-    for (var i = 0; i < 100; i++) {
-      data.add(new LinearSales(i, random.nextInt(100), makeRadius(4)));
+    // Test pan performance
+    for (var i = 0; i < 1000; i++) {
+      data.add(new LinearSales(i, random.nextInt(1000), makeRadius(4)));
     }
 
     final maxMeasure = 100;
@@ -84,11 +85,16 @@ class ScatterPlotAnimationZoomChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.ScatterPlotChart(seriesList,
-        animate: animate,
-        behaviors: [
-          new charts.PanAndZoomBehavior(),
-        ]);
+    return new charts.ScatterPlotChart(
+      seriesList,
+      animate: animate,
+      behaviors: [
+        new charts.PanAndZoomBehavior(),
+      ],
+      domainAxis: charts.NumericAxisSpec(
+        viewport: charts.NumericExtents(10, 70),
+      ),
+    );
   }
 
   /// Create one series with sample hard coded data.
