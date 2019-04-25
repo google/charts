@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show immutable;
+import 'package:intl/intl.dart';
 
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
@@ -28,6 +29,7 @@ import '../time/date_time_extents.dart' show DateTimeExtents;
 import '../time/date_time_tick_formatter.dart' show DateTimeTickFormatter;
 import '../time/day_time_stepper.dart' show DayTimeStepper;
 import '../time/hour_tick_formatter.dart' show HourTickFormatter;
+import '../time/simple_time_tick_formatter.dart' show SimpleTimeTickFormatter;
 import '../time/time_range_tick_provider_impl.dart'
     show TimeRangeTickProviderImpl;
 import '../time/time_tick_formatter.dart' show TimeTickFormatter;
@@ -236,6 +238,43 @@ class TimeFormatterSpec {
     hashcode = (hashcode * 37) + transitionFormat?.hashCode ?? 0;
     hashcode = (hashcode * 37) + noonFormat?.hashCode ?? 0;
     return hashcode;
+  }
+}
+
+/// [TickFormatterSpec] that delegates formatting to a given [DateFormat]
+@immutable
+class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
+  final TimeTickFormatter formatter;
+  final DateFormat dateFormat;
+
+  const BasicDateTimeTickFormatterSpec(this.formatter) : dateFormat = null;
+
+  const BasicDateTimeTickFormatterSpec.fromDateFormat(this.dateFormat)
+      : formatter = null;
+
+  /// A formatter will be created with the [DateFormat] if it is not null.
+  /// Otherwise, it will create one with the provided [TimeTickFormatter].
+  @override
+  DateTimeTickFormatter createTickFormatter(ChartContext context) {
+    return dateFormat != null
+        ? DateTimeTickFormatter.uniform(
+            SimpleTimeTickFormatter(dateFormat: dateFormat))
+        : DateTimeTickFormatter.uniform(formatter);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is BasicDateTimeTickFormatterSpec &&
+            formatter == other.formatter &&
+            dateFormat == other.dateFormat);
+  }
+
+  @override
+  int get hashCode {
+    int hashcode = formatter.hashCode;
+    hashcode = (hashcode * 37) * dateFormat.hashCode;
+    return hashCode;
   }
 }
 

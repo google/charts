@@ -70,6 +70,7 @@ export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
         DateTimeEndPointsTickProviderSpec,
         DateTimeTickFormatterSpec,
         DateTimeTickProviderSpec,
+        BasicDateTimeTickFormatterSpec,
         TimeFormatterSpec,
         StaticDateTimeTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/end_points_time_axis_spec.dart'
