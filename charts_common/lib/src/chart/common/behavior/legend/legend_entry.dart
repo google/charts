@@ -19,10 +19,21 @@ import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../processed_series.dart' show ImmutableSeries;
 import '../../series_renderer.dart' show rendererKey;
 
-/// The most basic possible legend entry - just a display name and positioning.
-class LegendEntryBase {
+/// Holder for the information used for a legend row.
+///
+/// [T] the datum class type for the series passed in.
+/// [D] the domain class type for the datum.
+class LegendEntry<D> {
   final String label;
+  final ImmutableSeries<D> series;
+  final dynamic datum;
+  final int datumIndex;
+  final D domain;
+  final Color color;
   final TextStyleSpec textStyle;
+  double value;
+  String formattedValue;
+  bool isSelected;
 
   /// Zero based index for the row where this legend appears in the legend.
   int rowNumber;
@@ -48,8 +59,17 @@ class LegendEntryBase {
   /// Indicates whether this is in the last column of a tabular layout.
   bool inLastColumn;
 
-  LegendEntryBase(this.label,
-      {this.textStyle,
+  // TODO: Forward the default formatters from series and allow for
+  // native legends to provide separate formatters.
+
+  LegendEntry(this.series, this.label,
+      {this.datum,
+      this.datumIndex,
+      this.domain,
+      this.value,
+      this.color,
+      this.textStyle,
+      this.isSelected = false,
       this.rowNumber,
       this.columnNumber,
       this.rowCount,
@@ -58,79 +78,6 @@ class LegendEntryBase {
       this.inFirstColumn,
       this.inLastRow,
       this.inLastColumn});
-}
-
-/// When the legend groups by category it will create additional legend entries
-/// that track styling and grouping on a per category basis.
-class LegendCategory<D> extends LegendEntryBase {
-  /// The list of entries that should be displayed within this category.
-  final List<LegendEntry<D>> entries;
-
-  LegendCategory(String label, this.entries,
-      {TextStyleSpec textStyle,
-      int rowNumber,
-      int columnNumber,
-      int rowCount,
-      int columnCount,
-      bool inFirstRow,
-      bool inFirstColumn,
-      bool inLastRow,
-      bool inLastColumn})
-      : super(label,
-            textStyle: textStyle,
-            rowNumber: rowNumber,
-            columnNumber: columnNumber,
-            rowCount: rowCount,
-            columnCount: columnCount,
-            inFirstRow: inFirstRow,
-            inFirstColumn: inFirstColumn,
-            inLastRow: inLastRow,
-            inLastColumn: inLastColumn);
-}
-
-/// Holder for the information used for a legend row.
-///
-/// [T] the datum class type for the series passed in.
-/// [D] the domain class type for the datum.
-class LegendEntry<D> extends LegendEntryBase {
-  final ImmutableSeries<D> series;
-  final dynamic datum;
-  final int datumIndex;
-  final D domain;
-  final Color color;
-  double value;
-  String formattedValue;
-  bool isSelected;
-
-  // TODO: Forward the default formatters from series and allow for
-  // native legends to provide separate formatters.
-
-  LegendEntry(this.series, String label,
-      {this.datum,
-      this.datumIndex,
-      this.domain,
-      this.value,
-      this.color,
-      this.isSelected = false,
-      TextStyleSpec textStyle,
-      int rowNumber,
-      int columnNumber,
-      int rowCount,
-      int columnCount,
-      bool inFirstRow,
-      bool inFirstColumn,
-      bool inLastRow,
-      bool inLastColumn})
-      : super(label,
-            textStyle: textStyle,
-            rowNumber: rowNumber,
-            columnNumber: columnNumber,
-            rowCount: rowCount,
-            columnCount: columnCount,
-            inFirstRow: inFirstRow,
-            inFirstColumn: inFirstColumn,
-            inLastRow: inLastRow,
-            inLastColumn: inLastColumn);
 
   /// Get the native symbol renderer stored in the series.
   SymbolRenderer get symbolRenderer =>
