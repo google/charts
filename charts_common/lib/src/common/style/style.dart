@@ -87,4 +87,7 @@ abstract class Style {
 
   /// Default background color for the chart.
   Color get chartBackgroundColor;
+
+  /// The width of the band specified as fraction of step.
+  double get rangeBandSize;
 }

@@ -96,4 +96,7 @@ class MaterialStyle implements Style {
 
   @override
   Color get chartBackgroundColor => MaterialPalette.white;
+
+  @override
+  double get rangeBandSize => 0.65;
 }
