@@ -15,10 +15,17 @@
 
 import 'package:charts_common/src/chart/cartesian/axis/scale.dart';
 import 'package:charts_common/src/chart/cartesian/axis/simple_ordinal_scale.dart';
+import 'package:charts_common/src/common/style/material_style.dart';
+import 'package:charts_common/src/common/style/style_factory.dart';
 
 import 'package:test/test.dart';
 
 const EPSILON = 0.001;
+
+class TestStyle extends MaterialStyle {
+  @override
+  double rangeBandSize;
+}
 
 void main() {
   SimpleOrdinalScale scale;
@@ -115,6 +122,13 @@ void main() {
 
     test('set to null throws argument exception', () {
       expect(() => scale.rangeBandConfig = null, throwsArgumentError);
+    });
+
+    test('range band size used from style', () {
+      StyleFactory.style = TestStyle()..rangeBandSize = 0.4;
+      scale.rangeBandConfig = new RangeBandConfig.styleAssignedPercent();
+      // 100 = 0.4f * 1000pixels / 4domains
+      expect(scale.rangeBand, closeTo(100, EPSILON));
     });
   });
 
