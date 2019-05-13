@@ -23,8 +23,9 @@ import '../common/chart_canvas.dart' show FillPatternType;
 class MutableSeries<D> extends ImmutableSeries<D> {
   final String id;
   String displayName;
-  String seriesCategory;
   bool overlaySeries;
+  String seriesCategory;
+  Color seriesColor;
   int seriesIndex;
 
   /// Sum of the measure values for the series.
@@ -63,8 +64,9 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
   MutableSeries(Series<dynamic, D> series) : this.id = series.id {
     displayName = series.displayName ?? series.id;
-    seriesCategory = series.seriesCategory;
     overlaySeries = series.overlaySeries;
+    seriesCategory = series.seriesCategory;
+    seriesColor = series.seriesColor;
 
     data = series.data;
     keyFn = series.keyFn;
@@ -109,8 +111,9 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
   MutableSeries.clone(MutableSeries<D> other) : this.id = other.id {
     displayName = other.displayName;
-    seriesCategory = other.seriesCategory;
     overlaySeries = other.overlaySeries;
+    seriesCategory = other.seriesCategory;
+    seriesColor = other.seriesColor;
     seriesIndex = other.seriesIndex;
 
     data = other.data;
@@ -167,9 +170,24 @@ abstract class ImmutableSeries<D> {
 
   String get displayName;
 
+  /// Overlay series provided supplemental information on a chart, but are not
+  /// considered to be primary data. They should not be selectable by user
+  /// interaction.
+  bool get overlaySeries;
+
   String get seriesCategory;
 
-  bool get overlaySeries;
+  /// Color which represents the entire series in legends.
+  ///
+  /// If this is not provided in the original series object, it will be inferred
+  /// from the color of the first datum in the series.
+  ///
+  /// If this is provided, but no [colorFn] is provided, then it will be treated
+  /// as the color for each datum in the series.
+  ///
+  /// If neither are provided, then the chart will insert colors for each series
+  /// on the chart using a mapping function.
+  Color get seriesColor;
 
   int get seriesIndex;
 

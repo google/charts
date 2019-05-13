@@ -23,8 +23,25 @@ import '../common/typed_registry.dart' show TypedRegistry, TypedKey;
 class Series<T, D> {
   final String id;
   final String displayName;
-  final String seriesCategory;
+
+  /// Overlay series provided supplemental information on a chart, but are not
+  /// considered to be primary data. They should not be selectable by user
+  /// interaction.
   final bool overlaySeries;
+
+  final String seriesCategory;
+
+  /// Color which represents the entire series in legends.
+  ///
+  /// If this is not provided in the original series object, it will be inferred
+  /// from the color of the first datum in the series.
+  ///
+  /// If this is provided, but no [colorFn] is provided, then it will be treated
+  /// as the color for each datum in the series.
+  ///
+  /// If neither are provided, then the chart will insert colors for each series
+  /// on the chart using a mapping function.
+  final Color seriesColor;
 
   final List<T> data;
 
@@ -54,6 +71,11 @@ class Series<T, D> {
   final AccessorFn<Color> areaColorFn;
 
   /// [colorFn] returns the rendered stroke color for a given data value.
+  ///
+  /// If this is not provided, then [seriesColor] will be used for every datum.
+  ///
+  /// If neither are provided, then the chart will insert colors for each series
+  /// on the chart using a mapping function.
   final AccessorFn<Color> colorFn;
 
   /// [dashPatternFn] returns the dash pattern for a given data value.
@@ -80,6 +102,7 @@ class Series<T, D> {
       @required TypedAccessorFn<T, D> domainFn,
       @required TypedAccessorFn<T, num> measureFn,
       String displayName,
+      Color seriesColor,
       TypedAccessorFn<T, Color> areaColorFn,
       TypedAccessorFn<T, Color> colorFn,
       TypedAccessorFn<T, List<int>> dashPatternFn,
@@ -168,6 +191,7 @@ class Series<T, D> {
       overlaySeries: overlaySeries,
       radiusPxFn: _radiusPxFn,
       seriesCategory: seriesCategory,
+      seriesColor: seriesColor,
       strokeWidthPxFn: _strokeWidthPxFn,
     );
   }
@@ -195,6 +219,7 @@ class Series<T, D> {
     this.overlaySeries = false,
     this.radiusPxFn,
     this.seriesCategory,
+    this.seriesColor,
     this.strokeWidthPxFn,
   });
 
