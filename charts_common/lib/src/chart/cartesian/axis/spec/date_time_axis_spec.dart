@@ -272,9 +272,9 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   int get hashCode {
-    int hashcode = formatter.hashCode;
-    hashcode = (hashcode * 37) * dateFormat.hashCode;
-    return hashCode;
+    int hash = formatter.hashCode;
+    hash = (hash * 37) * dateFormat.hashCode;
+    return hash;
   }
 }
 

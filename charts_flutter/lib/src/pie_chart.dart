@@ -30,7 +30,7 @@ class PieChart<D> extends BaseChart<D> {
     List<SelectionModelConfig<D>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
-    bool defaultInteractions: true,
+    bool defaultInteractions = true,
   }) : super(
           seriesList,
           animate: animate,

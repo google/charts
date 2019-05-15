@@ -53,7 +53,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     List<ChartBehavior> behaviors,
     List<SelectionModelConfig<D>> selectionModels,
     common.RTLSpec rtlSpec,
-    bool defaultInteractions: true,
+    bool defaultInteractions = true,
     LayoutConfig layoutConfig,
     UserManagedState userManagedState,
     this.flipVerticalAxis,
