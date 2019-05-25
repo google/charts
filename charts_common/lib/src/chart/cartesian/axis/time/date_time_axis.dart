@@ -36,6 +36,7 @@ class DateTimeAxis extends Axis<DateTime> {
         );
 
   void setScaleViewport(DateTimeExtents viewport) {
+    super.autoViewport=false; // Added for panbehaviour
     (mutableScale as DateTimeScale).viewportDomain = viewport;
   }
 }
