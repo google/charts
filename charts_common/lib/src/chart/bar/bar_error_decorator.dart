@@ -30,11 +30,22 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
   static const double _defaultStrokeWidthPx = 1;
   static const double _defaultEndpointLengthPx = 16;
 
-  final Color color;
+  static const Color _defaultOutlineColor = Color.white;
+  static const double _defaultOutlineWidthPx = 0;
+
   final double strokeWidthPx;
   final double endpointLengthPx;
+  final double outlineWidthPx;
 
-  BarErrorDecorator({this.color, this.strokeWidthPx, this.endpointLengthPx});
+  final Color strokeColor;
+  final Color outlineColor;
+
+  BarErrorDecorator(
+      {this.strokeColor = _defaultStrokeColor,
+      this.strokeWidthPx = _defaultStrokeWidthPx,
+      this.endpointLengthPx = _defaultEndpointLengthPx,
+      this.outlineWidthPx = _defaultOutlineWidthPx,
+      this.outlineColor = _defaultOutlineColor});
 
   @override
   void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
@@ -60,9 +71,6 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
         final measureAxis =
             element.series.getAttr(measureAxisKey) as ImmutableAxis<num>;
 
-        final strokeColor = color ?? _defaultStrokeColor;
-        final strokeWidth = strokeWidthPx ?? _defaultStrokeWidthPx;
-
         if (renderingVertically) {
           final startY = measureAxis.getLocation(
               measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex));
@@ -72,15 +80,42 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
           if (startY != endY) {
             final barWidth = bounds.right - bounds.left;
             final x = (bounds.left + bounds.right) / 2;
+            final rectWidth = min(strokeWidthPx + 2 * outlineWidthPx, barWidth);
+            final strokeWidth = rectWidth - 2 * outlineWidthPx;
+            final rectEndpointLength =
+                min(endpointLengthPx + 2 * outlineWidthPx, barWidth);
+            final endpointLength = rectEndpointLength - 2 * outlineWidthPx;
+
+            if (outlineWidthPx > 0) {
+              // Draw rectangle rendering the outline for the vertical line.
+              canvas.drawRect(
+                  Rectangle.fromPoints(Point(x - rectWidth / 2, startY),
+                      Point(x + rectWidth / 2, endY)),
+                  fill: outlineColor,
+                  strokeWidthPx: outlineWidthPx);
+
+              // Draw rectangle rendering the outline for the horizontal
+              // endpoint representing the lower bound.
+              canvas.drawRect(
+                  Rectangle(x - rectEndpointLength / 2, startY - rectWidth / 2,
+                      rectEndpointLength, rectWidth),
+                  fill: outlineColor,
+                  strokeWidthPx: outlineWidthPx);
+
+              // Draw rectangle rendering the outline for the horizontal
+              // endpoint representing the upper bound.
+              canvas.drawRect(
+                  Rectangle(x - rectEndpointLength / 2, endY - rectWidth / 2,
+                      rectEndpointLength, rectWidth),
+                  fill: outlineColor,
+                  strokeWidthPx: outlineWidthPx);
+            }
 
             // Draw vertical whisker line.
             canvas.drawLine(
                 points: [Point(x, startY), Point(x, endY)],
                 stroke: strokeColor,
-                strokeWidthPx: min(strokeWidth, barWidth as double));
-
-            final endpointLength =
-                min(endpointLengthPx ?? _defaultEndpointLengthPx, barWidth);
+                strokeWidthPx: strokeWidth);
 
             // Draw horizontal whisker line for the lower bound.
             canvas.drawLine(points: [
@@ -103,33 +138,54 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
           if (startX != endX) {
             final barWidth = bounds.bottom - bounds.top;
             final y = (bounds.top + bounds.bottom) / 2;
+            final rectWidth = min(strokeWidthPx + 2 * outlineWidthPx, barWidth);
+            final strokeWidth = rectWidth - 2 * outlineWidthPx;
+            final rectEndpointLength =
+                min(endpointLengthPx + 2 * outlineWidthPx, barWidth);
+            final endpointLength = rectEndpointLength - 2 * outlineWidthPx;
+
+            if (outlineWidthPx > 0) {
+              // Draw rectangle rendering the outline for the horizontal line.
+              canvas.drawRect(
+                  Rectangle.fromPoints(Point(startX, y - rectWidth / 2),
+                      Point(endX, y + rectWidth / 2)),
+                  fill: outlineColor,
+                  strokeWidthPx: outlineWidthPx);
+
+              // Draw rectangle rendering the outline for the vertical
+              // endpoint representing the lower bound.
+              canvas.drawRect(
+                  Rectangle(startX - rectWidth / 2, y - rectEndpointLength / 2,
+                      rectWidth, rectEndpointLength),
+                  fill: outlineColor,
+                  strokeWidthPx: outlineWidthPx);
+
+              // Draw rectangle rendering the outline for the vertical
+              // endpoint representing the upper bound.
+              canvas.drawRect(
+                  Rectangle(endX - rectWidth / 2, y - rectEndpointLength / 2,
+                      rectWidth, rectEndpointLength),
+                  fill: outlineColor,
+                  strokeWidthPx: outlineWidthPx);
+            }
 
             // Draw horizontal whisker line.
             canvas.drawLine(
                 points: [Point(startX, y), Point(endX, y)],
                 stroke: strokeColor,
-                strokeWidthPx: min(strokeWidth, barWidth as double));
-
-            final endpointLength =
-                min(endpointLengthPx ?? _defaultEndpointLengthPx, barWidth);
+                strokeWidthPx: strokeWidth);
 
             // Draw vertical whisker line for the lower bound.
-            canvas.drawLine(
-                points: [
-                  Point(startX, y - endpointLength / 2),
-                  Point(startX, y + endpointLength / 2)
-                ],
-                stroke: strokeColor,
-                strokeWidthPx: min(strokeWidth, barWidth as double));
+            canvas.drawLine(points: [
+              Point(startX, y - endpointLength / 2),
+              Point(startX, y + endpointLength / 2)
+            ], stroke: strokeColor, strokeWidthPx: strokeWidth);
 
             // Draw vertical whisker line for the upper bound.
-            canvas.drawLine(
-                points: [
-                  Point(endX, y - endpointLength / 2),
-                  Point(endX, y + endpointLength / 2)
-                ],
-                stroke: strokeColor,
-                strokeWidthPx: min(strokeWidth, barWidth as double));
+            canvas.drawLine(points: [
+              Point(endX, y - endpointLength / 2),
+              Point(endX, y + endpointLength / 2)
+            ], stroke: strokeColor, strokeWidthPx: strokeWidth);
           }
         }
       }
