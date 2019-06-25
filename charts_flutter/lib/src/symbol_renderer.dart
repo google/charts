@@ -31,7 +31,7 @@ class SymbolRendererCanvas implements SymbolRendererBuilder {
 
   @override
   Widget build(BuildContext context,
-      {Color color, Size size, bool enabled = true}) {
+      {Color color, List<int> dashPattern, Size size, bool enabled = true}) {
     if (!enabled) {
       color = color.withOpacity(0.26);
     }
@@ -40,7 +40,7 @@ class SymbolRendererCanvas implements SymbolRendererBuilder {
         size: size,
         child: new CustomPaint(
             painter:
-                new _SymbolCustomPaint(context, commonSymbolRenderer, color)));
+                new _SymbolCustomPaint(context, commonSymbolRenderer, color, dashPattern)));
   }
 }
 
@@ -54,7 +54,7 @@ abstract class CustomSymbolRenderer extends common.SymbolRenderer
   /// Must override this method to build the custom Widget with the given color
   /// as
   @override
-  Widget build(BuildContext context, {Color color, Size size, bool enabled});
+  Widget build(BuildContext context, {Color color, List<int> dashPattern, Size size, bool enabled});
 
   @override
   void paint(common.ChartCanvas canvas, Rectangle<num> bounds,
@@ -74,7 +74,7 @@ abstract class CustomSymbolRenderer extends common.SymbolRenderer
 /// Common interface for [CustomSymbolRenderer] & [SymbolRendererCanvas] for
 /// convenience for [LegendEntryLayout].
 abstract class SymbolRendererBuilder {
-  Widget build(BuildContext context, {Color color, Size size, bool enabled});
+  Widget build(BuildContext context, {Color color, List<int> dashPattern, Size size, bool enabled});
 }
 
 /// The Widget which fulfills the guts of [SymbolRendererCanvas] actually
@@ -83,8 +83,9 @@ class _SymbolCustomPaint extends CustomPainter {
   final BuildContext context;
   final common.SymbolRenderer symbolRenderer;
   final Color color;
+  final List<int> dashPattern;
 
-  _SymbolCustomPaint(this.context, this.symbolRenderer, this.color);
+  _SymbolCustomPaint(this.context, this.symbolRenderer, this.color, this.dashPattern);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -94,7 +95,7 @@ class _SymbolCustomPaint extends CustomPainter {
         r: color.red, g: color.green, b: color.blue, a: color.alpha);
     symbolRenderer.paint(
         new ChartCanvas(canvas, GraphicsFactory(context)), bounds,
-        fillColor: commonColor, strokeColor: commonColor);
+        fillColor: commonColor, strokeColor: commonColor, dashPattern: dashPattern);
   }
 
   @override

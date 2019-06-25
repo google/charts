@@ -42,6 +42,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
       legendEntries.add(new LegendEntry<D>(
           series, series.domainFn(i).toString(),
           color: series.colorFn(i),
+          dashPattern: series.dashPatternFn(i),
           datum: series.data[i],
           datumIndex: i,
           textStyle: entryTextStyle));

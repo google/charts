@@ -30,6 +30,7 @@ class LegendEntry<D> {
   final int datumIndex;
   final D domain;
   final Color color;
+  final List<int> dashPattern;
   final TextStyleSpec textStyle;
   double value;
   String formattedValue;
@@ -68,6 +69,7 @@ class LegendEntry<D> {
       this.domain,
       this.value,
       this.color,
+      this.dashPattern,
       this.textStyle,
       this.isSelected = false,
       this.rowNumber,

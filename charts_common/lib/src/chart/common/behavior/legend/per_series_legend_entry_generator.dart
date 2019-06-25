@@ -39,7 +39,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList) {
     final legendEntries = seriesList
         .map((series) => new LegendEntry<D>(series, series.displayName,
-            color: series.colorFn(0), textStyle: entryTextStyle))
+            color: series.colorFn(0), dashPattern: series.dashPatternFn(0), textStyle: entryTextStyle))
         .toList();
 
     // Update with measures only if showing measure on no selection.
