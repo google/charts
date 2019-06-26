@@ -56,6 +56,7 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
           context,
           size: materialSymbolSize,
           color: color,
+          dashPattern: legendEntry.dashPattern,
           enabled: !isHidden,
         ),
         onTapUp: makeTapUpCallback(context, legendEntry, legend));
