@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:math' show max, pow, Point;
-import 'dart:ui';
+import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/widgets.dart' show AnimationController;
 
