@@ -162,7 +162,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         final details = getBaseDetails(datum, barIndex);
 
         details.barStackIndex = 0;
-        details.measureOffset = 0;
+        details.measureOffset = measureOffsetFn(barIndex);
 
         if (fillPatternFn != null) {
           details.fillPattern = fillPatternFn(barIndex);
