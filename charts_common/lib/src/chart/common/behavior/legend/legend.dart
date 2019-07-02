@@ -158,6 +158,18 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     _legendTapHandling = legendTapHandling;
   }
 
+  /// Whether or not the legend show overlay series.
+  ///
+  /// By default this is false, the overlay series are not shown on the legend.
+  ///
+  /// if [showOverlaySeries] is set to null, it is changed to the default of
+  /// false.
+  bool get showOverlaySeries => legendEntryGenerator.showOverlaySeries;
+
+  set showOverlaySeries(bool showOverlaySeries) {
+    legendEntryGenerator.showOverlaySeries = showOverlaySeries ?? false;
+  }
+
   /// Resets any hidden series data when new data is drawn on the chart.
   @protected
   void onData(List<MutableSeries<D>> seriesList) {}
