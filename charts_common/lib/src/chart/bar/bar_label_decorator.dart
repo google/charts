@@ -76,7 +76,16 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
     if (animationPercent != 1.0) {
       return;
     }
+    _decorateHorizontalBar(
+        barElements, canvas, graphicsFactory, drawBounds, rtl);
+  }
 
+  void _decorateHorizontalBar(
+      Iterable<ImmutableBarRendererElement<D>> barElements,
+      ChartCanvas canvas,
+      GraphicsFactory graphicsFactory,
+      Rectangle drawBounds,
+      bool rtl) {
     // Create [TextStyle] from [TextStyleSpec] to be used by all the elements.
     // The [GraphicsFactory] is needed so it can't be created earlier.
     final insideLabelStyle =
