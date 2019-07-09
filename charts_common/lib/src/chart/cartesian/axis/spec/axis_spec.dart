@@ -116,9 +116,11 @@ abstract class RenderSpec<D> {
 class TextStyleSpec {
   final String fontFamily;
   final int fontSize;
+  final double lineHeight;
   final Color color;
 
-  const TextStyleSpec({this.fontFamily, this.fontSize, this.color});
+  const TextStyleSpec(
+      {this.fontFamily, this.fontSize, this.lineHeight, this.color});
 
   @override
   bool operator ==(Object other) {
@@ -126,6 +128,7 @@ class TextStyleSpec {
         (other is TextStyleSpec &&
             fontFamily == other.fontFamily &&
             fontSize == other.fontSize &&
+            lineHeight == other.lineHeight &&
             color == other.color);
   }
 
@@ -133,6 +136,7 @@ class TextStyleSpec {
   int get hashCode {
     int hashcode = fontFamily?.hashCode ?? 0;
     hashcode = (hashcode * 37) + fontSize?.hashCode ?? 0;
+    hashcode = (hashcode * 37) + lineHeight?.hashCode ?? 0;
     hashcode = (hashcode * 37) + color?.hashCode ?? 0;
     return hashcode;
   }
