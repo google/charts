@@ -86,9 +86,12 @@ export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
     show
         BasicOrdinalTickProviderSpec,
         BasicOrdinalTickFormatterSpec,
+        FixedPixelSpaceOrdinalScaleSpec,
         OrdinalAxisSpec,
         OrdinalTickFormatterSpec,
         OrdinalTickProviderSpec,
+        OrdinalScaleSpec,
+        SimpleOrdinalScaleSpec,
         StaticOrdinalTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
     show PercentAxisSpec;
