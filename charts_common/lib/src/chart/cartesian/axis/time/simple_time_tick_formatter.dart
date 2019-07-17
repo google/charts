@@ -13,25 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:intl/intl.dart' show DateFormat;
 import 'package:meta/meta.dart' show required;
 import 'time_tick_formatter.dart' show TimeTickFormatter;
 
-/// Formatter that formats all ticks using a single [DateFormat].
+typedef DateTimeFormatterFunction = String Function(DateTime datetime);
+
+/// Formatter that formats all ticks using a single [DateTimeFormatterFunction].
 class SimpleTimeTickFormatter implements TimeTickFormatter {
-  DateFormat dateFormat;
+  DateTimeFormatterFunction formatter;
 
-  SimpleTimeTickFormatter({@required DateFormat dateFormat})
-      : this.dateFormat = dateFormat;
-
-  @override
-  String formatFirstTick(DateTime date) => dateFormat.format(date);
+  SimpleTimeTickFormatter({@required this.formatter});
 
   @override
-  String formatSimpleTick(DateTime date) => dateFormat.format(date);
+  String formatFirstTick(DateTime date) => formatter(date);
 
   @override
-  String formatTransitionTick(DateTime date) => dateFormat.format(date);
+  String formatSimpleTick(DateTime date) => formatter(date);
+
+  @override
+  String formatTransitionTick(DateTime date) => formatter(date);
 
   // Transition fields don't matter here.
   @override

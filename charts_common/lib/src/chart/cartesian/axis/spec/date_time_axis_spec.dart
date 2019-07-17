@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show immutable;
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
@@ -29,7 +29,8 @@ import '../time/date_time_extents.dart' show DateTimeExtents;
 import '../time/date_time_tick_formatter.dart' show DateTimeTickFormatter;
 import '../time/day_time_stepper.dart' show DayTimeStepper;
 import '../time/hour_tick_formatter.dart' show HourTickFormatter;
-import '../time/simple_time_tick_formatter.dart' show SimpleTimeTickFormatter;
+import '../time/simple_time_tick_formatter.dart'
+    show DateTimeFormatterFunction, SimpleTimeTickFormatter;
 import '../time/time_range_tick_provider_impl.dart'
     show TimeRangeTickProviderImpl;
 import '../time/time_tick_formatter.dart' show TimeTickFormatter;
@@ -241,10 +242,11 @@ class TimeFormatterSpec {
   }
 }
 
-/// [TickFormatterSpec] that delegates formatting to a given [DateFormat]
+/// A [DateTimeTickFormatterSpec] that accepts a [DateFormat] or a
+/// [DateTimeFormatterFunction].
 @immutable
 class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
-  final TimeTickFormatter formatter;
+  final DateTimeFormatterFunction formatter;
   final DateFormat dateFormat;
 
   const BasicDateTimeTickFormatterSpec(this.formatter) : dateFormat = null;
@@ -253,13 +255,12 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
       : formatter = null;
 
   /// A formatter will be created with the [DateFormat] if it is not null.
-  /// Otherwise, it will create one with the provided [TimeTickFormatter].
+  /// Otherwise, it will create one with the provided
+  /// [DateTimeFormatterFunction].
   @override
   DateTimeTickFormatter createTickFormatter(ChartContext context) {
-    return dateFormat != null
-        ? DateTimeTickFormatter.uniform(
-            SimpleTimeTickFormatter(dateFormat: dateFormat))
-        : DateTimeTickFormatter.uniform(formatter);
+    return DateTimeTickFormatter.uniform(SimpleTimeTickFormatter(
+        formatter: dateFormat != null ? dateFormat.format : formatter));
   }
 
   @override
