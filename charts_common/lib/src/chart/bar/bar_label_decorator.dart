@@ -19,7 +19,7 @@ import 'package:meta/meta.dart' show required;
 
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../common/text_element.dart' show TextDirection;
+import '../../common/text_element.dart' show TextDirection, TextElement;
 import '../../common/text_style.dart' show TextStyle;
 import '../../data/series.dart' show AccessorFn;
 import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
@@ -37,6 +37,8 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       new TextStyleSpec(fontSize: 12, color: Color.white);
   static final _defaultOutsideLabelStyle =
       new TextStyleSpec(fontSize: 12, color: Color.black);
+  static final _labelSplitPattern = '\n';
+  static final _defaultMultiLineLabelPadding = 2;
 
   /// Configures [TextStyleSpec] for labels placed inside the bars.
   final TextStyleSpec insideLabelStyleSpec;
@@ -117,8 +119,12 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
 
       // Skip calculation and drawing for this element if no label.
       if (label == null || label.isEmpty) {
-        return;
+        continue;
       }
+
+      var labelElements = label
+          .split(_labelSplitPattern)
+          .map((labelPart) => graphicsFactory.createTextElement(labelPart));
 
       final bounds = element.bounds;
 
@@ -127,60 +133,80 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       final insideBarHeight = bounds.height - totalPadding;
       final outsideBarHeight = drawBounds.height - bounds.height - totalPadding;
 
-      final labelElement = graphicsFactory.createTextElement(label);
-      labelElement.textDirection = rtl ? TextDirection.rtl : TextDirection.ltr;
       var calculatedLabelPosition = labelPosition;
       if (calculatedLabelPosition == BarLabelPosition.auto) {
         // For auto, first try to fit the text inside the bar.
-        labelElement.textStyle = datumInsideLabelStyle;
+        labelElements = labelElements.map(
+            (labelElement) => labelElement..textStyle = datumInsideLabelStyle);
+
+        final labelMaxWidth = labelElements
+            .map(
+                (labelElement) => labelElement.measurement.horizontalSliceWidth)
+            .fold(0, (max, current) => max > current ? max : current);
+
+        // Total label height depends on the label element's text style.
+        final totalLabelHeight = _getTotalLabelHeight(labelElements);
 
         // A label fits if the length and width of the text fits.
         calculatedLabelPosition =
-            labelElement.measurement.verticalSliceWidth < insideBarHeight &&
-                    labelElement.measurement.horizontalSliceWidth < bounds.width
+            totalLabelHeight < insideBarHeight && labelMaxWidth < bounds.width
                 ? BarLabelPosition.inside
                 : BarLabelPosition.outside;
       }
 
-      // Set the max width and text style.
-      labelElement.textStyle =
-          calculatedLabelPosition == BarLabelPosition.inside
-              ? datumInsideLabelStyle
-              : datumOutsideLabelStyle;
-      labelElement.maxWidth = bounds.width;
+      // Set the max width, text style, and text direction.
+      labelElements = labelElements.map((labelElement) => labelElement
+        ..textStyle = calculatedLabelPosition == BarLabelPosition.inside
+            ? datumInsideLabelStyle
+            : datumOutsideLabelStyle
+        ..maxWidth = bounds.width
+        ..textDirection = rtl ? TextDirection.rtl : TextDirection.ltr);
 
-      // Calculate the start position of label based on [labelAnchor].
-      int labelY;
-      final labelCenterOffsetHeight =
-          labelElement.measurement.verticalSliceWidth.round();
-      if (calculatedLabelPosition == BarLabelPosition.inside) {
-        final _labelAnchor = labelAnchor ?? _defaultVerticalLabelAnchor;
-        switch (_labelAnchor) {
-          case BarLabelAnchor.end:
-            labelY = bounds.top + labelPadding;
-            break;
-          case BarLabelAnchor.middle:
-            labelY = (bounds.bottom -
-                    bounds.height / 2 -
-                    labelCenterOffsetHeight / 2)
-                .round();
-            break;
-          case BarLabelAnchor.start:
-            labelY = bounds.bottom - labelPadding - labelCenterOffsetHeight;
-            break;
+      // Total label height depends on the label element's text style.
+      final totalLabelHeight = _getTotalLabelHeight(labelElements);
+
+      var labelsDrawn = 0;
+      for (var labelElement in labelElements) {
+        // Calculate the start position of label based on [labelAnchor].
+        int labelY;
+        final labelHeight = labelElement.measurement.verticalSliceWidth.round();
+        final offsetHeight =
+            (labelHeight + _defaultMultiLineLabelPadding) * labelsDrawn;
+
+        if (calculatedLabelPosition == BarLabelPosition.inside) {
+          final _labelAnchor = labelAnchor ?? _defaultVerticalLabelAnchor;
+          switch (_labelAnchor) {
+            case BarLabelAnchor.end:
+              labelY = bounds.top + labelPadding + offsetHeight;
+              break;
+            case BarLabelAnchor.middle:
+              labelY = (bounds.bottom -
+                      bounds.height / 2 -
+                      totalLabelHeight / 2 +
+                      offsetHeight)
+                  .round();
+              break;
+            case BarLabelAnchor.start:
+              labelY = bounds.bottom -
+                  labelPadding -
+                  totalLabelHeight +
+                  offsetHeight;
+              break;
+          }
+        } else {
+          // calculatedLabelPosition == LabelPosition.outside
+          labelY = bounds.top - labelPadding - totalLabelHeight + offsetHeight;
         }
-      } else {
-        // calculatedLabelPosition == LabelPosition.outside
-        labelY = bounds.top - labelPadding - labelCenterOffsetHeight;
+
+        // Center the label inside the bar.
+        final labelX = (bounds.left +
+                bounds.width / 2 -
+                labelElement.measurement.horizontalSliceWidth / 2)
+            .round();
+
+        canvas.drawText(labelElement, labelX, labelY);
+        labelsDrawn += 1;
       }
-
-      // Center the label inside the bar.
-      final labelX = (bounds.left +
-              bounds.width / 2 -
-              labelElement.measurement.horizontalSliceWidth / 2)
-          .round();
-
-      canvas.drawText(labelElement, labelX, labelY);
     }
   }
 
@@ -300,6 +326,14 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       }
     }
   }
+
+  /// Helper function to get the total height for a group of labels.
+  /// This includes the padding in between the labels.
+  int _getTotalLabelHeight(Iterable<TextElement> labelElements) =>
+      (labelElements.first.measurement.verticalSliceWidth *
+              labelElements.length)
+          .round() +
+      _defaultMultiLineLabelPadding * (labelElements.length - 1);
 
   // Helper function that converts [TextStyleSpec] to [TextStyle].
   TextStyle _getTextStyle(

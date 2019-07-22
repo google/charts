@@ -242,6 +242,40 @@ void main() {
           equals(70)); // top position - label padding - text height
     });
 
+    test('Outside label with new lines draws multiline labels', () {
+      final barElements = [
+        FakeBarRendererElement(
+            'A', Rectangle(10, 80, 10, 20), (_) => 'LabelA\n(50)', ['A']),
+      ];
+
+      BarLabelDecorator(
+              labelPosition: BarLabelPosition.outside,
+              labelPadding: 0, // Turn off label padding for testing.
+              outsideLabelStyleSpec: TextStyleSpec(fontSize: 10))
+          .decorate(barElements, canvas, graphicsFactory,
+              drawBounds: drawBounds,
+              animationPercent: 1.0,
+              renderingVertically: true);
+
+      final captured =
+          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      // Draw text is called 2 times (once for each label line) and all 3
+      // parameters were captured.
+      expect(captured, hasLength(6));
+      expect(captured[0].measurement.horizontalSliceWidth, equals(6));
+      expect(captured[0].measurement.verticalSliceWidth, equals(10));
+      expect(captured[1],
+          equals(12)); // left position + bar width / 2 - text width / 2
+      // top position - label padding - text height * 2 - multiline padding
+      expect(captured[2], equals(58));
+      expect(captured[3].measurement.horizontalSliceWidth, equals(4));
+      expect(captured[3].measurement.verticalSliceWidth, equals(10));
+      expect(captured[4],
+          equals(13)); // left position + bar width / 2 - text width / 2
+      expect(captured[5],
+          equals(70)); // top position - label padding - text height
+    });
+
     test('Inside and outside label styles are applied', () {
       final data = ['A', 'B'];
       final barElements = [
