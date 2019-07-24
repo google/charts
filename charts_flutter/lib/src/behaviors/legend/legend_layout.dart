@@ -132,7 +132,7 @@ class TabularLegendLayout implements LegendLayout {
   }
 
   Table _buildTableFromRows(List<TableRow> rows) {
-    final padWidget = Padding(padding: cellPadding);
+    final padWidget = Padding(padding: cellPadding ?? EdgeInsets.all(4));
 
     // Pad rows to the max column count, because each TableRow in a table is
     // required to have the same number of children.
