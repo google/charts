@@ -1001,7 +1001,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
     return graphicsFactory.createTextPaint()
       ..color = labelSpec?.color ?? Color.black
       ..fontFamily = labelSpec?.fontFamily
-      ..fontSize = labelSpec?.fontSize ?? 12;
+      ..fontSize = labelSpec?.fontSize ?? 12
+      ..lineHeight = labelSpec?.lineHeight;
   }
 }
 

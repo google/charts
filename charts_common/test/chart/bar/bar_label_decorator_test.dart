@@ -57,6 +57,7 @@ class FakeTextStyle implements TextStyle {
   Color color;
   int fontSize;
   String fontFamily;
+  double lineHeight;
 }
 
 /// Fake [TextElement] which returns text length as [horizontalSliceWidth].
