@@ -368,7 +368,7 @@ class ChartCanvas implements common.ChartCanvas {
     double fillWidthPx = 4.0,
     Rectangle<num> drawAreaBounds,
   }) {
-    background ??= common.StyleFactory.style.white;
+    background ??= common.StyleFactory.style.transparent;
     fill ??= common.StyleFactory.style.black;
 
     // Fill in the shape with a solid background color.
