@@ -58,6 +58,7 @@ class Series<T, D> {
   final AccessorFn<D> domainLowerBoundFn;
   final AccessorFn<D> domainUpperBoundFn;
   final AccessorFn<num> measureFn;
+  final AccessorFn<String> measureFormatterFn;
   final AccessorFn<num> measureLowerBoundFn;
   final AccessorFn<num> measureUpperBoundFn;
   final AccessorFn<num> measureOffsetFn;
@@ -114,6 +115,7 @@ class Series<T, D> {
       TypedAccessorFn<T, String> labelAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn,
+      TypedAccessorFn<T, String> measureFormatterFn,
       TypedAccessorFn<T, num> measureLowerBoundFn,
       TypedAccessorFn<T, num> measureUpperBoundFn,
       TypedAccessorFn<T, num> measureOffsetFn,
@@ -153,6 +155,9 @@ class Series<T, D> {
     final _outsideLabelStyleAccessorFn = outsideLabelStyleAccessorFn == null
         ? null
         : (int index) => outsideLabelStyleAccessorFn(data[index], index);
+    final _measureFormatterFn = measureFormatterFn == null
+        ? null
+        : (int index) => measureFormatterFn(data[index], index);
     final _measureLowerBoundFn = measureLowerBoundFn == null
         ? null
         : (int index) => measureLowerBoundFn(data[index], index);
@@ -185,6 +190,7 @@ class Series<T, D> {
       labelAccessorFn: _labelAccessorFn,
       insideLabelStyleAccessorFn: _insideLabelStyleAccessorFn,
       outsideLabelStyleAccessorFn: _outsideLabelStyleAccessorFn,
+      measureFormatterFn: _measureFormatterFn,
       measureLowerBoundFn: _measureLowerBoundFn,
       measureUpperBoundFn: _measureUpperBoundFn,
       measureOffsetFn: _measureOffsetFn,
@@ -213,6 +219,7 @@ class Series<T, D> {
     this.labelAccessorFn,
     this.insideLabelStyleAccessorFn,
     this.outsideLabelStyleAccessorFn,
+    this.measureFormatterFn,
     this.measureLowerBoundFn,
     this.measureUpperBoundFn,
     this.measureOffsetFn,

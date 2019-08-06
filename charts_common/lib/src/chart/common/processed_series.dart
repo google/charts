@@ -39,6 +39,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<D> domainLowerBoundFn;
   AccessorFn<D> domainUpperBoundFn;
   AccessorFn<num> measureFn;
+  AccessorFn<String> measureFormatterFn;
   AccessorFn<num> measureLowerBoundFn;
   AccessorFn<num> measureUpperBoundFn;
   AccessorFn<num> measureOffsetFn;
@@ -76,6 +77,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     domainUpperBoundFn = series.domainUpperBoundFn;
 
     measureFn = series.measureFn;
+    measureFormatterFn = series.measureFormatterFn;
     measureLowerBoundFn = series.measureLowerBoundFn;
     measureUpperBoundFn = series.measureUpperBoundFn;
     measureOffsetFn = series.measureOffsetFn;
@@ -124,6 +126,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     domainUpperBoundFn = other.domainUpperBoundFn;
 
     measureFn = other.measureFn;
+    measureFormatterFn = other.measureFormatterFn;
     measureLowerBoundFn = other.measureLowerBoundFn;
     measureUpperBoundFn = other.measureUpperBoundFn;
     measureOffsetFn = other.measureOffsetFn;
@@ -212,6 +215,8 @@ abstract class ImmutableSeries<D> {
   AccessorFn<D> get domainUpperBoundFn;
 
   AccessorFn<num> get measureFn;
+
+  AccessorFn<String> get measureFormatterFn;
 
   AccessorFn<num> get measureLowerBoundFn;
 
