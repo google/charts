@@ -451,6 +451,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
           new DatumDetails(
               datum: datum,
               domain: domain,
+              index: datumIndex,
               measure: measure,
               measureOffset: measureOffset,
               rawMeasure: rawMeasure,
