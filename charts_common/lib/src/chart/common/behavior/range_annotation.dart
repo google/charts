@@ -135,7 +135,10 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
     _chart = chart;
 
     _view = new _RangeAnnotationLayoutView<D>(
-        defaultColor: defaultColor, labelPadding: labelPadding, chart: chart);
+        defaultColor: defaultColor,
+        labelPadding: labelPadding,
+        chart: chart,
+        rangeAnnotation: this);
 
     chart.addView(_view);
 
@@ -149,6 +152,10 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
     _view.chart = null;
   }
+
+  /// Sub-classes can override this method to control label visibility.
+  @protected
+  bool shouldShowLabels(AnnotationSegment annotation) => true;
 
   void _updateAxisRange(List<MutableSeries<D>> seriesList) {
     // Extend the axis range if enabled.
@@ -255,6 +262,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         animatingAnnotation = new _AnimatedAnnotation<D>(key: key)
           ..setNewTarget(new _AnnotationElement<D>()
             ..annotation = annotationDatum
+            ..annotationSegment = annotation
             ..color = color
             ..dashPattern = dashPattern
             ..startLabel = startLabel
@@ -276,6 +284,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       // Get the annotation element we are going to setup.
       final annotationElement = new _AnnotationElement<D>()
         ..annotation = annotationDatum
+        ..annotationSegment = annotation
         ..color = color
         ..dashPattern = dashPattern
         ..startLabel = startLabel
@@ -330,6 +339,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   final int labelPadding;
 
+  final RangeAnnotation rangeAnnotation;
+
   CartesianChart<D> chart;
 
   bool get isRtl => chart.context.isRtl;
@@ -346,11 +357,12 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
   /// order as the data was given to the chart.
   LinkedHashMap<String, _AnimatedAnnotation<D>> _annotationMap;
 
-  _RangeAnnotationLayoutView({
-    @required this.defaultColor,
-    @required this.labelPadding,
-    @required this.chart,
-  }) : this.layoutConfig = new LayoutViewConfig(
+  _RangeAnnotationLayoutView(
+      {@required this.defaultColor,
+      @required this.labelPadding,
+      @required this.chart,
+      @required this.rangeAnnotation})
+      : this.layoutConfig = new LayoutViewConfig(
             paintOrder: LayoutViewPaintOrder.rangeAnnotation,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
@@ -432,33 +444,36 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
               ? -pi / 2
               : 0.0;
 
-      final labels = {
-        if (annotationElement.startLabel != null)
-          _AnnotationLabelType.start: annotationElement.startLabel,
-        if (annotationElement.endLabel != null)
-          _AnnotationLabelType.end: annotationElement.endLabel,
-        if (annotationElement.middleLabel != null)
-          _AnnotationLabelType.middle: annotationElement.middleLabel,
-      };
+      if (rangeAnnotation
+          .shouldShowLabels(annotationElement.annotationSegment)) {
+        final labels = {
+          if (annotationElement.startLabel != null)
+            _AnnotationLabelType.start: annotationElement.startLabel,
+          if (annotationElement.endLabel != null)
+            _AnnotationLabelType.end: annotationElement.endLabel,
+          if (annotationElement.middleLabel != null)
+            _AnnotationLabelType.middle: annotationElement.middleLabel,
+        };
 
-      // Draw labels that have been defined.
-      labels.forEach((labelType, label) {
-        final labelElement = graphicsFactory.createTextElement(label)
-          ..maxWidthStrategy = MaxWidthStrategy.ellipsize
-          ..textStyle = labelStyle;
+        // Draw labels that have been defined.
+        labels.forEach((labelType, label) {
+          final labelElement = graphicsFactory.createTextElement(label)
+            ..maxWidthStrategy = MaxWidthStrategy.ellipsize
+            ..textStyle = labelStyle;
 
-        // Measure the label max width once if either type of label is defined.
-        labelElement.maxWidth =
-            _getLabelMaxWidth(bounds, annotationElement, labelElement);
+          // Measure the label max width once if either type of label is defined.
+          labelElement.maxWidth =
+              _getLabelMaxWidth(bounds, annotationElement, labelElement);
 
-        final labelPoint = _getLabelPosition(
-            labelType, bounds, annotationElement, labelElement);
+          final labelPoint = _getLabelPosition(
+              labelType, bounds, annotationElement, labelElement);
 
-        if (labelPoint != null) {
-          canvas.drawText(labelElement, labelPoint.x, labelPoint.y,
-              rotation: rotation);
-        }
-      });
+          if (labelPoint != null) {
+            canvas.drawText(labelElement, labelPoint.x, labelPoint.y,
+                rotation: rotation);
+          }
+        });
+      }
     });
   }
 
@@ -1078,6 +1093,7 @@ class _DatumAnnotation {
 
 class _AnnotationElement<D> {
   _DatumAnnotation annotation;
+  AnnotationSegment annotationSegment;
   Color color;
   String startLabel;
   String endLabel;
@@ -1093,6 +1109,7 @@ class _AnnotationElement<D> {
   _AnnotationElement<D> clone() {
     return new _AnnotationElement<D>()
       ..annotation = new _DatumAnnotation.from(annotation)
+      ..annotationSegment = annotationSegment
       ..color = color != null ? new Color.fromOther(color: color) : null
       ..startLabel = this.startLabel
       ..endLabel = this.endLabel
