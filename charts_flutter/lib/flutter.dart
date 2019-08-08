@@ -57,6 +57,7 @@ export 'package:charts_common/common.dart'
         ChartTitleDirection,
         CircleSymbolRenderer,
         Color,
+        Padding,
         ComparisonPointsDecorator,
         ConstCornerStrategy,
         CornerStrategy,
