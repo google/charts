@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
+import 'dart:ui' as prefix0;
 
 import 'package:charts_common/common.dart' as common
     show
@@ -55,6 +56,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
     bool defaultInteractions: true,
     bool flipVerticalAxis,
     UserManagedState<DateTime> userManagedState,
+    prefix0.Canvas canvas,
   }) : super(
           seriesList,
           animate: animate,
@@ -71,6 +73,7 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
           defaultInteractions: defaultInteractions,
           flipVerticalAxis: flipVerticalAxis,
           userManagedState: userManagedState,
+          canvas: canvas,
         );
 
   @override

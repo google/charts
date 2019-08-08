@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:io';
+
 /// Timeseries chart example
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
@@ -20,10 +22,15 @@ import 'dart:math';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
+import 'dart:ui' as ui;
+
+import 'package:path_provider/path_provider.dart';
+
 class SimpleTimeSeriesChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
-
+  static ui.PictureRecorder recorder;
+  Canvas canvas;
   SimpleTimeSeriesChart(this.seriesList, {this.animate});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
@@ -68,14 +75,37 @@ class SimpleTimeSeriesChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.TimeSeriesChart(
-      seriesList,
-      animate: animate,
-      // Optionally pass in a [DateTimeFactory] used by the chart. The factory
-      // should create the same type of [DateTime] as the data provided. If none
-      // specified, the default creates local date time.
-      dateTimeFactory: const charts.LocalDateTimeFactory(),
-    );
+    if (recorder == null || canvas == null) {
+      recorder = ui.PictureRecorder();
+      canvas = Canvas(recorder);
+    }
+    return Stack(children: <Widget>[
+      charts.TimeSeriesChart(
+        seriesList,
+        animate: false,
+        // Optionally pass in a [DateTimeFactory] used by the chart. The factory
+        // should create the same type of [DateTime] as the data provided. If none
+        // specified, the default creates local date time.
+        dateTimeFactory: const charts.LocalDateTimeFactory(),
+        defaultInteractions: false,
+        canvas: canvas,
+      ),
+      RaisedButton(
+        onPressed: () => toImg(),
+        child: Text('File'),
+      )
+    ]);
+  }
+
+  void toImg() async {
+    ui.Picture rec = recorder.endRecording();
+    ui.Image img = await rec.toImage(400, 256);
+    print(img.toString());
+    var pngBytes = await img.toByteData(format: ui.ImageByteFormat.png);
+    //final output = await getApplicationSupportDirectory();
+    final file = File(
+        '/Users/luca/Library/Developer/CoreSimulator/Devices/E31D0064-E622-4090-8866-2F8F38E79BF0/data/Containers/Data/Application/429CCE6E-167E-49AE-A721-74FE91B12462/Library/Caches/example.png'); //"${output.path}/example.png");
+    file.writeAsBytesSync(pngBytes.buffer.asInt8List());
   }
 
   /// Create one series with sample hard coded data.

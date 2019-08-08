@@ -38,6 +38,8 @@ import 'graphics_factory.dart' show GraphicsFactory;
 import 'time_series_chart.dart' show TimeSeriesChart;
 import 'user_managed_state.dart' show UserManagedState;
 
+import 'dart:ui' as ui;
+
 /// Widget that inflates to a [CustomPaint] that implements common [ChartContext].
 class ChartContainer<D> extends CustomPaint {
   final BaseChart<D> chartWidget;
@@ -47,7 +49,7 @@ class ChartContainer<D> extends CustomPaint {
   final bool rtl;
   final common.RTLSpec rtlSpec;
   final UserManagedState<D> userManagedState;
-
+  final Canvas canvas;
   ChartContainer(
       {@required this.oldChartWidget,
       @required this.chartWidget,
@@ -55,7 +57,8 @@ class ChartContainer<D> extends CustomPaint {
       @required this.animationValue,
       @required this.rtl,
       @required this.rtlSpec,
-      this.userManagedState});
+      this.userManagedState,
+      this.canvas});
 
   @override
   RenderCustomPaint createRenderObject(BuildContext context) {
@@ -183,7 +186,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
 
     // Set the painter used for calling common chart for paint.
     // This painter is also used to generate semantic nodes for a11y.
-    _setNewPainter();
+    _setNewPainter(config.canvas);
   }
 
   /// If user managed state is set, check each setting to see if it is different
@@ -335,13 +338,14 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     }
   }
 
-  void _setNewPainter() {
+  void _setNewPainter([Canvas customCanvas]) {
     painter = new ChartContainerCustomPaint(
         oldPainter: painter,
         chart: _chart,
         exploreMode: _exploreMode,
         a11yNodes: _a11yNodes,
-        textDirection: textDirection);
+        textDirection: textDirection,
+        customCanvas: customCanvas);
   }
 }
 
@@ -350,13 +354,15 @@ class ChartContainerCustomPaint extends CustomPainter {
   final bool exploreMode;
   final List<common.A11yNode> a11yNodes;
   final TextDirection textDirection;
+  final Canvas customCanvas;
 
   factory ChartContainerCustomPaint(
       {ChartContainerCustomPaint oldPainter,
       common.BaseChart chart,
       bool exploreMode,
       List<common.A11yNode> a11yNodes,
-      TextDirection textDirection}) {
+      TextDirection textDirection,
+      Canvas customCanvas}) {
     if (oldPainter != null &&
         oldPainter.exploreMode == exploreMode &&
         oldPainter.a11yNodes == a11yNodes &&
@@ -367,18 +373,28 @@ class ChartContainerCustomPaint extends CustomPainter {
           chart: chart,
           exploreMode: exploreMode ?? false,
           a11yNodes: a11yNodes ?? <common.A11yNode>[],
-          textDirection: textDirection ?? TextDirection.ltr);
+          textDirection: textDirection ?? TextDirection.ltr,
+          customCanvas: customCanvas ?? null);
     }
   }
 
   ChartContainerCustomPaint._internal(
-      {this.chart, this.exploreMode, this.a11yNodes, this.textDirection});
+      {this.chart,
+      this.exploreMode,
+      this.a11yNodes,
+      this.textDirection,
+      this.customCanvas});
 
   @override
   void paint(Canvas canvas, Size size) {
     common.Performance.time('chartsPaint');
     final chartsCanvas = new ChartCanvas(canvas, chart.graphicsFactory);
     chart.paint(chartsCanvas);
+    if (customCanvas != null) {
+      final chartsCanvas2 =
+          new ChartCanvas(customCanvas, chart.graphicsFactory);
+      chart.paint(chartsCanvas2);
+    }
     common.Performance.timeEnd('chartsPaint');
   }
 

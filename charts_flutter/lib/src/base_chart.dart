@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:ui';
+
 import 'package:charts_common/common.dart' as common
     show
         BaseChart,
@@ -69,6 +71,8 @@ abstract class BaseChart<D> extends StatefulWidget {
   /// Optional state that overrides internally kept state, such as selection.
   final UserManagedState<D> userManagedState;
 
+  final Canvas canvas;
+
   BaseChart(this.seriesList,
       {bool animate,
       Duration animationDuration,
@@ -79,7 +83,8 @@ abstract class BaseChart<D> extends StatefulWidget {
       this.rtlSpec,
       this.defaultInteractions = true,
       this.layoutConfig,
-      this.userManagedState})
+      this.userManagedState,
+      this.canvas})
       : this.animate = animate ?? true,
         this.animationDuration =
             animationDuration ?? const Duration(milliseconds: 300);

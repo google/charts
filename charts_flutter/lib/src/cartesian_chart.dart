@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
+import 'dart:ui';
 import 'package:meta/meta.dart' show immutable, protected;
 
 import 'package:charts_common/common.dart' as common
@@ -57,6 +58,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     LayoutConfig layoutConfig,
     UserManagedState userManagedState,
     this.flipVerticalAxis,
+    Canvas canvas,
   }) : super(
           seriesList,
           animate: animate,
@@ -69,6 +71,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
           defaultInteractions: defaultInteractions,
           layoutConfig: layoutConfig,
           userManagedState: userManagedState,
+          canvas: canvas,
         );
 
   @override

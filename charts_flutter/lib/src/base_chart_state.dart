@@ -94,6 +94,7 @@ class BaseChartState<D> extends State<BaseChart<D>>
       rtl: Directionality.of(context) == TextDirection.rtl,
       rtlSpec: widget.rtlSpec,
       userManagedState: widget.userManagedState,
+      canvas: widget.canvas,
     );
     _oldWidget = widget;
 

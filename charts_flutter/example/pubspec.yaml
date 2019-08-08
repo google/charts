@@ -4,6 +4,7 @@ dependencies:
   charts_flutter:
     path: ../
   cupertino_icons: ^0.1.0
+  path_provider: any
   flutter:
     sdk: flutter
   flutter_test:
