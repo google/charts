@@ -28,6 +28,7 @@ import '../time/date_time_extents.dart' show DateTimeExtents;
 import '../time/date_time_tick_formatter.dart' show DateTimeTickFormatter;
 import '../time/day_time_stepper.dart' show DayTimeStepper;
 import '../time/minute_time_stepper.dart' show MinuteTimeStepper;
+import '../time/hour_time_stepper.dart' show HourTimeStepper;
 import '../time/hour_tick_formatter.dart' show HourTickFormatter;
 import '../time/time_range_tick_provider_impl.dart'
     show TimeRangeTickProviderImpl;
@@ -189,6 +190,33 @@ class MinuteTickProviderSpec implements DateTimeTickProviderSpec { //Added cloni
   @override
   bool operator ==(Object other) =>
       other is MinuteTickProviderSpec && increments == other.increments;
+
+  @override
+  int get hashCode => increments?.hashCode ?? 0;
+}
+
+@immutable
+class HourTickProviderSpec implements DateTimeTickProviderSpec { //Added cloning dayTick
+  final List<int> increments;
+
+  const HourTickProviderSpec({this.increments});
+
+  /// Creates a [TickProviderSpec] that dynamically chooses ticks based on the
+  /// extents of the data, limited to day increments.
+  ///
+  /// [increments] specify the number of hour increments that can be chosen from
+  /// when searching for the appropriate tick intervals.
+  @override
+  AutoAdjustingDateTimeTickProvider createTickProvider(ChartContext context) {
+    return new AutoAdjustingDateTimeTickProvider.createWith([
+      new TimeRangeTickProviderImpl(HourTimeStepper(context.dateTimeFactory,
+          allowedTickIncrements: increments))
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is HourTickProviderSpec && increments == other.increments;
 
   @override
   int get hashCode => increments?.hashCode ?? 0;

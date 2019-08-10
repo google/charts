@@ -65,6 +65,7 @@ export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
         DateTimeAxisSpec,
         DayTickProviderSpec,
         MinuteTickProviderSpec,
+        HourTickProviderSpec,
         AutoDateTimeTickFormatterSpec,
         AutoDateTimeTickProviderSpec,
         DateTimeEndPointsTickProviderSpec,
