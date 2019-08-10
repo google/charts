@@ -96,6 +96,7 @@ export 'package:charts_common/common.dart'
         MaxWidthStrategy,
         MeasureFormatter,
         MinuteTickProviderSpec,
+        HourTickProviderSpec,
         NoCornerStrategy,
         NoneRenderSpec,
         NumericAxis,
