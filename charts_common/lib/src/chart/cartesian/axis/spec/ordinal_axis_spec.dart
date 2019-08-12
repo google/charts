@@ -182,3 +182,24 @@ class FixedPixelSpaceOrdinalScaleSpec implements OrdinalScaleSpec {
   @override
   int get hashCode => 37;
 }
+
+/// [OrdinalScaleSpec] which allows setting bar width to be a fixed pixel size.
+@immutable
+class FixedPixelOrdinalScaleSpec implements OrdinalScaleSpec {
+  final double pixels;
+
+  const FixedPixelOrdinalScaleSpec(this.pixels);
+
+  @override
+  OrdinalScale createScale() {
+    SimpleOrdinalScale scale = new SimpleOrdinalScale();
+    scale.rangeBandConfig = new RangeBandConfig.fixedPixel(pixels);
+    return scale;
+  }
+
+  @override
+  bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
+
+  @override
+  int get hashCode => 37;
+}
