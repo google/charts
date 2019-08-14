@@ -134,9 +134,14 @@ class TextStyleSpec {
   final int fontSize;
   final double lineHeight;
   final Color color;
+  final String fontWeight;
 
   const TextStyleSpec(
-      {this.fontFamily, this.fontSize, this.lineHeight, this.color});
+      {this.fontFamily,
+      this.fontSize,
+      this.lineHeight,
+      this.color,
+      this.fontWeight});
 
   @override
   bool operator ==(Object other) {
@@ -145,7 +150,8 @@ class TextStyleSpec {
             fontFamily == other.fontFamily &&
             fontSize == other.fontSize &&
             lineHeight == other.lineHeight &&
-            color == other.color);
+            color == other.color &&
+            fontWeight == other.fontWeight);
   }
 
   @override
@@ -154,6 +160,7 @@ class TextStyleSpec {
     hashcode = (hashcode * 37) + fontSize?.hashCode ?? 0;
     hashcode = (hashcode * 37) + lineHeight?.hashCode ?? 0;
     hashcode = (hashcode * 37) + color?.hashCode ?? 0;
+    hashcode = (hashcode * 37) + fontWeight?.hashCode ?? 0;
     return hashcode;
   }
 }
