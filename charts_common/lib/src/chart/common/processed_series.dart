@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import '../../common/color.dart' show Color;
+import 'datum_details.dart' show DomainFormatter, MeasureFormatter;
 import '../../data/series.dart'
     show AccessorFn, Series, SeriesAttributes, AttributeKey;
 import '../cartesian/axis/axis.dart' show Axis;
@@ -36,10 +37,11 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<String> keyFn;
 
   AccessorFn<D> domainFn;
+  AccessorFn<DomainFormatter<D>> domainFormatterFn;
   AccessorFn<D> domainLowerBoundFn;
   AccessorFn<D> domainUpperBoundFn;
   AccessorFn<num> measureFn;
-  AccessorFn<String> measureFormatterFn;
+  AccessorFn<MeasureFormatter> measureFormatterFn;
   AccessorFn<num> measureLowerBoundFn;
   AccessorFn<num> measureUpperBoundFn;
   AccessorFn<num> measureOffsetFn;
@@ -210,13 +212,15 @@ abstract class ImmutableSeries<D> {
 
   AccessorFn<D> get domainFn;
 
+  AccessorFn<DomainFormatter<D>> get domainFormatterFn;
+
   AccessorFn<D> get domainLowerBoundFn;
 
   AccessorFn<D> get domainUpperBoundFn;
 
   AccessorFn<num> get measureFn;
 
-  AccessorFn<String> get measureFormatterFn;
+  AccessorFn<MeasureFormatter> get measureFormatterFn;
 
   AccessorFn<num> get measureLowerBoundFn;
 

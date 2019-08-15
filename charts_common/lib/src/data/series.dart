@@ -17,6 +17,8 @@ import 'package:meta/meta.dart';
 
 import '../chart/cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../chart/common/chart_canvas.dart' show FillPatternType;
+import '../chart/common/datum_details.dart'
+    show DomainFormatter, MeasureFormatter;
 import '../common/color.dart' show Color;
 import '../common/typed_registry.dart' show TypedRegistry, TypedKey;
 
@@ -55,10 +57,11 @@ class Series<T, D> {
   final AccessorFn<String> keyFn;
 
   final AccessorFn<D> domainFn;
+  final AccessorFn<DomainFormatter<D>> domainFormatterFn;
   final AccessorFn<D> domainLowerBoundFn;
   final AccessorFn<D> domainUpperBoundFn;
   final AccessorFn<num> measureFn;
-  final AccessorFn<String> measureFormatterFn;
+  final AccessorFn<MeasureFormatter> measureFormatterFn;
   final AccessorFn<num> measureLowerBoundFn;
   final AccessorFn<num> measureUpperBoundFn;
   final AccessorFn<num> measureOffsetFn;
@@ -107,6 +110,7 @@ class Series<T, D> {
       TypedAccessorFn<T, Color> areaColorFn,
       TypedAccessorFn<T, Color> colorFn,
       TypedAccessorFn<T, List<int>> dashPatternFn,
+      TypedAccessorFn<T, DomainFormatter<D>> domainFormatterFn,
       TypedAccessorFn<T, D> domainLowerBoundFn,
       TypedAccessorFn<T, D> domainUpperBoundFn,
       TypedAccessorFn<T, Color> fillColorFn,
@@ -115,7 +119,7 @@ class Series<T, D> {
       TypedAccessorFn<T, String> labelAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> insideLabelStyleAccessorFn,
       TypedAccessorFn<T, TextStyleSpec> outsideLabelStyleAccessorFn,
-      TypedAccessorFn<T, String> measureFormatterFn,
+      TypedAccessorFn<T, MeasureFormatter> measureFormatterFn,
       TypedAccessorFn<T, num> measureLowerBoundFn,
       TypedAccessorFn<T, num> measureUpperBoundFn,
       TypedAccessorFn<T, num> measureOffsetFn,
@@ -134,6 +138,9 @@ class Series<T, D> {
     final _dashPatternFn = dashPatternFn == null
         ? null
         : (int index) => dashPatternFn(data[index], index);
+    final _domainFormatterFn = domainFormatterFn == null
+        ? null
+        : (int index) => domainFormatterFn(data[index], index);
     final _domainLowerBoundFn = domainLowerBoundFn == null
         ? null
         : (int index) => domainLowerBoundFn(data[index], index);
@@ -183,6 +190,7 @@ class Series<T, D> {
       areaColorFn: _areaColorFn,
       colorFn: _colorFn,
       dashPatternFn: _dashPatternFn,
+      domainFormatterFn: _domainFormatterFn,
       domainLowerBoundFn: _domainLowerBoundFn,
       domainUpperBoundFn: _domainUpperBoundFn,
       fillColorFn: _fillColorFn,
@@ -211,6 +219,7 @@ class Series<T, D> {
     this.areaColorFn,
     this.colorFn,
     this.dashPatternFn,
+    this.domainFormatterFn,
     this.domainLowerBoundFn,
     this.domainUpperBoundFn,
     this.fillColorFn,

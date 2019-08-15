@@ -440,7 +440,9 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       final datumIndex = seriesDatum.index;
 
       final domain = series.domainFn(datumIndex);
+      final domainFormatterFn = series.domainFormatterFn;
       final measure = series.measureFn(datumIndex);
+      final measureFormatterFn = series.measureFormatterFn;
       final measureOffset = series.measureOffsetFn(datumIndex);
       final rawMeasure = series.rawMeasureFn(datumIndex);
       final color = series.colorFn(datumIndex);
@@ -451,8 +453,14 @@ abstract class CartesianChart<D> extends BaseChart<D> {
           new DatumDetails(
               datum: datum,
               domain: domain,
+              domainFormatter: domainFormatterFn != null
+                  ? domainFormatterFn(datumIndex)
+                  : null,
               index: datumIndex,
               measure: measure,
+              measureFormatter: measureFormatterFn != null
+                  ? measureFormatterFn(datumIndex)
+                  : null,
               measureOffset: measureOffset,
               rawMeasure: rawMeasure,
               series: series,
