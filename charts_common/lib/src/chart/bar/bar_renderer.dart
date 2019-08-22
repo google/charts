@@ -385,6 +385,10 @@ class BarRenderer<D>
       double previousBarGroupWeight,
       double barGroupWeight,
       int numBarGroups) {
+    // TODO: Investigate why this is negative for a DateTime domain
+    // in RTL mode.
+    domainWidth = domainWidth.abs();
+
     // If no weights were passed in, default to equal weight per bar.
     if (barGroupWeight == null) {
       barGroupWeight = 1 / numBarGroups;

@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
-import 'dart:math' show Point;
 
 import 'package:meta/meta.dart' show protected;
 
@@ -26,7 +25,7 @@ import '../common/chart_context.dart' show ChartContext;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show MutableSeries;
 import '../common/selection_model/selection_model.dart' show SelectionModelType;
-import '../common/series_renderer.dart' show SeriesRenderer;
+import '../common/series_renderer.dart' show SeriesRenderer, rendererIdKey;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
 import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import 'axis/axis.dart'
@@ -441,26 +440,34 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       final datumIndex = seriesDatum.index;
 
       final domain = series.domainFn(datumIndex);
+      final domainFormatterFn = series.domainFormatterFn;
       final measure = series.measureFn(datumIndex);
+      final measureFormatterFn = series.measureFormatterFn;
+      final measureOffset = series.measureOffsetFn(datumIndex);
       final rawMeasure = series.rawMeasureFn(datumIndex);
       final color = series.colorFn(datumIndex);
 
-      final domainPosition = series.getAttr(domainAxisKey).getLocation(domain);
-      final measurePosition =
-          series.getAttr(measureAxisKey).getLocation(measure);
+      final renderer = getSeriesRenderer(series.getAttr(rendererIdKey));
 
-      final chartPosition = new Point<double>(
-          vertical ? domainPosition : measurePosition,
-          vertical ? measurePosition : domainPosition);
+      final datumDetails = renderer.addPositionToDetailsForSeriesDatum(
+          new DatumDetails(
+              datum: datum,
+              domain: domain,
+              domainFormatter: domainFormatterFn != null
+                  ? domainFormatterFn(datumIndex)
+                  : null,
+              index: datumIndex,
+              measure: measure,
+              measureFormatter: measureFormatterFn != null
+                  ? measureFormatterFn(datumIndex)
+                  : null,
+              measureOffset: measureOffset,
+              rawMeasure: rawMeasure,
+              series: series,
+              color: color),
+          seriesDatum);
 
-      entries.add(new DatumDetails(
-          datum: datum,
-          domain: domain,
-          measure: measure,
-          rawMeasure: rawMeasure,
-          series: series,
-          color: color,
-          chartPosition: chartPosition));
+      entries.add(datumDetails);
     });
 
     return entries;

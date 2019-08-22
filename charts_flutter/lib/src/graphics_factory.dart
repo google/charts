@@ -15,30 +15,35 @@
 
 import 'package:charts_common/common.dart' as common
     show GraphicsFactory, LineStyle, TextElement, TextStyle;
-import 'package:flutter/widgets.dart' show BuildContext, MediaQuery;
+import 'package:flutter/widgets.dart'
+    show BuildContext, DefaultTextStyle, MediaQuery;
 import 'line_style.dart' show LineStyle;
 import 'text_element.dart' show TextElement;
 import 'text_style.dart' show TextStyle;
 
 class GraphicsFactory implements common.GraphicsFactory {
   final double textScaleFactor;
+  final DefaultTextStyle defaultTextStyle;
 
   GraphicsFactory(BuildContext context,
       {GraphicsFactoryHelper helper = const GraphicsFactoryHelper()})
-      : textScaleFactor = helper.getTextScaleFactorOf(context);
+      : textScaleFactor = helper.getTextScaleFactorOf(context),
+        defaultTextStyle = DefaultTextStyle.of(context);
 
   /// Returns a [TextStyle] object.
   @override
-  common.TextStyle createTextPaint() => new TextStyle();
+  common.TextStyle createTextPaint() =>
+      TextStyle()..fontFamily = defaultTextStyle.style.fontFamily;
 
   /// Returns a text element from [text] and [style].
   @override
   common.TextElement createTextElement(String text) {
-    return new TextElement(text, textScaleFactor: textScaleFactor);
+    return TextElement(text, textScaleFactor: textScaleFactor)
+      ..textStyle = createTextPaint();
   }
 
   @override
-  common.LineStyle createLinePaint() => new LineStyle();
+  common.LineStyle createLinePaint() => LineStyle();
 }
 
 /// Wraps the MediaQuery function to allow for testing.

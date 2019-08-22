@@ -14,6 +14,7 @@
 // limitations under the License.
 
 export 'src/chart/bar/bar_chart.dart' show BarChart;
+export 'src/chart/bar/bar_error_decorator.dart' show BarErrorDecorator;
 export 'src/chart/bar/bar_label_decorator.dart'
     show BarLabelAnchor, BarLabelDecorator, BarLabelPosition;
 export 'src/chart/bar/bar_lane_renderer_config.dart' show BarLaneRendererConfig;
@@ -40,15 +41,13 @@ export 'src/chart/cartesian/axis/axis.dart'
         NumericAxis,
         OrdinalAxis,
         OrdinalViewport;
-export 'src/chart/cartesian/axis/numeric_extents.dart' show NumericExtents;
 export 'src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
     show NoneRenderSpec;
 export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
-export 'src/chart/cartesian/axis/tick_formatter.dart'
-    show SimpleTickFormatterBase, TickFormatter;
+export 'src/chart/cartesian/axis/numeric_extents.dart' show NumericExtents;
 export 'src/chart/cartesian/axis/spec/axis_spec.dart'
     show
         AxisSpec,
@@ -69,6 +68,7 @@ export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
         DateTimeEndPointsTickProviderSpec,
         DateTimeTickFormatterSpec,
         DateTimeTickProviderSpec,
+        BasicDateTimeTickFormatterSpec,
         TimeFormatterSpec,
         StaticDateTimeTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/end_points_time_axis_spec.dart'
@@ -86,17 +86,23 @@ export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
     show
         BasicOrdinalTickProviderSpec,
         BasicOrdinalTickFormatterSpec,
+        FixedPixelOrdinalScaleSpec,
+        FixedPixelSpaceOrdinalScaleSpec,
         OrdinalAxisSpec,
         OrdinalTickFormatterSpec,
         OrdinalTickProviderSpec,
+        OrdinalScaleSpec,
+        SimpleOrdinalScaleSpec,
         StaticOrdinalTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
     show PercentAxisSpec;
+export 'src/chart/cartesian/axis/spec/tick_spec.dart' show TickSpec;
+export 'src/chart/cartesian/axis/tick_formatter.dart'
+    show SimpleTickFormatterBase, TickFormatter;
 export 'src/chart/cartesian/axis/time/date_time_extents.dart'
     show DateTimeExtents;
 export 'src/chart/cartesian/axis/time/date_time_tick_formatter.dart'
     show DateTimeTickFormatter;
-export 'src/chart/cartesian/axis/spec/tick_spec.dart' show TickSpec;
 export 'src/chart/cartesian/cartesian_chart.dart'
     show CartesianChart, NumericCartesianChart, OrdinalCartesianChart;
 export 'src/chart/cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
@@ -106,23 +112,28 @@ export 'src/chart/common/behavior/a11y/a11y_explore_behavior.dart'
 export 'src/chart/common/behavior/a11y/a11y_node.dart' show A11yNode;
 export 'src/chart/common/behavior/a11y/domain_a11y_explore_behavior.dart'
     show DomainA11yExploreBehavior, VocalizationCallback;
+export 'src/chart/common/behavior/a11y/keyboard_domain_navigator.dart'
+    show KeyboardDomainNavigator;
+export 'src/chart/common/behavior/calculation/percent_injector.dart'
+    show PercentInjector, PercentInjectorTotalType;
 export 'src/chart/common/behavior/chart_behavior.dart'
     show
         BehaviorPosition,
         ChartBehavior,
         InsideJustification,
         OutsideJustification;
-export 'src/chart/common/behavior/calculation/percent_injector.dart'
-    show PercentInjector, PercentInjectorTotalType;
+export 'src/chart/common/behavior/chart_title/chart_title.dart'
+    show ChartTitle, ChartTitleDirection;
 export 'src/chart/common/behavior/domain_highlighter.dart'
     show DomainHighlighter;
 export 'src/chart/common/behavior/initial_selection.dart' show InitialSelection;
+export 'src/chart/common/behavior/legend/datum_legend.dart' show DatumLegend;
 export 'src/chart/common/behavior/legend/legend.dart'
     show Legend, LegendCellPadding, LegendState, LegendTapHandling;
-export 'src/chart/common/behavior/legend/legend_entry.dart' show LegendEntry;
+export 'src/chart/common/behavior/legend/legend_entry.dart'
+    show LegendEntry, LegendCategory, LegendEntryBase;
 export 'src/chart/common/behavior/legend/legend_entry_generator.dart'
     show LegendEntryGenerator, LegendDefaultMeasure;
-export 'src/chart/common/behavior/legend/datum_legend.dart' show DatumLegend;
 export 'src/chart/common/behavior/legend/series_legend.dart' show SeriesLegend;
 export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter, LinePointHighlighterFollowLineType;
@@ -136,9 +147,6 @@ export 'src/chart/common/behavior/range_annotation.dart'
         RangeAnnotation,
         RangeAnnotationAxisType,
         RangeAnnotationSegment;
-export 'src/chart/common/behavior/sliding_viewport.dart' show SlidingViewport;
-export 'src/chart/common/behavior/chart_title/chart_title.dart'
-    show ChartTitle, ChartTitleDirection;
 export 'src/chart/common/behavior/selection/lock_selection.dart'
     show LockSelection;
 export 'src/chart/common/behavior/selection/select_nearest.dart'
@@ -152,6 +160,7 @@ export 'src/chart/common/behavior/slider/slider.dart'
         SliderListenerCallback,
         SliderListenerDragState,
         SliderStyle;
+export 'src/chart/common/behavior/sliding_viewport.dart' show SlidingViewport;
 export 'src/chart/common/behavior/zoom/initial_hint_behavior.dart'
     show InitialHintBehavior;
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
@@ -168,9 +177,9 @@ export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
 export 'src/chart/common/processed_series.dart'
     show ImmutableSeries, MutableSeries;
-export 'src/chart/common/series_datum.dart' show SeriesDatum, SeriesDatumConfig;
 export 'src/chart/common/selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType, SelectionModelListener;
+export 'src/chart/common/series_datum.dart' show SeriesDatum, SeriesDatumConfig;
 export 'src/chart/common/series_renderer.dart'
     show rendererIdKey, rendererKey, SeriesRenderer;
 export 'src/chart/common/series_renderer_config.dart'

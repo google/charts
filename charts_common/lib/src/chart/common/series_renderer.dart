@@ -186,6 +186,14 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     bool hasSpecifiedCategory = false;
 
     seriesList.forEach((MutableSeries<D> series) {
+      // Assign the seriesColor as the color of every datum if no colorFn was
+      // provided.
+      if (series.colorFn == null && series.seriesColor != null) {
+        series.colorFn = (_) => series.seriesColor;
+      }
+
+      // This series was missing both seriesColor and a colorFn. Add it to the
+      // "missing" set.
       if (series.colorFn == null) {
         // If there is no category, give it a default category to match logic.
         String category = series.seriesCategory;
@@ -213,6 +221,18 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
             final color = palettes[index % palettes.length].shadeDefault;
             index++;
             series.colorFn = (_) => color;
+            series.seriesColor ??= color;
+          } else {
+            // Fill in missing seriesColor values with the color of the first
+            // datum in the series. Note that [Series.colorFn] should always
+            // return a color.
+            if (series.seriesColor == null) {
+              try {
+                series.seriesColor = series.colorFn(0);
+              } catch (exception) {
+                series.seriesColor = StyleFactory.style.defaultSeriesColor;
+              }
+            }
           }
         });
         return;
@@ -257,6 +277,18 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         series.fillColorFn ??= (int index) => series.colorFn(index);
       });
     }
+
+    // Fill in any missing seriesColor values with the color of the first datum
+    // in the series. Note that [Series.colorFn] should always return a color.
+    seriesList.forEach((MutableSeries series) {
+      if (series.seriesColor == null) {
+        try {
+          series.seriesColor = series.colorFn(0);
+        } catch (exception) {
+          series.seriesColor = StyleFactory.style.defaultSeriesColor;
+        }
+      }
+    });
   }
 
   @override

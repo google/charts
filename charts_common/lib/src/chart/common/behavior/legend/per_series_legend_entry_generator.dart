@@ -31,6 +31,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   TextStyleSpec entryTextStyle;
   MeasureFormatter measureFormatter;
   MeasureFormatter secondaryMeasureFormatter;
+  bool showOverlaySeries = false; // Defaults to false.
 
   /// Option for showing measures when there is no selection.
   LegendDefaultMeasure legendDefaultMeasure;
@@ -38,8 +39,9 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   @override
   List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList) {
     final legendEntries = seriesList
+        .where((series) => showOverlaySeries || !series.overlaySeries)
         .map((series) => new LegendEntry<D>(series, series.displayName,
-            color: series.colorFn(0), textStyle: entryTextStyle))
+            color: series.seriesColor, textStyle: entryTextStyle))
         .toList();
 
     // Update with measures only if showing measure on no selection.

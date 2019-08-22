@@ -22,8 +22,12 @@ import '../ordinal_tick_provider.dart' show OrdinalTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../tick_formatter.dart' show OrdinalTickFormatter;
 import 'axis_spec.dart'
-    show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
+    show AxisSpec, TickProviderSpec, TickFormatterSpec, ScaleSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
+import '../ordinal_scale.dart' show OrdinalScale;
+import '../simple_ordinal_scale.dart' show SimpleOrdinalScale;
+import 'package:charts_common/src/chart/cartesian/axis/scale.dart'
+    show RangeBandConfig;
 
 /// [AxisSpec] specialized for ordinal/non-continuous axes typically for bars.
 @immutable
@@ -48,12 +52,14 @@ class OrdinalAxisSpec extends AxisSpec<String> {
     OrdinalTickProviderSpec tickProviderSpec,
     OrdinalTickFormatterSpec tickFormatterSpec,
     bool showAxisLine,
+    OrdinalScaleSpec scaleSpec,
     this.viewport,
   }) : super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec,
             tickFormatterSpec: tickFormatterSpec,
-            showAxisLine: showAxisLine);
+            showAxisLine: showAxisLine,
+            scaleSpec: scaleSpec);
 
   @override
   configure(Axis<String> axis, ChartContext context,
@@ -87,6 +93,8 @@ class OrdinalAxisSpec extends AxisSpec<String> {
 abstract class OrdinalTickProviderSpec extends TickProviderSpec<String> {}
 
 abstract class OrdinalTickFormatterSpec extends TickFormatterSpec<String> {}
+
+abstract class OrdinalScaleSpec extends ScaleSpec<String> {}
 
 @immutable
 class BasicOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
@@ -133,6 +141,64 @@ class BasicOrdinalTickFormatterSpec implements OrdinalTickFormatterSpec {
 
   @override
   bool operator ==(Object other) => other is BasicOrdinalTickFormatterSpec;
+
+  @override
+  int get hashCode => 37;
+}
+
+@immutable
+class SimpleOrdinalScaleSpec implements OrdinalScaleSpec {
+  const SimpleOrdinalScaleSpec();
+
+  @override
+  OrdinalScale createScale() => new SimpleOrdinalScale();
+
+  @override
+  bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
+
+  @override
+  int get hashCode => 37;
+}
+
+/// [OrdinalScaleSpec] which allows setting space between bars to be a fixed
+/// pixel size.
+@immutable
+class FixedPixelSpaceOrdinalScaleSpec implements OrdinalScaleSpec {
+  final double pixelSpaceBetweenBars;
+
+  const FixedPixelSpaceOrdinalScaleSpec(this.pixelSpaceBetweenBars);
+
+  @override
+  OrdinalScale createScale() {
+    SimpleOrdinalScale scale = new SimpleOrdinalScale();
+    scale.rangeBandConfig =
+        new RangeBandConfig.fixedPixelSpaceBetweenStep(pixelSpaceBetweenBars);
+    return scale;
+  }
+
+  @override
+  bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
+
+  @override
+  int get hashCode => 37;
+}
+
+/// [OrdinalScaleSpec] which allows setting bar width to be a fixed pixel size.
+@immutable
+class FixedPixelOrdinalScaleSpec implements OrdinalScaleSpec {
+  final double pixels;
+
+  const FixedPixelOrdinalScaleSpec(this.pixels);
+
+  @override
+  OrdinalScale createScale() {
+    SimpleOrdinalScale scale = new SimpleOrdinalScale();
+    scale.rangeBandConfig = new RangeBandConfig.fixedPixel(pixels);
+    return scale;
+  }
+
+  @override
+  bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
 
   @override
   int get hashCode => 37;

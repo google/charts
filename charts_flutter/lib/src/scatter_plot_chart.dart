@@ -46,7 +46,7 @@ class ScatterPlotChart extends CartesianChart<num> {
     List<SelectionModelConfig<num>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
-    bool defaultInteractions: true,
+    bool defaultInteractions = true,
     bool flipVerticalAxis,
     UserManagedState<num> userManagedState,
   }) : super(

@@ -72,7 +72,7 @@ abstract class BaseTimeStepper implements TimeStepper {
 
   DateTime getStepTimeAfterInclusive(DateTime time, int tickIncrement) {
     final boundedStart = getStepTimeBeforeInclusive(time, tickIncrement);
-    if (boundedStart == time) {
+    if (boundedStart.isAtSameMomentAs(time)) {
       return boundedStart;
     }
     return getNextStepTime(boundedStart, tickIncrement);

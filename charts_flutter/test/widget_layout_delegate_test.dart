@@ -41,7 +41,7 @@ void main() {
         {common.OutsideJustification outsideJustification,
         common.InsideJustification insideJustification,
         Rectangle<int> drawAreaBounds,
-        bool isRTL: false}) {
+        bool isRTL = false}) {
       // Create a mock buildable behavior that returns information about the
       // position and justification desired.
       final behavior = new MockBuildableBehavior();

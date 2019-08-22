@@ -29,6 +29,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   TextStyleSpec entryTextStyle;
   MeasureFormatter measureFormatter;
   MeasureFormatter secondaryMeasureFormatter;
+  bool showOverlaySeries;
 
   /// Option for showing measures when there is no selection.
   LegendDefaultMeasure legendDefaultMeasure;

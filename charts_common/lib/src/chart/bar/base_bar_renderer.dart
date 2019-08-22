@@ -162,7 +162,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         final details = getBaseDetails(datum, barIndex);
 
         details.barStackIndex = 0;
-        details.measureOffset = 0;
+        details.measureOffset = measureOffsetFn(barIndex);
 
         if (fillPatternFn != null) {
           details.fillPattern = fillPatternFn(barIndex);
@@ -327,7 +327,12 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       // Given that charts can only have one domain axis, just grab it from the
       // first series.
       final domainAxis = seriesList.first.getAttr(domainAxisKey);
-      domainAxis.setRangeBandConfig(new RangeBandConfig.styleAssignedPercent());
+      // rangeBandConfig is set when current config is not valid to render
+      // bars (this is necessary with combo charts that have NumericAxis)
+      if (!domainAxis.hasValidBarChartRangeBandConfig) {
+        domainAxis
+            .setRangeBandConfig(new RangeBandConfig.styleAssignedPercent());
+      }
     }
   }
 

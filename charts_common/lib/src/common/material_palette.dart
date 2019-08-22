@@ -37,42 +37,23 @@ class MaterialPalette {
   static Palette get teal => const MaterialTeal();
   static MaterialGray get gray => const MaterialGray();
 
+  // Lazily-instantiated iterable, to avoid allocating colors that are not used.
+  static final Iterable<Palette> _orderedPalettes = [
+    () => blue,
+    () => red,
+    () => yellow,
+    () => green,
+    () => purple,
+    () => cyan,
+    () => deepOrange,
+    () => lime,
+    () => indigo,
+    () => pink,
+    () => teal
+  ].map((f) => f());
+
   static List<Palette> getOrderedPalettes(int count) {
-    final orderedPalettes = <Palette>[];
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(blue);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(red);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(yellow);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(green);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(purple);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(cyan);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(deepOrange);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(lime);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(indigo);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(pink);
-    }
-    if (orderedPalettes.length < count) {
-      orderedPalettes.add(teal);
-    }
-    return orderedPalettes;
+    return _orderedPalettes.take(count).toList();
   }
 }
 
