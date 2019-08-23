@@ -42,7 +42,6 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
     int labelOffsetFromAxisPx,
     int labelOffsetFromTickPx,
     int minimumPaddingBetweenLabelsPx,
-    int labelRotation,
   }) : super(
             labelStyle: labelStyle,
             lineStyle: lineStyle,
@@ -51,7 +50,6 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-            labelRotation: labelRotation,
             tickLengthPx: tickLengthPx,
             axisLineStyle: axisLineStyle);
 
@@ -67,8 +65,7 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
           labelJustification: labelJustification,
           labelOffsetFromAxisPx: labelOffsetFromAxisPx,
           labelOffsetFromTickPx: labelOffsetFromTickPx,
-          minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-          labelRotation: labelRotation);
+          minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx);
 
   @override
   bool operator ==(Object other) {
@@ -102,7 +99,6 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
     int labelOffsetFromAxisPx,
     int labelOffsetFromTickPx,
     int minimumPaddingBetweenLabelsPx,
-    int labelRotation,
   }) : super(chartContext, graphicsFactory,
             labelStyleSpec: labelStyleSpec,
             axisLineStyleSpec: axisLineStyleSpec ?? lineStyleSpec,
@@ -110,8 +106,7 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
-            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-            labelRotation: labelRotation) {
+            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx) {
     lineStyle =
         StyleFactory.style.createGridlineStyle(graphicsFactory, lineStyleSpec);
 
