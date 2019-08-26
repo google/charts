@@ -13,25 +13,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable, required;
 import 'dart:math';
 
-import '../../../../common/style/style_factory.dart' show StyleFactory;
+import 'package:meta/meta.dart' show immutable, required;
+
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../../common/line_style.dart' show LineStyle;
+import '../../../../common/style/style_factory.dart' show StyleFactory;
 import '../../../common/chart_canvas.dart' show ChartCanvas;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show AxisOrientation;
 import '../spec/axis_spec.dart'
     show TextStyleSpec, LineStyleSpec, TickLabelAnchor, TickLabelJustification;
-import 'small_tick_draw_strategy.dart' show SmallTickRendererSpec;
 import '../tick.dart' show Tick;
 import 'base_tick_draw_strategy.dart' show BaseTickDrawStrategy;
+import 'small_tick_draw_strategy.dart' show SmallTickRendererSpec;
 import 'tick_draw_strategy.dart' show TickDrawStrategy;
 
 @immutable
 class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
-  GridlineRendererSpec({
+  const GridlineRendererSpec({
     TextStyleSpec labelStyle,
     LineStyleSpec lineStyle,
     LineStyleSpec axisLineStyle,
@@ -41,6 +42,7 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
     int labelOffsetFromAxisPx,
     int labelOffsetFromTickPx,
     int minimumPaddingBetweenLabelsPx,
+    int labelRotation,
   }) : super(
             labelStyle: labelStyle,
             lineStyle: lineStyle,
@@ -49,13 +51,14 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+            labelRotation: labelRotation,
             tickLengthPx: tickLengthPx,
             axisLineStyle: axisLineStyle);
 
   @override
   TickDrawStrategy<D> createDrawStrategy(
-          ChartContext chartContext, GraphicsFactory graphicsFactory) =>
-      new GridlineTickDrawStrategy<D>(chartContext, graphicsFactory,
+          ChartContext context, GraphicsFactory graphicsFactory) =>
+      new GridlineTickDrawStrategy<D>(context, graphicsFactory,
           tickLengthPx: tickLengthPx,
           lineStyleSpec: lineStyle,
           labelStyleSpec: labelStyle,
@@ -64,11 +67,13 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
           labelJustification: labelJustification,
           labelOffsetFromAxisPx: labelOffsetFromAxisPx,
           labelOffsetFromTickPx: labelOffsetFromTickPx,
-          minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx);
+          minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+          labelRotation: labelRotation);
 
   @override
   bool operator ==(Object other) {
-    return other is GridlineRendererSpec && super == (other);
+    return identical(this, other) ||
+        (other is GridlineRendererSpec && super == (other));
   }
 
   @override
@@ -97,6 +102,7 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
     int labelOffsetFromAxisPx,
     int labelOffsetFromTickPx,
     int minimumPaddingBetweenLabelsPx,
+    int labelRotation,
   }) : super(chartContext, graphicsFactory,
             labelStyleSpec: labelStyleSpec,
             axisLineStyleSpec: axisLineStyleSpec ?? lineStyleSpec,
@@ -104,7 +110,8 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
-            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx) {
+            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+            labelRotation: labelRotation) {
     lineStyle =
         StyleFactory.style.createGridlineStyle(graphicsFactory, lineStyleSpec);
 

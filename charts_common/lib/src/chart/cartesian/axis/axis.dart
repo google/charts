@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle, min, max;
+
 import 'package:meta/meta.dart' show protected, visibleForTesting;
 
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
@@ -30,19 +31,21 @@ import '../../layout/layout_view.dart'
         LayoutViewPositionOrder,
         ViewMeasuredSizes;
 import 'axis_tick.dart' show AxisTicks;
+import 'draw_strategy/small_tick_draw_strategy.dart' show SmallTickDrawStrategy;
+import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import 'linear/linear_scale.dart' show LinearScale;
-import 'ordinal_tick_provider.dart' show OrdinalTickProvider;
-import 'numeric_tick_provider.dart' show NumericTickProvider;
-import 'scale.dart' show MutableScale, ScaleOutputExtent, Scale;
 import 'numeric_extents.dart' show NumericExtents;
 import 'numeric_scale.dart' show NumericScale;
+import 'numeric_tick_provider.dart' show NumericTickProvider;
+import 'ordinal_tick_provider.dart' show OrdinalTickProvider;
+import 'scale.dart'
+    show MutableScale, RangeBandConfig, RangeBandType, ScaleOutputExtent, Scale;
 import 'simple_ordinal_scale.dart' show SimpleOrdinalScale;
+import 'ordinal_scale.dart' show OrdinalScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart'
     show TickFormatter, OrdinalTickFormatter, NumericTickFormatter;
 import 'tick_provider.dart' show TickProvider;
-import 'draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
-import 'draw_strategy/small_tick_draw_strategy.dart' show SmallTickDrawStrategy;
 
 const measureAxisIdKey = const AttributeKey<String>('Axis.measureAxisId');
 const measureAxisKey = const AttributeKey<Axis>('Axis.measureAxis');
@@ -78,11 +81,14 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   static const primaryMeasureAxisId = 'primaryMeasureAxisId';
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
 
-  final MutableScale<D> _scale;
+  MutableScale<D> _scale;
 
   /// [Scale] of this axis.
-  @protected
   MutableScale<D> get scale => _scale;
+
+  set scale(MutableScale<D> scale) {
+    _scale = scale;
+  }
 
   /// Previous [Scale] of this axis, used to calculate tick animation.
   MutableScale<D> _previousScale;
@@ -91,12 +97,14 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
   /// [TickProvider] for this axis.
   TickProvider<D> get tickProvider => _tickProvider;
+
   set tickProvider(TickProvider<D> tickProvider) {
     _tickProvider = tickProvider;
   }
 
   /// [TickFormatter] for this axis.
   TickFormatter<D> _tickFormatter;
+
   set tickFormatter(TickFormatter<D> formatter) {
     if (_tickFormatter != formatter) {
       _tickFormatter = formatter;
@@ -178,6 +186,16 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   bool get autoViewport => _autoViewport;
+
+  void setRangeBandConfig(RangeBandConfig rangeBandConfig) {
+    mutableScale.rangeBandConfig = rangeBandConfig;
+  }
+
+  /// For bars to be renderer properly the RangeBandConfig must be set and
+  /// type must not be RangeBandType.none.
+  bool get hasValidBarChartRangeBandConfig =>
+      (mutableScale?.rangeBandConfig?.type ?? RangeBandType.none) !=
+      RangeBandType.none;
 
   void addDomainValue(D domain) {
     if (lockAxis) {
@@ -526,7 +544,7 @@ class OrdinalAxis extends Axis<String> {
 
   void setScaleViewport(OrdinalViewport viewport) {
     autoViewport = false;
-    (_scale as SimpleOrdinalScale)
+    (_scale as OrdinalScale)
         .setViewport(viewport.dataSize, viewport.startingDomain);
   }
 
@@ -546,7 +564,7 @@ class OrdinalAxis extends Axis<String> {
     // By resetting the viewport after layout, we guarantee the correct range
     // was used to apply the viewport and behaviors that update the viewport
     // based on translate and scale changes will not be affected (pan/zoom).
-    (_scale as SimpleOrdinalScale).setViewport(null, null);
+    (_scale as OrdinalScale).setViewport(null, null);
   }
 }
 

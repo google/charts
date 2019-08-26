@@ -14,9 +14,9 @@
 // limitations under the License.
 
 import 'dart:math' show cos, min, sin, pi, Point, Rectangle;
+
 import 'package:meta/meta.dart' show immutable, required;
-import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
-import '../common/chart_canvas.dart' show ChartCanvas;
+
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/style/style_factory.dart' show StyleFactory;
@@ -24,6 +24,8 @@ import '../../common/text_element.dart'
     show MaxWidthStrategy, TextDirection, TextElement;
 import '../../common/text_style.dart' show TextStyle;
 import '../../data/series.dart' show AccessorFn;
+import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
+import '../common/chart_canvas.dart' show ChartCanvas;
 import 'arc_renderer.dart' show ArcRendererElementList;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
@@ -72,9 +74,9 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       {TextStyleSpec insideLabelStyleSpec,
       TextStyleSpec outsideLabelStyleSpec,
       ArcLabelLeaderLineStyleSpec leaderLineStyleSpec,
-      this.labelPosition: _defaultLabelPosition,
-      this.labelPadding: _defaultLabelPadding,
-      this.showLeaderLines: _defaultShowLeaderLines,
+      this.labelPosition = _defaultLabelPosition,
+      this.labelPadding = _defaultLabelPadding,
+      this.showLeaderLines = _defaultShowLeaderLines,
       Color leaderLineColor})
       : insideLabelStyleSpec = insideLabelStyleSpec ?? _defaultInsideLabelStyle,
         outsideLabelStyleSpec =
@@ -86,7 +88,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       GraphicsFactory graphicsFactory,
       {@required Rectangle drawBounds,
       @required double animationPercent,
-      bool rtl: false}) {
+      bool rtl = false}) {
     // Only decorate the arcs when animation is at 100%.
     if (animationPercent != 1.0) {
       return;
@@ -101,8 +103,8 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
 
     // Track the Y position of the previous outside label for collision
     // detection purposes.
-    var previousOutsideLabelY;
-    var previousLabelLeftOfChart;
+    num previousOutsideLabelY;
+    bool previousLabelLeftOfChart;
 
     for (var element in arcElements.arcs) {
       final labelFn = element.series.labelAccessorFn;
@@ -219,7 +221,8 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
     return graphicsFactory.createTextPaint()
       ..color = labelSpec?.color ?? Color.black
       ..fontFamily = labelSpec?.fontFamily
-      ..fontSize = labelSpec?.fontSize ?? 12;
+      ..fontSize = labelSpec?.fontSize ?? 12
+      ..lineHeight = labelSpec?.lineHeight;
   }
 
   /// Helper function to get datum specific style

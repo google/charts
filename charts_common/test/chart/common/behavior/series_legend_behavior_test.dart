@@ -22,6 +22,7 @@ import 'package:charts_common/src/chart/common/behavior/legend/legend_entry_gene
 import 'package:charts_common/src/chart/common/behavior/legend/series_legend.dart';
 import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
+import 'package:charts_common/src/chart/line/line_renderer.dart';
 import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:test/test.dart';
@@ -29,10 +30,15 @@ import 'package:test/test.dart';
 class ConcreteChart extends BaseChart<String> {
   List<MutableSeries<String>> _seriesList;
 
+  SeriesRenderer<String> _seriesRenderer = new LineRenderer<String>();
+
   ConcreteChart(this._seriesList);
 
   @override
-  SeriesRenderer<String> makeDefaultRenderer() => null;
+  SeriesRenderer<String> makeDefaultRenderer() => _seriesRenderer;
+
+  @override
+  SeriesRenderer<String> getSeriesRenderer(_) => _seriesRenderer;
 
   @override
   List<MutableSeries<String>> get currentSeriesList => _seriesList;
@@ -46,6 +52,10 @@ class ConcreteChart extends BaseChart<String> {
 
   void callOnDraw() {
     fireOnDraw(_seriesList);
+  }
+
+  void callConfigureSeries() {
+    configureSeries(_seriesList);
   }
 
   void callOnPreProcess() {
@@ -124,6 +134,7 @@ void main() {
     chart = new ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
     chart.callOnPostProcess();
 
@@ -151,6 +162,7 @@ void main() {
     chart = new ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
 
     expect(legend.isSeriesHidden('s1'), isFalse);
@@ -170,6 +182,7 @@ void main() {
     legend.attachTo(chart);
     legend.hideSeries('s1');
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
 
     expect(legend.isSeriesHidden('s1'), isTrue);
@@ -192,6 +205,7 @@ void main() {
     // First hide the series.
     legend.hideSeries('s1');
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
 
     expect(legend.isSeriesHidden('s1'), isTrue);
@@ -224,6 +238,7 @@ void main() {
     chart = new ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
     chart.callOnPostProcess();
     chart.getSelectionModel(selectionType).updateSelection([], [series1]);
@@ -253,6 +268,7 @@ void main() {
     // First hide the series.
     legend.hideSeries('s1');
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
 
     expect(legend.isSeriesHidden('s1'), isTrue);
@@ -266,6 +282,7 @@ void main() {
     final seriesList2 = [series1, series2];
     chart.seriesList = seriesList2;
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
 
     expect(legend.isSeriesHidden('s1'), isTrue);
@@ -279,6 +296,7 @@ void main() {
 
     chart.seriesList = seriesList3;
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
 
     expect(legend.isSeriesHidden('s2'), isFalse);
@@ -291,6 +309,7 @@ void main() {
     final seriesList4 = [series1, series2];
     chart.seriesList = seriesList4;
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
 
     expect(legend.isSeriesHidden('s1'), isFalse);
@@ -317,6 +336,7 @@ void main() {
     chart = new ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
     chart.callOnPostProcess();
     chart.getSelectionModel(selectionType).updateSelection(
@@ -350,6 +370,7 @@ void main() {
     chart = new ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
     chart.callOnPostProcess();
 
@@ -382,6 +403,7 @@ void main() {
     chart = new ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
     chart.callOnPostProcess();
 
@@ -414,6 +436,7 @@ void main() {
     chart = new ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
     chart.callOnPostProcess();
 
@@ -446,6 +469,7 @@ void main() {
     chart = new ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
+    chart.callConfigureSeries();
     chart.callOnPreProcess();
     chart.callOnPostProcess();
 

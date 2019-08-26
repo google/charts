@@ -47,7 +47,7 @@ class NumericComboChart extends CartesianChart<num> {
     List<SelectionModelConfig<num>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
-    bool defaultInteractions: true,
+    bool defaultInteractions = true,
   }) : super(
           seriesList,
           animate: animate,
@@ -92,7 +92,7 @@ class OrdinalComboChart extends CartesianChart<String> {
     List<SelectionModelConfig<String>> selectionModels,
     common.RTLSpec rtlSpec,
     LayoutConfig layoutConfig,
-    bool defaultInteractions: true,
+    bool defaultInteractions = true,
   }) : super(
           seriesList,
           animate: animate,

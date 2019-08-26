@@ -67,7 +67,8 @@ void main() {
   /////////////////////////////////////////
   _configureBaseRenderer(BaseBarRenderer renderer, bool vertical) {
     final context = new MockContext();
-    when(context.rtl).thenReturn(false);
+    when(context.chartContainerIsRtl).thenReturn(false);
+    when(context.isRtl).thenReturn(false);
     final verticalChart = new MockChart();
     when(verticalChart.vertical).thenReturn(vertical);
     when(verticalChart.context).thenReturn(context);

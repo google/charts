@@ -28,5 +28,5 @@ class TickSpec<D> {
   /// of the axis.
   /// [style] optional style for this tick. If not set, uses the style of the
   /// axis.
-  TickSpec(this.value, {this.label, this.style});
+  const TickSpec(this.value, {this.label, this.style});
 }

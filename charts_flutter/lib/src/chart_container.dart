@@ -16,6 +16,7 @@
 import 'package:charts_common/common.dart' as common
     show
         A11yNode,
+        AxisDirection,
         BaseChart,
         ChartContext,
         DateTimeFactory,
@@ -74,7 +75,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   common.BaseChart<D> _chart;
   List<common.Series<dynamic, D>> _seriesList;
   ChartState _chartState;
-  bool _rtl;
+  bool _chartContainerIsRtl = false;
   common.RTLSpec _rtlSpec;
   common.DateTimeFactory _dateTimeFactory;
   bool _exploreMode = false;
@@ -114,8 +115,9 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     config.chartWidget
         .updateCommonChart(_chart, config.oldChartWidget, _chartState);
 
-    _rtl = config.rtl;
     _rtlSpec = config.rtlSpec ?? const common.RTLSpec();
+    _chartContainerIsRtl = config.rtl ?? false;
+
     common.Performance.timeEnd('chartsConfig');
 
     // If the configuration is changed more frequently than the threshold,
@@ -144,6 +146,10 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
             ' or renderer config is missing equality checks that may be causing'
             ' configuration to be detected as changed. ');
       }
+    }
+
+    if (_chartState.chartIsDirty) {
+      _chart.configurationChanged();
     }
 
     // If series list changes or other configuration changed that triggered the
@@ -284,10 +290,18 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   double get pixelsPerDp => 1.0;
 
   @override
-  bool get rtl => _rtl;
+  bool get chartContainerIsRtl => _chartContainerIsRtl;
 
   @override
   common.RTLSpec get rtlSpec => _rtlSpec;
+
+  @override
+  bool get isRtl =>
+      _chartContainerIsRtl &&
+      _rtlSpec?.axisDirection == common.AxisDirection.reversed;
+
+  @override
+  bool get isTappable => _chart.isTappable;
 
   @override
   common.DateTimeFactory get dateTimeFactory => _dateTimeFactory;
@@ -296,7 +310,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
   common.ProxyGestureListener get gestureProxy => _chart.gestureProxy;
 
   TextDirection get textDirection =>
-      rtl ? TextDirection.rtl : TextDirection.ltr;
+      _chartContainerIsRtl ? TextDirection.rtl : TextDirection.ltr;
 
   @override
   void enableA11yExploreMode(List<common.A11yNode> nodes,
@@ -363,7 +377,7 @@ class ChartContainerCustomPaint extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     common.Performance.time('chartsPaint');
-    final chartsCanvas = new ChartCanvas(canvas);
+    final chartsCanvas = new ChartCanvas(canvas, chart.graphicsFactory);
     chart.paint(chartsCanvas);
     common.Performance.timeEnd('chartsPaint');
   }

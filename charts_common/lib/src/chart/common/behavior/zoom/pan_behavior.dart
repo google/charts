@@ -18,8 +18,8 @@ import 'dart:math' show Point;
 import 'package:meta/meta.dart' show protected;
 
 import '../../../../common/gesture_listener.dart' show GestureListener;
-import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../../cartesian/axis/axis.dart' show Axis;
+import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../base_chart.dart' show BaseChart;
 import '../chart_behavior.dart' show ChartBehavior;
 import 'panning_tick_provider.dart';

@@ -39,12 +39,12 @@ class PercentAxisSpec extends NumericAxisSpec {
   }) : super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec ??
-                new BasicNumericTickProviderSpec(dataIsInWholeNumbers: false),
+                const BasicNumericTickProviderSpec(dataIsInWholeNumbers: false),
             tickFormatterSpec: tickFormatterSpec ??
                 new BasicNumericTickFormatterSpec.fromNumberFormat(
                     new NumberFormat.percentPattern()),
             showAxisLine: showAxisLine,
-            viewport: viewport ??= const NumericExtents(0.0, 1.0));
+            viewport: viewport ?? const NumericExtents(0.0, 1.0));
 
   @override
   bool operator ==(Object other) =>

@@ -167,13 +167,11 @@ class ViewMeasuredSizes {
   /// [minWidth] the component's minimum width. If not set, default to 0.
   /// [minHeight] the component's minimum height. If not set, default to 0.
   const ViewMeasuredSizes(
-      {@required int preferredWidth,
-      @required int preferredHeight,
+      {@required this.preferredWidth,
+      @required this.preferredHeight,
       int minWidth,
       int minHeight})
-      : preferredWidth = preferredWidth,
-        preferredHeight = preferredHeight,
-        minWidth = minWidth ?? 0,
+      : minWidth = minWidth ?? 0,
         minHeight = minHeight ?? 0;
 }
 

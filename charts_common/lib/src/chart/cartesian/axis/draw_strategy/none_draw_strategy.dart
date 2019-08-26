@@ -17,19 +17,18 @@ import 'dart:math';
 
 import 'package:meta/meta.dart' show immutable, required;
 
+import '../../../../common/color.dart' show Color;
+import '../../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../../common/line_style.dart' show LineStyle;
+import '../../../../common/style/style_factory.dart' show StyleFactory;
+import '../../../../common/text_style.dart' show TextStyle;
+import '../../../common/chart_canvas.dart' show ChartCanvas;
+import '../../../common/chart_context.dart' show ChartContext;
+import '../../../layout/layout_view.dart' show ViewMeasuredSizes;
 import '../axis.dart' show AxisOrientation;
 import '../collision_report.dart' show CollisionReport;
 import '../spec/axis_spec.dart' show RenderSpec, LineStyleSpec;
 import '../tick.dart' show Tick;
-import '../../../common/chart_canvas.dart' show ChartCanvas;
-import '../../../common/chart_context.dart' show ChartContext;
-import '../../../layout/layout_view.dart' show ViewMeasuredSizes;
-import '../../../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../../../common/color.dart' show Color;
-import '../../../../common/line_style.dart' show LineStyle;
-import '../../../../common/text_style.dart' show TextStyle;
-import '../../../../common/style/style_factory.dart' show StyleFactory;
-
 import 'tick_draw_strategy.dart';
 
 /// Renders no ticks no labels, and claims no space in layout.
@@ -38,16 +37,17 @@ import 'tick_draw_strategy.dart';
 class NoneRenderSpec<D> extends RenderSpec<D> {
   final LineStyleSpec axisLineStyle;
 
-  NoneRenderSpec({this.axisLineStyle});
+  const NoneRenderSpec({this.axisLineStyle});
 
   @override
   TickDrawStrategy<D> createDrawStrategy(
-          ChartContext chartContext, GraphicsFactory graphicsFactory) =>
-      new NoneDrawStrategy<D>(chartContext, graphicsFactory,
+          ChartContext context, GraphicsFactory graphicFactory) =>
+      new NoneDrawStrategy<D>(context, graphicFactory,
           axisLineStyleSpec: axisLineStyle);
 
   @override
-  bool operator ==(Object other) => other is NoneRenderSpec;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is NoneRenderSpec;
 
   @override
   int get hashCode => 0;

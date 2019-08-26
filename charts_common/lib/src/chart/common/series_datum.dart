@@ -43,10 +43,10 @@ class SeriesDatumConfig<D> {
   SeriesDatumConfig(this.seriesId, this.domainValue);
 
   @override
-  bool operator ==(Object o) {
-    return o is SeriesDatumConfig &&
-        seriesId == o.seriesId &&
-        domainValue == o.domainValue;
+  bool operator ==(Object other) {
+    return other is SeriesDatumConfig &&
+        seriesId == other.seriesId &&
+        domainValue == other.domainValue;
   }
 
   @override

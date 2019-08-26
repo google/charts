@@ -13,16 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'base_bar_renderer_config.dart' show BarGroupingType;
+import '../../common/color.dart' show Color;
+import '../../common/style/style_factory.dart' show StyleFactory;
+import '../../common/symbol_renderer.dart';
+import '../common/chart_canvas.dart' show FillPatternType;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import 'bar_label_decorator.dart' show BarLabelDecorator;
 import 'bar_lane_renderer.dart' show BarLaneRenderer;
 import 'bar_renderer_config.dart' show BarRendererConfig, CornerStrategy;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
-import '../common/chart_canvas.dart' show FillPatternType;
-import '../layout/layout_view.dart' show LayoutViewPaintOrder;
-import '../../common/color.dart' show Color;
-import '../../common/style/style_factory.dart' show StyleFactory;
-import '../../common/symbol_renderer.dart';
+import 'base_bar_renderer_config.dart' show BarGroupingType;
 
 /// Configuration for a bar lane renderer.
 class BarLaneRendererConfig extends BarRendererConfig<String> {
@@ -80,17 +80,17 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   }
 
   @override
-  bool operator ==(o) {
-    if (identical(this, o)) {
+  bool operator ==(other) {
+    if (identical(this, other)) {
       return true;
     }
-    if (!(o is BarLaneRendererConfig)) {
+    if (!(other is BarLaneRendererConfig)) {
       return false;
     }
-    return o.backgroundBarColor == backgroundBarColor &&
-        o.emptyLaneLabel == emptyLaneLabel &&
-        o.mergeEmptyLanes == mergeEmptyLanes &&
-        super == (o);
+    return other.backgroundBarColor == backgroundBarColor &&
+        other.emptyLaneLabel == emptyLaneLabel &&
+        other.mergeEmptyLanes == mergeEmptyLanes &&
+        super == (other);
   }
 
   @override

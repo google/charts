@@ -15,7 +15,6 @@
 
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../axis.dart' show Axis;
-import '../scale.dart' show RangeBandConfig;
 import '../tick_formatter.dart' show TickFormatter;
 import '../tick_provider.dart' show TickProvider;
 import 'auto_adjusting_date_time_tick_provider.dart'
@@ -38,9 +37,5 @@ class DateTimeAxis extends Axis<DateTime> {
 
   void setScaleViewport(DateTimeExtents viewport) {
     (mutableScale as DateTimeScale).viewportDomain = viewport;
-  }
-
-  void setRangeBandConfig(RangeBandConfig rangeBandConfig) {
-    mutableScale.rangeBandConfig = rangeBandConfig;
   }
 }

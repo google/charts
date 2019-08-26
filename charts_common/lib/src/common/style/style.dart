@@ -28,7 +28,9 @@ import '../palette.dart';
 /// Get or set the [Style] that is used for the app using [StyleFactory.style].
 abstract class Style {
   Color get black;
+
   Color get transparent;
+
   Color get white;
 
   /// Gets list with [count] of palettes.
@@ -62,6 +64,10 @@ abstract class Style {
   /// Default color for outside label leader lines for [ArcLabelDecorator].
   Color get arcLabelOutsideLeaderLine;
 
+  /// Default series color for legends, used as a fallback when a series has no
+  /// data.
+  Color get defaultSeriesColor;
+
   /// Default color for entry text for [Legend].
   Color get legendEntryTextColor;
 
@@ -82,4 +88,10 @@ abstract class Style {
 
   /// Default stroke color for [Slider].
   Color get sliderStrokeColor;
+
+  /// Default background color for the chart.
+  Color get chartBackgroundColor;
+
+  /// The width of the band specified as fraction of step.
+  double get rangeBandSize;
 }

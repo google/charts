@@ -1,6 +1,6 @@
 # Legend Options Legends Example
 
-![](legend_options_full.png)
+![](series_legend_options_full.png)
 
 Example:
 

@@ -15,14 +15,14 @@
 
 import 'dart:math';
 
-import 'selection_trigger.dart' show SelectionTrigger;
-import '../../base_chart.dart' show BaseChart;
-import '../../datum_details.dart' show DatumDetails;
-import '../../behavior/chart_behavior.dart' show ChartBehavior;
-import '../../processed_series.dart' show ImmutableSeries;
-import '../../series_datum.dart' show SeriesDatum;
-import '../../selection_model/selection_model.dart' show SelectionModelType;
 import '../../../../common/gesture_listener.dart' show GestureListener;
+import '../../base_chart.dart' show BaseChart;
+import '../../behavior/chart_behavior.dart' show ChartBehavior;
+import '../../datum_details.dart' show DatumDetails;
+import '../../processed_series.dart' show ImmutableSeries;
+import '../../selection_model/selection_model.dart' show SelectionModelType;
+import '../../series_datum.dart' show SeriesDatum;
+import 'selection_trigger.dart' show SelectionTrigger;
 
 /// Chart behavior that listens to the given eventTrigger and updates the
 /// specified [SelectionModel]. This is used to pair input events to behaviors
@@ -173,8 +173,24 @@ class SelectNearest<D> implements ChartBehavior<D> {
             ? _expandToDomain(details.first)
             : [new SeriesDatum<D>(details.first.series, details.first.datum)];
 
+        // Filter out points from overlay series.
+        seriesDatumList
+            .removeWhere((SeriesDatum<D> datum) => datum.series.overlaySeries);
+
         if (selectClosestSeries && seriesList.isEmpty) {
-          seriesList.add(details.first.series);
+          if (details.first.series.overlaySeries) {
+            // If the closest "details" was from an overlay series, grab the
+            // closest remaining series instead. In this case, we need to sort a
+            // copy of the list by domain distance because we do not want to
+            // re-order the actual return values here.
+            final sortedSeriesDatumList =
+                new List<SeriesDatum<D>>.from(seriesDatumList);
+            sortedSeriesDatumList.sort((a, b) =>
+                a.datum.domainDistance.compareTo(b.datum.domainDistance));
+            seriesList.add(sortedSeriesDatumList.first.series);
+          } else {
+            seriesList.add(details.first.series);
+          }
         }
       }
     }
@@ -258,11 +274,26 @@ class SelectNearest<D> implements ChartBehavior<D> {
   void attachTo(BaseChart<D> chart) {
     _chart = chart;
     chart.addGestureListener(_listener);
+
+    // TODO: Update this dynamically based on tappable location.
+    switch (this.eventTrigger) {
+      case SelectionTrigger.tap:
+      case SelectionTrigger.tapAndDrag:
+      case SelectionTrigger.pressHold:
+      case SelectionTrigger.longPressHold:
+        chart.registerTappable(this);
+        break;
+      case SelectionTrigger.hover:
+      default:
+        chart.unregisterTappable(this);
+        break;
+    }
   }
 
   @override
   void removeFrom(BaseChart<D> chart) {
     chart.removeGestureListener(_listener);
+    chart.unregisterTappable(this);
     _chart = null;
   }
 

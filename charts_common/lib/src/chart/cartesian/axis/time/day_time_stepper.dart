@@ -35,7 +35,7 @@ class DayTimeStepper extends BaseTimeStepper {
     allowedTickIncrements ??= _defaultIncrements;
 
     // Must have at least one increment option.
-    assert(allowedTickIncrements.length > 0);
+    assert(allowedTickIncrements.isNotEmpty);
     // All increments must be > 0.
     assert(allowedTickIncrements.any((increment) => increment <= 0) == false);
 

@@ -1,11 +1,9 @@
+.dart_tool/
+.packages
+pubspec.lock
+
 .bundle
 _site
-
-.DS_Store
-.dart_tool/
-
-.packages
-.pub/
 
 build/
 **/ios/.generated/

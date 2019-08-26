@@ -74,7 +74,8 @@ void main() {
   /////////////////////////////////////////
   _configureBaseRenderer(BaseBarRenderer renderer, bool vertical) {
     final context = new MockContext();
-    when(context.rtl).thenReturn(false);
+    when(context.chartContainerIsRtl).thenReturn(false);
+    when(context.isRtl).thenReturn(false);
     final verticalChart = new MockChart();
     when(verticalChart.vertical).thenReturn(vertical);
     when(verticalChart.context).thenReturn(context);
@@ -876,6 +877,29 @@ void main() {
       renderer.paintBarCallCount = 0;
       renderer.paint(canvas, 1.0);
       expect(renderer.paintBarCallCount, equals(3));
+    });
+  });
+
+  group('renderer configuration', () {
+    test('NoCornerStrategy always equals', () {
+      final strategyOne = NoCornerStrategy();
+      final strategyTwo = NoCornerStrategy();
+
+      expect(strategyOne, equals(strategyTwo));
+    });
+
+    test('CornerStrategy with same radius is equals', () {
+      final strategyOne = ConstCornerStrategy(1);
+      final strategyTwo = ConstCornerStrategy(1);
+
+      expect(strategyOne, equals(strategyTwo));
+    });
+
+    test('CornerStrategy with different radius is not equal', () {
+      final strategyOne = ConstCornerStrategy(1);
+      final strategyTwo = ConstCornerStrategy(2);
+
+      expect(strategyOne, isNot(equals(strategyTwo)));
     });
   });
 }

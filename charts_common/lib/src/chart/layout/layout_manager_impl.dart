@@ -13,12 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
 import 'dart:math' show Point, Rectangle, max;
-import 'layout_view.dart' show LayoutView, LayoutPosition;
+
+import 'package:meta/meta.dart' show required;
+
 import 'layout_config.dart' show LayoutConfig;
 import 'layout_manager.dart';
 import 'layout_margin_strategy.dart';
+import 'layout_view.dart' show LayoutView, LayoutPosition;
 
 /// Default Layout manager for [LayoutView]s.
 class LayoutManagerImpl implements LayoutManager {
@@ -115,10 +117,16 @@ class LayoutManagerImpl implements LayoutManager {
     final drawableViews =
         _views.where((LayoutView view) => view.isSeriesRenderer);
 
-    var componentBounds = drawableViews.first.componentBounds;
+    var componentBounds = drawableViews?.first?.componentBounds;
 
-    for (LayoutView view in drawableViews.skip(1)) {
-      componentBounds = componentBounds.boundingBox(view.componentBounds);
+    if (componentBounds != null) {
+      for (LayoutView view in drawableViews.skip(1)) {
+        if (view.componentBounds != null) {
+          componentBounds = componentBounds.boundingBox(view.componentBounds);
+        }
+      }
+    } else {
+      componentBounds = new Rectangle(0, 0, 0, 0);
     }
 
     return componentBounds;
