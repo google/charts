@@ -91,8 +91,6 @@ class TimeSeriesBar extends StatelessWidget {
       // Set the default renderer to a bar renderer.
       // This can also be one of the custom renderers of the time series chart.
       defaultRenderer: new charts.BarRendererConfig<DateTime>(),
-      // Indicate that this time axis is being used with a bar renderer.
-      domainAxis: new charts.DateTimeAxisSpec(usingBarRenderer: true),
       // It is recommended that default interactions be turned off if using bar
       // renderer, because the line point highlighter is the default for time
       // series chart.

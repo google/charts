@@ -13,12 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'base_bar_renderer_config.dart'
-    show BarGroupingType, BaseBarRendererConfig;
-import 'bar_target_line_renderer.dart' show BarTargetLineRenderer;
-import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import '../../common/symbol_renderer.dart'
     show SymbolRenderer, LineSymbolRenderer;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
+import 'bar_target_line_renderer.dart' show BarTargetLineRenderer;
+import 'base_bar_renderer_config.dart'
+    show BarGroupingType, BaseBarRendererConfig;
 
 /// Configuration for a bar target line renderer.
 class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
@@ -68,17 +68,17 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   }
 
   @override
-  bool operator ==(o) {
-    if (identical(this, o)) {
+  bool operator ==(other) {
+    if (identical(this, other)) {
       return true;
     }
-    if (!(o is BarTargetLineRendererConfig)) {
+    if (!(other is BarTargetLineRendererConfig)) {
       return false;
     }
-    return o.overDrawOuterPx == overDrawOuterPx &&
-        o.overDrawPx == overDrawPx &&
-        o.roundEndCaps == roundEndCaps &&
-        super == (o);
+    return other.overDrawOuterPx == overDrawOuterPx &&
+        other.overDrawPx == overDrawPx &&
+        other.roundEndCaps == roundEndCaps &&
+        super == (other);
   }
 
   @override

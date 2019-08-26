@@ -108,7 +108,8 @@ void main() {
     when(graphicsFactory.createTextPaint()).thenReturn(new MockTextStyle());
 
     chartContext = new MockContext();
-    when(chartContext.rtl).thenReturn(false);
+    when(chartContext.chartContainerIsRtl).thenReturn(false);
+    when(chartContext.isRtl).thenReturn(false);
   });
 
   group('collision detection - vertically drawn axis', () {

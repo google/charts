@@ -15,11 +15,14 @@
 
 import 'package:flutter/material.dart';
 import '../gallery_scaffold.dart';
-import 'simple_series_legend.dart';
-import 'legend_options.dart';
-import 'legend_custom_symbol.dart';
-import 'legend_with_measures.dart';
+import 'datum_legend_options.dart';
+import 'datum_legend_with_measures.dart';
 import 'default_hidden_series_legend.dart';
+import 'legend_custom_symbol.dart';
+import 'series_legend_options.dart';
+import 'series_legend_with_measures.dart';
+import 'simple_datum_legend.dart';
+import 'simple_series_legend.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -53,6 +56,25 @@ List<GalleryScaffold> buildGallery() {
       title: 'Series legend with measures',
       subtitle: 'Series legend with measures and measure formatting',
       childBuilder: () => new LegendWithMeasures.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart),
+      title: 'Datum Legend',
+      subtitle: 'A datum legend for a pie chart with default settings',
+      childBuilder: () => new SimpleDatumLegend.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart),
+      title: 'Datum Legend Options',
+      subtitle:
+          'A datum legend with custom positioning and spacing for a pie chart',
+      childBuilder: () => new DatumLegendOptions.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Icon(Icons.pie_chart),
+      title: 'Datum legend with measures',
+      subtitle: 'Datum legend with measures and measure formatting',
+      childBuilder: () => new DatumLegendWithMeasures.withRandomData(),
     ),
   ];
 }

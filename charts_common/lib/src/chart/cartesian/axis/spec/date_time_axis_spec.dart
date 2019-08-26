@@ -14,26 +14,28 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show immutable;
+import 'package:intl/intl.dart' show DateFormat;
 
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis;
-import '../scale.dart' show RangeBandConfig;
+import '../end_points_tick_provider.dart' show EndPointsTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../time/auto_adjusting_date_time_tick_provider.dart'
     show AutoAdjustingDateTimeTickProvider;
 import '../time/date_time_axis.dart' show DateTimeAxis;
 import '../time/date_time_extents.dart' show DateTimeExtents;
+import '../time/date_time_tick_formatter.dart' show DateTimeTickFormatter;
+import '../time/day_time_stepper.dart' show DayTimeStepper;
+import '../time/hour_tick_formatter.dart' show HourTickFormatter;
+import '../time/simple_time_tick_formatter.dart'
+    show DateTimeFormatterFunction, SimpleTimeTickFormatter;
 import '../time/time_range_tick_provider_impl.dart'
     show TimeRangeTickProviderImpl;
-import '../time/day_time_stepper.dart' show DayTimeStepper;
-import '../time/date_time_tick_formatter.dart' show DateTimeTickFormatter;
-import '../time/hour_tick_formatter.dart' show HourTickFormatter;
 import '../time/time_tick_formatter.dart' show TimeTickFormatter;
 import '../time/time_tick_formatter_impl.dart'
     show CalendarField, TimeTickFormatterImpl;
-import '../end_points_tick_provider.dart' show EndPointsTickProvider;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
@@ -46,12 +48,6 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// If pan / zoom behaviors are set, this is the initial viewport.
   final DateTimeExtents viewport;
 
-  /// If set, modifies the scale's range band on [configure].
-  ///
-  /// When using the date time axis with a bar renderer, the range band has to
-  /// be modified to styleAssignedPercent.
-  final RangeBandConfig rangeBandConfig;
-
   /// Creates a [AxisSpec] that specialized for timeseries charts.
   ///
   /// [renderSpec] spec used to configure how the ticks and labels
@@ -63,17 +59,13 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   ///     are formatted.
   /// [showAxisLine] override to force the axis to draw the axis
   ///     line.
-  DateTimeAxisSpec({
+  const DateTimeAxisSpec({
     RenderSpec<DateTime> renderSpec,
     DateTimeTickProviderSpec tickProviderSpec,
     DateTimeTickFormatterSpec tickFormatterSpec,
     bool showAxisLine,
     this.viewport,
-    bool usingBarRenderer = false,
-  })  : rangeBandConfig = usingBarRenderer
-            ? new RangeBandConfig.styleAssignedPercent()
-            : null,
-        super(
+  }) : super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec,
             tickFormatterSpec: tickFormatterSpec,
@@ -84,13 +76,8 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
       GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 
-    if (axis is DateTimeAxis) {
-      if (viewport != null) {
-        axis.setScaleViewport(viewport);
-      }
-      if (rangeBandConfig != null) {
-        axis.setRangeBandConfig(rangeBandConfig);
-      }
+    if (axis is DateTimeAxis && viewport != null) {
+      axis.setScaleViewport(viewport);
     }
   }
 
@@ -132,7 +119,7 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
   ///
   /// [includeTime] - flag that indicates whether the time should be
   /// included when choosing appropriate tick intervals.
-  AutoDateTimeTickProviderSpec({this.includeTime = true});
+  const AutoDateTimeTickProviderSpec({this.includeTime = true});
 
   @override
   AutoAdjustingDateTimeTickProvider createTickProvider(ChartContext context) {
@@ -157,7 +144,8 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
 @immutable
 class DayTickProviderSpec implements DateTimeTickProviderSpec {
   final List<int> increments;
-  DayTickProviderSpec({this.increments});
+
+  const DayTickProviderSpec({this.increments});
 
   /// Creates a [TickProviderSpec] that dynamically chooses ticks based on the
   /// extents of the data, limited to day increments.
@@ -184,7 +172,7 @@ class DayTickProviderSpec implements DateTimeTickProviderSpec {
 /// range.
 @immutable
 class DateTimeEndPointsTickProviderSpec implements DateTimeTickProviderSpec {
-  DateTimeEndPointsTickProviderSpec();
+  const DateTimeEndPointsTickProviderSpec();
 
   /// Creates a [TickProviderSpec] that dynamically chooses time ticks at the
   /// two end points of the axis range
@@ -202,7 +190,7 @@ class DateTimeEndPointsTickProviderSpec implements DateTimeTickProviderSpec {
 class StaticDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
   final List<TickSpec<DateTime>> tickSpecs;
 
-  StaticDateTimeTickProviderSpec(this.tickSpecs);
+  const StaticDateTimeTickProviderSpec(this.tickSpecs);
 
   @override
   StaticTickProvider<DateTime> createTickProvider(ChartContext context) =>
@@ -235,7 +223,8 @@ class TimeFormatterSpec {
   /// [noonFormat] [DateFormat] format string used only for formatting hours
   ///     in the event that you want to format noon differently than other
   ///     hours (ie: [10, 11, 12p, 1, 2, 3]).
-  TimeFormatterSpec({this.format, this.transitionFormat, this.noonFormat});
+  const TimeFormatterSpec(
+      {this.format, this.transitionFormat, this.noonFormat});
 
   @override
   bool operator ==(Object other) =>
@@ -250,6 +239,43 @@ class TimeFormatterSpec {
     hashcode = (hashcode * 37) + transitionFormat?.hashCode ?? 0;
     hashcode = (hashcode * 37) + noonFormat?.hashCode ?? 0;
     return hashcode;
+  }
+}
+
+/// A [DateTimeTickFormatterSpec] that accepts a [DateFormat] or a
+/// [DateTimeFormatterFunction].
+@immutable
+class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
+  final DateTimeFormatterFunction formatter;
+  final DateFormat dateFormat;
+
+  const BasicDateTimeTickFormatterSpec(this.formatter) : dateFormat = null;
+
+  const BasicDateTimeTickFormatterSpec.fromDateFormat(this.dateFormat)
+      : formatter = null;
+
+  /// A formatter will be created with the [DateFormat] if it is not null.
+  /// Otherwise, it will create one with the provided
+  /// [DateTimeFormatterFunction].
+  @override
+  DateTimeTickFormatter createTickFormatter(ChartContext context) {
+    return DateTimeTickFormatter.uniform(SimpleTimeTickFormatter(
+        formatter: dateFormat != null ? dateFormat.format : formatter));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is BasicDateTimeTickFormatterSpec &&
+            formatter == other.formatter &&
+            dateFormat == other.dateFormat);
+  }
+
+  @override
+  int get hashCode {
+    int hash = formatter.hashCode;
+    hash = (hash * 37) * dateFormat.hashCode;
+    return hash;
   }
 }
 
@@ -271,7 +297,7 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
   /// There is a default formatter for each level that is configurable, but
   /// by specifying a level here it replaces the default for that particular
   /// granularity. This is useful for swapping out one or all of the formatters.
-  AutoDateTimeTickFormatterSpec(
+  const AutoDateTimeTickFormatterSpec(
       {this.minute, this.hour, this.day, this.month, this.year});
 
   @override
@@ -321,12 +347,13 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   bool operator ==(Object other) =>
-      other is AutoDateTimeTickFormatterSpec &&
-      minute == other.minute &&
-      hour == other.hour &&
-      day == other.day &&
-      month == other.month &&
-      year == other.year;
+      identical(this, other) ||
+      (other is AutoDateTimeTickFormatterSpec &&
+          minute == other.minute &&
+          hour == other.hour &&
+          day == other.day &&
+          month == other.month &&
+          year == other.year);
 
   @override
   int get hashCode {

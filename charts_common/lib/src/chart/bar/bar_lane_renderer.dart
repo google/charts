@@ -15,8 +15,14 @@
 
 import 'dart:collection' show LinkedHashMap;
 
-import 'bar_renderer.dart' show AnimatedBar, BarRenderer, BarRendererElement;
+import '../../data/series.dart' show AttributeKey;
+import '../cartesian/axis/axis.dart'
+    show ImmutableAxis, domainAxisKey, measureAxisKey;
+import '../cartesian/cartesian_chart.dart' show CartesianChart;
+import '../common/chart_canvas.dart' show ChartCanvas;
+import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import 'bar_lane_renderer_config.dart' show BarLaneRendererConfig;
+import 'bar_renderer.dart' show AnimatedBar, BarRenderer, BarRendererElement;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import 'base_bar_renderer.dart'
     show
@@ -26,12 +32,6 @@ import 'base_bar_renderer.dart'
         previousBarGroupWeightKey,
         stackKeyKey;
 import 'base_bar_renderer_element.dart' show BaseBarRendererElement;
-import '../cartesian/cartesian_chart.dart' show CartesianChart;
-import '../cartesian/axis/axis.dart'
-    show ImmutableAxis, domainAxisKey, measureAxisKey;
-import '../common/chart_canvas.dart' show ChartCanvas;
-import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
-import '../../data/series.dart' show AttributeKey;
 
 /// Key for storing a list of all domain values that exist in the series data.
 ///
@@ -194,7 +194,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
               measureAxis: measureAxis,
               numBarGroups: barGroupCount,
               strokeWidthPx: config.strokeWidthPx,
-              measureIsNull: false);
+              measureIsNull: false,
+              measureIsNegative: false);
 
           barStackList.add(animatingBar);
         } else {
@@ -222,7 +223,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
             measureAxis: measureAxis,
             numBarGroups: barGroupCount,
             strokeWidthPx: config.strokeWidthPx,
-            measureIsNull: false);
+            measureIsNull: false,
+            measureIsNegative: false);
 
         animatingBar.setNewTarget(barElement);
 
@@ -298,7 +300,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
                 measureAxis: measureAxis,
                 numBarGroups: barGroupCount,
                 strokeWidthPx: config.strokeWidthPx,
-                measureIsNull: false);
+                measureIsNull: false,
+                measureIsNegative: false);
 
             barStackList.add(animatingBar);
           } else {
@@ -326,7 +329,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
               measureAxis: measureAxis,
               numBarGroups: barGroupCount,
               strokeWidthPx: config.strokeWidthPx,
-              measureIsNull: false);
+              measureIsNull: false,
+              measureIsNegative: false);
 
           animatingBar.setNewTarget(barElement);
 
@@ -340,7 +344,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
   num _getMaxMeasureValue(ImmutableAxis<num> measureAxis) {
     final pos = (chart as CartesianChart).vertical
         ? chart.drawAreaBounds.top
-        : rtl ? chart.drawAreaBounds.left : chart.drawAreaBounds.right;
+        : isRtl ? chart.drawAreaBounds.left : chart.drawAreaBounds.right;
 
     return measureAxis.getDomain(pos.toDouble());
   }

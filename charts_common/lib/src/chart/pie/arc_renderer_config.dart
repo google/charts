@@ -15,12 +15,12 @@
 
 import 'dart:math' show pi;
 
+import '../../common/color.dart' show Color;
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/symbol_renderer.dart';
-import '../../common/color.dart' show Color;
-import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import '../common/series_renderer_config.dart'
     show RendererAttributes, SeriesRendererConfig;
+import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
 import 'arc_renderer.dart' show ArcRenderer;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
@@ -82,9 +82,10 @@ class ArcRendererConfig<D> extends LayoutViewConfig
       this.minHoleWidthForCenterContent = 30,
       this.startAngle = -pi / 2,
       this.strokeWidthPx = 2.0,
-      this.symbolRenderer})
-      : this.stroke = StyleFactory.style.arcStrokeColor,
-        this.noDataColor = StyleFactory.style.noDataColor;
+      SymbolRenderer symbolRenderer})
+      : this.noDataColor = StyleFactory.style.noDataColor,
+        this.stroke =  StyleFactory.style.arcStrokeColor,
+        this.symbolRenderer = symbolRenderer ?? new CircleSymbolRenderer();
 
   @override
   ArcRenderer<D> build() {

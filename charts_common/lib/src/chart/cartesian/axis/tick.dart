@@ -42,7 +42,6 @@ class Tick<D> {
       this.labelOffsetPx});
 
   @override
-  String toString() =>
-      'Tick(value: ${value}, locationPx: ${locationPx}, ' +
-      'labelOffsetPx: ${labelOffsetPx})';
+  String toString() => 'Tick(value: $value, locationPx: $locationPx, '
+      'labelOffsetPx: $labelOffsetPx)';
 }

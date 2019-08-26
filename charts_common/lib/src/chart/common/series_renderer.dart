@@ -14,12 +14,14 @@
 // limitations under the License.
 
 import 'dart:math' show Point, Rectangle, max;
+
 import 'package:meta/meta.dart';
-import 'base_chart.dart' show BaseChart;
-import 'chart_canvas.dart' show ChartCanvas;
-import 'datum_details.dart' show DatumDetails;
-import 'processed_series.dart' show ImmutableSeries, MutableSeries;
-import 'series_datum.dart' show SeriesDatum;
+
+import '../../common/color.dart' show Color;
+import '../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../common/style/style_factory.dart' show StyleFactory;
+import '../../common/symbol_renderer.dart' show SymbolRenderer;
+import '../../data/series.dart' show AttributeKey;
 import '../layout/layout_view.dart'
     show
         LayoutPosition,
@@ -27,11 +29,11 @@ import '../layout/layout_view.dart'
         LayoutViewConfig,
         LayoutViewPositionOrder,
         ViewMeasuredSizes;
-import '../../common/color.dart' show Color;
-import '../../common/graphics_factory.dart' show GraphicsFactory;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
-import '../../common/style/style_factory.dart' show StyleFactory;
-import '../../data/series.dart' show AttributeKey;
+import 'base_chart.dart' show BaseChart;
+import 'chart_canvas.dart' show ChartCanvas;
+import 'datum_details.dart' show DatumDetails;
+import 'processed_series.dart' show ImmutableSeries, MutableSeries;
+import 'series_datum.dart' show SeriesDatum;
 
 /// Unique identifier used to associate custom series renderers on a chart with
 /// one or more series of data.
@@ -54,11 +56,13 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// the [SymbolRenderer] has to be a Flutter wrapped version to support
   /// building widget based symbols.
   SymbolRenderer get symbolRenderer;
+
   set symbolRenderer(SymbolRenderer symbolRenderer);
 
   /// Unique identifier for this renderer. Any [Series] on a chart with a
   /// matching  [rendererIdKey] will be drawn by this renderer.
   String get rendererId;
+
   set rendererId(String rendererId);
 
   /// Handles any setup of the renderer that needs to be deferred until it is
@@ -135,6 +139,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   SymbolRenderer symbolRenderer;
 
   Rectangle<int> _drawAreaBounds;
+
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
   GraphicsFactory _graphicsFactory;
@@ -181,6 +186,14 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     bool hasSpecifiedCategory = false;
 
     seriesList.forEach((MutableSeries<D> series) {
+      // Assign the seriesColor as the color of every datum if no colorFn was
+      // provided.
+      if (series.colorFn == null && series.seriesColor != null) {
+        series.colorFn = (_) => series.seriesColor;
+      }
+
+      // This series was missing both seriesColor and a colorFn. Add it to the
+      // "missing" set.
       if (series.colorFn == null) {
         // If there is no category, give it a default category to match logic.
         String category = series.seriesCategory;
@@ -208,6 +221,18 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
             final color = palettes[index % palettes.length].shadeDefault;
             index++;
             series.colorFn = (_) => color;
+            series.seriesColor ??= color;
+          } else {
+            // Fill in missing seriesColor values with the color of the first
+            // datum in the series. Note that [Series.colorFn] should always
+            // return a color.
+            if (series.seriesColor == null) {
+              try {
+                series.seriesColor = series.colorFn(0);
+              } catch (exception) {
+                series.seriesColor = StyleFactory.style.defaultSeriesColor;
+              }
+            }
           }
         });
         return;
@@ -252,6 +277,18 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         series.fillColorFn ??= (int index) => series.colorFn(index);
       });
     }
+
+    // Fill in any missing seriesColor values with the color of the first datum
+    // in the series. Note that [Series.colorFn] should always return a color.
+    seriesList.forEach((MutableSeries series) {
+      if (series.seriesColor == null) {
+        try {
+          series.seriesColor = series.colorFn(0);
+        } catch (exception) {
+          series.seriesColor = StyleFactory.style.defaultSeriesColor;
+        }
+      }
+    });
   }
 
   @override
@@ -300,6 +337,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     final rawMeasureLowerBoundFn = series.rawMeasureLowerBoundFn;
     final rawMeasureUpperBoundFn = series.rawMeasureUpperBoundFn;
     final colorFn = series.colorFn;
+    final areaColorFn = series.areaColorFn ?? colorFn;
     final fillColorFn = series.fillColorFn ?? colorFn;
     final radiusPxFn = series.radiusPxFn;
     final strokeWidthPxFn = series.strokeWidthPxFn;
@@ -331,6 +369,9 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     var fillColor = fillColorFn(index);
     fillColor ??= color;
 
+    // Area color is entirely optional.
+    final areaColor = areaColorFn(index);
+
     var radiusPx = radiusPxFn != null ? radiusPxFn(index) : null;
     radiusPx = radiusPx?.toDouble();
 
@@ -353,6 +394,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         series: series,
         color: color,
         fillColor: fillColor,
+        areaColor: areaColor,
         radiusPx: radiusPx,
         strokeWidthPx: strokeWidthPx);
 
@@ -375,7 +417,8 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
       if (!bounds.containsPoint(chartPoint)) {
         return false;
       }
-    } else if (!componentBounds.containsPoint(chartPoint)) {
+    } else if (componentBounds == null ||
+        !componentBounds.containsPoint(chartPoint)) {
       return false;
     }
 

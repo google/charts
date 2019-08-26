@@ -33,6 +33,7 @@ import 'stacked_fill_color.dart';
 import 'stacked_horizontal.dart';
 import 'stacked_target_line.dart';
 import 'spark_bar.dart';
+import 'vertical_bar_label.dart';
 
 List<GalleryScaffold> buildGallery() {
   return [
@@ -106,6 +107,13 @@ List<GalleryScaffold> buildGallery() {
       title: 'Horizontal Bar Chart with Custom Bar Labels',
       subtitle: 'Bar labels with customized styling',
       childBuilder: () => new HorizontalBarLabelCustomChart.withRandomData(),
+    ),
+    new GalleryScaffold(
+      listTileIcon: new Transform.rotate(
+          angle: 1.5708, child: new Icon(Icons.insert_chart)),
+      title: 'Vertical Bar Chart with Bar Labels',
+      subtitle: 'Vertical bar chart with a single series and bar labels',
+      childBuilder: () => new VerticalBarLabelChart.withRandomData(),
     ),
     new GalleryScaffold(
       listTileIcon: new Icon(Icons.insert_chart),

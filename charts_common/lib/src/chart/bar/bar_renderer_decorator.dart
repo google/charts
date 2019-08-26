@@ -14,9 +14,11 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
+
 import 'package:meta/meta.dart' show required;
-import '../common/chart_canvas.dart' show ChartCanvas;
+
 import '../../common/graphics_factory.dart' show GraphicsFactory;
+import '../common/chart_canvas.dart' show ChartCanvas;
 import 'bar_renderer.dart' show ImmutableBarRendererElement;
 
 /// Decorates bars after the bars have already been painted.
@@ -28,5 +30,5 @@ abstract class BarRendererDecorator<D> {
       {@required Rectangle drawBounds,
       @required double animationPercent,
       @required bool renderingVertically,
-      bool rtl: false});
+      bool rtl = false});
 }

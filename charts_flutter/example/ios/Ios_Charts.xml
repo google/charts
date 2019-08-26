@@ -1,0 +1,7 @@
+<configuration
+    name="Ios Charts"
+    type="FlutterBazelRunConfigurationType"
+    factoryName="Flutter (Bazel)">
+  <option name="bazelTarget" value="//third_party/dart/charts_flutter/example/ios:Charts" />
+  <method v="2" />
+</configuration>

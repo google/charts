@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import '../base_chart.dart' show BaseChart;
 import '../../cartesian/cartesian_chart.dart' show CartesianChart;
+import '../base_chart.dart' show BaseChart;
 import '../selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
 import 'chart_behavior.dart' show ChartBehavior;
@@ -30,7 +30,7 @@ class SlidingViewport<D> implements ChartBehavior<D> {
 
   CartesianChart<D> _chart;
 
-  SlidingViewport([this.selectionModelType = SelectionModelType.info]) {}
+  SlidingViewport([this.selectionModelType = SelectionModelType.info]);
 
   void _selectionChanged(SelectionModel selectionModel) {
     if (selectionModel.hasAnySelection == false) {

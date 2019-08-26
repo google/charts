@@ -80,6 +80,16 @@ class DatumDetails<D> {
   /// Otherwise, [color] will be used for the fill color.
   final Color fillColor;
 
+  /// Optional area color of this [datum].
+  ///
+  /// This color is used for supplemental information on the series, such as
+  /// confidence intervals or area skirts. If not provided, then some variation
+  /// of the main [color] will be used (e.g. 10% opacity).
+  final Color areaColor;
+
+  /// Optional dash pattern of this [datum].
+  final List<int> dashPattern;
+
   /// The chart position of the (domain, measure) for the [datum] from a
   /// renderer.
   final Point<double> chartPosition;
@@ -123,9 +133,11 @@ class DatumDetails<D> {
       {this.datum,
       this.index,
       this.domain,
+      this.domainFormatter,
       this.domainLowerBound,
       this.domainUpperBound,
       this.measure,
+      this.measureFormatter,
       this.measureLowerBound,
       this.measureUpperBound,
       this.measureOffset,
@@ -135,6 +147,8 @@ class DatumDetails<D> {
       this.series,
       this.color,
       this.fillColor,
+      this.areaColor,
+      this.dashPattern,
       this.chartPosition,
       this.chartPositionLower,
       this.chartPositionUpper,
@@ -152,6 +166,7 @@ class DatumDetails<D> {
       D domainLowerBound,
       D domainUpperBound,
       num measure,
+      MeasureFormatter measureFormatter,
       num measureLowerBound,
       num measureUpperBound,
       num measureOffset,
@@ -161,9 +176,12 @@ class DatumDetails<D> {
       ImmutableSeries<D> series,
       Color color,
       Color fillColor,
+      Color areaColor,
+      List<int> dashPattern,
       Point<double> chartPosition,
       Point<double> chartPositionLower,
       Point<double> chartPositionUpper,
+      DomainFormatter domainFormatter,
       double domainDistance,
       double measureDistance,
       double radiusPx,
@@ -173,9 +191,11 @@ class DatumDetails<D> {
         datum: datum ?? other.datum,
         index: index ?? other.index,
         domain: domain ?? other.domain,
+        domainFormatter: domainFormatter ?? other.domainFormatter,
         domainLowerBound: domainLowerBound ?? other.domainLowerBound,
         domainUpperBound: domainUpperBound ?? other.domainUpperBound,
         measure: measure ?? other.measure,
+        measureFormatter: measureFormatter ?? other.measureFormatter,
         measureLowerBound: measureLowerBound ?? other.measureLowerBound,
         measureUpperBound: measureUpperBound ?? other.measureUpperBound,
         measureOffset: measureOffset ?? other.measureOffset,
@@ -187,6 +207,8 @@ class DatumDetails<D> {
         series: series ?? other.series,
         color: color ?? other.color,
         fillColor: fillColor ?? other.fillColor,
+        areaColor: areaColor ?? other.areaColor,
+        dashPattern: dashPattern ?? other.dashPattern,
         chartPosition: chartPosition ?? other.chartPosition,
         chartPositionLower: chartPositionLower ?? other.chartPositionLower,
         chartPositionUpper: chartPositionUpper ?? other.chartPositionUpper,

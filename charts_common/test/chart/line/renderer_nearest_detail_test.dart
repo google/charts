@@ -111,6 +111,7 @@ void main() {
         _makeSeries(id: 'foo')..data.clear(),
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -138,6 +139,7 @@ void main() {
         _makeSeries(id: 'foo')..data.clear(),
         _makeSeries(id: 'bar')..data.clear(),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -158,6 +160,7 @@ void main() {
         _makeSeries(id: 'foo')..overlaySeries = true,
         _makeSeries(id: 'bar'),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -185,6 +188,7 @@ void main() {
         _makeSeries(id: 'foo')..overlaySeries = true,
         _makeSeries(id: 'bar')..overlaySeries = true,
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -207,6 +211,7 @@ void main() {
     test('hit test works', () {
       // Setup
       final seriesList = <MutableSeries<int>>[_makeSeries(id: 'foo')];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -233,6 +238,7 @@ void main() {
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar', measureOffset: 20),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -268,6 +274,7 @@ void main() {
         _makeSeries(id: 'foo'),
         _makeSeries(id: 'bar', measureOffset: 20)..data.removeAt(1),
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -302,6 +309,7 @@ void main() {
       final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo')..data[1].clickCount = 500
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);
@@ -327,6 +335,7 @@ void main() {
       final seriesList = <MutableSeries<int>>[
         _makeSeries(id: 'foo')..data.add(new MyRow(-1000, 20))
       ];
+      renderer.configureSeries(seriesList);
       renderer.preprocessSeries(seriesList);
       renderer.update(seriesList, false);
       renderer.paint(new MockCanvas(), 1.0);

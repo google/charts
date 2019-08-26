@@ -109,7 +109,7 @@ void main() {
     _series1 = new MutableSeries<String>(new Series(
         id: 'mySeries1',
         data: ['myDatum1', 'myDatum2', 'myDatum3'],
-        domainFn: (dynamic, int i) => _series1Data[i],
+        domainFn: (_, int i) => _series1Data[i],
         measureFn: (_, __) {}));
 
     _details1 = new DatumDetails(
@@ -136,7 +136,7 @@ void main() {
     _series2 = new MutableSeries<String>(new Series(
         id: 'mySeries2',
         data: ['myDatum1s2'],
-        domainFn: (dynamic, int i) => _series2Data[i],
+        domainFn: (_, int i) => _series2Data[i],
         measureFn: (_, __) {}));
 
     _details1Series2 = new DatumDetails(
@@ -147,9 +147,7 @@ void main() {
         measureDistance: 20.0);
   });
 
-  tearDown(() {
-    resetMockitoState();
-  });
+  tearDown(resetMockitoState);
 
   group('SelectNearest trigger handling', () {
     test('single series selects detail', () {
@@ -412,6 +410,34 @@ void main() {
         new SeriesDatum(_series1, _details1.datum),
         new SeriesDatum(_series2, _details1Series2.datum)
       ], []));
+      verifyNoMoreInteractions(_hoverSelectionModel);
+      verifyNoMoreInteractions(_clickSelectionModel);
+    });
+
+    test('does not include overlay series', () {
+      // Setup chart with an overlay series.
+      _series2.overlaySeries = true;
+
+      _makeBehavior(SelectionModelType.info, SelectionTrigger.hover,
+          expandToDomain: true, selectClosestSeries: true);
+      Point<double> point = new Point(100.0, 100.0);
+      _setupChart(forPoint: point, isWithinRenderer: true, respondWithDetails: [
+        _details1,
+        _details1Series2,
+      ], seriesList: [
+        _series1,
+        _series2
+      ]);
+
+      // Act
+      _chart.lastListener.onHover(point);
+
+      // Validate
+      verify(_hoverSelectionModel.updateSelection([
+        new SeriesDatum(_series1, _details1.datum),
+      ], [
+        _series1
+      ]));
       verifyNoMoreInteractions(_hoverSelectionModel);
       verifyNoMoreInteractions(_clickSelectionModel);
     });

@@ -15,16 +15,17 @@
 
 import 'package:meta/meta.dart';
 
+import '../../common/symbol_renderer.dart' show SymbolRenderer;
+import '../../data/series.dart' show AccessorFn;
+import '../common/base_chart.dart' show BaseChart;
+import '../common/processed_series.dart' show MutableSeries;
+import '../common/series_renderer.dart' show BaseSeriesRenderer, SeriesRenderer;
 import 'axis/axis.dart' show Axis, domainAxisKey, measureAxisKey;
 import 'cartesian_chart.dart' show CartesianChart;
-import '../common/base_chart.dart' show BaseChart;
-import '../common/series_renderer.dart' show BaseSeriesRenderer, SeriesRenderer;
-import '../common/processed_series.dart' show MutableSeries;
-import '../../data/series.dart' show AccessorFn;
-import '../../common/symbol_renderer.dart' show SymbolRenderer;
 
 abstract class CartesianRenderer<D> extends SeriesRenderer<D> {
   void configureDomainAxes(List<MutableSeries<D>> seriesList);
+
   void configureMeasureAxes(List<MutableSeries<D>> seriesList);
 }
 
@@ -52,7 +53,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @override
   void configureDomainAxes(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
-      if (series.data.length == 0) {
+      if (series.data.isEmpty) {
         return;
       }
 
@@ -100,7 +101,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @override
   void configureMeasureAxes(List<MutableSeries<D>> seriesList) {
     seriesList.forEach((MutableSeries<D> series) {
-      if (series.data.length == 0) {
+      if (series.data.isEmpty) {
         return;
       }
 
@@ -151,7 +152,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @visibleForTesting
   int findNearestViewportStart(
       Axis domainAxis, AccessorFn<D> domainFn, List data) {
-    if (data.length == 0) {
+    if (data.isEmpty) {
       return null;
     }
 
@@ -207,7 +208,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @visibleForTesting
   int findNearestViewportEnd(
       Axis domainAxis, AccessorFn<D> domainFn, List data) {
-    if (data.length == 0) {
+    if (data.isEmpty) {
       return null;
     }
 

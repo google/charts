@@ -264,5 +264,5 @@ class LinearClicks {
   final int clickCount;
   final double clickRate;
 
-  LinearClicks(this.year, {this.clickCount = null, this.clickRate = null});
+  LinearClicks(this.year, {this.clickCount, this.clickRate});
 }

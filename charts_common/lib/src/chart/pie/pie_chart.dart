@@ -15,13 +15,13 @@
 
 import 'dart:math' show Rectangle;
 
-import 'arc_renderer.dart' show ArcRenderer;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show MutableSeries;
-import '../common/series_renderer.dart' show rendererIdKey, SeriesRenderer;
 import '../common/selection_model/selection_model.dart' show SelectionModelType;
+import '../common/series_renderer.dart' show rendererIdKey, SeriesRenderer;
 import '../layout/layout_config.dart' show LayoutConfig, MarginSpec;
+import 'arc_renderer.dart' show ArcRenderer;
 
 class PieChart<D> extends BaseChart<D> {
   static final _defaultLayoutConfig = new LayoutConfig(

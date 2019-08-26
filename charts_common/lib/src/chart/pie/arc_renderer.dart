@@ -18,6 +18,9 @@ import 'dart:math' show atan2, cos, max, sin, pi, Point, Rectangle;
 
 import 'package:meta/meta.dart' show required;
 
+import '../../common/color.dart' show Color;
+import '../../common/style/style_factory.dart' show StyleFactory;
+import '../../data/series.dart' show AttributeKey;
 import '../common/base_chart.dart' show BaseChart;
 import '../common/canvas_shapes.dart' show CanvasPieSlice, CanvasPie;
 import '../common/chart_canvas.dart' show ChartCanvas, getAnimatedColor;
@@ -25,9 +28,6 @@ import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../common/series_datum.dart' show SeriesDatum;
 import '../common/series_renderer.dart' show BaseSeriesRenderer;
-import '../../common/color.dart' show Color;
-import '../../common/style/style_factory.dart' show StyleFactory;
-import '../../data/series.dart' show AttributeKey;
 import 'arc_renderer_config.dart' show ArcRendererConfig;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
@@ -101,7 +101,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
       var measures = [];
 
-      if (series.data.length == 0) {
+      if (series.data.isEmpty) {
         // If the series has no data, generate an empty arc element that
         // occupies the entire chart.
         //
@@ -167,7 +167,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         : (bounds.width / 2).toDouble();
 
     if (config.arcRatio != null) {
-      if (0 < config.arcRatio || config.arcRatio > 1) {
+      if (config.arcRatio < 0 || config.arcRatio > 1) {
         throw new ArgumentError('arcRatio must be between 0 and 1');
       }
     }
@@ -183,7 +183,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
       var elementsList = series.getAttr(arcElementsKey);
 
-      if (series.data.length == 0) {
+      if (series.data.isEmpty) {
         // If the series is empty, set up the "no data" arc element. This should
         // occupy the entire chart, and use the chart style's no data color.
         final details = elementsList[0];
@@ -327,7 +327,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         }
       });
 
-      keysToRemove.forEach((String key) => _seriesArcMap.remove(key));
+      keysToRemove.forEach(_seriesArcMap.remove);
     }
 
     _seriesArcMap.forEach((String key, _AnimatedArcList<D> arcList) {
@@ -359,7 +359,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         decorator.decorate(arcElementsList, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: animationPercent,
-            rtl: rtl);
+            rtl: isRtl);
       });
 
       // Draw the arcs.
@@ -375,12 +375,12 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         decorator.decorate(arcElementsList, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: animationPercent,
-            rtl: rtl);
+            rtl: isRtl);
       });
     });
   }
 
-  bool get rtl => _chart?.context?.rtl ?? false;
+  bool get isRtl => _chart?.context?.isRtl ?? false;
 
   /// Gets a bounding box for the largest center content card that can fit
   /// inside the hole of the chart.
@@ -438,7 +438,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   ///
   /// [key] the key in the current animated arc list.
   Point<double> _getChartPosition(String seriesId, String key) {
-    var chartPosition;
+    Point<double> chartPosition;
 
     final arcList = _seriesArcMap[seriesId];
 
@@ -551,9 +551,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       final colorPalette = colorPalettes[0].makeShades(maxMissing);
 
       seriesList.forEach((MutableSeries series) {
-        if (series.colorFn == null) {
-          series.colorFn = (index) => colorPalette[index];
-        }
+        series.colorFn ??= (index) => colorPalette[index];
       });
     }
   }

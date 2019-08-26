@@ -20,14 +20,16 @@ class TextStyle implements common.TextStyle {
   int fontSize;
   String fontFamily;
   common.Color color;
+  double lineHeight;
 
   @override
   bool operator ==(Object other) =>
       other is TextStyle &&
       fontSize == other.fontSize &&
       fontFamily == other.fontFamily &&
-      color == other.color;
+      color == other.color &&
+      lineHeight == other.lineHeight;
 
   @override
-  int get hashCode => hashValues(fontSize, fontFamily, color);
+  int get hashCode => hashValues(fontSize, fontFamily, color, lineHeight);
 }

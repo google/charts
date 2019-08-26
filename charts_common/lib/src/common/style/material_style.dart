@@ -77,6 +77,9 @@ class MaterialStyle implements Style {
   Color get arcStrokeColor => MaterialPalette.white;
 
   @override
+  Color get defaultSeriesColor => MaterialPalette.gray.shadeDefault;
+
+  @override
   Color get legendEntryTextColor => MaterialPalette.gray.shade800;
 
   @override
@@ -96,4 +99,10 @@ class MaterialStyle implements Style {
 
   @override
   Color get sliderStrokeColor => MaterialPalette.gray.shade600;
+
+  @override
+  Color get chartBackgroundColor => MaterialPalette.white;
+
+  @override
+  double get rangeBandSize => 0.65;
 }

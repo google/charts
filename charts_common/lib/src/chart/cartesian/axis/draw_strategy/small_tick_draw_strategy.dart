@@ -13,8 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable, required;
 import 'dart:math';
+
+import 'package:meta/meta.dart' show immutable, required;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../../common/line_style.dart' show LineStyle;
@@ -34,29 +35,31 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
   final LineStyleSpec lineStyle;
   final int tickLengthPx;
 
-  SmallTickRendererSpec({
-    TextStyleSpec labelStyle,
-    this.lineStyle,
-    LineStyleSpec axisLineStyle,
-    TickLabelAnchor labelAnchor,
-    TickLabelJustification labelJustification,
-    int labelOffsetFromAxisPx,
-    int labelOffsetFromTickPx,
-    this.tickLengthPx,
-    int minimumPaddingBetweenLabelsPx,
-  }) : super(
+  const SmallTickRendererSpec(
+      {TextStyleSpec labelStyle,
+      this.lineStyle,
+      LineStyleSpec axisLineStyle,
+      TickLabelAnchor labelAnchor,
+      TickLabelJustification labelJustification,
+      int labelOffsetFromAxisPx,
+      int labelOffsetFromTickPx,
+      this.tickLengthPx,
+      int minimumPaddingBetweenLabelsPx,
+      int labelRotation})
+      : super(
             labelStyle: labelStyle,
             labelAnchor: labelAnchor,
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+            labelRotation: labelRotation,
             axisLineStyle: axisLineStyle);
 
   @override
   TickDrawStrategy<D> createDrawStrategy(
-          ChartContext chartContext, GraphicsFactory graphicsFactory) =>
-      new SmallTickDrawStrategy<D>(chartContext, graphicsFactory,
+          ChartContext context, GraphicsFactory graphicsFactory) =>
+      new SmallTickDrawStrategy<D>(context, graphicsFactory,
           tickLengthPx: tickLengthPx,
           lineStyleSpec: lineStyle,
           labelStyleSpec: labelStyle,
@@ -65,14 +68,16 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
           labelJustification: labelJustification,
           labelOffsetFromAxisPx: labelOffsetFromAxisPx,
           labelOffsetFromTickPx: labelOffsetFromTickPx,
-          minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx);
+          minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+          labelRotation: labelRotation);
 
   @override
   bool operator ==(Object other) {
-    return other is SmallTickRendererSpec &&
-        lineStyle == other.lineStyle &&
-        tickLengthPx == other.tickLengthPx &&
-        super == (other);
+    return identical(this, other) ||
+        (other is SmallTickRendererSpec &&
+            lineStyle == other.lineStyle &&
+            tickLengthPx == other.tickLengthPx &&
+            super == (other));
   }
 
   @override
@@ -90,25 +95,26 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
   LineStyle lineStyle;
 
   SmallTickDrawStrategy(
-    ChartContext chartContext,
-    GraphicsFactory graphicsFactory, {
-    int tickLengthPx,
-    LineStyleSpec lineStyleSpec,
-    TextStyleSpec labelStyleSpec,
-    LineStyleSpec axisLineStyleSpec,
-    TickLabelAnchor labelAnchor,
-    TickLabelJustification labelJustification,
-    int labelOffsetFromAxisPx,
-    int labelOffsetFromTickPx,
-    int minimumPaddingBetweenLabelsPx,
-  }) : super(chartContext, graphicsFactory,
+      ChartContext chartContext, GraphicsFactory graphicsFactory,
+      {int tickLengthPx,
+      LineStyleSpec lineStyleSpec,
+      TextStyleSpec labelStyleSpec,
+      LineStyleSpec axisLineStyleSpec,
+      TickLabelAnchor labelAnchor,
+      TickLabelJustification labelJustification,
+      int labelOffsetFromAxisPx,
+      int labelOffsetFromTickPx,
+      int minimumPaddingBetweenLabelsPx,
+      int labelRotation})
+      : super(chartContext, graphicsFactory,
             labelStyleSpec: labelStyleSpec,
             axisLineStyleSpec: axisLineStyleSpec ?? lineStyleSpec,
             labelAnchor: labelAnchor,
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
-            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx) {
+            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+            labelRotation: labelRotation) {
     this.tickLength = tickLengthPx ?? StyleFactory.style.tickLength;
     lineStyle =
         StyleFactory.style.createTickLineStyle(graphicsFactory, lineStyleSpec);

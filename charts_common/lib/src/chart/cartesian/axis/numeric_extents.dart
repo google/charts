@@ -97,7 +97,7 @@ class NumericExtents implements Extents<num> {
   num get width => max - min;
 
   @override
-  String toString() => "Extent($min, $max)";
+  String toString() => 'Extent($min, $max)';
 
   static const NumericExtents unbounded =
       const NumericExtents(double.negativeInfinity, double.infinity);

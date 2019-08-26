@@ -35,7 +35,7 @@ class HourTimeStepper extends BaseTimeStepper {
     allowedTickIncrements ??= _defaultIncrements;
 
     // Must have at least one increment option.
-    assert(allowedTickIncrements.length > 0);
+    assert(allowedTickIncrements.isNotEmpty);
     // All increments must be between 1 and 24 inclusive.
     assert(allowedTickIncrements
             .any((increment) => increment <= 0 || increment > 24) ==
