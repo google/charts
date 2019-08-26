@@ -23,3 +23,7 @@ and iOS.
 
 All charts packages are licensed under the Apache 2 license, see the
 [LICENSE](LICENSE) and [AUTHORS](AUTHORS) files for details.
+
+## Development
+This project is developed internally at Google and published for external
+consumption, external contributions unfortunately cannot be taken at this time.
