@@ -68,6 +68,9 @@ abstract class Style {
   /// data.
   Color get defaultSeriesColor;
 
+  /// Default color for strokes for [ArcRendererConfig].
+  Color get arcStrokeColor;
+
   /// Default color for entry text for [Legend].
   Color get legendEntryTextColor;
 

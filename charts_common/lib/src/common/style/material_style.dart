@@ -77,6 +77,9 @@ class MaterialStyle implements Style {
   Color get defaultSeriesColor => MaterialPalette.gray.shadeDefault;
 
   @override
+  Color get arcStrokeColor => MaterialPalette.white;
+
+  @override
   Color get legendEntryTextColor => MaterialPalette.gray.shade800;
 
   @override
