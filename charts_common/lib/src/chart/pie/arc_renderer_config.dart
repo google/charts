@@ -84,7 +84,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
       this.strokeWidthPx = 2.0,
       SymbolRenderer symbolRenderer})
       : this.noDataColor = StyleFactory.style.noDataColor,
-        this.stroke = StyleFactory.style.white,
+        this.stroke = StyleFactory.style.arcStrokeColor,
         this.symbolRenderer = symbolRenderer ?? new CircleSymbolRenderer();
 
   @override

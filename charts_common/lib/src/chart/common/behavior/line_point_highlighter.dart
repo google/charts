@@ -454,7 +454,7 @@ class _LinePointLayoutView<D> extends LayoutView {
             ],
             stroke: StyleFactory.style.linePointHighlighterColor,
             strokeWidthPx: 1.0,
-            dashPattern: [1, 3]);
+            dashPattern: dashPattern);
 
         if (showHorizontalFollowLine ==
             LinePointHighlighterFollowLineType.nearest) {

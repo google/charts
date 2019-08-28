@@ -1,3 +1,6 @@
+# 0.8.0
+* Bug fixes from open source.
+
 # 0.7.0
 * Added vertical bar label
 
