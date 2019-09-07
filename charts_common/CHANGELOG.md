@@ -1,3 +1,6 @@
+# 0.8.0+1
+* Loosen intl dependency
+
 # 0.8.0
 * Bug fixes from open source.
 
