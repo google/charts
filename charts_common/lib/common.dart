@@ -126,6 +126,7 @@ export 'src/chart/common/behavior/chart_title/chart_title.dart'
     show ChartTitle, ChartTitleDirection;
 export 'src/chart/common/behavior/domain_highlighter.dart'
     show DomainHighlighter;
+export 'src/chart/common/behavior/domain_outliner.dart' show DomainOutliner;
 export 'src/chart/common/behavior/initial_selection.dart' show InitialSelection;
 export 'src/chart/common/behavior/legend/datum_legend.dart' show DatumLegend;
 export 'src/chart/common/behavior/legend/legend.dart'
@@ -221,6 +222,13 @@ export 'src/chart/scatter_plot/symbol_annotation_renderer.dart'
 export 'src/chart/scatter_plot/symbol_annotation_renderer_config.dart'
     show SymbolAnnotationRendererConfig;
 export 'src/chart/time_series/time_series_chart.dart' show TimeSeriesChart;
+export 'src/chart/treemap/squarified_treemap_renderer.dart'
+    show SquarifiedTreeMapRenderer;
+export 'src/chart/treemap/treemap_chart.dart' show TreeMapChart;
+export 'src/chart/treemap/treemap_label_decorator.dart'
+    show TreeMapLabelDecorator;
+export 'src/chart/treemap/treemap_renderer_config.dart'
+    show TreeMapRendererConfig;
 export 'src/common/color.dart' show Color;
 export 'src/common/date_time_factory.dart'
     show DateTimeFactory, LocalDateTimeFactory, UTCDateTimeFactory;
@@ -247,3 +255,4 @@ export 'src/common/text_element.dart'
 export 'src/common/text_measurement.dart' show TextMeasurement;
 export 'src/common/text_style.dart' show TextStyle;
 export 'src/data/series.dart' show Series, TypedAccessorFn;
+export 'src/data/tree.dart' show Tree, TreeNode;
