@@ -74,8 +74,6 @@ class DomainOutliner<D> implements ChartBehavior<D> {
         };
       }
 
-      // Overrides the stroke width if provided. Otherwise, increases the stroke
-      // width by 1 pixel.
       if (strokeWidthPxFn != null) {
         series.strokeWidthPxFn = (int index) {
           final strokeWidthPx = strokeWidthPxFn(index);
