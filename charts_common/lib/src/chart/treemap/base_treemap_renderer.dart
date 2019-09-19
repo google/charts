@@ -83,6 +83,12 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
     _ensureSingleTree(seriesList);
+
+    // Clears [_treeNodeToRendererElement] map when a new seriesList is passed
+    // in for preprocessing. The order in this map matters because the first
+    // entry is expected to be the root.
+    _treeNodeToRendererElement.clear();
+
     for (var series in seriesList) {
       final count = series.data.length;
 
@@ -369,13 +375,16 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       TreeMapRendererElement<D> element) {
     final domainValue = element.domain;
     final key = domainValue.toString();
-    var rect = _animatedTreeMapRects.firstWhere((rect) => rect.key == key,
-        orElse: () => null);
+    final index = _animatedTreeMapRects.indexWhere((rect) => rect.key == key);
+    // Creates a new _AnimatedTreeMapRect if not exists. Otherwise, moves the
+    // existing one to the end of the list so that the iteration order of
+    // _AnimatedTreeMapRects is preserved. This is important because the order
+    // of rects in _animatedTreeMapRects determines the painting order.
+    final rect = index == -1
+        ? _AnimatedTreeMapRect<D>(key: key)
+        : _animatedTreeMapRects.removeAt(index);
 
-    if (rect == null) {
-      rect = _AnimatedTreeMapRect<D>(key: key);
-      _animatedTreeMapRects.add(rect);
-    }
+    _animatedTreeMapRects.add(rect);
     return rect..setNewTarget(element);
   }
 
