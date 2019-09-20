@@ -110,7 +110,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     // _visibleTreeMapRectKeys is used to remove any [_AnimatedTreeMapRect]s
     // that were rendered in the previous draw cycles, but no longer have a
     // corresponding datum in the new series data.
-    final _visibleTreeMapRectKeys = Set<String>();
+    final _visibleTreeMapRectKeys = Set<D>();
 
     for (var series in seriesList) {
       if (series.data.isNotEmpty) {
@@ -373,8 +373,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   /// treemap renderer [element].
   _AnimatedTreeMapRect<D> _asAnimatedTreeMapRect(
       TreeMapRendererElement<D> element) {
-    final domainValue = element.domain;
-    final key = domainValue.toString();
+    final key = element.domain;
     final index = _animatedTreeMapRects.indexWhere((rect) => rect.key == key);
     // Creates a new _AnimatedTreeMapRect if not exists. Otherwise, moves the
     // existing one to the end of the list so that the iteration order of
@@ -414,7 +413,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
 /// A representation of the animation state of [TreeMapRendererElement].
 class _AnimatedTreeMapRect<D> {
-  final String key;
+  final D key;
 
   /// A previous [TreeMapRendererElement] before animation.
   TreeMapRendererElement<D> _previousRect;
