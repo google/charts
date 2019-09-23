@@ -67,6 +67,16 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     seriesList.forEach((MutableSeries<D> series) {
       series.colorFn ??= (_) => _color;
       series.fillColorFn ??= (_) => _color;
+
+      // Fill in missing seriesColor values with the color of the first datum in
+      // the series. Note that [Series.colorFn] should always return a color.
+      if (series.seriesColor == null) {
+        try {
+          series.seriesColor = series.colorFn(0);
+        } catch (exception) {
+          series.seriesColor = _color;
+        }
+      }
     });
   }
 

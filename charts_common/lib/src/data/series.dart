@@ -89,6 +89,11 @@ class Series<T, D> {
   /// not provided, then [colorFn] will be used as a fallback.
   final AccessorFn<Color> fillColorFn;
 
+  /// [patternColorFn] returns the background color of tile when a
+  /// [FillPatternType] beside `solid` is used. If not provided, then
+  /// background color is used.
+  final AccessorFn<Color> patternColorFn;
+
   final AccessorFn<FillPatternType> fillPatternFn;
   final AccessorFn<num> radiusPxFn;
   final AccessorFn<num> strokeWidthPxFn;
@@ -114,6 +119,7 @@ class Series<T, D> {
       TypedAccessorFn<T, D> domainLowerBoundFn,
       TypedAccessorFn<T, D> domainUpperBoundFn,
       TypedAccessorFn<T, Color> fillColorFn,
+      TypedAccessorFn<T, Color> patternColorFn,
       TypedAccessorFn<T, FillPatternType> fillPatternFn,
       TypedAccessorFn<T, String> keyFn,
       TypedAccessorFn<T, String> labelAccessorFn,
@@ -150,6 +156,9 @@ class Series<T, D> {
     final _fillColorFn = fillColorFn == null
         ? null
         : (int index) => fillColorFn(data[index], index);
+    final _patternColorFn = patternColorFn == null
+        ? null
+        : (int index) => patternColorFn(data[index], index);
     final _fillPatternFn = fillPatternFn == null
         ? null
         : (int index) => fillPatternFn(data[index], index);
@@ -195,6 +204,7 @@ class Series<T, D> {
       domainUpperBoundFn: _domainUpperBoundFn,
       fillColorFn: _fillColorFn,
       fillPatternFn: _fillPatternFn,
+      patternColorFn: _patternColorFn,
       labelAccessorFn: _labelAccessorFn,
       insideLabelStyleAccessorFn: _insideLabelStyleAccessorFn,
       outsideLabelStyleAccessorFn: _outsideLabelStyleAccessorFn,
@@ -224,6 +234,7 @@ class Series<T, D> {
     this.domainUpperBoundFn,
     this.fillColorFn,
     this.fillPatternFn,
+    this.patternColorFn,
     this.keyFn,
     this.labelAccessorFn,
     this.insideLabelStyleAccessorFn,
