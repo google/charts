@@ -1,3 +1,6 @@
+# 0.8.1
+* Update intl version.
+
 # 0.8.0
 * Bug fixes from open source.
 
