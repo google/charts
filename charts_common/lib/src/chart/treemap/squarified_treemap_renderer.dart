@@ -59,7 +59,9 @@ class SquarifiedTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
 
       var bestScore = double.infinity;
       var width = math.min(rect.width, rect.height);
-      scaleArea(children, areaForRectangle(rect) / measureForTreeNode(node));
+      final measure = measureForTreeNode(node);
+      final scaleFactor = measure == 0 ? 0 : areaForRectangle(rect) / measure;
+      scaleArea(children, scaleFactor);
 
       while (remainingNodes.isNotEmpty) {
         final child = remainingNodes.first;
