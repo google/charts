@@ -129,10 +129,10 @@ class _SelectionCallbackState extends State<SelectionCallbackExample> {
     if (_time != null) {
       children.add(new Padding(
           padding: new EdgeInsets.only(top: 5.0),
-          child: new Text(_time.toString())));
+          child: new Text(_time.toString(), textDirection: TextDirection.ltr)));
     }
     _measures?.forEach((String series, num value) {
-      children.add(new Text('${series}: ${value}'));
+      children.add(new Text('${series}: ${value}', textDirection: TextDirection.ltr));
     });
 
     return new Column(children: children);
