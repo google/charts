@@ -261,7 +261,9 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   @override
   String get role => 'legend-${selectionModelType.toString()}';
 
-  bool get isRtl => _chart.context.isRtl;
+  bool get isRtl => _chart.context.chartContainerIsRtl;
+
+  bool get isAxisFlipped => _chart.context.isRtl;
 
   @override
   GraphicsFactory get graphicsFactory => _graphicsFactory;
@@ -287,14 +289,14 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
         position = LayoutPosition.Bottom;
         break;
       case BehaviorPosition.end:
-        position = isRtl ? LayoutPosition.Left : LayoutPosition.Right;
+        position = isAxisFlipped ? LayoutPosition.Left : LayoutPosition.Right;
         break;
       case BehaviorPosition.inside:
         position = LayoutPosition.DrawArea;
         break;
       case BehaviorPosition.start:
-        position = isRtl ? LayoutPosition.Right : LayoutPosition.Left;
-        position = isRtl ? LayoutPosition.Right : LayoutPosition.Left;
+        position = isAxisFlipped ? LayoutPosition.Right : LayoutPosition.Left;
+        position = isAxisFlipped ? LayoutPosition.Right : LayoutPosition.Left;
         break;
       case BehaviorPosition.top:
         position = LayoutPosition.Top;
