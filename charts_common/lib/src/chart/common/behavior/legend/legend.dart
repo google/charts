@@ -296,7 +296,6 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
         break;
       case BehaviorPosition.start:
         position = isAxisFlipped ? LayoutPosition.Right : LayoutPosition.Left;
-        position = isAxisFlipped ? LayoutPosition.Right : LayoutPosition.Left;
         break;
       case BehaviorPosition.top:
         position = LayoutPosition.Top;
