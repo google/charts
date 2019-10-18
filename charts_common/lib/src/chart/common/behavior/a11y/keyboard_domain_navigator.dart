@@ -199,6 +199,12 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
 
   /// Reads the current active index of the hover selection.
   int _getActiveHoverDomainIndex() {
+    // If enter is pressed before an arrow key, we don't have any selection
+    // domains available. Bail out.
+    if (_domains == null || _domains.isEmpty) {
+      return NO_SELECTION;
+    }
+
     final selectionModel = _chart.getSelectionModel(SelectionModelType.info);
 
     if (!selectionModel.hasAnySelection) {
