@@ -49,7 +49,7 @@ class TreeMapChart<D> extends BaseChart<D> {
     final details = <DatumDetails<D>>[];
     final treeMapSelection = getSelectionModel(type);
 
-    for (var seriesDatum in treeMapSelection.selectedDatum) {
+    for (final seriesDatum in treeMapSelection.selectedDatum) {
       final series = seriesDatum.series;
       final datumIndex = seriesDatum.index;
       final renderer = getSeriesRenderer(series.getAttr(rendererIdKey));

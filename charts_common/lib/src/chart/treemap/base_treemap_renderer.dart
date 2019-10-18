@@ -89,7 +89,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     // entry is expected to be the root.
     _treeNodeToRendererElement.clear();
 
-    for (var series in seriesList) {
+    for (final series in seriesList) {
       final count = series.data.length;
 
       // Populates [treeNodeToRendererElement] map entries.
@@ -112,15 +112,13 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     // corresponding datum in the new series data.
     final _visibleTreeMapRectKeys = Set<D>();
 
-    for (var series in seriesList) {
+    for (final series in seriesList) {
       if (series.data.isNotEmpty) {
-        final TreeNode root = series.data.first;
-
         // Configures the renderer element for root node.
-        _configureRootRendererElement(root);
+        _configureRootRendererElement(series.data.first);
 
         // Applies tiling algorithm to each node.
-        for (TreeNode node in series.data) {
+        for (final TreeNode node in series.data) {
           tile(node);
           final element = _rendererElementForTreeNode(node);
           element.refreshPaintProperties();
@@ -130,7 +128,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       }
     }
 
-    for (var rect in _animatedTreeMapRects) {
+    for (final rect in _animatedTreeMapRects) {
       if (!_visibleTreeMapRectKeys.contains(rect.key)) {
         rect.animateOut();
       }
@@ -143,7 +141,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       _animatedTreeMapRects.removeWhere((rect) => rect.animatingOut);
     }
 
-    for (var animatedRect in _animatedTreeMapRects) {
+    for (final animatedRect in _animatedTreeMapRects) {
       final element = animatedRect.getCurrentRect(animationPercent);
       final rect = element.boundingRect;
 
@@ -200,8 +198,8 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
           measureDistance: 0.0,
         ));
 
-        // Only processes children of this node since parent node contains
-        // the child rectangles in the treemap.
+        // Only processes nodes where its parent contains the [chartPoint].
+        // This reduces the number of nodes to verify.
         queue.addAll(node.children);
       }
     }
@@ -227,7 +225,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   @override
   assignMissingColors(Iterable<MutableSeries<D>> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
-    for (var series in seriesList) {
+    for (final series in seriesList) {
       final colorPalettes =
           StyleFactory.style.getOrderedPalettes(series.data.length);
       final count = colorPalettes.length;
@@ -250,7 +248,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   /// functions are not set.
   @protected
   void assignMissingStrokeWidths(Iterable<MutableSeries<D>> seriesList) {
-    for (var series in seriesList) {
+    for (final series in seriesList) {
       if (series.strokeWidthPxFn == null) {
         series.strokeWidthPxFn = (_) => config.strokeWidthPx;
       }
@@ -290,7 +288,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   /// the measure which the available layout area represents.
   @protected
   void scaleArea(Iterable<TreeNode> children, num scaleFactor) {
-    for (var child in children) {
+    for (final child in children) {
       final element = _rendererElementForTreeNode(child);
       final area = element.measure * (scaleFactor < 0 ? 0 : scaleFactor);
       element.area = area <= 0 ? 0 : area;
@@ -336,7 +334,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     if (side == boundingRect.height) {
       // Truncates the length since it is out of bounds.
       if (length > boundingRect.width) length = boundingRect.width.toInt();
-      for (var node in nodes) {
+      for (final node in nodes) {
         final element = _rendererElementForTreeNode(node);
         final height = min(boundingRect.top + boundingRect.height - top,
             length > 0 ? (element.area / length).round() : 0);
@@ -348,7 +346,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     } else {
       // Positions rectangles horizontally.
       if (length > boundingRect.height) length = boundingRect.height.toInt();
-      for (var node in nodes) {
+      for (final node in nodes) {
         final element = _rendererElementForTreeNode(node);
         final width = min(boundingRect.left + boundingRect.width - left,
             length > 0 ? (element.area / length).round() : 0);
@@ -446,7 +444,7 @@ class _AnimatedTreeMapRect<D> {
 
   void setNewTarget(TreeMapRendererElement<D> newTarget) {
     animatingOut = false;
-    // Only when [crrentRect] is null, [currentRect] should be [newTarget].
+    // Only when [currentRect] is null, [currentRect] should be [newTarget].
     _currentRect ??= newTarget.clone();
     _previousRect = _currentRect.clone();
     _targetRect = newTarget;

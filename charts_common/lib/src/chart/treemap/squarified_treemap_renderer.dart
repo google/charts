@@ -130,7 +130,7 @@ class _SquarifyRatioAnalyzer {
     var rMax = 0.0;
 
     // Finds rMin (i.e minimum area) and rMax (i.e maximum area) in [nodes].
-    for (var node in nodes) {
+    for (final node in nodes) {
       final area = _areaFn(node);
       if (area <= 0) continue;
       if (area < rMin) rMin = area;
