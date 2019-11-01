@@ -56,7 +56,8 @@ export 'src/chart/cartesian/axis/spec/axis_spec.dart'
         TextStyleSpec,
         TickLabelAnchor,
         TickLabelJustification,
-        TickFormatterSpec;
+        TickFormatterSpec,
+        TickProviderSpec;
 export 'src/chart/cartesian/axis/spec/bucketing_axis_spec.dart'
     show BucketingAxisSpec, BucketingNumericTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
