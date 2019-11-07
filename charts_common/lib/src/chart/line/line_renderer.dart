@@ -1071,18 +1071,19 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             return;
           }
 
-          final domainDistance = (p.x - chartPoint.x).abs();
-
           double measureDistance;
           double relativeDistance;
+          double domainDistance;
 
           if (p.y != null) {
             measureDistance = (p.y - chartPoint.y).abs();
+            domainDistance = (p.x - chartPoint.x).abs();
             relativeDistance = chartPoint.distanceTo(p);
           } else {
             // Null measures have no real position, so make them the farthest
             // away by real distance.
             measureDistance = double.infinity;
+            domainDistance = double.infinity;
             relativeDistance = byDomain ? domainDistance : double.infinity;
           }
 
