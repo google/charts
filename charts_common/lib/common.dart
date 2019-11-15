@@ -229,7 +229,7 @@ export 'src/chart/treemap/treemap_chart.dart' show TreeMapChart;
 export 'src/chart/treemap/treemap_label_decorator.dart'
     show TreeMapLabelDecorator;
 export 'src/chart/treemap/treemap_renderer_config.dart'
-    show TreeMapRendererConfig;
+    show TreeMapRendererConfig, TreeMapTileType;
 export 'src/common/color.dart' show Color;
 export 'src/common/date_time_factory.dart'
     show DateTimeFactory, LocalDateTimeFactory, UTCDateTimeFactory;
