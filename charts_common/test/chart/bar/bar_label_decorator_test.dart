@@ -401,10 +401,10 @@ void main() {
         // 'LabelABC' would not fit inside the bar in auto setting because it
         // has a width of 8.
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 6, 20), (_) => 'LabelABC', ['A']),
+            'A', new Rectangle(0, 0, 8, 20), (_) => 'LabelABC', ['A']),
       ];
-      // Draw bounds with width of 10 means that space inside the bar is larger.
-      final smallDrawBounds = new Rectangle(0, 0, 10, 20);
+      // Draw bounds with width of 14 means that space inside the bar is larger.
+      final smallDrawBounds = new Rectangle(0, 0, 14, 20);
 
       new BarLabelDecorator(
               labelPadding: 0, // Turn off label padding for testing.
@@ -417,7 +417,7 @@ void main() {
       final captured =
           verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
       expect(captured, hasLength(3));
-      expect(captured[0].maxWidth, equals(6));
+      expect(captured[0].maxWidth, equals(8));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
       expect(captured[1], equals(0));
       expect(captured[2], equals(5));
@@ -428,7 +428,7 @@ void main() {
         // 'LabelABC' would not fit inside the bar in auto setting because it
         // has a width of 8.
         new FakeBarRendererElement(
-            'A', new Rectangle(0, 0, 6, 20), (_) => 'LabelABC', ['A']),
+            'A', new Rectangle(0, 0, 8, 20), (_) => 'LabelABC', ['A']),
       ];
 
       new BarLabelDecorator(
@@ -443,10 +443,33 @@ void main() {
       final captured =
           verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
       expect(captured, hasLength(3));
-      expect(captured[0].maxWidth, equals(6));
+      expect(captured[0].maxWidth, equals(8));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
       expect(captured[1], equals(0));
       expect(captured[2], equals(5));
+    });
+
+    test('Do not paint labels if they do not fit', () {
+      final barElements = [
+        // 'LabelABC' would not fit inside the bar in auto setting because it
+        // has a width of 8.
+        new FakeBarRendererElement(
+            'A', new Rectangle(0, 0, 6, 20), (_) => 'LabelABC', ['A']),
+      ];
+
+      // Draw bounds with width of 12 means that label can fit neither inside
+      // nor outside.
+      final smallDrawBounds = new Rectangle(0, 0, 12, 20);
+
+      new BarLabelDecorator(
+              labelPadding: 0, // Turn off label padding for testing.
+              insideLabelStyleSpec: new TextStyleSpec(fontSize: 10))
+          .decorate(barElements, canvas, graphicsFactory,
+              drawBounds: smallDrawBounds,
+              animationPercent: 1.0,
+              renderingVertically: false);
+
+      verifyNever(canvas.drawText(captureAny, captureAny, captureAny));
     });
 
     test('LabelPosition.outside always paints outside the bar', () {

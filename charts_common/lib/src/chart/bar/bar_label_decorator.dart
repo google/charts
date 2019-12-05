@@ -280,50 +280,55 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       }
 
       // Only calculate and draw label if there's actually space for the label.
-      if (labelElement.maxWidth > 0) {
-        // Calculate the start position of label based on [labelAnchor].
-        int labelX;
-        if (calculatedLabelPosition == BarLabelPosition.inside) {
-          final _labelAnchor = labelAnchor ?? _defaultHorizontalLabelAnchor;
-          switch (_labelAnchor) {
-            case BarLabelAnchor.middle:
-              labelX = (bounds.left +
-                      bounds.width / 2 -
-                      labelElement.measurement.horizontalSliceWidth / 2)
-                  .round();
-              labelElement.textDirection =
-                  rtl ? TextDirection.rtl : TextDirection.ltr;
-              break;
-
-            case BarLabelAnchor.end:
-            case BarLabelAnchor.start:
-              final alignLeft = rtl
-                  ? (_labelAnchor == BarLabelAnchor.end)
-                  : (_labelAnchor == BarLabelAnchor.start);
-
-              if (alignLeft) {
-                labelX = bounds.left + labelPadding;
-                labelElement.textDirection = TextDirection.ltr;
-              } else {
-                labelX = bounds.right - labelPadding;
-                labelElement.textDirection = TextDirection.rtl;
-              }
-              break;
-          }
-        } else {
-          // calculatedLabelPosition == LabelPosition.outside
-          labelX = bounds.right + labelPadding;
-          labelElement.textDirection = TextDirection.ltr;
-        }
-
-        // Center the label inside the bar.
-        final labelY = (bounds.top +
-                (bounds.bottom - bounds.top) / 2 -
-                labelElement.measurement.verticalSliceWidth / 2)
-            .round();
-
-        canvas.drawText(labelElement, labelX, labelY);
+      if (labelElement.maxWidth < 0 ||
+          (labelElement.maxWidthStrategy == null &&
+              labelElement.measurement.horizontalSliceWidth >
+                  labelElement.maxWidth)) {
+        return;
       }
+
+      // Calculate the start position of label based on [labelAnchor].
+      int labelX;
+      if (calculatedLabelPosition == BarLabelPosition.inside) {
+        final _labelAnchor = labelAnchor ?? _defaultHorizontalLabelAnchor;
+        switch (_labelAnchor) {
+          case BarLabelAnchor.middle:
+            labelX = (bounds.left +
+                    bounds.width / 2 -
+                    labelElement.measurement.horizontalSliceWidth / 2)
+                .round();
+            labelElement.textDirection =
+                rtl ? TextDirection.rtl : TextDirection.ltr;
+            break;
+
+          case BarLabelAnchor.end:
+          case BarLabelAnchor.start:
+            final alignLeft = rtl
+                ? (_labelAnchor == BarLabelAnchor.end)
+                : (_labelAnchor == BarLabelAnchor.start);
+
+            if (alignLeft) {
+              labelX = bounds.left + labelPadding;
+              labelElement.textDirection = TextDirection.ltr;
+            } else {
+              labelX = bounds.right - labelPadding;
+              labelElement.textDirection = TextDirection.rtl;
+            }
+            break;
+        }
+      } else {
+        // calculatedLabelPosition == LabelPosition.outside
+        labelX = bounds.right + labelPadding;
+        labelElement.textDirection = TextDirection.ltr;
+      }
+
+      // Center the label inside the bar.
+      final labelY = (bounds.top +
+              (bounds.bottom - bounds.top) / 2 -
+              labelElement.measurement.verticalSliceWidth / 2)
+          .round();
+
+      canvas.drawText(labelElement, labelX, labelY);
     }
   }
 
