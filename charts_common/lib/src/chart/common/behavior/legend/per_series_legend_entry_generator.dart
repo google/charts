@@ -123,7 +123,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     num getMeasureTotal(MutableSeries<D> series) {
       var measureTotal = 0.0;
       for (var i = 0; i < series.data.length; i++) {
-        measureTotal += series.measureFn(i);
+        measureTotal += series.measureFn(i) ?? 0.0;
       }
       return measureTotal;
     }
