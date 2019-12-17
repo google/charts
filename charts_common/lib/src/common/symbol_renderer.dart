@@ -17,7 +17,7 @@ import 'dart:math' show Rectangle, Point, min;
 
 import 'package:meta/meta.dart' show protected;
 
-import '../chart/common/chart_canvas.dart' show ChartCanvas;
+import '../chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import 'color.dart' show Color;
 import 'style/style_factory.dart' show StyleFactory;
 
@@ -44,6 +44,7 @@ abstract class SymbolRenderer extends BaseSymbolRenderer {
   void paint(ChartCanvas canvas, Rectangle<num> bounds,
       {List<int> dashPattern,
       Color fillColor,
+      FillPatternType fillPattern,
       Color strokeColor,
       double strokeWidthPx});
 
@@ -71,7 +72,7 @@ abstract class SymbolRenderer extends BaseSymbolRenderer {
 /// An optional second point can describe an extended symbol.
 abstract class PointSymbolRenderer extends BaseSymbolRenderer {
   void paint(ChartCanvas canvas, Point<double> p1, double radius,
-      {Point<double> p2, Color fillColor, strokeColor});
+      {Point<double> p2, Color fillColor, Color strokeColor});
 }
 
 /// Rounded rectangular symbol with corners having [radius].
@@ -86,10 +87,12 @@ class RoundedRectSymbolRenderer extends SymbolRenderer {
   void paint(ChartCanvas canvas, Rectangle<num> bounds,
       {List<int> dashPattern,
       Color fillColor,
+      FillPatternType fillPattern,
       Color strokeColor,
       double strokeWidthPx}) {
     canvas.drawRRect(bounds,
         fill: getSolidFillColor(fillColor),
+        fillPattern: fillPattern,
         stroke: strokeColor,
         radius: radius,
         roundTopLeft: true,
@@ -141,6 +144,7 @@ class LineSymbolRenderer extends SymbolRenderer {
   void paint(ChartCanvas canvas, Rectangle<num> bounds,
       {List<int> dashPattern,
       Color fillColor,
+      FillPatternType fillPattern,
       Color strokeColor,
       double strokeWidthPx}) {
     final centerHeight = (bounds.bottom - bounds.top) / 2;
@@ -208,6 +212,7 @@ class CircleSymbolRenderer extends SymbolRenderer {
   void paint(ChartCanvas canvas, Rectangle<num> bounds,
       {List<int> dashPattern,
       Color fillColor,
+      FillPatternType fillPattern,
       Color strokeColor,
       double strokeWidthPx}) {
     final center = new Point(
@@ -248,6 +253,7 @@ class RectSymbolRenderer extends SymbolRenderer {
   void paint(ChartCanvas canvas, Rectangle<num> bounds,
       {List<int> dashPattern,
       Color fillColor,
+      FillPatternType fillPattern,
       Color strokeColor,
       double strokeWidthPx}) {
     canvas.drawRect(bounds,
@@ -279,7 +285,10 @@ class CylinderSymbolRenderer extends PointSymbolRenderer {
 
   @override
   void paint(ChartCanvas canvas, Point<double> p1, double radius,
-      {Point<double> p2, Color fillColor, strokeColor, double strokeWidthPx}) {
+      {Point<double> p2,
+      Color fillColor,
+      Color strokeColor,
+      double strokeWidthPx}) {
     if (p1 == null) {
       throw new ArgumentError('Invalid point p1 "${p1}"');
     }
@@ -316,7 +325,10 @@ class RectangleRangeSymbolRenderer extends PointSymbolRenderer {
 
   @override
   void paint(ChartCanvas canvas, Point<double> p1, double radius,
-      {Point<double> p2, Color fillColor, strokeColor, double strokeWidthPx}) {
+      {Point<double> p2,
+      Color fillColor,
+      Color strokeColor,
+      double strokeWidthPx}) {
     if (p1 == null) {
       throw new ArgumentError('Invalid point p1 "${p1}"');
     }

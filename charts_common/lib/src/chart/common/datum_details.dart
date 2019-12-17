@@ -17,6 +17,7 @@ import 'dart:math' show Point;
 
 import '../../common/color.dart' show Color;
 import '../../common/symbol_renderer.dart' show SymbolRenderer;
+import 'chart_canvas.dart' show FillPatternType;
 import 'processed_series.dart' show ImmutableSeries;
 
 typedef String DomainFormatter<D>(D domain);
@@ -79,6 +80,9 @@ class DatumDetails<D> {
   /// If this is defined, then [color] will be used as a stroke color.
   /// Otherwise, [color] will be used for the fill color.
   final Color fillColor;
+
+  /// Optional fill pattern of this [datum].
+  final FillPatternType fillPattern;
 
   /// Optional area color of this [datum].
   ///
@@ -147,6 +151,7 @@ class DatumDetails<D> {
       this.series,
       this.color,
       this.fillColor,
+      this.fillPattern,
       this.areaColor,
       this.dashPattern,
       this.chartPosition,
@@ -176,6 +181,7 @@ class DatumDetails<D> {
       ImmutableSeries<D> series,
       Color color,
       Color fillColor,
+      FillPatternType fillPattern,
       Color areaColor,
       List<int> dashPattern,
       Point<double> chartPosition,
@@ -207,6 +213,7 @@ class DatumDetails<D> {
         series: series ?? other.series,
         color: color ?? other.color,
         fillColor: fillColor ?? other.fillColor,
+        fillPattern: fillPattern ?? other.fillPattern,
         areaColor: areaColor ?? other.areaColor,
         dashPattern: dashPattern ?? other.dashPattern,
         chartPosition: chartPosition ?? other.chartPosition,
