@@ -25,16 +25,22 @@ class MaterialPalette {
   static const white = const Color(r: 255, g: 255, b: 255);
 
   static Palette get blue => const MaterialBlue();
+  static Palette get lightBlue => const MaterialLightBlue();
+  static Palette get blueGrey => const MaterialBlueGrey();
   static Palette get red => const MaterialRed();
   static Palette get yellow => const MaterialYellow();
+  static Palette get amber => const MaterialYellow();
   static Palette get green => const MaterialGreen();
+  static Palette get lightGreen => const MaterialLightGreen();
   static Palette get purple => const MaterialPurple();
+  static Palette get deepPurple => const MaterialDeepPurple();
   static Palette get cyan => const MaterialCyan();
   static Palette get deepOrange => const MaterialDeepOrange();
   static Palette get lime => const MaterialLime();
   static Palette get indigo => const MaterialIndigo();
   static Palette get pink => const MaterialPink();
   static Palette get teal => const MaterialTeal();
+  static Palette get brown => const MaterialBrown();
   static MaterialGray get gray => const MaterialGray();
 
   // Lazily-instantiated iterable, to avoid allocating colors that are not used.
@@ -49,7 +55,13 @@ class MaterialPalette {
     () => lime,
     () => indigo,
     () => pink,
-    () => teal
+    () => teal,
+    () => lightBlue,
+    () => blueGrey,
+    () => amber,
+    () => lightGreen,
+    () => deepPurple,
+    () => brown
   ].map((f) => f());
 
   static List<Palette> getOrderedPalettes(int count) {
@@ -64,6 +76,30 @@ class MaterialBlue extends Palette {
   static const _shade700 = const Color(r: 0x19, g: 0x76, b: 0xD2); //#1976D2
 
   const MaterialBlue();
+
+  @override
+  Color get shadeDefault => _shade500;
+}
+
+class MaterialLightBlue extends Palette {
+  static const _shade200 = const Color(r: 0x81, g: 0xD4, b: 0xFA); //#81D4FA
+  static const _shade500 = const Color(
+      r: 0x03, g: 0xA9, b: 0xF4, darker: _shade700, lighter: _shade200);
+  static const _shade700 = const Color(r: 0x02, g: 0x88, b: 0xD1); //#0288D1
+
+  const MaterialLightBlue();
+
+  @override
+  Color get shadeDefault => _shade500;
+}
+
+class MaterialBlueGrey extends Palette {
+  static const _shade200 = const Color(r: 0xB0, g: 0xBE, b: 0xC5); //#B0BEC5
+  static const _shade500 = const Color(
+      r: 0x60, g: 0x7D, b: 0x8B, darker: _shade700, lighter: _shade200);
+  static const _shade700 = const Color(r: 0x45, g: 0x5A, b: 0x64); //#455A64
+
+  const MaterialBlueGrey();
 
   @override
   Color get shadeDefault => _shade500;
@@ -93,6 +129,30 @@ class MaterialYellow extends Palette {
   Color get shadeDefault => _shade500;
 }
 
+class MaterialAmber extends Palette {
+  static const _shade200 = const Color(r: 0xFF, g: 0xE0, b: 0x82); //#FFE082
+  static const _shade500 = const Color(
+      r: 0xFF, g: 0xCA, b: 0x28, darker: _shade700, lighter: _shade200);
+  static const _shade700 = const Color(r: 0xFF, g: 0xB3, b: 0x00); //#FFB300
+
+  const MaterialAmber();
+
+  @override
+  Color get shadeDefault => _shade500;
+}
+
+class MaterialLightGreen extends Palette {
+  static const _shade200 = const Color(r: 0xC5, g: 0xE1, b: 0xA5); //#C5E1A5
+  static const _shade500 = const Color(
+      r: 0x8B, g: 0xC3, b: 0x4A, darker: _shade700, lighter: _shade200);
+  static const _shade700 = const Color(r: 0x68, g: 0x9F, b: 0x38); //#689F38
+
+  const MaterialLightGreen();
+
+  @override
+  Color get shadeDefault => _shade500;
+}
+
 class MaterialGreen extends Palette {
   static const _shade200 = const Color(r: 0xA5, g: 0xD6, b: 0xA7); //#A5D6A7
   static const _shade700 = const Color(r: 0x38, g: 0x8E, b: 0x3C); //#388E3C;
@@ -112,6 +172,18 @@ class MaterialPurple extends Palette {
       r: 0x9C, g: 0x27, b: 0xB0, darker: _shade700, lighter: _shade200);
 
   const MaterialPurple();
+
+  @override
+  Color get shadeDefault => _shade500;
+}
+
+class MaterialDeepPurple extends Palette {
+  static const _shade200 = const Color(r: 0xB3, g: 0x9D, b: 0xDB); //#B39DDB
+  static const _shade700 = const Color(r: 0x51, g: 0x2D, b: 0xA8); //#512DA8
+  static const _shade500 = const Color(
+      r: 0x67, g: 0x3A, b: 0xB7, darker: _shade700, lighter: _shade200);
+
+  const MaterialDeepPurple();
 
   @override
   Color get shadeDefault => _shade500;
@@ -184,6 +256,18 @@ class MaterialTeal extends Palette {
       r: 0x00, g: 0x96, b: 0x88, darker: _shade700, lighter: _shade200);
 
   const MaterialTeal();
+
+  @override
+  Color get shadeDefault => _shade500;
+}
+
+class MaterialBrown extends Palette {
+  static const _shade200 = const Color(r: 0xBC, g: 0xAA, b: 0xA4); //#BCAAA4
+  static const _shade500 = const Color(
+      r: 0x8D, g: 0x6E, b: 0x63, darker: _shade700, lighter: _shade200);
+  static const _shade700 = const Color(r: 0x6D, g: 0x4C, b: 0x41); //#6D4C41
+
+  const MaterialBrown();
 
   @override
   Color get shadeDefault => _shade500;
