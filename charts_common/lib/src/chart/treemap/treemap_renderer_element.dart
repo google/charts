@@ -75,7 +75,7 @@ class TreeMapRendererElement<D> {
 
   /// Refreshes paint properties by invoking series accessor functions again.
   ///
-  /// This is useful when series accessor funcations are updated by behaviors
+  /// This is useful when series accessor functions are updated by behaviors
   /// and redraw of this element is triggered.
   void refreshPaintProperties() {
     strokeColor = series.colorFn(index);

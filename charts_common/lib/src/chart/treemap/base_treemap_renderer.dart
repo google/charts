@@ -187,6 +187,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     while (queue.isNotEmpty) {
       final node = queue.removeFirst();
       final element = _rendererElementForTreeNode(node);
+
       if (element.boundingRect.containsPoint(chartPoint)) {
         nearest.add(DatumDetails<D>(
           index: element.index,
@@ -197,8 +198,10 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
           domainDistance: 0.0,
           measureDistance: 0.0,
         ));
+        // No need to verify remaining siblings.
+        queue.clear();
 
-        // Only processes nodes where its parent contains the [chartPoint].
+        // Only processes nodes whose parents contain the [chartPoint].
         // This reduces the number of nodes to verify.
         queue.addAll(node.children);
       }

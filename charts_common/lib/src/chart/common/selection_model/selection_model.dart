@@ -157,9 +157,7 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
   bool updateSelection(
       List<SeriesDatum<D>> datumSelection, List<ImmutableSeries<D>> seriesList,
       {bool notifyListeners = true}) {
-    if (locked) {
-      return false;
-    }
+    if (locked) return false;
 
     final origSelectedDatum = _selectedDatum;
     final origSelectedSeries = _selectedSeries;
@@ -168,12 +166,11 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
     _selectedSeries = seriesList;
 
     // Provide a copy, so listeners get an immutable model.
-    final copyOfSelectionModel = new SelectionModel.fromOther(this);
+    final copyOfSelectionModel = SelectionModel.fromOther(this);
     _updatedListeners.forEach((listener) => listener(copyOfSelectionModel));
 
-    final changed =
-        !new ListEquality().equals(origSelectedDatum, _selectedDatum) ||
-            !new ListEquality().equals(origSelectedSeries, _selectedSeries);
+    final changed = !ListEquality().equals(origSelectedDatum, _selectedDatum) ||
+        !ListEquality().equals(origSelectedSeries, _selectedSeries);
     if (notifyListeners && changed) {
       _changedListeners.forEach((listener) => listener(copyOfSelectionModel));
     }
