@@ -143,9 +143,18 @@ class SelectionModel<D> {
 class MutableSelectionModel<D> extends SelectionModel<D> {
   final _changedListeners = <SelectionModelListener<D>>[];
   final _updatedListeners = <SelectionModelListener<D>>[];
+  final _lockChangedListeners = <SelectionModelListener<D>>[];
+
+  bool _locked = false;
 
   /// When set to true, prevents the model from being updated.
-  bool locked = false;
+  set locked(bool locked) {
+    _locked = locked;
+    _lockChangedListeners
+        .forEach((listener) => listener(SelectionModel.fromOther(this)));
+  }
+
+  bool get locked => _locked;
 
   /// Clears the selection state.
   bool clearSelection({bool notifyListeners = true}) {
@@ -157,7 +166,7 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
   bool updateSelection(
       List<SeriesDatum<D>> datumSelection, List<ImmutableSeries<D>> seriesList,
       {bool notifyListeners = true}) {
-    if (locked) return false;
+    if (_locked) return false;
 
     final origSelectedDatum = _selectedDatum;
     final origSelectedSeries = _selectedSeries;
@@ -208,10 +217,21 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
     _updatedListeners.remove(listener);
   }
 
+  /// Add a listener to be notified when this [SelectionModel] is locked.
+  void addSelectionLockChangedListener(SelectionModelListener<D> listener) {
+    _lockChangedListeners.add(listener);
+  }
+
+  /// Remove listener from being notified when this [SelectionModel]  is locked.
+  void removeSelectionLockChangedListener(SelectionModelListener<D> listener) {
+    _lockChangedListeners.remove(listener);
+  }
+
   /// Remove all listeners.
   void clearAllListeners() {
     _changedListeners.clear();
     _updatedListeners.clear();
+    _lockChangedListeners.clear();
   }
 }
 

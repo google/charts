@@ -323,6 +323,43 @@ void main() {
       expect(triggeredModel, isNull);
     });
   });
+
+  group('SelectionModel locked listeners', () {
+    test('listener triggered when model is locked', () {
+      SelectionModel<String> triggeredModel;
+      // Listen
+      _selectionModel
+          .addSelectionLockChangedListener((SelectionModel<String> model) {
+        triggeredModel = model;
+      });
+
+      // Lock selection.
+      _selectionModel.locked = true;
+
+      // Callback should have been triggered.
+      expect(triggeredModel, equals(_selectionModel));
+    });
+
+    test('removed listener not triggered for locking', () {
+      SelectionModel<String> triggeredModel;
+
+      Function cb = (SelectionModel<String> model) {
+        triggeredModel = model;
+      };
+
+      // Listen
+      _selectionModel.addSelectionLockChangedListener(cb);
+
+      // Unlisten
+      _selectionModel.removeSelectionLockChangedListener(cb);
+
+      // Lock selection.
+      _selectionModel.locked = true;
+
+      // Callback should not have been triggered.
+      expect(triggeredModel, isNull);
+    });
+  });
 }
 
 class MyDatum {
