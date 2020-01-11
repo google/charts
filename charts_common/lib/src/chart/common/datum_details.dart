@@ -193,7 +193,7 @@ class DatumDetails<D> {
       double radiusPx,
       SymbolRenderer symbolRenderer,
       double strokeWidthPx}) {
-    return new DatumDetails<D>(
+    return DatumDetails<D>(
         datum: datum ?? other.datum,
         index: index ?? other.index,
         domain: domain ?? other.domain,

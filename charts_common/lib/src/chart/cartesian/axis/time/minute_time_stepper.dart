@@ -40,8 +40,7 @@ class MinuteTimeStepper extends BaseTimeStepper {
             .any((increment) => increment <= 0 || increment > 60) ==
         false);
 
-    return new MinuteTimeStepper._internal(
-        dateTimeFactory, allowedTickIncrements);
+    return MinuteTimeStepper._internal(dateTimeFactory, allowedTickIncrements);
   }
 
   @override
@@ -73,6 +72,6 @@ class MinuteTimeStepper extends BaseTimeStepper {
 
   @override
   DateTime getNextStepTime(DateTime time, int tickIncrement) {
-    return time.add(new Duration(minutes: tickIncrement));
+    return time.add(Duration(minutes: tickIncrement));
   }
 }

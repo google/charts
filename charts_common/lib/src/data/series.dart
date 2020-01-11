@@ -103,7 +103,7 @@ class Series<T, D> {
 
   // TODO: should this be immutable as well? If not, should any of
   // the non-required ones be final?
-  final SeriesAttributes attributes = new SeriesAttributes();
+  final SeriesAttributes attributes = SeriesAttributes();
 
   factory Series(
       {@required String id,
@@ -190,7 +190,7 @@ class Series<T, D> {
         ? null
         : (int index) => strokeWidthPxFn(data[index], index);
 
-    return new Series._internal(
+    return Series._internal(
       id: id,
       data: data,
       domainFn: _domainFn,

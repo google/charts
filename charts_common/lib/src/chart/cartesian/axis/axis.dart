@@ -253,7 +253,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   void setOutputRange(int start, int end) {
-    _scale.range = new ScaleOutputExtent(start, end);
+    _scale.range = ScaleOutputExtent(start, end);
   }
 
   /// Request update ticks from tick provider and update the painted ticks.
@@ -287,7 +287,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       return;
     }
 
-    final providedTicks = new List.from(_providedTicks ?? []);
+    final providedTicks = List.from(_providedTicks ?? []);
 
     for (AxisTicks<D> animatedTick in _axisTicks) {
       final tick = providedTicks?.firstWhere(
@@ -312,7 +312,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
     // Add new ticks
     providedTicks?.forEach((tick) {
-      final animatedTick = new AxisTicks<D>(tick);
+      final animatedTick = AxisTicks<D>(tick);
       if (_previousScale != null) {
         animatedTick.animateInFrom(_previousScale[tick.value].toDouble());
       }
@@ -396,7 +396,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
-  LayoutViewConfig get layoutConfig => new LayoutViewConfig(
+  LayoutViewConfig get layoutConfig => LayoutViewConfig(
       paintOrder: layoutPaintOrder,
       position: _layoutPosition,
       positionOrder: LayoutViewPositionOrder.axis);
@@ -467,8 +467,8 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
         isVertical ? _componentBounds.top : _componentBounds.right;
 
     final outputRange = reverseOutputRange
-        ? new ScaleOutputExtent(outputEnd, outputStart)
-        : new ScaleOutputExtent(outputStart, outputEnd);
+        ? ScaleOutputExtent(outputEnd, outputStart)
+        : ScaleOutputExtent(outputStart, outputEnd);
 
     if (_scale.range != outputRange) {
       _scale.range = outputRange;
@@ -520,9 +520,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 class NumericAxis extends Axis<num> {
   NumericAxis({TickProvider<num> tickProvider})
       : super(
-          tickProvider: tickProvider ?? new NumericTickProvider(),
-          tickFormatter: new NumericTickFormatter(),
-          scale: new LinearScale(),
+          tickProvider: tickProvider ?? NumericTickProvider(),
+          tickFormatter: NumericTickFormatter(),
+          scale: LinearScale(),
         );
 
   void setScaleViewport(NumericExtents viewport) {
@@ -539,7 +539,7 @@ class OrdinalAxis extends Axis<String> {
   }) : super(
           tickProvider: tickProvider ?? const OrdinalTickProvider(),
           tickFormatter: tickFormatter ?? const OrdinalTickFormatter(),
-          scale: new SimpleOrdinalScale(),
+          scale: SimpleOrdinalScale(),
         );
 
   void setScaleViewport(OrdinalViewport viewport) {

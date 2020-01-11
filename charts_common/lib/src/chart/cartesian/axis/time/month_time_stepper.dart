@@ -37,8 +37,7 @@ class MonthTimeStepper extends BaseTimeStepper {
     // All increments must be > 0.
     assert(allowedTickIncrements.any((increment) => increment <= 0) == false);
 
-    return new MonthTimeStepper._internal(
-        dateTimeFactory, allowedTickIncrements);
+    return MonthTimeStepper._internal(dateTimeFactory, allowedTickIncrements);
   }
 
   @override

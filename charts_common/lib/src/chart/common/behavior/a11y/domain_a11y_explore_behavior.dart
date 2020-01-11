@@ -58,8 +58,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
             minimumWidth: minimumWidth,
             exploreModeEnabledAnnouncement: exploreModeEnabledAnnouncement,
             exploreModeDisabledAnnouncement: exploreModeDisabledAnnouncement) {
-    _lifecycleListener =
-        new LifecycleListener<D>(onPostprocess: _updateSeriesList);
+    _lifecycleListener = LifecycleListener<D>(onPostprocess: _updateSeriesList);
   }
 
   @override
@@ -77,7 +76,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
         D domain = series.domainFn(index);
 
         domainSeriesDatum[domain] ??= <SeriesDatum<D>>[];
-        domainSeriesDatum[domain].add(new SeriesDatum<D>(series, datum));
+        domainSeriesDatum[domain].add(SeriesDatum<D>(series, datum));
       }
     }
 
@@ -93,7 +92,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
           ? domainAxis.stepSize
           : minimumWidth;
 
-      nodes.add(new _DomainA11yNode(a11yDescription,
+      nodes.add(_DomainA11yNode(a11yDescription,
           location: location,
           stepSize: stepSize,
           chartDrawBounds: _chart.drawAreaBounds,
@@ -157,16 +156,16 @@ class _DomainA11yNode extends A11yNode implements Comparable<_DomainA11yNode> {
       var top = chartDrawBounds.top;
       var width = stepSize.round();
       var height = chartDrawBounds.height;
-      boundingBox = new Rectangle(left, top, width, height);
+      boundingBox = Rectangle(left, top, width, height);
     } else {
       var left = chartDrawBounds.left;
       var top = (location - stepSize / 2).round();
       var width = chartDrawBounds.width;
       var height = stepSize.round();
-      boundingBox = new Rectangle(left, top, width, height);
+      boundingBox = Rectangle(left, top, width, height);
     }
 
-    return new _DomainA11yNode._internal(label, boundingBox,
+    return _DomainA11yNode._internal(label, boundingBox,
         location: location,
         isRtl: isRtl,
         renderVertically: renderVertically,

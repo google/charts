@@ -37,8 +37,7 @@ class YearTimeStepper extends BaseTimeStepper {
     // All increments must be > 0.
     assert(allowedTickIncrements.any((increment) => increment <= 0) == false);
 
-    return new YearTimeStepper._internal(
-        dateTimeFactory, allowedTickIncrements);
+    return YearTimeStepper._internal(dateTimeFactory, allowedTickIncrements);
   }
 
   @override

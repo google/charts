@@ -148,7 +148,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     @required this.rendererId,
     @required int layoutPaintOrder,
     this.symbolRenderer,
-  }) : this.layoutConfig = new LayoutViewConfig(
+  }) : this.layoutConfig = LayoutViewConfig(
             paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
@@ -378,7 +378,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     var strokeWidthPx = strokeWidthPxFn != null ? strokeWidthPxFn(index) : null;
     strokeWidthPx = strokeWidthPx?.toDouble();
 
-    final details = new DatumDetails<D>(
+    final details = DatumDetails<D>(
         datum: seriesDatum.datum,
         index: seriesDatum.index,
         domain: domainValue,

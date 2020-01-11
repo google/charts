@@ -165,7 +165,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
 
     // If there are no ticks, they do not collide.
     if (ticks == null) {
-      return new CollisionReport(
+      return CollisionReport(
           ticksCollide: false, ticks: ticks, alternateTicksUsed: false);
     }
 
@@ -246,12 +246,12 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       }
 
       if (collides) {
-        return new CollisionReport(
+        return CollisionReport(
             ticksCollide: true, ticks: ticks, alternateTicksUsed: false);
       }
     }
 
-    return new CollisionReport(
+    return CollisionReport(
         ticksCollide: false, ticks: ticks, alternateTicksUsed: false);
   }
 
@@ -272,7 +272,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
                     labelOffsetFromAxisPx))
         .round();
 
-    return new ViewMeasuredSizes(
+    return ViewMeasuredSizes(
         preferredWidth: maxHorizontalSliceWidth, preferredHeight: maxHeight);
   }
 
@@ -290,7 +290,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
                     tick.textElement.measurement.horizontalSliceWidth)))
         .round();
 
-    return new ViewMeasuredSizes(
+    return ViewMeasuredSizes(
         preferredWidth: maxWidth,
         preferredHeight: maxVerticalSliceWidth + labelOffsetFromAxisPx);
   }

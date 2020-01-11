@@ -48,7 +48,7 @@ class AxisSpec<D> {
     bool showAxisLine,
     ScaleSpec scaleSpec,
   }) {
-    return new AxisSpec(
+    return AxisSpec(
       renderSpec: renderSpec ?? other.renderSpec,
       tickProviderSpec: tickProviderSpec ?? other.tickProviderSpec,
       tickFormatterSpec: tickFormatterSpec ?? other.tickFormatterSpec,

@@ -175,7 +175,7 @@ class LineSymbolRenderer extends SymbolRenderer {
     // TODO: Pass in strokeWidth, roundEndCaps, and dashPattern from
     // line renderer config.
     canvas.drawLine(
-      points: [new Point(left, centerHeight), new Point(right, centerHeight)],
+      points: [Point(left, centerHeight), Point(right, centerHeight)],
       dashPattern: localDashPattern,
       fill: getSolidFillColor(fillColor),
       roundEndCaps: roundEndCaps,
@@ -215,7 +215,7 @@ class CircleSymbolRenderer extends SymbolRenderer {
       FillPatternType fillPattern,
       Color strokeColor,
       double strokeWidthPx}) {
-    final center = new Point(
+    final center = Point(
       bounds.left + (bounds.width / 2),
       bounds.top + (bounds.height / 2),
     );
@@ -290,15 +290,15 @@ class CylinderSymbolRenderer extends PointSymbolRenderer {
       Color strokeColor,
       double strokeWidthPx}) {
     if (p1 == null) {
-      throw new ArgumentError('Invalid point p1 "${p1}"');
+      throw ArgumentError('Invalid point p1 "${p1}"');
     }
 
     if (p2 == null) {
-      throw new ArgumentError('Invalid point p2 "${p2}"');
+      throw ArgumentError('Invalid point p2 "${p2}"');
     }
 
-    final adjustedP1 = new Point<double>(p1.x, p1.y);
-    final adjustedP2 = new Point<double>(p2.x, p2.y);
+    final adjustedP1 = Point<double>(p1.x, p1.y);
+    final adjustedP2 = Point<double>(p2.x, p2.y);
 
     canvas.drawLine(
         points: [adjustedP1, adjustedP2],
@@ -330,15 +330,15 @@ class RectangleRangeSymbolRenderer extends PointSymbolRenderer {
       Color strokeColor,
       double strokeWidthPx}) {
     if (p1 == null) {
-      throw new ArgumentError('Invalid point p1 "${p1}"');
+      throw ArgumentError('Invalid point p1 "${p1}"');
     }
 
     if (p2 == null) {
-      throw new ArgumentError('Invalid point p2 "${p2}"');
+      throw ArgumentError('Invalid point p2 "${p2}"');
     }
 
-    final adjustedP1 = new Point<double>(p1.x, p1.y);
-    final adjustedP2 = new Point<double>(p2.x, p2.y);
+    final adjustedP1 = Point<double>(p1.x, p1.y);
+    final adjustedP2 = Point<double>(p2.x, p2.y);
 
     canvas.drawLine(
         points: [adjustedP1, adjustedP2],
