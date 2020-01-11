@@ -19,7 +19,7 @@ import 'base_time_stepper.dart' show BaseTimeStepper;
 /// Day stepper.
 class DayTimeStepper extends BaseTimeStepper {
   // TODO: Remove the 14 day increment if we add week stepper.
-  static const _defaultIncrements = const [1, 2, 3, 7, 14];
+  static const _defaultIncrements = [1, 2, 3, 7, 14];
   static const _hoursInDay = 24;
 
   final List<int> _allowedTickIncrements;

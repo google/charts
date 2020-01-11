@@ -49,7 +49,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
   static const MIN_DIPS_BETWEEN_TICKS = 25;
 
   /// Potential steps available to the baseTen value of the data.
-  static const DEFAULT_STEPS = const [
+  static const DEFAULT_STEPS = [
     0.01,
     0.02,
     0.025,

@@ -25,7 +25,7 @@ import 'simple_date_time_factory.dart' show SimpleDateTimeFactory;
 const EPSILON = 0.001;
 
 void main() {
-  const dateTimeFactory = const SimpleDateTimeFactory();
+  const dateTimeFactory = SimpleDateTimeFactory();
   const millisecondsInHour = 3600 * 1000;
 
   setUp(() {});

@@ -34,20 +34,19 @@ import 'base_bar_renderer_config.dart' show BaseBarRendererConfig;
 import 'base_bar_renderer_element.dart'
     show BaseAnimatedBar, BaseBarRendererElement;
 
-const barGroupIndexKey = const AttributeKey<int>('BarRenderer.barGroupIndex');
+const barGroupIndexKey = AttributeKey<int>('BarRenderer.barGroupIndex');
 
-const barGroupCountKey = const AttributeKey<int>('BarRenderer.barGroupCount');
+const barGroupCountKey = AttributeKey<int>('BarRenderer.barGroupCount');
 
-const barGroupWeightKey =
-    const AttributeKey<double>('BarRenderer.barGroupWeight');
+const barGroupWeightKey = AttributeKey<double>('BarRenderer.barGroupWeight');
 
 const previousBarGroupWeightKey =
-    const AttributeKey<double>('BarRenderer.previousBarGroupWeight');
+    AttributeKey<double>('BarRenderer.previousBarGroupWeight');
 
-const stackKeyKey = const AttributeKey<String>('BarRenderer.stackKey');
+const stackKeyKey = AttributeKey<String>('BarRenderer.stackKey');
 
 const barElementsKey =
-    const AttributeKey<List<BaseBarRendererElement>>('BarRenderer.elements');
+    AttributeKey<List<BaseBarRendererElement>>('BarRenderer.elements');
 
 /// Base class for bar renderers that implements common stacking and grouping
 /// logic.

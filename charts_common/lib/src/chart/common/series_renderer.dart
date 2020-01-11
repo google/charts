@@ -41,10 +41,10 @@ import 'series_datum.dart' show SeriesDatum;
 /// [rendererIdKey] can be added as an attribute to user-defined [Series]
 /// objects.
 const AttributeKey<String> rendererIdKey =
-    const AttributeKey<String>('SeriesRenderer.rendererId');
+    AttributeKey<String>('SeriesRenderer.rendererId');
 
 const AttributeKey<SeriesRenderer> rendererKey =
-    const AttributeKey<SeriesRenderer>('SeriesRenderer.renderer');
+    AttributeKey<SeriesRenderer>('SeriesRenderer.renderer');
 
 /// A series renderer draws one or more series of data onto a chart canvas.
 abstract class SeriesRenderer<D> extends LayoutView {

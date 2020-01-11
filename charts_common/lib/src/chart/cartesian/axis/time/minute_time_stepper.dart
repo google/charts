@@ -18,7 +18,7 @@ import 'base_time_stepper.dart';
 
 /// Minute stepper where ticks generated aligns with the hour.
 class MinuteTimeStepper extends BaseTimeStepper {
-  static const _defaultIncrements = const [5, 10, 15, 20, 30];
+  static const _defaultIncrements = [5, 10, 15, 20, 30];
   static const _millisecondsInMinute = 60 * 1000;
 
   final List<int> _allowedTickIncrements;

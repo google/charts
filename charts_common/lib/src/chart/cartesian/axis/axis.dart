@@ -47,9 +47,9 @@ import 'tick_formatter.dart'
     show TickFormatter, OrdinalTickFormatter, NumericTickFormatter;
 import 'tick_provider.dart' show TickProvider;
 
-const measureAxisIdKey = const AttributeKey<String>('Axis.measureAxisId');
-const measureAxisKey = const AttributeKey<Axis>('Axis.measureAxis');
-const domainAxisKey = const AttributeKey<Axis>('Axis.domainAxis');
+const measureAxisIdKey = AttributeKey<String>('Axis.measureAxisId');
+const measureAxisKey = AttributeKey<Axis>('Axis.measureAxis');
+const domainAxisKey = AttributeKey<Axis>('Axis.domainAxis');
 
 /// Orientation of an Axis.
 enum AxisOrientation { top, right, bottom, left }

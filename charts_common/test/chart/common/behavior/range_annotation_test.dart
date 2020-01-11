@@ -85,7 +85,7 @@ void main() {
   final _s2D2 = MyRow(4, 22);
   final _s2D3 = MyRow(5, 23);
 
-  const _dashPattern = const <int>[2, 3];
+  const _dashPattern = <int>[2, 3];
 
   List<RangeAnnotationSegment<num>> _annotations1;
 

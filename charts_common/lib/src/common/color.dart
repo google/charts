@@ -17,9 +17,9 @@ import 'package:meta/meta.dart' show immutable;
 
 @immutable
 class Color {
-  static const black = const Color(r: 0, g: 0, b: 0);
-  static const white = const Color(r: 255, g: 255, b: 255);
-  static const transparent = const Color(r: 0, g: 0, b: 0, a: 0);
+  static const black = Color(r: 0, g: 0, b: 0);
+  static const white = Color(r: 255, g: 255, b: 255);
+  static const transparent = Color(r: 0, g: 0, b: 0, a: 0);
 
   static const _darkerPercentOfOrig = 0.7;
   static const _lighterPercentOfOrig = 0.1;

@@ -38,22 +38,22 @@ import 'point_renderer_config.dart' show PointRendererConfig;
 import 'point_renderer_decorator.dart' show PointRendererDecorator;
 
 const pointElementsKey =
-    const AttributeKey<List<PointRendererElement>>('PointRenderer.elements');
+    AttributeKey<List<PointRendererElement>>('PointRenderer.elements');
 
 const pointSymbolRendererFnKey =
-    const AttributeKey<AccessorFn<String>>('PointRenderer.symbolRendererFn');
+    AttributeKey<AccessorFn<String>>('PointRenderer.symbolRendererFn');
 
 const pointSymbolRendererIdKey =
-    const AttributeKey<String>('PointRenderer.symbolRendererId');
+    AttributeKey<String>('PointRenderer.symbolRendererId');
 
 /// Defines a fixed radius for data bounds lines (typically drawn by attaching a
 /// [ComparisonPointsDecorator] to the renderer.
 const boundsLineRadiusPxKey =
-    const AttributeKey<double>('SymbolAnnotationRenderer.boundsLineRadiusPx');
+    AttributeKey<double>('SymbolAnnotationRenderer.boundsLineRadiusPx');
 
 /// Defines an [AccessorFn] for the radius for data bounds lines (typically
 /// drawn by attaching a [ComparisonPointsDecorator] to the renderer.
-const boundsLineRadiusPxFnKey = const AttributeKey<AccessorFn<double>>(
+const boundsLineRadiusPxFnKey = AttributeKey<AccessorFn<double>>(
     'SymbolAnnotationRenderer.boundsLineRadiusPxFn');
 
 const defaultSymbolRendererId = '__default__';

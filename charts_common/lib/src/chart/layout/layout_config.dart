@@ -35,7 +35,7 @@ class LayoutConfig {
 /// Specs that applies to one margin.
 class MarginSpec {
   /// [MarginSpec] that has max of 50 percent.
-  static const defaultSpec = const MarginSpec._internal(null, null, null, 50);
+  static const defaultSpec = MarginSpec._internal(null, null, null, 50);
 
   final int _minPixel;
   final int _maxPixel;

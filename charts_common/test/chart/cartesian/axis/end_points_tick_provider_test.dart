@@ -100,7 +100,7 @@ class MockLinePaint extends Mock implements LineStyle {}
 class MockChartContext extends Mock implements ChartContext {}
 
 void main() {
-  const dateTimeFactory = const SimpleDateTimeFactory();
+  const dateTimeFactory = SimpleDateTimeFactory();
   FakeGraphicsFactory graphicsFactory;
   EndPointsTickProvider tickProvider;
   ChartContext context;

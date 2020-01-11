@@ -33,11 +33,10 @@ import '../scatter_plot/point_renderer.dart' show PointRenderer;
 import '../scatter_plot/point_renderer_config.dart' show PointRendererConfig;
 import 'line_renderer_config.dart' show LineRendererConfig;
 
-const styleSegmentsKey = const AttributeKey<List<_LineRendererElement>>(
-    'LineRenderer.styleSegments');
+const styleSegmentsKey =
+    AttributeKey<List<_LineRendererElement>>('LineRenderer.styleSegments');
 
-const lineStackIndexKey =
-    const AttributeKey<int>('LineRenderer.lineStackIndex');
+const lineStackIndexKey = AttributeKey<int>('LineRenderer.lineStackIndex');
 
 class LineRenderer<D> extends BaseCartesianRenderer<D> {
   // Configuration used to extend the clipping area to extend the draw bounds.

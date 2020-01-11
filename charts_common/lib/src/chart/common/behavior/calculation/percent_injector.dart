@@ -19,7 +19,7 @@ import '../../behavior/chart_behavior.dart' show ChartBehavior;
 import '../../processed_series.dart' show MutableSeries;
 
 const percentInjectedKey =
-    const AttributeKey<bool>('PercentInjector.percentInjected');
+    AttributeKey<bool>('PercentInjector.percentInjected');
 
 /// Chart behavior that can inject series or domain percentages into each datum.
 ///

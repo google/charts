@@ -18,7 +18,7 @@ import 'base_time_stepper.dart' show BaseTimeStepper;
 
 /// Month stepper.
 class MonthTimeStepper extends BaseTimeStepper {
-  static const _defaultIncrements = const [1, 2, 3, 4, 6, 12];
+  static const _defaultIncrements = [1, 2, 3, 4, 6, 12];
 
   final List<int> _allowedTickIncrements;
 

@@ -18,7 +18,7 @@ import 'base_time_stepper.dart' show BaseTimeStepper;
 
 /// Hour stepper.
 class HourTimeStepper extends BaseTimeStepper {
-  static const _defaultIncrements = const [1, 2, 3, 4, 6, 12, 24];
+  static const _defaultIncrements = [1, 2, 3, 4, 6, 12, 24];
   static const _hoursInDay = 24;
   static const _millisecondsInHour = 3600 * 1000;
 

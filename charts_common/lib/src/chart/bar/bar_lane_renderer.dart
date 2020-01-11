@@ -37,7 +37,7 @@ import 'base_bar_renderer_element.dart' show BaseBarRendererElement;
 ///
 /// In grouped stacked mode, this list will contain a combination of domain
 /// value and series category.
-const domainValuesKey = const AttributeKey<Set>('BarLaneRenderer.domainValues');
+const domainValuesKey = AttributeKey<Set>('BarLaneRenderer.domainValues');
 
 /// Renders series data as a series of bars with lanes.
 ///
