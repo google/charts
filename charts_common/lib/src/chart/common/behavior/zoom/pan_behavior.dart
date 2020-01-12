@@ -218,4 +218,4 @@ class PanBehavior<D> implements ChartBehavior<D> {
 }
 
 /// Callback for when panning is completed.
-typedef void PanningCompletedCallback();
+typedef PanningCompletedCallback = void Function();

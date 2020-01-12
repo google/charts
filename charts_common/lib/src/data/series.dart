@@ -266,9 +266,9 @@ class Series<T, D> {
 /// such usage.
 ///
 /// Otherwise, [index] must be a valid subscript into a list of `series.length`.
-typedef R AccessorFn<R>(int index);
+typedef AccessorFn<R> = R Function(int index);
 
-typedef R TypedAccessorFn<T, R>(T datum, int index);
+typedef TypedAccessorFn<T, R> = R Function(T datum, int index);
 
 class AttributeKey<R> extends TypedKey<R> {
   const AttributeKey(String uniqueKey) : super(uniqueKey);

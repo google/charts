@@ -20,8 +20,8 @@ import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import 'chart_canvas.dart' show FillPatternType;
 import 'processed_series.dart' show ImmutableSeries;
 
-typedef String DomainFormatter<D>(D domain);
-typedef String MeasureFormatter(num measure);
+typedef DomainFormatter<D> = String Function(D domain);
+typedef MeasureFormatter = String Function(num measure);
 
 /// Represents processed rendering details for a data point from a series.
 class DatumDetails<D> {

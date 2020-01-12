@@ -19,7 +19,8 @@ import 'package:test/test.dart';
 
 const EPSILON = 0.001;
 
-typedef bool IsTransitionFunction(DateTime tickValue, DateTime prevTickValue);
+typedef IsTransitionFunction = bool Function(
+    DateTime tickValue, DateTime prevTickValue);
 
 class FakeTimeTickFormatter implements TimeTickFormatter {
   static const firstTick = '-firstTick-';

@@ -770,8 +770,8 @@ class SliderEventListener<D> {
 /// [domain] is the domain value at the slider position.
 ///
 /// [dragState] indicates the current state of a drag event.
-typedef SliderListenerCallback<D>(Point<int> point, D domain, String roleId,
-    SliderListenerDragState dragState);
+typedef SliderListenerCallback<D> = void Function(Point<int> point, D domain,
+    String roleId, SliderListenerDragState dragState);
 
 /// Describes the current state of a slider change as a result of a drag event.
 ///

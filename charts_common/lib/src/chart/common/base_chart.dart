@@ -731,6 +731,7 @@ class LifecycleListener<D> {
       this.onAnimationComplete});
 }
 
-typedef LifecycleSeriesListCallback<D>(List<MutableSeries<D>> seriesList);
-typedef LifecycleCanvasCallback(ChartCanvas canvas);
-typedef LifecycleEmptyCallback();
+typedef LifecycleSeriesListCallback<D> = void Function(
+    List<MutableSeries<D>> seriesList);
+typedef LifecycleCanvasCallback = void Function(ChartCanvas canvas);
+typedef LifecycleEmptyCallback = void Function();

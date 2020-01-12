@@ -28,7 +28,8 @@ import 'a11y_explore_behavior.dart'
 import 'a11y_node.dart' show A11yNode, OnFocus;
 
 /// Returns a string for a11y vocalization from a list of series datum.
-typedef String VocalizationCallback<D>(List<SeriesDatum<D>> seriesDatums);
+typedef VocalizationCallback<D> = String Function(
+    List<SeriesDatum<D>> seriesDatums);
 
 /// A simple vocalization that returns the domain value to string.
 String domainVocalization<D>(List<SeriesDatum<D>> seriesDatums) {

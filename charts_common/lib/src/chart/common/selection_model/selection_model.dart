@@ -236,7 +236,7 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
 
 /// Callback for SelectionModel. It is triggered when the selection state
 /// changes.
-typedef SelectionModelListener<D>(SelectionModel<D> model);
+typedef SelectionModelListener<D> = void Function(SelectionModel<D> model);
 
 enum SelectionModelType {
   /// Typical Hover or Details event for viewing the details of the selected

@@ -653,7 +653,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
   @protected
   List<BaseAnimatedBar<D, R>> _getSegmentsForDomainValue(D domainValue,
-      {bool where(BaseAnimatedBar<D, R> bar)}) {
+      {bool Function(BaseAnimatedBar<D, R> bar) where}) {
     final matchingSegments = <BaseAnimatedBar<D, R>>[];
 
     // [domainValue] is null only when the bar renderer is being used with in
