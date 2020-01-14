@@ -15,6 +15,7 @@
 
 import 'package:meta/meta.dart' show immutable;
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:collection/collection.dart' show ListEquality;
 
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
@@ -162,7 +163,9 @@ class DayTickProviderSpec implements DateTimeTickProviderSpec {
 
   @override
   bool operator ==(Object other) =>
-      other is DayTickProviderSpec && increments == other.increments;
+    identical(this, other) ||
+      other is DayTickProviderSpec &&
+        const ListEquality().equals(increments, other.increments);
 
   @override
   int get hashCode => increments?.hashCode ?? 0;
@@ -198,7 +201,9 @@ class StaticDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
 
   @override
   bool operator ==(Object other) =>
-      other is StaticDateTimeTickProviderSpec && tickSpecs == other.tickSpecs;
+    identical(this, other) ||
+      other is StaticDateTimeTickProviderSpec &&
+        const ListEquality().equals(tickSpecs, other.tickSpecs);
 
   @override
   int get hashCode => tickSpecs.hashCode;

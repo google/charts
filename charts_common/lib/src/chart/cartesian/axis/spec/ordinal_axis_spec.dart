@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:meta/meta.dart' show immutable;
+import 'package:collection/collection.dart' show ListEquality;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
@@ -124,8 +125,9 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is StaticOrdinalTickProviderSpec && tickSpecs == other.tickSpecs);
+    identical(this, other) ||
+      other is StaticOrdinalTickProviderSpec &&
+        const ListEquality().equals(tickSpecs, other.tickSpecs);
 
   @override
   int get hashCode => tickSpecs.hashCode;

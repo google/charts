@@ -29,4 +29,12 @@ class TickSpec<D> {
   /// [style] optional style for this tick. If not set, uses the style of the
   /// axis.
   const TickSpec(this.value, {this.label, this.style});
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) ||
+      other is TickSpec && value == other.value && label == other.label && style == other.style;
+
+  @override
+  int get hashCode => value.hashCode ^ label.hashCode ^ style.hashCode;
 }

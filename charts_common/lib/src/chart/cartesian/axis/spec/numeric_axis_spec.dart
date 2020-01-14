@@ -16,6 +16,7 @@
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
 import 'package:meta/meta.dart' show immutable;
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart' show ListEquality;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
@@ -208,8 +209,9 @@ class StaticNumericTickProviderSpec implements NumericTickProviderSpec {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is StaticNumericTickProviderSpec && tickSpecs == other.tickSpecs);
+    identical(this, other) ||
+      other is StaticNumericTickProviderSpec &&
+        const ListEquality().equals(tickSpecs, other.tickSpecs);
 
   @override
   int get hashCode => tickSpecs.hashCode;
