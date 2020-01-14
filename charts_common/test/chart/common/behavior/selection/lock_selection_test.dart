@@ -58,7 +58,7 @@ void main() {
     return behavior;
   }
 
-  _setupChart({Point<double> forPoint, bool isWithinRenderer}) {
+  void _setupChart({Point<double> forPoint, bool isWithinRenderer}) {
     if (isWithinRenderer != null) {
       when(_chart.pointWithinRenderer(forPoint)).thenReturn(isWithinRenderer);
     }

@@ -1211,7 +1211,7 @@ class RangeAnnotationTester<D> {
     behavior._view._graphicsFactory = value;
   }
 
-  mockLayout(Rectangle<int> bounds) {
+  void mockLayout(Rectangle<int> bounds) {
     behavior._view.layout(bounds, bounds);
   }
 

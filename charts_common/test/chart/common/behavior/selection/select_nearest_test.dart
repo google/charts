@@ -77,7 +77,7 @@ void main() {
     return behavior;
   }
 
-  _setupChart(
+  void _setupChart(
       {Point<double> forPoint,
       bool isWithinRenderer,
       List<DatumDetails<String>> respondWithDetails,

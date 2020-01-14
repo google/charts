@@ -38,13 +38,13 @@ class ConcreteChart extends LineChart {
   final _primaryMeasureAxis = ConcreteNumericAxis();
 
   @override
-  addLifecycleListener(LifecycleListener listener) {
+  LifecycleListener addLifecycleListener(LifecycleListener listener) {
     lastListener = listener;
     return super.addLifecycleListener(listener);
   }
 
   @override
-  removeLifecycleListener(LifecycleListener listener) {
+  bool removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
     return super.removeLifecycleListener(listener);
@@ -106,7 +106,8 @@ void main() {
 
   /// Initializes the [chart], draws the [seriesList], and configures mock axis
   /// layout bounds.
-  _drawSeriesList(ConcreteChart chart, List<Series<MyRow, int>> seriesList) {
+  void _drawSeriesList(
+      ConcreteChart chart, List<Series<MyRow, int>> seriesList) {
     _chart.domainAxis.autoViewport = true;
     _chart.domainAxis.resetDomains();
 

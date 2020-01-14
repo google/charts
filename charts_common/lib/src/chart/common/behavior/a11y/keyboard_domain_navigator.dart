@@ -149,17 +149,17 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   }
 
   /// Triggers when the left or right arrow keys are pressed.
-  _doNavigate(domainIndex) {
+  void _doNavigate(domainIndex) {
     _selectDomainIndex(SelectionModelType.info, domainIndex);
   }
 
   /// Triggers when the Enter or Space key is pressed.
-  selectDomain(domainIndex) {
+  void selectDomain(domainIndex) {
     _selectDomainIndex(SelectionModelType.action, domainIndex);
   }
 
   /// Triggers when the Escape key is pressed or the chart loses focus.
-  clearSelection() {
+  void clearSelection() {
     _selectDomainIndex(SelectionModelType.info, NO_SELECTION);
   }
 
@@ -273,7 +273,8 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   }
 
   /// Gets the datum/series pairs for the given domainIndex.
-  _getDatumPairs(domainIndex) => _datumPairs[domainIndex] ?? [];
+  List<SeriesDatum<D>> _getDatumPairs(domainIndex) =>
+      _datumPairs[domainIndex] ?? <SeriesDatum<D>>[];
 
   @override
   String get role => 'keyboard-domain-navigator';

@@ -21,7 +21,7 @@ class SizeList {
   final _sizes = <int>[];
   int _total = 0;
 
-  operator [](i) => _sizes[i];
+  int operator [](i) => _sizes[i];
 
   int get total => _total;
 

@@ -535,7 +535,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
   /// Assigns colors to series that are missing their colorFn.
   @override
-  assignMissingColors(Iterable<MutableSeries> seriesList,
+  void assignMissingColors(Iterable<MutableSeries> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
     int maxMissing = 0;
 

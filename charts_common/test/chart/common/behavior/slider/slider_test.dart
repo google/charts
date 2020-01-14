@@ -48,11 +48,11 @@ class MockChart extends Mock implements CartesianChart {
   }
 
   @override
-  addLifecycleListener(LifecycleListener listener) =>
+  LifecycleListener addLifecycleListener(LifecycleListener listener) =>
       lastLifecycleListener = listener;
 
   @override
-  removeLifecycleListener(LifecycleListener listener) {
+  bool removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastLifecycleListener));
     lastLifecycleListener = null;
     return true;
@@ -107,7 +107,7 @@ void main() {
     return behavior;
   }
 
-  _setupChart(
+  void _setupChart(
       {Point<double> forPoint,
       bool isWithinRenderer,
       List<DatumDetails> respondWithDetails}) {

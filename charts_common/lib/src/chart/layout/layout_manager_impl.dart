@@ -157,7 +157,7 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   @override
-  withinDrawArea(Point<num> point) {
+  bool withinDrawArea(Point<num> point) {
     return _drawAreaBounds.containsPoint(point);
   }
 

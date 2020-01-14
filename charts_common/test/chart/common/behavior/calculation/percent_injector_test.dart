@@ -39,11 +39,11 @@ class MockChart extends Mock implements CartesianChart {
   bool vertical = true;
 
   @override
-  addLifecycleListener(LifecycleListener listener) =>
+  LifecycleListener addLifecycleListener(LifecycleListener listener) =>
       lastLifecycleListener = listener;
 
   @override
-  removeLifecycleListener(LifecycleListener listener) {
+  bool removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastLifecycleListener));
     lastLifecycleListener = null;
     return true;

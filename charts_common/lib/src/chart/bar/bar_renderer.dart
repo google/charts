@@ -533,7 +533,7 @@ class AnimatedBar<D> extends BaseAnimatedBar<D, BarRendererElement<D>> {
       : super(key: key, datum: datum, series: series, domainValue: domainValue);
 
   @override
-  animateElementToMeasureAxisPosition(BaseBarRendererElement target) {
+  void animateElementToMeasureAxisPosition(BaseBarRendererElement target) {
     final BarRendererElement localTarget = target;
 
     // TODO: Animate out bars in the middle of a stack.

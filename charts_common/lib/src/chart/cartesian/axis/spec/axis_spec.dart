@@ -57,7 +57,7 @@ class AxisSpec<D> {
     );
   }
 
-  configure(
+  void configure(
       Axis<D> axis, ChartContext context, GraphicsFactory graphicsFactory) {
     if (showAxisLine != null) {
       axis.forceDrawAxisLine = showAxisLine;

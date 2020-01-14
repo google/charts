@@ -36,7 +36,7 @@ class FakeCartesianChart extends CartesianChart<String> {
   }
 
   @override
-  initDomainAxis() {}
+  void initDomainAxis() {}
 }
 
 void main() {

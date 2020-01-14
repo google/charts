@@ -175,7 +175,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   ///     Setting it to false used different palettes (ie: s1 uses Blue500,
   ///     s2 uses Red500),
   @protected
-  assignMissingColors(Iterable<MutableSeries<D>> seriesList,
+  void assignMissingColors(Iterable<MutableSeries<D>> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
     const defaultCategory = '__default__';
 

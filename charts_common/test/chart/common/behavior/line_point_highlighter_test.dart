@@ -33,10 +33,11 @@ class MockChart extends Mock implements CartesianChart {
   LifecycleListener lastListener;
 
   @override
-  addLifecycleListener(LifecycleListener listener) => lastListener = listener;
+  LifecycleListener addLifecycleListener(LifecycleListener listener) =>
+      lastListener = listener;
 
   @override
-  removeLifecycleListener(LifecycleListener listener) {
+  bool removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
     return true;
@@ -50,11 +51,11 @@ class MockSelectionModel extends Mock implements MutableSelectionModel {
   SelectionModelListener lastListener;
 
   @override
-  addSelectionChangedListener(SelectionModelListener listener) =>
+  void addSelectionChangedListener(SelectionModelListener listener) =>
       lastListener = listener;
 
   @override
-  removeSelectionChangedListener(SelectionModelListener listener) {
+  void removeSelectionChangedListener(SelectionModelListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
   }
@@ -62,7 +63,7 @@ class MockSelectionModel extends Mock implements MutableSelectionModel {
 
 class MockNumericAxis extends Mock implements NumericAxis {
   @override
-  getLocation(num domain) {
+  double getLocation(num domain) {
     return 10.0;
   }
 }
@@ -110,7 +111,7 @@ void main() {
     return details;
   }
 
-  _setupSelection(List<SeriesDatum> selection) {
+  void _setupSelection(List<SeriesDatum> selection) {
     final selected = <MyRow>[];
 
     for (var i = 0; i < selection.length; i++) {

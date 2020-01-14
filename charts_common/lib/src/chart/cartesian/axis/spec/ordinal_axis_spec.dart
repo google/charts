@@ -62,7 +62,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
             scaleSpec: scaleSpec);
 
   @override
-  configure(Axis<String> axis, ChartContext context,
+  void configure(Axis<String> axis, ChartContext context,
       GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 

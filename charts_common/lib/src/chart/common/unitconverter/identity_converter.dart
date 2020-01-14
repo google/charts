@@ -20,8 +20,8 @@ class IdentityConverter<U extends num> implements UnitConverter<U, U> {
   const IdentityConverter();
 
   @override
-  convert(U value) => value;
+  U convert(U value) => value;
 
   @override
-  invert(U value) => value;
+  U invert(U value) => value;
 }

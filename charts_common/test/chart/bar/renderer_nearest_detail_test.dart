@@ -68,7 +68,8 @@ void main() {
   /////////////////////////////////////////
   // Convenience methods for creating mocks.
   /////////////////////////////////////////
-  _configureBaseRenderer(BaseBarRenderer renderer, bool vertical) {
+  BaseBarRenderer _configureBaseRenderer(
+      BaseBarRenderer renderer, bool vertical) {
     final context = MockContext();
     when(context.chartContainerIsRtl).thenReturn(false);
     when(context.isRtl).thenReturn(false);

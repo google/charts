@@ -236,7 +236,7 @@ class MockListener {
     return consumeEvent;
   }
 
-  verify({int callCount = 1, Object arg1, Object arg2, Object arg3}) {
+  void verify({int callCount = 1, Object arg1, Object arg2, Object arg3}) {
     if (callCount != any) {
       expect(_callCount, equals(callCount));
     }

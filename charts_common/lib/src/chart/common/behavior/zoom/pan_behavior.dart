@@ -77,7 +77,7 @@ class PanBehavior<D> implements ChartBehavior<D> {
 
   /// Injects the behavior into a chart.
   @override
-  attachTo(BaseChart<D> chart) {
+  void attachTo(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
       throw ArgumentError(
           'PanBehavior can only be attached to a CartesianChart');
@@ -97,7 +97,7 @@ class PanBehavior<D> implements ChartBehavior<D> {
 
   /// Removes the behavior from a chart.
   @override
-  removeFrom(BaseChart<D> chart) {
+  void removeFrom(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
       throw ArgumentError(
           'PanBehavior can only be attached to a CartesianChart');

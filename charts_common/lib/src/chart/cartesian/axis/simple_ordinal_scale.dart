@@ -170,13 +170,13 @@ class SimpleOrdinalScale implements OrdinalScale {
   ScaleOutputExtent get range => _range;
 
   @override
-  resetDomain() {
+  void resetDomain() {
     _domain.clear();
     _scaleChanged = true;
   }
 
   @override
-  resetViewportSettings() {
+  void resetViewportSettings() {
     _viewportScale = 1.0;
     _viewportTranslatePx = 0.0;
     _scaleChanged = true;

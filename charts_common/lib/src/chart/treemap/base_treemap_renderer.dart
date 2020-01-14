@@ -226,7 +226,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   ///
   /// Assigned color is based on the depth of each node.
   @override
-  assignMissingColors(Iterable<MutableSeries<D>> seriesList,
+  void assignMissingColors(Iterable<MutableSeries<D>> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
     for (final series in seriesList) {
       final colorPalettes =

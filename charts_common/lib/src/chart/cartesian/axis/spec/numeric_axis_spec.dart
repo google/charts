@@ -78,7 +78,7 @@ class NumericAxisSpec extends AxisSpec<num> {
   }
 
   @override
-  configure(
+  void configure(
       Axis<num> axis, ChartContext context, GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 

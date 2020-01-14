@@ -72,7 +72,7 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
             showAxisLine: showAxisLine);
 
   @override
-  configure(Axis<DateTime> axis, ChartContext context,
+  void configure(Axis<DateTime> axis, ChartContext context,
       GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 

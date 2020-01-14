@@ -413,7 +413,7 @@ class _AnimatedBarTargetLine<D>
       : super(key: key, datum: datum, series: series, domainValue: domainValue);
 
   @override
-  animateElementToMeasureAxisPosition(BaseBarRendererElement target) {
+  void animateElementToMeasureAxisPosition(BaseBarRendererElement target) {
     final _BarTargetLineRendererElement localTarget = target;
 
     final newPoints = <Point<int>>[];

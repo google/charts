@@ -26,10 +26,11 @@ class MockChart extends Mock implements BaseChart {
   LifecycleListener lastListener;
 
   @override
-  addLifecycleListener(LifecycleListener listener) => lastListener = listener;
+  LifecycleListener addLifecycleListener(LifecycleListener listener) =>
+      lastListener = listener;
 
   @override
-  removeLifecycleListener(LifecycleListener listener) {
+  bool removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
     return true;
@@ -40,11 +41,11 @@ class MockSelectionModel extends Mock implements MutableSelectionModel {
   SelectionModelListener lastListener;
 
   @override
-  addSelectionChangedListener(SelectionModelListener listener) =>
+  void addSelectionChangedListener(SelectionModelListener listener) =>
       lastListener = listener;
 
   @override
-  removeSelectionChangedListener(SelectionModelListener listener) {
+  void removeSelectionChangedListener(SelectionModelListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
   }
@@ -64,7 +65,7 @@ void main() {
   final _s2D2 = MyRow('s2d2', 22);
   final _s2D3 = MyRow('s2d3', 23);
 
-  _setupSelection(List<MyRow> selected) {
+  void _setupSelection(List<MyRow> selected) {
     for (var i = 0; i < _series1.data.length; i++) {
       when(_selectionModel.isDatumSelected(_series1, i))
           .thenReturn(selected.contains(_series1.data[i]));

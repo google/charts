@@ -112,7 +112,7 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
   }
 
   @override
-  attachTo(BaseChart<D> chart) {
+  void attachTo(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
       throw ArgumentError(
           'InitialHintBehavior can only be attached to a CartesianChart');
@@ -125,7 +125,7 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
   }
 
   @override
-  removeFrom(BaseChart<D> chart) {
+  void removeFrom(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
       throw ArgumentError(
           'InitialHintBehavior can only be removed from a CartesianChart');
