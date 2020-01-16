@@ -105,7 +105,7 @@ class SelectNearest<D> implements ChartBehavior<D> {
       this.eventTrigger = SelectionTrigger.hover,
       this.maximumDomainDistancePx}) {
     // Setup the appropriate gesture listening.
-    switch (this.eventTrigger) {
+    switch (eventTrigger) {
       case SelectionTrigger.tap:
         _listener = GestureListener(onTapTest: _onTapTest, onTap: _onSelect);
         break;
@@ -275,7 +275,7 @@ class SelectNearest<D> implements ChartBehavior<D> {
     chart.addGestureListener(_listener);
 
     // TODO: Update this dynamically based on tappable location.
-    switch (this.eventTrigger) {
+    switch (eventTrigger) {
       case SelectionTrigger.tap:
       case SelectionTrigger.tapAndDrag:
       case SelectionTrigger.pressHold:

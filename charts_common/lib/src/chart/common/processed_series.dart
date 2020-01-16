@@ -66,7 +66,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   Axis measureAxis;
   Axis domainAxis;
 
-  MutableSeries(Series<dynamic, D> series) : this.id = series.id {
+  MutableSeries(Series<dynamic, D> series) : id = series.id {
     displayName = series.displayName ?? series.id;
     overlaySeries = series.overlaySeries;
     seriesCategory = series.seriesCategory;
@@ -115,7 +115,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     _attrs.mergeFrom(series.attributes);
   }
 
-  MutableSeries.clone(MutableSeries<D> other) : this.id = other.id {
+  MutableSeries.clone(MutableSeries<D> other) : id = other.id {
     displayName = other.displayName;
     overlaySeries = other.overlaySeries;
     seriesCategory = other.seriesCategory;
@@ -159,11 +159,11 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   }
 
   void setAttr<R>(AttributeKey<R> key, R value) {
-    this._attrs.setAttr(key, value);
+    _attrs.setAttr(key, value);
   }
 
   R getAttr<R>(AttributeKey<R> key) {
-    return this._attrs.getAttr(key);
+    return _attrs.getAttr(key);
   }
 
   bool operator ==(Object other) =>

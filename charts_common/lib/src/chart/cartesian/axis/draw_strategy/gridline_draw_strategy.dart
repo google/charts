@@ -115,7 +115,7 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
     lineStyle =
         StyleFactory.style.createGridlineStyle(graphicsFactory, lineStyleSpec);
 
-    this.tickLength = tickLengthPx ?? 0;
+    tickLength = tickLengthPx ?? 0;
   }
 
   @override

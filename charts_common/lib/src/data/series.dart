@@ -251,11 +251,11 @@ class Series<T, D> {
   });
 
   void setAttribute<R>(AttributeKey<R> key, R value) {
-    this.attributes.setAttr(key, value);
+    attributes.setAttr(key, value);
   }
 
   R getAttribute<R>(AttributeKey<R> key) {
-    return this.attributes.getAttr<R>(key);
+    return attributes.getAttr<R>(key);
   }
 }
 

@@ -163,7 +163,7 @@ class Slider<D> implements ChartBehavior<D> {
     }
 
     // Setup the appropriate gesture listening.
-    switch (this.eventTrigger) {
+    switch (eventTrigger) {
       case SelectionTrigger.tapAndDrag:
         _gestureListener = GestureListener(
             onTapTest: _onTapTest,
@@ -190,7 +190,7 @@ class Slider<D> implements ChartBehavior<D> {
         break;
       default:
         throw ArgumentError('Slider does not support the event trigger '
-            '"${this.eventTrigger}"');
+            '"$eventTrigger"');
         break;
     }
 
@@ -626,7 +626,7 @@ class _SliderLayoutView<D> extends LayoutView {
   }
 
   @override
-  Rectangle<int> get componentBounds => this._drawAreaBounds;
+  Rectangle<int> get componentBounds => _drawAreaBounds;
 
   @override
   bool get isSeriesRenderer => false;
@@ -642,11 +642,11 @@ class _SliderElement<D> {
 
   _SliderElement<D> clone() {
     return _SliderElement<D>()
-      ..domainCenterPoint = this.domainCenterPoint
-      ..buttonBounds = this.buttonBounds
-      ..fill = this.fill
-      ..stroke = this.stroke
-      ..strokeWidthPx = this.strokeWidthPx;
+      ..domainCenterPoint = domainCenterPoint
+      ..buttonBounds = buttonBounds
+      ..fill = fill
+      ..stroke = stroke
+      ..strokeWidthPx = strokeWidthPx;
   }
 
   void updateAnimationPercent(

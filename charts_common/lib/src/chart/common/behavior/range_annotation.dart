@@ -362,7 +362,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
       @required this.labelPadding,
       @required this.chart,
       @required this.rangeAnnotation})
-      : this.layoutConfig = LayoutViewConfig(
+      : layoutConfig = LayoutViewConfig(
             paintOrder: LayoutViewPaintOrder.rangeAnnotation,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
@@ -386,7 +386,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
-    this._drawAreaBounds = drawAreaBounds;
+    _drawAreaBounds = drawAreaBounds;
   }
 
   @override
@@ -1059,7 +1059,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
   }
 
   @override
-  Rectangle<int> get componentBounds => this._drawAreaBounds;
+  Rectangle<int> get componentBounds => _drawAreaBounds;
 
   @override
   bool get isSeriesRenderer => false;
@@ -1111,16 +1111,16 @@ class _AnnotationElement<D> {
       ..annotation = _DatumAnnotation.from(annotation)
       ..annotationSegment = annotationSegment
       ..color = color != null ? Color.fromOther(color: color) : null
-      ..startLabel = this.startLabel
-      ..endLabel = this.endLabel
-      ..middleLabel = this.middleLabel
-      ..isRange = this.isRange
-      ..labelAnchor = this.labelAnchor
-      ..labelDirection = this.labelDirection
-      ..labelPosition = this.labelPosition
-      ..labelStyleSpec = this.labelStyleSpec
+      ..startLabel = startLabel
+      ..endLabel = endLabel
+      ..middleLabel = middleLabel
+      ..isRange = isRange
+      ..labelAnchor = labelAnchor
+      ..labelDirection = labelDirection
+      ..labelPosition = labelPosition
+      ..labelStyleSpec = labelStyleSpec
       ..dashPattern = dashPattern
-      ..strokeWidthPx = this.strokeWidthPx;
+      ..strokeWidthPx = strokeWidthPx;
   }
 
   void updateAnimationPercent(_AnnotationElement previous,

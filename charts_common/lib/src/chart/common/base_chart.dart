@@ -587,7 +587,7 @@ abstract class BaseChart<D> {
     // Request animation
     if (animatingThisDraw) {
       animationPercent = 0.0;
-      context.requestAnimation(this.transition);
+      context.requestAnimation(transition);
     } else {
       animationPercent = 1.0;
       context.requestPaint();

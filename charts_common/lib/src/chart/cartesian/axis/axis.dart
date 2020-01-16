@@ -159,9 +159,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       {TickProvider<D> tickProvider,
       TickFormatter<D> tickFormatter,
       MutableScale<D> scale})
-      : this._scale = scale,
-        this._tickProvider = tickProvider,
-        this._tickFormatter = tickFormatter;
+      : _scale = scale,
+        _tickProvider = tickProvider,
+        _tickFormatter = tickFormatter;
 
   @protected
   MutableScale<D> get mutableScale => _scale;
@@ -484,7 +484,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   bool get isSeriesRenderer => false;
 
   @override
-  Rectangle<int> get componentBounds => this._componentBounds;
+  Rectangle<int> get componentBounds => _componentBounds;
 
   bool get drawAxisLine {
     if (forceDrawAxisLine != null) {

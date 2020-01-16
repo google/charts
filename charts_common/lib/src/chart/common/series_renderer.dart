@@ -148,7 +148,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     @required this.rendererId,
     @required int layoutPaintOrder,
     this.symbolRenderer,
-  }) : this.layoutConfig = LayoutViewConfig(
+  }) : layoutConfig = LayoutViewConfig(
             paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
@@ -298,11 +298,11 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
 
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
-    this._drawAreaBounds = drawAreaBounds;
+    _drawAreaBounds = drawAreaBounds;
   }
 
   @override
-  Rectangle<int> get componentBounds => this._drawAreaBounds;
+  Rectangle<int> get componentBounds => _drawAreaBounds;
 
   @override
   bool get isSeriesRenderer => true;

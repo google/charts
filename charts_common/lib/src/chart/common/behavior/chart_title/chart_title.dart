@@ -290,7 +290,7 @@ class _ChartTitleLayoutView<D> extends LayoutView {
       {@required int layoutPaintOrder,
       @required _ChartTitleConfig config,
       @required this.chart})
-      : this._config = config {
+      : _config = config {
     // Set inside body to resolve [_layoutPosition].
     _layoutConfig = LayoutViewConfig(
         paintOrder: layoutPaintOrder,
@@ -424,8 +424,8 @@ class _ChartTitleLayoutView<D> extends LayoutView {
 
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
-    this._componentBounds = componentBounds;
-    this._drawAreaBounds = drawAreaBounds;
+    _componentBounds = componentBounds;
+    _drawAreaBounds = drawAreaBounds;
 
     // Reset the cached text elements used during the paint step.
     _resetTextElementCache();
@@ -794,7 +794,7 @@ class _ChartTitleLayoutView<D> extends LayoutView {
   }
 
   @override
-  Rectangle<int> get componentBounds => this._drawAreaBounds;
+  Rectangle<int> get componentBounds => _drawAreaBounds;
 
   @override
   bool get isSeriesRenderer => false;

@@ -115,7 +115,7 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
             labelOffsetFromTickPx: labelOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
             labelRotation: labelRotation) {
-    this.tickLength = tickLengthPx ?? StyleFactory.style.tickLength;
+    tickLength = tickLengthPx ?? StyleFactory.style.tickLength;
     lineStyle =
         StyleFactory.style.createTickLineStyle(graphicsFactory, lineStyleSpec);
   }

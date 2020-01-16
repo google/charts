@@ -309,7 +309,7 @@ class _LinePointLayoutView<D> extends LayoutView {
     @required this.symbolRenderer,
     this.dashPattern,
     this.drawFollowLinesAcrossChart,
-  }) : this.layoutConfig = LayoutViewConfig(
+  }) : layoutConfig = LayoutViewConfig(
             paintOrder: LayoutViewPaintOrder.linePointHighlighter,
             position: LayoutPosition.DrawArea,
             positionOrder: layoutPaintOrder);
@@ -333,7 +333,7 @@ class _LinePointLayoutView<D> extends LayoutView {
 
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
-    this._drawAreaBounds = drawAreaBounds;
+    _drawAreaBounds = drawAreaBounds;
   }
 
   @override
@@ -516,7 +516,7 @@ class _LinePointLayoutView<D> extends LayoutView {
   }
 
   @override
-  Rectangle<int> get componentBounds => this._drawAreaBounds;
+  Rectangle<int> get componentBounds => _drawAreaBounds;
 
   @override
   bool get isSeriesRenderer => false;
@@ -551,13 +551,13 @@ class _PointRendererElement<D> {
 
   _PointRendererElement<D> clone() {
     return _PointRendererElement<D>()
-      ..point = this.point
-      ..color = this.color
-      ..fillColor = this.fillColor
-      ..measureAxisPosition = this.measureAxisPosition
-      ..radiusPx = this.radiusPx
-      ..strokeWidthPx = this.strokeWidthPx
-      ..symbolRenderer = this.symbolRenderer;
+      ..point = point
+      ..color = color
+      ..fillColor = fillColor
+      ..measureAxisPosition = measureAxisPosition
+      ..radiusPx = radiusPx
+      ..strokeWidthPx = strokeWidthPx
+      ..symbolRenderer = symbolRenderer;
   }
 
   void updateAnimationPercent(_PointRendererElement previous,
