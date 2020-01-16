@@ -689,21 +689,21 @@ class LifecycleListener<D> {
   /// This step is good for processing the data (running averages, percentage of
   /// first, etc). It can also be used to add Series of data (trend line) or
   /// remove a line as mentioned above, removing Series.
-  final LifecycleSeriesListCallback onData;
+  final LifecycleSeriesListCallback<D> onData;
 
   /// Called for every redraw given the original SeriesList resulting from the
   /// previous onData.
   ///
   /// This step is good for injecting default attributes on the Series before
   /// the renderers process the data (ex: before stacking measures).
-  final LifecycleSeriesListCallback onPreprocess;
+  final LifecycleSeriesListCallback<D> onPreprocess;
 
   /// Called after the chart and renderers get a chance to process the data but
   /// before the axes process them.
   ///
   /// This step is good if you need to alter the Series measure values after the
   /// renderers have processed them (ex: after stacking measures).
-  final LifecycleSeriesListCallback onPostprocess;
+  final LifecycleSeriesListCallback<D> onPostprocess;
 
   /// Called after the Axes have been configured.
   /// This step is good if you need to use the axes to get any cartesian
