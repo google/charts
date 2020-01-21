@@ -189,6 +189,8 @@ class Series<T, D> {
     final _strokeWidthPxFn = strokeWidthPxFn == null
         ? null
         : (int index) => strokeWidthPxFn(data[index], index);
+    final _keyFn =
+        keyFn == null ? null : (int index) => keyFn(data[index], index);
 
     return Series._internal(
       id: id,
@@ -204,6 +206,7 @@ class Series<T, D> {
       domainUpperBoundFn: _domainUpperBoundFn,
       fillColorFn: _fillColorFn,
       fillPatternFn: _fillPatternFn,
+      keyFn: _keyFn,
       patternColorFn: _patternColorFn,
       labelAccessorFn: _labelAccessorFn,
       insideLabelStyleAccessorFn: _insideLabelStyleAccessorFn,
