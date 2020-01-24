@@ -20,7 +20,7 @@ import 'package:meta/meta.dart' show immutable, protected, required;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../../common/line_style.dart' show LineStyle;
 import '../../../../common/style/style_factory.dart' show StyleFactory;
-import '../../../../common/text_element.dart' show TextDirection, TextElement;
+import '../../../../common/text_element.dart' show TextDirection;
 import '../../../../common/text_style.dart' show TextStyle;
 import '../../../common/chart_canvas.dart' show ChartCanvas;
 import '../../../common/chart_context.dart' show ChartContext;
@@ -98,13 +98,9 @@ abstract class BaseRenderSpec<D> implements RenderSpec<D> {
 
 /// Base strategy that draws tick labels and checks for label collisions.
 abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
-  static final _labelSplitPattern = '\n';
-  static final _multiLineLabelPadding = 2;
-
   static num _degToRad(num deg) => deg * (pi / 180.0);
 
   final ChartContext chartContext;
-  final GraphicsFactory graphicsFactory;
 
   LineStyle axisLineStyle;
   TextStyle labelStyle;
@@ -117,7 +113,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
 
   int labelRotation;
 
-  BaseTickDrawStrategy(this.chartContext, this.graphicsFactory,
+  BaseTickDrawStrategy(this.chartContext, GraphicsFactory graphicsFactory,
       {TextStyleSpec labelStyleSpec,
       LineStyleSpec axisLineStyleSpec,
       TickLabelAnchor labelAnchor,
@@ -264,38 +260,35 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       List<Tick<D>> ticks, int maxWidth, int maxHeight) {
     // TODO: Add spacing to account for the distance between the
     // text and the axis baseline (even if it isn't drawn).
-
-    final maxHorizontalSliceWidth = ticks.fold(0.0, (double prevMax, tick) {
-      final labelElements = _splitLabel(tick.textElement);
-
-      return max(
-          prevMax,
-          _calculateWidthForRotatedLabel(
-            labelRotation,
-            _getLabelHeight(labelElements),
-            _getLabelWidth(labelElements),
-          ));
-    }).round();
+    final maxHorizontalSliceWidth = ticks
+        .fold(
+            0.0,
+            (double prevMax, tick) => max(
+                prevMax,
+                _calculateWidthForRotatedLabel(
+                        labelRotation,
+                        tick.textElement.measurement.verticalSliceWidth,
+                        tick.textElement.measurement.horizontalSliceWidth) +
+                    labelOffsetFromAxisPx))
+        .round();
 
     return ViewMeasuredSizes(
-        preferredWidth: maxHorizontalSliceWidth + labelOffsetFromAxisPx,
-        preferredHeight: maxHeight);
+        preferredWidth: maxHorizontalSliceWidth, preferredHeight: maxHeight);
   }
 
   @override
   ViewMeasuredSizes measureHorizontallyDrawnTicks(
       List<Tick<D>> ticks, int maxWidth, int maxHeight) {
-    final maxVerticalSliceWidth = ticks.fold(0.0, (double prevMax, tick) {
-      final labelElements = _splitLabel(tick.textElement);
-
-      return max(
-          prevMax,
-          _calculateHeightForRotatedLabel(
-            labelRotation,
-            _getLabelHeight(labelElements),
-            _getLabelWidth(labelElements),
-          ));
-    }).round();
+    final maxVerticalSliceWidth = ticks
+        .fold(
+            0.0,
+            (double prevMax, tick) => max(
+                prevMax,
+                _calculateHeightForRotatedLabel(
+                    labelRotation,
+                    tick.textElement.measurement.verticalSliceWidth,
+                    tick.textElement.measurement.horizontalSliceWidth)))
+        .round();
 
     return ViewMeasuredSizes(
         preferredWidth: maxWidth,
@@ -344,83 +337,77 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       @required bool isFirst,
       @required bool isLast}) {
     final locationPx = tick.locationPx;
-    final labelOffsetPx = tick.labelOffsetPx ?? 0;
+    final measurement = tick.textElement.measurement;
     final isRtl = chartContext.isRtl;
-    final labelElements = _splitLabel(tick.textElement);
-    final labelHeight = _getLabelHeight(labelElements);
-    int multiLineLabelOffset = 0;
 
-    for (final line in labelElements) {
-      int x = 0;
-      int y = 0;
+    int x = 0;
+    int y = 0;
 
-      if (orientation == AxisOrientation.bottom ||
-          orientation == AxisOrientation.top) {
-        y = orientation == AxisOrientation.bottom
-            ? axisBounds.top + labelOffsetFromAxisPx
-            : axisBounds.bottom -
-                (labelHeight.toInt() - multiLineLabelOffset) -
-                labelOffsetFromAxisPx;
+    final labelOffsetPx = tick.labelOffsetPx ?? 0;
 
-        final direction =
-            _normalizeHorizontalAnchor(tickLabelAnchor, isRtl, isFirst, isLast);
+    if (orientation == AxisOrientation.bottom ||
+        orientation == AxisOrientation.top) {
+      y = orientation == AxisOrientation.bottom
+          ? axisBounds.top + labelOffsetFromAxisPx
+          : axisBounds.bottom -
+              measurement.verticalSliceWidth.toInt() -
+              labelOffsetFromAxisPx;
 
-        line.textDirection = direction;
+      final direction =
+          _normalizeHorizontalAnchor(tickLabelAnchor, isRtl, isFirst, isLast);
+      tick.textElement.textDirection = direction;
 
-        switch (direction) {
-          case TextDirection.rtl:
-            x = (locationPx + labelOffsetFromTickPx + labelOffsetPx).toInt();
-            break;
-          case TextDirection.ltr:
-            x = (locationPx - labelOffsetFromTickPx - labelOffsetPx).toInt();
-            break;
-          case TextDirection.center:
-          default:
-            x = (locationPx - labelOffsetPx).toInt();
-            break;
+      switch (direction) {
+        case TextDirection.rtl:
+          x = (locationPx + labelOffsetFromTickPx + labelOffsetPx).toInt();
+          break;
+        case TextDirection.ltr:
+          x = (locationPx - labelOffsetFromTickPx - labelOffsetPx).toInt();
+          break;
+        case TextDirection.center:
+        default:
+          x = (locationPx - labelOffsetPx).toInt();
+          break;
+      }
+    } else {
+      if (orientation == AxisOrientation.left) {
+        if (tickLabelJustification == TickLabelJustification.inside) {
+          x = axisBounds.right - labelOffsetFromAxisPx;
+          tick.textElement.textDirection = TextDirection.rtl;
+        } else {
+          x = axisBounds.left + labelOffsetFromAxisPx;
+          tick.textElement.textDirection = TextDirection.ltr;
         }
       } else {
-        if (orientation == AxisOrientation.left) {
-          if (tickLabelJustification == TickLabelJustification.inside) {
-            x = axisBounds.right - labelOffsetFromAxisPx;
-            line.textDirection = TextDirection.rtl;
-          } else {
-            x = axisBounds.left + labelOffsetFromAxisPx;
-            line.textDirection = TextDirection.ltr;
-          }
+        // orientation == right
+        if (tickLabelJustification == TickLabelJustification.inside) {
+          x = axisBounds.left + labelOffsetFromAxisPx;
+          tick.textElement.textDirection = TextDirection.ltr;
         } else {
-          // orientation == right
-          if (tickLabelJustification == TickLabelJustification.inside) {
-            x = axisBounds.left + labelOffsetFromAxisPx;
-            line.textDirection = TextDirection.ltr;
-          } else {
-            x = axisBounds.right - labelOffsetFromAxisPx;
-            line.textDirection = TextDirection.rtl;
-          }
-        }
-
-        switch (_normalizeVerticalAnchor(tickLabelAnchor, isFirst, isLast)) {
-          case _PixelVerticalDirection.over:
-            y = (locationPx -
-                    (labelHeight - multiLineLabelOffset) -
-                    labelOffsetFromTickPx -
-                    labelOffsetPx)
-                .toInt();
-            break;
-          case _PixelVerticalDirection.under:
-            y = (locationPx + labelOffsetFromTickPx + labelOffsetPx).toInt();
-            break;
-          case _PixelVerticalDirection.center:
-          default:
-            y = (locationPx - labelHeight / 2 + labelOffsetPx).toInt();
-            break;
+          x = axisBounds.right - labelOffsetFromAxisPx;
+          tick.textElement.textDirection = TextDirection.rtl;
         }
       }
-      canvas.drawText(line, x, y + multiLineLabelOffset,
-          rotation: _degToRad(labelRotation));
-      multiLineLabelOffset +=
-          _multiLineLabelPadding + line.measurement.verticalSliceWidth.round();
+
+      switch (_normalizeVerticalAnchor(tickLabelAnchor, isFirst, isLast)) {
+        case _PixelVerticalDirection.over:
+          y = (locationPx -
+                  measurement.verticalSliceWidth -
+                  labelOffsetFromTickPx -
+                  labelOffsetPx)
+              .toInt();
+          break;
+        case _PixelVerticalDirection.under:
+          y = (locationPx + labelOffsetFromTickPx + labelOffsetPx).toInt();
+          break;
+        case _PixelVerticalDirection.center:
+        default:
+          y = (locationPx - measurement.verticalSliceWidth / 2 + labelOffsetPx)
+              .toInt();
+          break;
+      }
     }
+    canvas.drawText(tick.textElement, x, y, rotation: _degToRad(labelRotation));
   }
 
   TextDirection _normalizeHorizontalAnchor(
@@ -516,29 +503,6 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     // line perpendicular to the axis baseline, in radians.
     var angle = pi / 2.0 - rotationRadian.abs();
     return labelLength * cos(angle);
-  }
-
-  /// The [wholeLabel] is split into constituent chunks if it is multiline.
-  List<TextElement> _splitLabel(TextElement wholeLabel) => wholeLabel.text
-      .split(_labelSplitPattern)
-      .map((line) => (graphicsFactory.createTextElement(line.trim())
-        ..textStyle = wholeLabel.textStyle))
-      .toList();
-
-  /// The width of the label (handles labels spanning multiple lines).
-  ///
-  /// If the label spans multiple lines then it returns the width of the
-  /// longest line.
-  double _getLabelWidth(Iterable<TextElement> labelElements) => labelElements
-      .map((line) => line.measurement.horizontalSliceWidth)
-      .reduce(max);
-
-  /// The height of the label (handles labels spanning multiple lines).
-  double _getLabelHeight(Iterable<TextElement> labelElements) {
-    if (labelElements.isEmpty) return 0;
-    final textHeight = labelElements.first.measurement.verticalSliceWidth;
-    final numLines = labelElements.length;
-    return (textHeight * numLines) + (_multiLineLabelPadding * (numLines - 1));
   }
 }
 
