@@ -46,8 +46,9 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   final _treeNodeToRendererElement =
       LinkedHashMap<TreeNode, TreeMapRendererElement<D>>();
 
-  /// A list of [_AnimatedTreeMapRect] that will get drawn on the canvas.
-  final _animatedTreeMapRects = <_AnimatedTreeMapRect<D>>[];
+  /// An ordered map of [_AnimatedTreeMapRect] that will get drawn on the
+  /// canvas.
+  final _animatedTreeMapRects = LinkedHashMap<D, _AnimatedTreeMapRect<D>>();
 
   /// Renderer configuration.
   final TreeMapRendererConfig<D> config;
@@ -110,7 +111,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     // _visibleTreeMapRectKeys is used to remove any [_AnimatedTreeMapRect]s
     // that were rendered in the previous draw cycles, but no longer have a
     // corresponding datum in the new series data.
-    final _visibleTreeMapRectKeys = Set<D>();
+    final _visibleTreeMapRectKeys = <D>{};
 
     for (final series in seriesList) {
       if (series.data.isNotEmpty) {
@@ -128,20 +129,20 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       }
     }
 
-    for (final rect in _animatedTreeMapRects) {
+    _animatedTreeMapRects.forEach((_, rect) {
       if (!_visibleTreeMapRectKeys.contains(rect.key)) {
         rect.animateOut();
       }
-    }
+    });
   }
 
   @override
   void paint(ChartCanvas canvas, double animationPercent) {
     if (animationPercent == 1.0) {
-      _animatedTreeMapRects.removeWhere((rect) => rect.animatingOut);
+      _animatedTreeMapRects.removeWhere((_, rect) => rect.animatingOut);
     }
 
-    for (final animatedRect in _animatedTreeMapRects) {
+    for (final animatedRect in _animatedTreeMapRects.values) {
       final element = animatedRect.getCurrentRect(animationPercent);
       final rect = element.boundingRect;
 
@@ -375,16 +376,15 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   _AnimatedTreeMapRect<D> _asAnimatedTreeMapRect(
       TreeMapRendererElement<D> element) {
     final key = element.domain;
-    final index = _animatedTreeMapRects.indexWhere((rect) => rect.key == key);
     // Creates a new _AnimatedTreeMapRect if not exists. Otherwise, moves the
     // existing one to the end of the list so that the iteration order of
     // _AnimatedTreeMapRects is preserved. This is important because the order
     // of rects in _animatedTreeMapRects determines the painting order.
-    final rect = index == -1
-        ? _AnimatedTreeMapRect<D>(key: key)
-        : _animatedTreeMapRects.removeAt(index);
+    final rect = _animatedTreeMapRects.containsKey(key)
+        ? _animatedTreeMapRects.remove(key)
+        : _AnimatedTreeMapRect<D>(key: key);
 
-    _animatedTreeMapRects.add(rect);
+    _animatedTreeMapRects[key] = rect;
     return rect..setNewTarget(element);
   }
 
