@@ -16,6 +16,7 @@
 import 'dart:math';
 
 import '../../../../common/gesture_listener.dart' show GestureListener;
+import '../../../../common/rate_limit_utils.dart' show throttle;
 import '../../base_chart.dart' show BaseChart;
 import '../../behavior/chart_behavior.dart' show ChartBehavior;
 import '../../datum_details.dart' show DatumDetails;
@@ -93,6 +94,9 @@ class SelectNearest<D> implements ChartBehavior<D> {
   /// reasonable distance. Defaults to no maximum distance.
   final int maximumDomainDistancePx;
 
+  /// Wait time in milliseconds for when the next event can be called.
+  final int hoverEventDelay;
+
   BaseChart<D> _chart;
 
   bool _delaySelect = false;
@@ -103,7 +107,8 @@ class SelectNearest<D> implements ChartBehavior<D> {
       this.selectAcrossAllSeriesRendererComponents = true,
       this.selectClosestSeries = true,
       this.eventTrigger = SelectionTrigger.hover,
-      this.maximumDomainDistancePx}) {
+      this.maximumDomainDistancePx,
+      this.hoverEventDelay}) {
     // Setup the appropriate gesture listening.
     switch (eventTrigger) {
       case SelectionTrigger.tap:
@@ -135,7 +140,12 @@ class SelectNearest<D> implements ChartBehavior<D> {
         break;
       case SelectionTrigger.hover:
       default:
-        _listener = GestureListener(onHover: _onSelect);
+        _listener = GestureListener(
+            onHover: hoverEventDelay == null
+                ? _onSelect
+                : throttle<Point<double>, bool>(_onSelect,
+                    delay: Duration(milliseconds: hoverEventDelay),
+                    defaultReturn: false));
         break;
     }
   }
