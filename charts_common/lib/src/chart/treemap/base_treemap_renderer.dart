@@ -142,7 +142,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       _animatedTreeMapRects.removeWhere((_, rect) => rect.animatingOut);
     }
 
-    for (final animatedRect in _animatedTreeMapRects.values) {
+    _animatedTreeMapRects.forEach((_, animatedRect) {
       final element = animatedRect.getCurrentRect(animationPercent);
       final rect = element.boundingRect;
 
@@ -170,7 +170,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
           rtl: isRtl,
           // only leaf node could possibly render label vertically.
           renderVertically: element.isLeaf && rect.width < rect.height);
-    }
+    });
   }
 
   /// Datum details of nearest rectangles in the treemap.
