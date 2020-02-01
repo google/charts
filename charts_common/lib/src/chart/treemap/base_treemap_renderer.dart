@@ -331,7 +331,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       num side, num layoutArea) {
     var top = boundingRect.top;
     var left = boundingRect.left;
-    var length = side > 0 ? (layoutArea / side).round() : 0;
+    var length = side > 0 ? (layoutArea / side) : 0;
 
     // [side] is equal to the height of the boundingRect, so stacks rectangles
     // vertically. [length] is the width of the stacking rectangles.
@@ -341,7 +341,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       for (final node in nodes) {
         final element = _rendererElementForTreeNode(node);
         final height = min(boundingRect.top + boundingRect.height - top,
-            length > 0 ? (element.area / length).round() : 0);
+            length > 0 ? (element.area / length) : 0);
         element.boundingRect = Rectangle(left, top, length, height);
         top += height;
       }
@@ -353,7 +353,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       for (final node in nodes) {
         final element = _rendererElementForTreeNode(node);
         final width = min(boundingRect.left + boundingRect.width - left,
-            length > 0 ? (element.area / length).round() : 0);
+            length > 0 ? (element.area / length) : 0);
         element.boundingRect = Rectangle(left, top, width, length);
         left += width;
       }
