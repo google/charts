@@ -124,10 +124,15 @@ void main() {
     });
 
     test('range band size used from style', () {
+      var oldStyle = StyleFactory.style;
       StyleFactory.style = TestStyle()..rangeBandSize = 0.4;
+
       scale.rangeBandConfig = RangeBandConfig.styleAssignedPercent();
       // 100 = 0.4f * 1000pixels / 4domains
       expect(scale.rangeBand, closeTo(100, EPSILON));
+
+      // Restore style for other tests.
+      StyleFactory.style = oldStyle;
     });
   });
 
