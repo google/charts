@@ -347,7 +347,9 @@ class Slider<D> implements ChartBehavior<D> {
         dragState);
   }
 
-  /// Moves the slider along the domain axis to [point].
+  /// Moves the slider along the domain axis (and primary measure axis if
+  /// [_style.handlePosition] is set to [SliderHandlePosition.manual]) to [point
+  /// ].
   ///
   /// If [point] exists beyond either edge of the draw area, it will be bound to
   /// the nearest edge.
@@ -368,19 +370,45 @@ class Slider<D> implements ChartBehavior<D> {
       final viewBounds = _view.componentBounds;
 
       // Clamp the position to the edge of the viewport.
-      final position = clamp(point.x, viewBounds.left, viewBounds.right);
+      final positionX = clamp(point.x, viewBounds.left, viewBounds.right);
 
-      positionChanged = (_previousDomainCenterPoint != null &&
-          position != _previousDomainCenterPoint.x);
+      final previousYPosition = _handleBounds == null
+          ? 0
+          : _handleBounds.top +
+              _style.handleSize.height / 2 -
+              _style.handleOffset.y;
+
+      var positionY = point.y;
+      if (point.y == 0) {
+        if (_handleBounds == null) {
+          positionY = viewBounds.bottom.toDouble();
+        } else {
+          positionY = previousYPosition;
+        }
+      }
+
+      // Clamp the position to the edge of the viewport.
+      positionY = clamp(positionY, viewBounds.top, viewBounds.bottom);
+
+      final positionXChanged = (_previousDomainCenterPoint != null &&
+          positionX != _previousDomainCenterPoint.x);
+
+      final positionYChanged =
+          (_style.handlePosition == SliderHandlePosition.manual &&
+              _handleBounds != null &&
+              positionY != previousYPosition);
+
+      positionChanged = positionXChanged || positionYChanged;
 
       // Reset the domain value if the position was outside of the chart.
-      _domainValue = _chart.domainAxis.getDomain(position.toDouble());
+      _domainValue = _chart.domainAxis.getDomain(positionX.toDouble());
 
       if (_domainCenterPoint != null) {
-        _domainCenterPoint = Point<int>(position.round(), _domainCenterPoint.y);
+        _domainCenterPoint =
+            Point<int>(positionX.round(), _domainCenterPoint.y);
       } else {
-        _domainCenterPoint = Point<int>(
-            position.round(), (viewBounds.top + viewBounds.height / 2).round());
+        _domainCenterPoint = Point<int>(positionX.round(),
+            (viewBounds.top + viewBounds.height / 2).round());
       }
 
       num handleReferenceY;
@@ -390,6 +418,9 @@ class Slider<D> implements ChartBehavior<D> {
           break;
         case SliderHandlePosition.top:
           handleReferenceY = viewBounds.top;
+          break;
+        case SliderHandlePosition.manual:
+          handleReferenceY = positionY;
           break;
         default:
           throw ArgumentError('Slider does not support the handle position '
@@ -413,9 +444,11 @@ class Slider<D> implements ChartBehavior<D> {
     return positionChanged;
   }
 
-  /// Moves the slider along the domain axis to the location of [domain].
+  /// Moves the slider along the domain axis to the location of [domain] and iff
+  /// [measure] is set moves it also to location of [measure] along the primary
+  /// measure axis.
   ///
-  /// If [domain] exists beyond either edge of the draw area, the position will
+  /// If [domain] or [measure] exists beyond either edge of the draw area, the position will
   /// be bound to the nearest edge.
   ///
   /// Updates [_domainValue] with the location of [domain]. For ordinal axes,
@@ -427,14 +460,17 @@ class Slider<D> implements ChartBehavior<D> {
   ///
   /// Returns whether or not the position actually changed. This will generally
   /// be false if the mouse was dragged outside of the domain axis viewport.
-  bool _moveSliderToDomain(D domain) {
+  bool _moveSliderToDomain(D domain, {num measure}) {
     final x = _chart.domainAxis.getLocation(domain);
+    final y =
+        measure != null ? _chart.getMeasureAxis().getLocation(measure) : 0.0;
 
-    return _moveSliderToPoint(Point<double>(x, 0.0));
+    return _moveSliderToPoint(Point<double>(x, y));
   }
 
   /// Programmatically moves the slider to the location of [domain] on the
-  /// domain axis.
+  /// domain axis and iff [measure] is set moves it also to its position along
+  /// the primary measure axis.
   ///
   /// If [domain] exists beyond either edge of the draw area, the position will
   /// be bound to the nearest edge of the chart. The slider's current domain
@@ -449,14 +485,19 @@ class Slider<D> implements ChartBehavior<D> {
   ///
   /// [skipAnimation] controls whether or not the slider will animate. Animation
   /// is disabled by default.
-  void moveSliderToDomain(D domain, {bool skipAnimation = true}) {
+  ///
+  /// [measure] controls the vertical position of the handle on the measure
+  /// axis, can only be set if the SliderHandlePosition is set to 'manual'. If
+  /// measure exists beyond the edges of the draw area, the position will be
+  /// bound to the nearest edge of the chart.
+  void moveSliderToDomain(D domain, {num measure, bool skipAnimation = true}) {
     // Nothing to do if we are unattached to a chart or asked to move to the
     // current location.
     if (_chart == null || domain == _domainValue) {
       return;
     }
 
-    final positionChanged = _moveSliderToDomain(domain);
+    final positionChanged = _moveSliderToDomain(domain, measure: measure);
 
     if (positionChanged) {
       _dragStateToFireOnPostRender = SliderListenerDragState.end;
@@ -559,7 +600,10 @@ class SliderStyle {
 ///
 /// [top] indicates the slider should be rendered relative to the top of the
 /// chart.
-enum SliderHandlePosition { middle, top }
+///
+/// [manual] indicates that the slider vertical position can be set every
+/// time the slider moves by calling moveSliderToDomain.
+enum SliderHandlePosition { middle, top, manual }
 
 /// Layout view component for [Slider].
 class _SliderLayoutView<D> extends LayoutView {

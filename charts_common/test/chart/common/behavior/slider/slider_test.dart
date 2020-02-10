@@ -74,6 +74,7 @@ class MockDomainAxis extends Mock implements NumericAxis {
 void main() {
   MockChart _chart;
   MockDomainAxis _domainAxis;
+  MockDomainAxis _measureAxis;
   ImmutableSeries _series1;
   DatumDetails _details1;
   DatumDetails _details2;
@@ -112,6 +113,7 @@ void main() {
       bool isWithinRenderer,
       List<DatumDetails> respondWithDetails}) {
     when(_chart.domainAxis).thenReturn(_domainAxis);
+    when(_chart.getMeasureAxis()).thenReturn(_measureAxis);
 
     if (isWithinRenderer != null) {
       when(_chart.pointWithinRenderer(forPoint)).thenReturn(isWithinRenderer);
@@ -126,6 +128,8 @@ void main() {
     _chart = MockChart();
 
     _domainAxis = MockDomainAxis();
+
+    _measureAxis = MockDomainAxis();
 
     _series1 = MutableSeries(Series(
         id: 'mySeries1',
@@ -586,6 +590,44 @@ void main() {
       expect(tester.domainCenterPoint, equals(Point(150.0, 100.0)));
       expect(tester.domainValue, equals(7.5));
       expect(tester.handleBounds, equals(Rectangle<int>(145, 90, 10, 20)));
+    });
+
+    test('can set domain and measure position when handle position is manual',
+        () {
+      // Setup chart matches point with single domain single series.
+      final slider = _makeBehavior(SelectionTrigger.tapAndDrag,
+          handleOffset: Point<double>(0.0, 0.0),
+          handleSize: Rectangle<int>(0, 0, 10, 20),
+          initialDomainValue: 1.0,
+          handlePosition: SliderHandlePosition.manual);
+
+      _setupChart();
+
+      // Act
+      _chart.lastLifecycleListener.onAxisConfigured();
+
+      // Verify initial position.
+      expect(tester.domainCenterPoint, equals(Point(20.0, 100.0)));
+      expect(tester.domainValue, equals(1.0));
+      expect(tester.handleBounds, equals(Rectangle<int>(15, 190, 10, 20)));
+
+      // Move to first domain value.
+      slider.moveSliderToDomain(2, measure: 5);
+      expect(tester.domainCenterPoint, equals(Point(40.0, 100.0)));
+      expect(tester.domainValue, equals(2.0));
+      expect(tester.handleBounds, equals(Rectangle<int>(35, 90, 10, 20)));
+
+      // Move to second domain value.
+      slider.moveSliderToDomain(5, measure: 7);
+      expect(tester.domainCenterPoint, equals(Point(100.0, 100.0)));
+      expect(tester.domainValue, equals(5.0));
+      expect(tester.handleBounds, equals(Rectangle<int>(95, 130, 10, 20)));
+
+      // Move to second domain value.
+      slider.moveSliderToDomain(7.5, measure: 3);
+      expect(tester.domainCenterPoint, equals(Point(150.0, 100.0)));
+      expect(tester.domainValue, equals(7.5));
+      expect(tester.handleBounds, equals(Rectangle<int>(145, 50, 10, 20)));
     });
   });
 
