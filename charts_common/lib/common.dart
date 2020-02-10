@@ -180,7 +180,11 @@ export 'src/chart/common/datum_details.dart'
 export 'src/chart/common/processed_series.dart'
     show ImmutableSeries, MutableSeries;
 export 'src/chart/common/selection_model/selection_model.dart'
-    show SelectionModel, SelectionModelType, SelectionModelListener;
+    show
+        MutableSelectionModel,
+        SelectionModel,
+        SelectionModelType,
+        SelectionModelListener;
 export 'src/chart/common/series_datum.dart' show SeriesDatum, SeriesDatumConfig;
 export 'src/chart/common/series_renderer.dart'
     show rendererIdKey, rendererKey, SeriesRenderer;
