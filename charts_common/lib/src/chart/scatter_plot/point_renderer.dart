@@ -437,8 +437,9 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         ? domainAxis.getLocation(domainUpperBoundValue)
         : null;
 
-    final measurePosition =
-        measureAxis.getLocation(measureValue + measureOffsetValue);
+    final measurePosition = measureValue != null && measureOffsetValue != null
+        ? measureAxis.getLocation(measureValue + measureOffsetValue)
+        : null;
 
     final measureLowerBoundPosition = measureLowerBoundValue != null
         ? measureAxis.getLocation(measureLowerBoundValue + measureOffsetValue)
