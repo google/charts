@@ -76,6 +76,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     keyFn = series.keyFn;
 
     domainFn = series.domainFn;
+    domainFormatterFn = series.domainFormatterFn;
     domainLowerBoundFn = series.domainLowerBoundFn;
     domainUpperBoundFn = series.domainUpperBoundFn;
 
@@ -126,6 +127,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     keyFn = other.keyFn;
 
     domainFn = other.domainFn;
+    domainFormatterFn = other.domainFormatterFn;
     domainLowerBoundFn = other.domainLowerBoundFn;
     domainUpperBoundFn = other.domainUpperBoundFn;
 
