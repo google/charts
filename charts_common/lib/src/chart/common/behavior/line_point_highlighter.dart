@@ -205,7 +205,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
           ? detail.radiusPx.toDouble() + radiusPaddingPx
           : defaultRadiusPx;
 
-      final pointKey = '${lineKey}::${detail.domain}';
+      final pointKey = '${lineKey}::${detail.domain}::${detail.measure}';
 
       // If we already have a point for that key, use it.
       _AnimatedPoint<D> animatingPoint;
