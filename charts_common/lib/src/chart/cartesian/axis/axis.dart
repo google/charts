@@ -80,6 +80,9 @@ abstract class ImmutableAxis<D> {
 abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   static const primaryMeasureAxisId = 'primaryMeasureAxisId';
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
+  static const _autoViewportDefault = true;
+
+  final MutableScale<D> _defaultScale;
 
   MutableScale<D> _scale;
 
@@ -93,6 +96,8 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// Previous [Scale] of this axis, used to calculate tick animation.
   MutableScale<D> _previousScale;
 
+  final TickProvider<D> _defaultTickProvider;
+
   TickProvider<D> _tickProvider;
 
   /// [TickProvider] for this axis.
@@ -102,7 +107,8 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     _tickProvider = tickProvider;
   }
 
-  /// [TickFormatter] for this axis.
+  final TickFormatter<D> _defaultTickFormatter;
+
   TickFormatter<D> _tickFormatter;
 
   set tickFormatter(TickFormatter<D> formatter) {
@@ -112,7 +118,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     }
   }
 
+  /// [TickFormatter] for this axis.
   TickFormatter<D> get tickFormatter => _tickFormatter;
+
   final _formatterValueCache = <D, String>{};
 
   /// [TickDrawStrategy] for this axis.
@@ -128,7 +136,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
   /// Whether or not the axis will configure the viewport to have "niced" ticks
   /// around the domain values.
-  bool _autoViewport = true;
+  bool _autoViewport = _autoViewportDefault;
 
   /// If the axis line should always be drawn.
   bool forceDrawAxisLine;
@@ -159,8 +167,11 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       {TickProvider<D> tickProvider,
       TickFormatter<D> tickFormatter,
       MutableScale<D> scale})
-      : _scale = scale,
+      : _defaultScale = scale,
+        _scale = scale,
+        _defaultTickProvider = tickProvider,
         _tickProvider = tickProvider,
+        _defaultTickFormatter = tickFormatter,
         _tickFormatter = tickFormatter;
 
   @protected
@@ -203,6 +214,14 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     }
 
     _scale.addDomain(domain);
+  }
+
+  void resetDefaultConfiguration() {
+    forceDrawAxisLine = null;
+    _autoViewport = _autoViewportDefault;
+    _scale = _defaultScale;
+    _tickFormatter = _defaultTickFormatter;
+    _tickProvider = _defaultTickProvider;
   }
 
   void resetDomains() {
