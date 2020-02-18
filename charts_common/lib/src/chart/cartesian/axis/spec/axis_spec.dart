@@ -59,6 +59,8 @@ class AxisSpec<D> {
 
   void configure(
       Axis<D> axis, ChartContext context, GraphicsFactory graphicsFactory) {
+    axis.resetDefaultConfiguration();
+
     if (showAxisLine != null) {
       axis.forceDrawAxisLine = showAxisLine;
     }
