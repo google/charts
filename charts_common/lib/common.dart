@@ -216,7 +216,8 @@ export 'src/chart/scatter_plot/point_renderer.dart'
         boundsLineRadiusPxFnKey,
         pointSymbolRendererFnKey,
         pointSymbolRendererIdKey,
-        PointRenderer;
+        PointRenderer,
+        PointRendererElement;
 export 'src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
 export 'src/chart/scatter_plot/point_renderer_decorator.dart'
