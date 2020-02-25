@@ -181,6 +181,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         fillColor ??= color;
 
         final details = PointRendererElement<D>()
+          ..index = index
           ..color = color
           ..fillColor = fillColor
           ..radiusPx = radiusPx.toDouble()
@@ -281,6 +282,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
           animatingPoint = AnimatedPoint<D>(
               key: pointKey, overlaySeries: series.overlaySeries)
             ..setNewTarget(PointRendererElement<D>()
+              ..index = details.index
               ..color = details.color
               ..fillColor = details.fillColor
               ..measureAxisPosition = measureAxis.getLocation(0.0)
@@ -298,6 +300,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
         // Get the pointElement we are going to setup.
         final pointElement = PointRendererElement<D>()
+          ..index = index
           ..color = details.color
           ..fillColor = details.fillColor
           ..measureAxisPosition = measureAxis.getLocation(0.0)
@@ -695,6 +698,7 @@ class DatumPoint<D> extends Point<double> {
 
 class PointRendererElement<D> {
   DatumPoint<D> point;
+  int index;
   Color color;
   Color fillColor;
   double measureAxisPosition;
@@ -706,6 +710,7 @@ class PointRendererElement<D> {
   PointRendererElement<D> clone() {
     return PointRendererElement<D>()
       ..point = DatumPoint<D>.from(point)
+      ..index = index
       ..color = color != null ? Color.fromOther(color: color) : null
       ..fillColor = fillColor != null ? Color.fromOther(color: fillColor) : null
       ..measureAxisPosition = measureAxisPosition

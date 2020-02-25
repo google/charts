@@ -93,6 +93,11 @@ void main() {
       var elementsList = series.getAttr(pointElementsKey);
       expect(elementsList.length, equals(4));
 
+      expect(elementsList[0].index, equals(0));
+      expect(elementsList[1].index, equals(1));
+      expect(elementsList[2].index, equals(2));
+      expect(elementsList[3].index, equals(3));
+
       expect(elementsList[0].radiusPx, equals(3.0));
       expect(elementsList[1].radiusPx, equals(5.0));
       expect(elementsList[2].radiusPx, equals(4.0));
