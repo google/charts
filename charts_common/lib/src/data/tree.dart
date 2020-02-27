@@ -1,4 +1,4 @@
-// Copyright 2018 the Charts project authors. Please see the AUTHORS file
+// Copyright 2019 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -187,7 +187,7 @@ class TreeNode<T> {
 
   /// Applies the function [f] to all child nodes rooted from this node in
   /// breadth first order.
-  void visit(void f(TreeNode<T> node)) {
+  void visit(void Function(TreeNode<T> node) f) {
     final queue = Queue<TreeNode<T>>()..add(this);
 
     while (queue.isNotEmpty) {

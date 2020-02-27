@@ -587,7 +587,7 @@ abstract class BaseChart<D> {
     // Request animation
     if (animatingThisDraw) {
       animationPercent = 0.0;
-      context.requestAnimation(this.transition);
+      context.requestAnimation(transition);
     } else {
       animationPercent = 1.0;
       context.requestPaint();
@@ -617,7 +617,7 @@ abstract class BaseChart<D> {
       !_animationsTemporarilyDisabled);
 
   @protected
-  fireOnDraw(List<MutableSeries<D>> seriesList) {
+  void fireOnDraw(List<MutableSeries<D>> seriesList) {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
       if (listener.onData != null) {
         listener.onData(seriesList);
@@ -626,7 +626,7 @@ abstract class BaseChart<D> {
   }
 
   @protected
-  fireOnPreprocess(List<MutableSeries<D>> seriesList) {
+  void fireOnPreprocess(List<MutableSeries<D>> seriesList) {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
       if (listener.onPreprocess != null) {
         listener.onPreprocess(seriesList);
@@ -635,7 +635,7 @@ abstract class BaseChart<D> {
   }
 
   @protected
-  fireOnPostprocess(List<MutableSeries<D>> seriesList) {
+  void fireOnPostprocess(List<MutableSeries<D>> seriesList) {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
       if (listener.onPostprocess != null) {
         listener.onPostprocess(seriesList);
@@ -644,7 +644,7 @@ abstract class BaseChart<D> {
   }
 
   @protected
-  fireOnAxisConfigured() {
+  void fireOnAxisConfigured() {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
       if (listener.onAxisConfigured != null) {
         listener.onAxisConfigured();
@@ -653,7 +653,7 @@ abstract class BaseChart<D> {
   }
 
   @protected
-  fireOnPostrender(ChartCanvas canvas) {
+  void fireOnPostrender(ChartCanvas canvas) {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
       if (listener.onPostrender != null) {
         listener.onPostrender(canvas);
@@ -662,7 +662,7 @@ abstract class BaseChart<D> {
   }
 
   @protected
-  fireOnAnimationComplete() {
+  void fireOnAnimationComplete() {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
       if (listener.onAnimationComplete != null) {
         listener.onAnimationComplete();
@@ -671,7 +671,7 @@ abstract class BaseChart<D> {
   }
 
   /// Called to free up any resources due to chart going away.
-  destroy() {
+  void destroy() {
     // Walk them in add order to support behaviors that remove other behaviors.
     for (var i = 0; i < _behaviorStack.length; i++) {
       _behaviorStack[i].removeFrom(this);
@@ -689,21 +689,21 @@ class LifecycleListener<D> {
   /// This step is good for processing the data (running averages, percentage of
   /// first, etc). It can also be used to add Series of data (trend line) or
   /// remove a line as mentioned above, removing Series.
-  final LifecycleSeriesListCallback onData;
+  final LifecycleSeriesListCallback<D> onData;
 
   /// Called for every redraw given the original SeriesList resulting from the
   /// previous onData.
   ///
   /// This step is good for injecting default attributes on the Series before
   /// the renderers process the data (ex: before stacking measures).
-  final LifecycleSeriesListCallback onPreprocess;
+  final LifecycleSeriesListCallback<D> onPreprocess;
 
   /// Called after the chart and renderers get a chance to process the data but
   /// before the axes process them.
   ///
   /// This step is good if you need to alter the Series measure values after the
   /// renderers have processed them (ex: after stacking measures).
-  final LifecycleSeriesListCallback onPostprocess;
+  final LifecycleSeriesListCallback<D> onPostprocess;
 
   /// Called after the Axes have been configured.
   /// This step is good if you need to use the axes to get any cartesian
@@ -731,6 +731,7 @@ class LifecycleListener<D> {
       this.onAnimationComplete});
 }
 
-typedef LifecycleSeriesListCallback<D>(List<MutableSeries<D>> seriesList);
-typedef LifecycleCanvasCallback(ChartCanvas canvas);
-typedef LifecycleEmptyCallback();
+typedef LifecycleSeriesListCallback<D> = void Function(
+    List<MutableSeries<D>> seriesList);
+typedef LifecycleCanvasCallback = void Function(ChartCanvas canvas);
+typedef LifecycleEmptyCallback = void Function();

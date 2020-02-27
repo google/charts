@@ -103,7 +103,7 @@ class Series<T, D> {
 
   // TODO: should this be immutable as well? If not, should any of
   // the non-required ones be final?
-  final SeriesAttributes attributes = new SeriesAttributes();
+  final SeriesAttributes attributes = SeriesAttributes();
 
   factory Series(
       {@required String id,
@@ -189,8 +189,10 @@ class Series<T, D> {
     final _strokeWidthPxFn = strokeWidthPxFn == null
         ? null
         : (int index) => strokeWidthPxFn(data[index], index);
+    final _keyFn =
+        keyFn == null ? null : (int index) => keyFn(data[index], index);
 
-    return new Series._internal(
+    return Series._internal(
       id: id,
       data: data,
       domainFn: _domainFn,
@@ -204,6 +206,7 @@ class Series<T, D> {
       domainUpperBoundFn: _domainUpperBoundFn,
       fillColorFn: _fillColorFn,
       fillPatternFn: _fillPatternFn,
+      keyFn: _keyFn,
       patternColorFn: _patternColorFn,
       labelAccessorFn: _labelAccessorFn,
       insideLabelStyleAccessorFn: _insideLabelStyleAccessorFn,
@@ -251,11 +254,11 @@ class Series<T, D> {
   });
 
   void setAttribute<R>(AttributeKey<R> key, R value) {
-    this.attributes.setAttr(key, value);
+    attributes.setAttr(key, value);
   }
 
   R getAttribute<R>(AttributeKey<R> key) {
-    return this.attributes.getAttr<R>(key);
+    return attributes.getAttr<R>(key);
   }
 }
 
@@ -266,9 +269,9 @@ class Series<T, D> {
 /// such usage.
 ///
 /// Otherwise, [index] must be a valid subscript into a list of `series.length`.
-typedef R AccessorFn<R>(int index);
+typedef AccessorFn<R> = R Function(int index);
 
-typedef R TypedAccessorFn<T, R>(T datum, int index);
+typedef TypedAccessorFn<T, R> = R Function(T datum, int index);
 
 class AttributeKey<R> extends TypedKey<R> {
   const AttributeKey(String uniqueKey) : super(uniqueKey);

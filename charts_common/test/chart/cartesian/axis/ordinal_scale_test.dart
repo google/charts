@@ -31,13 +31,13 @@ void main() {
   SimpleOrdinalScale scale;
 
   setUp(() {
-    scale = new SimpleOrdinalScale();
+    scale = SimpleOrdinalScale();
     scale.addDomain('a');
     scale.addDomain('b');
     scale.addDomain('c');
     scale.addDomain('d');
 
-    scale.range = new ScaleOutputExtent(2000, 1000);
+    scale.range = ScaleOutputExtent(2000, 1000);
   });
 
   group('conversion', () {
@@ -88,7 +88,7 @@ void main() {
 
   group('set RangeBandConfig', () {
     test('fixed pixel range band changes range band', () {
-      scale.rangeBandConfig = new RangeBandConfig.fixedPixel(123.0);
+      scale.rangeBandConfig = RangeBandConfig.fixedPixel(123.0);
 
       expect(scale.rangeBand, closeTo(123.0, EPSILON));
 
@@ -98,25 +98,24 @@ void main() {
     });
 
     test('percent range band changes range band', () {
-      scale.rangeBandConfig = new RangeBandConfig.percentOfStep(0.5);
+      scale.rangeBandConfig = RangeBandConfig.percentOfStep(0.5);
       // 125 = 0.5f * 1000pixels / 4domains
       expect(scale.rangeBand, closeTo(125.0, EPSILON));
     });
 
     test('space from step changes range band', () {
-      scale.rangeBandConfig =
-          new RangeBandConfig.fixedPixelSpaceBetweenStep(50.0);
+      scale.rangeBandConfig = RangeBandConfig.fixedPixelSpaceBetweenStep(50.0);
       // 200 = 1000pixels / 4domains) - 50
       expect(scale.rangeBand, closeTo(200.0, EPSILON));
     });
 
     test('fixed domain throws argument exception', () {
-      expect(() => scale.rangeBandConfig = new RangeBandConfig.fixedDomain(5.0),
+      expect(() => scale.rangeBandConfig = RangeBandConfig.fixedDomain(5.0),
           throwsArgumentError);
     });
 
     test('type of none throws argument exception', () {
-      expect(() => scale.rangeBandConfig = new RangeBandConfig.none(),
+      expect(() => scale.rangeBandConfig = RangeBandConfig.none(),
           throwsArgumentError);
     });
 
@@ -125,10 +124,15 @@ void main() {
     });
 
     test('range band size used from style', () {
+      var oldStyle = StyleFactory.style;
       StyleFactory.style = TestStyle()..rangeBandSize = 0.4;
-      scale.rangeBandConfig = new RangeBandConfig.styleAssignedPercent();
+
+      scale.rangeBandConfig = RangeBandConfig.styleAssignedPercent();
       // 100 = 0.4f * 1000pixels / 4domains
       expect(scale.rangeBand, closeTo(100, EPSILON));
+
+      // Restore style for other tests.
+      StyleFactory.style = oldStyle;
     });
   });
 
@@ -138,16 +142,16 @@ void main() {
     });
 
     test('to auto does not throw', () {
-      scale.stepSizeConfig = new StepSizeConfig.auto();
+      scale.stepSizeConfig = StepSizeConfig.auto();
     });
 
     test('to fixed domain throw arugment exception', () {
-      expect(() => scale.stepSizeConfig = new StepSizeConfig.fixedDomain(1.0),
+      expect(() => scale.stepSizeConfig = StepSizeConfig.fixedDomain(1.0),
           throwsArgumentError);
     });
 
     test('to fixed pixel throw arugment exception', () {
-      expect(() => scale.stepSizeConfig = new StepSizeConfig.fixedPixels(1.0),
+      expect(() => scale.stepSizeConfig = StepSizeConfig.fixedPixels(1.0),
           throwsArgumentError);
     });
   });
@@ -179,15 +183,15 @@ void main() {
 
     test('rangeband is scaled', () {
       scale.setViewportSettings(2.0, -700.0);
-      scale.rangeBandConfig = new RangeBandConfig.percentOfStep(1.0);
+      scale.rangeBandConfig = RangeBandConfig.percentOfStep(1.0);
 
       expect(scale.rangeBand, closeTo(500.0, EPSILON));
     });
 
     test('translate to pixels is scaled', () {
       scale.setViewportSettings(2.0, -700.0);
-      scale.rangeBandConfig = new RangeBandConfig.percentOfStep(1.0);
-      scale.range = new ScaleOutputExtent(1000, 2000);
+      scale.rangeBandConfig = RangeBandConfig.percentOfStep(1.0);
+      scale.range = ScaleOutputExtent(1000, 2000);
 
       final scaledStepWidth = 500.0;
       final scaledInitialShift = 250.0;
@@ -200,8 +204,8 @@ void main() {
 
     test('only b and c should be within the viewport', () {
       scale.setViewportSettings(2.0, -700.0);
-      scale.rangeBandConfig = new RangeBandConfig.percentOfStep(1.0);
-      scale.range = new ScaleOutputExtent(1000, 2000);
+      scale.rangeBandConfig = RangeBandConfig.percentOfStep(1.0);
+      scale.range = ScaleOutputExtent(1000, 2000);
 
       expect(scale.compareDomainValueToViewport('a'), equals(-1));
       expect(scale.compareDomainValueToViewport('c'), equals(0));
@@ -212,8 +216,8 @@ void main() {
 
   group('viewport', () {
     test('set adjust scale to show viewport', () {
-      scale.range = new ScaleOutputExtent(1000, 2000);
-      scale.rangeBandConfig = new RangeBandConfig.percentOfStep(0.5);
+      scale.range = ScaleOutputExtent(1000, 2000);
+      scale.rangeBandConfig = RangeBandConfig.percentOfStep(0.5);
       scale.setViewport(2, 'b');
 
       expect(scale['a'], closeTo(750, EPSILON));
@@ -231,8 +235,8 @@ void main() {
     });
 
     test('set starting value if starting domain is not in domain list', () {
-      scale.range = new ScaleOutputExtent(1000, 2000);
-      scale.rangeBandConfig = new RangeBandConfig.percentOfStep(0.5);
+      scale.range = ScaleOutputExtent(1000, 2000);
+      scale.rangeBandConfig = RangeBandConfig.percentOfStep(0.5);
       scale.setViewport(2, 'f');
 
       expect(scale['a'], closeTo(1250, EPSILON));
@@ -242,7 +246,7 @@ void main() {
     });
 
     test('get size returns number of full steps that fit scale range', () {
-      scale.range = new ScaleOutputExtent(1000, 2000);
+      scale.range = ScaleOutputExtent(1000, 2000);
 
       scale.setViewportSettings(2.0, 0.0);
       expect(scale.viewportDataSize, equals(2));
@@ -252,7 +256,7 @@ void main() {
     });
 
     test('get starting viewport gets first fully visible domain', () {
-      scale.range = new ScaleOutputExtent(1000, 2000);
+      scale.range = ScaleOutputExtent(1000, 2000);
 
       scale.setViewportSettings(2.0, -500.0);
       expect(scale.viewportStartingDomain, equals('b'));

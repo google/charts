@@ -48,7 +48,7 @@ class AxisSpec<D> {
     bool showAxisLine,
     ScaleSpec scaleSpec,
   }) {
-    return new AxisSpec(
+    return AxisSpec(
       renderSpec: renderSpec ?? other.renderSpec,
       tickProviderSpec: tickProviderSpec ?? other.tickProviderSpec,
       tickFormatterSpec: tickFormatterSpec ?? other.tickFormatterSpec,
@@ -57,8 +57,10 @@ class AxisSpec<D> {
     );
   }
 
-  configure(
+  void configure(
       Axis<D> axis, ChartContext context, GraphicsFactory graphicsFactory) {
+    axis.resetDefaultConfiguration();
+
     if (showAxisLine != null) {
       axis.forceDrawAxisLine = showAxisLine;
     }

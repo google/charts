@@ -1,4 +1,4 @@
-// Copyright 2018 the Charts project authors. Please see the AUTHORS file
+// Copyright 2019 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
 import 'dart:collection' show Queue;
 import 'dart:math' as math;
 
-import 'package:charts_common/src/chart/layout/layout_view.dart';
 import 'package:charts_common/src/data/tree.dart';
 
 import 'base_treemap_renderer.dart';
@@ -24,22 +23,16 @@ import 'treemap_renderer_config.dart';
 
 /// A treemap renderer that renders a squarified treemap.
 class SquarifiedTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
-  /// Default padding of a squarified treemap rectangle.
-  static const _defaultRectPadding =
-      ViewMargin(topPx: 26, leftPx: 4, rightPx: 4, bottomPx: 4);
-
   /// Golden ratio.
   final _ratio = .5 * (1 + math.sqrt(5));
 
   SquarifiedTreeMapRenderer({String rendererId, TreeMapRendererConfig config})
       : super(
             config: config ??
-                TreeMapRendererConfig(
-                    tileType: TileType.squarified,
-                    rectPaddingPx: _defaultRectPadding),
+                TreeMapRendererConfig(tileType: TreeMapTileType.squarified),
             rendererId: rendererId ?? BaseTreeMapRenderer.defaultRendererId);
 
-  /// Using squarification as the tiling algorithm for this tree map.
+  /// Uses squarification as the tiling algorithm for this tree map.
   ///
   /// The idea is to present treemap layouts in which the rectangles approximate
   /// squares.
@@ -59,7 +52,9 @@ class SquarifiedTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
 
       var bestScore = double.infinity;
       var width = math.min(rect.width, rect.height);
-      scaleArea(children, areaForRectangle(rect) / measureForTreeNode(node));
+      final measure = measureForTreeNode(node);
+      final scaleFactor = measure == 0 ? 0 : areaForRectangle(rect) / measure;
+      scaleArea(children, scaleFactor);
 
       while (remainingNodes.isNotEmpty) {
         final child = remainingNodes.first;
@@ -128,7 +123,7 @@ class _SquarifyRatioAnalyzer {
     var rMax = 0.0;
 
     // Finds rMin (i.e minimum area) and rMax (i.e maximum area) in [nodes].
-    for (var node in nodes) {
+    for (final node in nodes) {
       final area = _areaFn(node);
       if (area <= 0) continue;
       if (area < rMin) rMin = area;

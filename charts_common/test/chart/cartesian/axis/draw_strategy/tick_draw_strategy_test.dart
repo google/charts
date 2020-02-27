@@ -56,15 +56,31 @@ class BaseTickDrawStrategyImpl<D> extends BaseTickDrawStrategy<D> {
       Rectangle<int> drawAreaBounds,
       bool isFirst,
       bool isLast}) {}
+
+  void drawLabel(ChartCanvas canvas, Tick<D> tick,
+      {AxisOrientation orientation,
+      Rectangle<int> axisBounds,
+      Rectangle<int> drawAreaBounds,
+      bool isFirst = false,
+      bool isLast = false}) {
+    super.drawLabel(canvas, tick,
+        orientation: orientation,
+        axisBounds: axisBounds,
+        drawAreaBounds: drawAreaBounds,
+        isFirst: isFirst,
+        isLast: isLast);
+  }
 }
 
 /// Fake [TextElement] for testing.
 ///
 /// [baseline] returns the same value as the [verticalSliceWidth] specified.
 class FakeTextElement implements TextElement {
+  static const _defaultVerticalSliceWidth = 15.0;
+
   final String text;
   final TextMeasurement measurement;
-  TextStyle textStyle;
+  var textStyle = MockTextStyle();
   int maxWidth;
   MaxWidthStrategy maxWidthStrategy;
   TextDirection textDirection;
@@ -75,9 +91,10 @@ class FakeTextElement implements TextElement {
     this.textDirection,
     double horizontalSliceWidth,
     double verticalSliceWidth,
-  ) : measurement = new TextMeasurement(
+  ) : measurement = TextMeasurement(
             horizontalSliceWidth: horizontalSliceWidth,
-            verticalSliceWidth: verticalSliceWidth);
+            verticalSliceWidth:
+                verticalSliceWidth ?? _defaultVerticalSliceWidth);
 }
 
 class MockGraphicsFactory extends Mock implements GraphicsFactory {}
@@ -86,15 +103,17 @@ class MockLineStyle extends Mock implements LineStyle {}
 
 class MockTextStyle extends Mock implements TextStyle {}
 
+class MockChartCanvas extends Mock implements ChartCanvas {}
+
 /// Helper function to create [Tick] for testing.
 Tick<String> createTick(String value, double locationPx,
     {double horizontalWidth,
     double verticalWidth,
     TextDirection textDirection}) {
-  return new Tick<String>(
+  return Tick<String>(
       value: value,
       locationPx: locationPx,
-      textElement: new FakeTextElement(
+      textElement: FakeTextElement(
           value, textDirection, horizontalWidth, verticalWidth));
 }
 
@@ -103,18 +122,18 @@ void main() {
   ChartContext chartContext;
 
   setUpAll(() {
-    graphicsFactory = new MockGraphicsFactory();
-    when(graphicsFactory.createLinePaint()).thenReturn(new MockLineStyle());
-    when(graphicsFactory.createTextPaint()).thenReturn(new MockTextStyle());
+    graphicsFactory = MockGraphicsFactory();
+    when(graphicsFactory.createLinePaint()).thenReturn(MockLineStyle());
+    when(graphicsFactory.createTextPaint()).thenReturn(MockTextStyle());
 
-    chartContext = new MockContext();
+    chartContext = MockContext();
     when(chartContext.chartContainerIsRtl).thenReturn(false);
     when(chartContext.isRtl).thenReturn(false);
   });
 
   group('collision detection - vertically drawn axis', () {
     test('ticks do not collide', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 2);
 
@@ -130,7 +149,7 @@ void main() {
     });
 
     test('ticks collide because it does not have minimum padding', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 2);
 
@@ -146,7 +165,7 @@ void main() {
     });
 
     test('first tick causes collision', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 0);
 
@@ -162,7 +181,7 @@ void main() {
     });
 
     test('last tick causes collision', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 0);
 
@@ -178,7 +197,7 @@ void main() {
     });
 
     test('ticks do not collide for inside tick label anchor', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 2,
           labelAnchor: TickLabelAnchor.inside);
@@ -195,7 +214,7 @@ void main() {
     });
 
     test('ticks collide for inside anchor - first tick too large', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 2,
           labelAnchor: TickLabelAnchor.inside);
@@ -212,7 +231,7 @@ void main() {
     });
 
     test('ticks collide for inside anchor - center tick too large', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 2,
           labelAnchor: TickLabelAnchor.inside);
@@ -229,7 +248,7 @@ void main() {
     });
 
     test('ticks collide for inside anchor - last tick too large', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 2,
           labelAnchor: TickLabelAnchor.inside);
@@ -248,7 +267,7 @@ void main() {
 
   group('collision detection - horizontally drawn axis', () {
     test('ticks do not collide for TickLabelAnchor.before', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 2,
           labelAnchor: TickLabelAnchor.before);
@@ -265,7 +284,7 @@ void main() {
     });
 
     test('ticks do not collide for TickLabelAnchor.inside', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 0,
           labelAnchor: TickLabelAnchor.inside);
@@ -288,7 +307,7 @@ void main() {
     });
 
     test('ticks collide - first tick too large', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 0,
           labelAnchor: TickLabelAnchor.inside);
@@ -305,7 +324,7 @@ void main() {
     });
 
     test('ticks collide - middle tick too large', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 0,
           labelAnchor: TickLabelAnchor.inside);
@@ -322,7 +341,7 @@ void main() {
     });
 
     test('ticks collide - last tick too large', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 0,
           labelAnchor: TickLabelAnchor.inside);
@@ -341,7 +360,7 @@ void main() {
 
   group('collision detection - unsorted ticks', () {
     test('ticks do not collide', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 0,
           labelAnchor: TickLabelAnchor.inside);
@@ -358,7 +377,7 @@ void main() {
     });
 
     test('ticks collide - tick B is too large', () {
-      final drawStrategy = new BaseTickDrawStrategyImpl(
+      final drawStrategy = BaseTickDrawStrategyImpl(
           chartContext, graphicsFactory,
           minimumPaddingBetweenLabelsPx: 0,
           labelAnchor: TickLabelAnchor.inside);
@@ -378,7 +397,7 @@ void main() {
   group('collision detection - corner cases', () {
     test('null ticks do not collide', () {
       final drawStrategy =
-          new BaseTickDrawStrategyImpl(chartContext, graphicsFactory);
+          BaseTickDrawStrategyImpl(chartContext, graphicsFactory);
 
       final report = drawStrategy.collides(null, AxisOrientation.left);
 
@@ -387,7 +406,7 @@ void main() {
 
     test('empty tick list do not collide', () {
       final drawStrategy =
-          new BaseTickDrawStrategyImpl(chartContext, graphicsFactory);
+          BaseTickDrawStrategyImpl(chartContext, graphicsFactory);
 
       final report = drawStrategy.collides([], AxisOrientation.left);
 
@@ -396,13 +415,120 @@ void main() {
 
     test('single tick does not collide', () {
       final drawStrategy =
-          new BaseTickDrawStrategyImpl(chartContext, graphicsFactory);
+          BaseTickDrawStrategyImpl(chartContext, graphicsFactory);
 
       final report = drawStrategy.collides(
           [createTick('A', 10.0, horizontalWidth: 10.0)],
           AxisOrientation.bottom);
 
       expect(report.ticksCollide, isFalse);
+    });
+  });
+  group('Draw Label', () {
+    void setUpLabel(String text, {double width}) =>
+        when(graphicsFactory.createTextElement(text))
+            .thenReturn(FakeTextElement(
+          text,
+          TextDirection.ltr,
+          width,
+          15.0,
+        ));
+
+    BaseTickDrawStrategyImpl drawStrategy;
+    List<Tick> ticks;
+
+    setUp(() {
+      drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory);
+
+      ticks = [
+        createTick('This label \nspans \n multiple lines!!!', 0.0,
+            horizontalWidth: 100.0, verticalWidth: 15.0), // 10.0 - 20.0
+        createTick('A', 20.0,
+            horizontalWidth: 10.0, verticalWidth: 15.0), // 30.0 - 40.0
+      ];
+
+      setUpLabel('This label', width: 30.0);
+      setUpLabel('spans', width: 10.0);
+      setUpLabel('multiple lines!!!', width: 60.0);
+      setUpLabel('A', width: 10.0);
+    });
+
+    test('measureHorizontallyDrawnTicks', () {
+      final offset = drawStrategy.labelOffsetFromAxisPx;
+      final sizes = drawStrategy.measureHorizontallyDrawnTicks(ticks, 250, 500);
+
+      // Text-Height * numLines + paddingBetweenLines + offset.
+      expect(sizes.preferredHeight, 15 * 3 + 4 + offset);
+      expect(sizes.preferredWidth, 250);
+    });
+
+    test('measureVerticallyDrawnTicks', () {
+      final offset = drawStrategy.labelOffsetFromAxisPx;
+      final sizes = drawStrategy.measureVerticallyDrawnTicks(ticks, 250, 500);
+
+      // Width of the longest line + offset.
+      expect(sizes.preferredWidth, 60.0 + offset);
+      expect(sizes.preferredHeight, 500);
+    });
+
+    test('memeasureVerticallyDrawnTicks - negativate labelOffsetFromAxisPx',
+        () {
+      final offset = -500;
+      drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory,
+          labelOffsetFromAxisPx: offset);
+      final sizes = drawStrategy.measureVerticallyDrawnTicks(ticks, 250, 500);
+
+      expect(sizes.preferredWidth, 0);
+      expect(sizes.preferredHeight, 500);
+    });
+
+    test('Draw multiline label', () {
+      final chartCanvas = MockChartCanvas();
+      final axisBounds = Rectangle<int>(0, 0, 1000, 1000);
+
+      drawStrategy.drawLabel(
+        chartCanvas,
+        ticks.first,
+        orientation: AxisOrientation.bottom,
+        axisBounds: axisBounds,
+      );
+
+      // The y-coordinate should increase by the line's height + padding.
+      final labelLine1 =
+          verify(chartCanvas.drawText(captureAny, 0, 5, rotation: 0))
+              .captured
+              .single;
+      expect(labelLine1.text, 'This label');
+
+      final labelLine2 =
+          verify(chartCanvas.drawText(captureAny, 0, 22, rotation: 0))
+              .captured
+              .single;
+      expect(labelLine2.text, 'spans');
+
+      final labelLine3 =
+          verify(chartCanvas.drawText(captureAny, 0, 39, rotation: 0))
+              .captured
+              .single;
+      expect(labelLine3.text, 'multiple lines!!!');
+    });
+
+    test('Draw singleline label', () {
+      final chartCanvas = MockChartCanvas();
+      final axisBounds = Rectangle<int>(0, 0, 1000, 1000);
+
+      drawStrategy.drawLabel(
+        chartCanvas,
+        ticks[1],
+        orientation: AxisOrientation.top,
+        axisBounds: axisBounds,
+      );
+
+      final labelLine =
+          verify(chartCanvas.drawText(captureAny, 20, 980, rotation: 0))
+              .captured
+              .single;
+      expect(labelLine.text, 'A');
     });
   });
 }

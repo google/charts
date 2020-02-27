@@ -26,10 +26,11 @@ class MockChart extends Mock implements BaseChart {
   LifecycleListener lastListener;
 
   @override
-  addLifecycleListener(LifecycleListener listener) => lastListener = listener;
+  LifecycleListener addLifecycleListener(LifecycleListener listener) =>
+      lastListener = listener;
 
   @override
-  removeLifecycleListener(LifecycleListener listener) {
+  bool removeLifecycleListener(LifecycleListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
     return true;
@@ -40,11 +41,11 @@ class MockSelectionModel extends Mock implements MutableSelectionModel {
   SelectionModelListener lastListener;
 
   @override
-  addSelectionChangedListener(SelectionModelListener listener) =>
+  void addSelectionChangedListener(SelectionModelListener listener) =>
       lastListener = listener;
 
   @override
-  removeSelectionChangedListener(SelectionModelListener listener) {
+  void removeSelectionChangedListener(SelectionModelListener listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
   }
@@ -55,16 +56,16 @@ void main() {
   MockSelectionModel _selectionModel;
 
   MutableSeries<String> _series1;
-  final _s1D1 = new MyRow('s1d1', 11);
-  final _s1D2 = new MyRow('s1d2', 12);
-  final _s1D3 = new MyRow('s1d3', 13);
+  final _s1D1 = MyRow('s1d1', 11);
+  final _s1D2 = MyRow('s1d2', 12);
+  final _s1D3 = MyRow('s1d3', 13);
 
   MutableSeries<String> _series2;
-  final _s2D1 = new MyRow('s2d1', 21);
-  final _s2D2 = new MyRow('s2d2', 22);
-  final _s2D3 = new MyRow('s2d3', 23);
+  final _s2D1 = MyRow('s2d1', 21);
+  final _s2D2 = MyRow('s2d2', 22);
+  final _s2D3 = MyRow('s2d3', 23);
 
-  _setupSelection(List<MyRow> selected) {
+  void _setupSelection(List<MyRow> selected) {
     for (var i = 0; i < _series1.data.length; i++) {
       when(_selectionModel.isDatumSelected(_series1, i))
           .thenReturn(selected.contains(_series1.data[i]));
@@ -76,13 +77,13 @@ void main() {
   }
 
   setUp(() {
-    _chart = new MockChart();
+    _chart = MockChart();
 
-    _selectionModel = new MockSelectionModel();
+    _selectionModel = MockSelectionModel();
     when(_chart.getSelectionModel(SelectionModelType.info))
         .thenReturn(_selectionModel);
 
-    _series1 = new MutableSeries(new Series<MyRow, String>(
+    _series1 = MutableSeries(Series<MyRow, String>(
         id: 's1',
         data: [_s1D1, _s1D2, _s1D3],
         domainFn: (MyRow row, _) => row.campaign,
@@ -90,7 +91,7 @@ void main() {
         colorFn: (_, __) => MaterialPalette.blue.shadeDefault))
       ..measureFn = (_) => 0.0;
 
-    _series2 = new MutableSeries(new Series<MyRow, String>(
+    _series2 = MutableSeries(Series<MyRow, String>(
         id: 's2',
         data: [_s2D1, _s2D2, _s2D3],
         domainFn: (MyRow row, _) => row.campaign,
@@ -102,7 +103,7 @@ void main() {
   group('DomainHighligher', () {
     test('darkens the selected bars', () {
       // Setup
-      final behavior = new DomainHighlighter(SelectionModelType.info);
+      final behavior = DomainHighlighter(SelectionModelType.info);
       behavior.attachTo(_chart);
       _setupSelection([_s1D2, _s2D2]);
       final seriesList = [_series1, _series2];
@@ -126,7 +127,7 @@ void main() {
 
     test('listens to other selection models', () {
       // Setup
-      final behavior = new DomainHighlighter(SelectionModelType.action);
+      final behavior = DomainHighlighter(SelectionModelType.action);
       when(_chart.getSelectionModel(SelectionModelType.action))
           .thenReturn(_selectionModel);
 
@@ -140,7 +141,7 @@ void main() {
 
     test('leaves everything alone with no selection', () {
       // Setup
-      final behavior = new DomainHighlighter(SelectionModelType.info);
+      final behavior = DomainHighlighter(SelectionModelType.info);
       behavior.attachTo(_chart);
       _setupSelection([]);
       final seriesList = [_series1, _series2];
@@ -164,7 +165,7 @@ void main() {
 
     test('cleans up', () {
       // Setup
-      final behavior = new DomainHighlighter(SelectionModelType.info);
+      final behavior = DomainHighlighter(SelectionModelType.info);
       behavior.attachTo(_chart);
       _setupSelection([_s1D2, _s2D2]);
 

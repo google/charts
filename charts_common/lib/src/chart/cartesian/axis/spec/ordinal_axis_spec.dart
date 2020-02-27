@@ -62,7 +62,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
             scaleSpec: scaleSpec);
 
   @override
-  configure(Axis<String> axis, ChartContext context,
+  void configure(Axis<String> axis, ChartContext context,
       GraphicsFactory graphicsFactory) {
     super.configure(axis, context, graphicsFactory);
 
@@ -72,7 +72,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
   }
 
   @override
-  OrdinalAxis createAxis() => new OrdinalAxis();
+  OrdinalAxis createAxis() => OrdinalAxis();
 
   @override
   bool operator ==(Object other) {
@@ -102,7 +102,7 @@ class BasicOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
 
   @override
   OrdinalTickProvider createTickProvider(ChartContext context) =>
-      new OrdinalTickProvider();
+      OrdinalTickProvider();
 
   @override
   bool operator ==(Object other) => other is BasicOrdinalTickProviderSpec;
@@ -120,7 +120,7 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
 
   @override
   StaticTickProvider<String> createTickProvider(ChartContext context) =>
-      new StaticTickProvider<String>(tickSpecs);
+      StaticTickProvider<String>(tickSpecs);
 
   @override
   bool operator ==(Object other) =>
@@ -137,7 +137,7 @@ class BasicOrdinalTickFormatterSpec implements OrdinalTickFormatterSpec {
 
   @override
   OrdinalTickFormatter createTickFormatter(ChartContext context) =>
-      new OrdinalTickFormatter();
+      OrdinalTickFormatter();
 
   @override
   bool operator ==(Object other) => other is BasicOrdinalTickFormatterSpec;
@@ -151,7 +151,7 @@ class SimpleOrdinalScaleSpec implements OrdinalScaleSpec {
   const SimpleOrdinalScaleSpec();
 
   @override
-  OrdinalScale createScale() => new SimpleOrdinalScale();
+  OrdinalScale createScale() => SimpleOrdinalScale();
 
   @override
   bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
@@ -170,9 +170,9 @@ class FixedPixelSpaceOrdinalScaleSpec implements OrdinalScaleSpec {
 
   @override
   OrdinalScale createScale() {
-    SimpleOrdinalScale scale = new SimpleOrdinalScale();
+    SimpleOrdinalScale scale = SimpleOrdinalScale();
     scale.rangeBandConfig =
-        new RangeBandConfig.fixedPixelSpaceBetweenStep(pixelSpaceBetweenBars);
+        RangeBandConfig.fixedPixelSpaceBetweenStep(pixelSpaceBetweenBars);
     return scale;
   }
 
@@ -192,8 +192,8 @@ class FixedPixelOrdinalScaleSpec implements OrdinalScaleSpec {
 
   @override
   OrdinalScale createScale() {
-    SimpleOrdinalScale scale = new SimpleOrdinalScale();
-    scale.rangeBandConfig = new RangeBandConfig.fixedPixel(pixels);
+    SimpleOrdinalScale scale = SimpleOrdinalScale();
+    scale.rangeBandConfig = RangeBandConfig.fixedPixel(pixels);
     return scale;
   }
 

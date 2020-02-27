@@ -54,14 +54,14 @@ class NumericCartesianChart extends CartesianChart<num> {
       : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
-            domainAxis: new NumericAxis(),
+            domainAxis: NumericAxis(),
             primaryMeasureAxis: primaryMeasureAxis,
             secondaryMeasureAxis: secondaryMeasureAxis,
             disjointMeasureAxes: disjointMeasureAxes);
 
   @protected
   void initDomainAxis() {
-    _domainAxis.tickDrawStrategy = new SmallTickRendererSpec<num>()
+    _domainAxis.tickDrawStrategy = SmallTickRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
   }
 }
@@ -76,7 +76,7 @@ class OrdinalCartesianChart extends CartesianChart<String> {
       : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
-            domainAxis: new OrdinalAxis(),
+            domainAxis: OrdinalAxis(),
             primaryMeasureAxis: primaryMeasureAxis,
             secondaryMeasureAxis: secondaryMeasureAxis,
             disjointMeasureAxes: disjointMeasureAxes);
@@ -84,17 +84,17 @@ class OrdinalCartesianChart extends CartesianChart<String> {
   @protected
   void initDomainAxis() {
     _domainAxis
-      ..tickDrawStrategy = new SmallTickRendererSpec<String>()
+      ..tickDrawStrategy = SmallTickRendererSpec<String>()
           .createDrawStrategy(context, graphicsFactory);
   }
 }
 
 abstract class CartesianChart<D> extends BaseChart<D> {
-  static final _defaultLayoutConfig = new LayoutConfig(
-    topSpec: new MarginSpec.fromPixel(minPixel: 20),
-    bottomSpec: new MarginSpec.fromPixel(minPixel: 20),
-    leftSpec: new MarginSpec.fromPixel(minPixel: 20),
-    rightSpec: new MarginSpec.fromPixel(minPixel: 20),
+  static final _defaultLayoutConfig = LayoutConfig(
+    topSpec: MarginSpec.fromPixel(minPixel: 20),
+    bottomSpec: MarginSpec.fromPixel(minPixel: 20),
+    leftSpec: MarginSpec.fromPixel(minPixel: 20),
+    rightSpec: MarginSpec.fromPixel(minPixel: 20),
   );
 
   bool vertical;
@@ -147,8 +147,8 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       : vertical = vertical ?? true,
         // [domainAxis] will be set to the new axis in [configurationChanged].
         _newDomainAxis = domainAxis,
-        _primaryMeasureAxis = primaryMeasureAxis ?? new NumericAxis(),
-        _secondaryMeasureAxis = secondaryMeasureAxis ?? new NumericAxis(),
+        _primaryMeasureAxis = primaryMeasureAxis ?? NumericAxis(),
+        _secondaryMeasureAxis = secondaryMeasureAxis ?? NumericAxis(),
         _disjointMeasureAxes = disjointMeasureAxes ?? <String, NumericAxis>{},
         super(layoutConfig: layoutConfig ?? _defaultLayoutConfig) {
     // As a convenience for chart configuration, set the paint order on any axis
@@ -165,17 +165,16 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     super.init(context, graphicsFactory);
 
     _primaryMeasureAxis.context = context;
-    _primaryMeasureAxis.tickDrawStrategy = new GridlineRendererSpec<num>()
+    _primaryMeasureAxis.tickDrawStrategy = GridlineRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
 
     _secondaryMeasureAxis.context = context;
-    _secondaryMeasureAxis.tickDrawStrategy = new GridlineRendererSpec<num>()
+    _secondaryMeasureAxis.tickDrawStrategy = GridlineRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
 
     _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
       axis.context = context;
-      axis.tickDrawStrategy =
-          new NoneDrawStrategy<num>(context, graphicsFactory);
+      axis.tickDrawStrategy = NoneDrawStrategy<num>(context, graphicsFactory);
     });
   }
 
@@ -298,7 +297,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
   @override
   SeriesRenderer<D> makeDefaultRenderer() {
-    return new BarRenderer()..rendererId = SeriesRenderer.defaultRendererId;
+    return BarRenderer()..rendererId = SeriesRenderer.defaultRendererId;
   }
 
   @override
@@ -450,7 +449,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       final renderer = getSeriesRenderer(series.getAttr(rendererIdKey));
 
       final datumDetails = renderer.addPositionToDetailsForSeriesDatum(
-          new DatumDetails(
+          DatumDetails(
               datum: datum,
               domain: domain,
               domainFormatter: domainFormatterFn != null

@@ -16,7 +16,7 @@
 export 'src/chart/bar/bar_chart.dart' show BarChart;
 export 'src/chart/bar/bar_error_decorator.dart' show BarErrorDecorator;
 export 'src/chart/bar/bar_label_decorator.dart'
-    show BarLabelAnchor, BarLabelDecorator, BarLabelPosition;
+    show BarLabelAnchor, BarLabelDecorator, BarLabelPlacement, BarLabelPosition;
 export 'src/chart/bar/bar_lane_renderer_config.dart' show BarLaneRendererConfig;
 export 'src/chart/bar/bar_renderer.dart'
     show BarRenderer, ImmutableBarRendererElement;
@@ -56,7 +56,8 @@ export 'src/chart/cartesian/axis/spec/axis_spec.dart'
         TextStyleSpec,
         TickLabelAnchor,
         TickLabelJustification,
-        TickFormatterSpec;
+        TickFormatterSpec,
+        TickProviderSpec;
 export 'src/chart/cartesian/axis/spec/bucketing_axis_spec.dart'
     show BucketingAxisSpec, BucketingNumericTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
@@ -179,7 +180,11 @@ export 'src/chart/common/datum_details.dart'
 export 'src/chart/common/processed_series.dart'
     show ImmutableSeries, MutableSeries;
 export 'src/chart/common/selection_model/selection_model.dart'
-    show SelectionModel, SelectionModelType, SelectionModelListener;
+    show
+        MutableSelectionModel,
+        SelectionModel,
+        SelectionModelType,
+        SelectionModelListener;
 export 'src/chart/common/series_datum.dart' show SeriesDatum, SeriesDatumConfig;
 export 'src/chart/common/series_renderer.dart'
     show rendererIdKey, rendererKey, SeriesRenderer;
@@ -211,7 +216,8 @@ export 'src/chart/scatter_plot/point_renderer.dart'
         boundsLineRadiusPxFnKey,
         pointSymbolRendererFnKey,
         pointSymbolRendererIdKey,
-        PointRenderer;
+        PointRenderer,
+        PointRendererElement;
 export 'src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
 export 'src/chart/scatter_plot/point_renderer_decorator.dart'
@@ -228,7 +234,7 @@ export 'src/chart/treemap/treemap_chart.dart' show TreeMapChart;
 export 'src/chart/treemap/treemap_label_decorator.dart'
     show TreeMapLabelDecorator;
 export 'src/chart/treemap/treemap_renderer_config.dart'
-    show TreeMapRendererConfig;
+    show TreeMapRendererConfig, TreeMapTileType;
 export 'src/common/color.dart' show Color;
 export 'src/common/date_time_factory.dart'
     show DateTimeFactory, LocalDateTimeFactory, UTCDateTimeFactory;

@@ -61,12 +61,12 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;
   AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
 
-  final _attrs = new SeriesAttributes();
+  final _attrs = SeriesAttributes();
 
   Axis measureAxis;
   Axis domainAxis;
 
-  MutableSeries(Series<dynamic, D> series) : this.id = series.id {
+  MutableSeries(Series<dynamic, D> series) : id = series.id {
     displayName = series.displayName ?? series.id;
     overlaySeries = series.overlaySeries;
     seriesCategory = series.seriesCategory;
@@ -76,6 +76,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     keyFn = series.keyFn;
 
     domainFn = series.domainFn;
+    domainFormatterFn = series.domainFormatterFn;
     domainLowerBoundFn = series.domainLowerBoundFn;
     domainUpperBoundFn = series.domainUpperBoundFn;
 
@@ -115,7 +116,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     _attrs.mergeFrom(series.attributes);
   }
 
-  MutableSeries.clone(MutableSeries<D> other) : this.id = other.id {
+  MutableSeries.clone(MutableSeries<D> other) : id = other.id {
     displayName = other.displayName;
     overlaySeries = other.overlaySeries;
     seriesCategory = other.seriesCategory;
@@ -126,6 +127,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     keyFn = other.keyFn;
 
     domainFn = other.domainFn;
+    domainFormatterFn = other.domainFormatterFn;
     domainLowerBoundFn = other.domainLowerBoundFn;
     domainUpperBoundFn = other.domainUpperBoundFn;
 
@@ -159,11 +161,11 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   }
 
   void setAttr<R>(AttributeKey<R> key, R value) {
-    this._attrs.setAttr(key, value);
+    _attrs.setAttr(key, value);
   }
 
   R getAttr<R>(AttributeKey<R> key) {
-    return this._attrs.getAttr(key);
+    return _attrs.getAttr(key);
   }
 
   bool operator ==(Object other) =>

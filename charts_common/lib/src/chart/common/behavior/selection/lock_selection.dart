@@ -45,14 +45,13 @@ class LockSelection<D> implements ChartBehavior<D> {
 
   LockSelection({this.selectionModelType = SelectionModelType.info}) {
     // Setup the appropriate gesture listening.
-    switch (this.eventTrigger) {
+    switch (eventTrigger) {
       case SelectionTrigger.tap:
-        _listener =
-            new GestureListener(onTapTest: _onTapTest, onTap: _onSelect);
+        _listener = GestureListener(onTapTest: _onTapTest, onTap: _onSelect);
         break;
       default:
-        throw new ArgumentError('LockSelection does not support the event '
-            'trigger "${this.eventTrigger}"');
+        throw ArgumentError('LockSelection does not support the event '
+            'trigger "$eventTrigger"');
         break;
     }
   }
@@ -101,7 +100,7 @@ class LockSelection<D> implements ChartBehavior<D> {
     chart.addGestureListener(_listener);
 
     // TODO: Update this dynamically based on tappable location.
-    switch (this.eventTrigger) {
+    switch (eventTrigger) {
       case SelectionTrigger.tap:
       case SelectionTrigger.tapAndDrag:
       case SelectionTrigger.pressHold:

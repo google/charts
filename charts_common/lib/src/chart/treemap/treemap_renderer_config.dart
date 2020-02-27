@@ -1,4 +1,4 @@
-// Copyright 2018 the Charts project authors. Please see the AUTHORS file
+// Copyright 2019 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,19 @@ import 'package:charts_common/src/chart/common/series_renderer_config.dart';
 import 'package:charts_common/src/chart/layout/layout_view.dart';
 
 import 'base_treemap_renderer.dart';
+import 'dice_treemap_renderer.dart';
+import 'slice_dice_treemap_renderer.dart';
+import 'slice_treemap_renderer.dart';
 import 'squarified_treemap_renderer.dart';
 import 'treemap_label_decorator.dart';
 
 /// Configuration for a [BaseTreeMapRenderer].
 class TreeMapRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
+  /// Default padding of a treemap rectangle.
+  static const _defaultRectPadding =
+      ViewMargin(topPx: 26, leftPx: 4, rightPx: 4, bottomPx: 4);
+
   final String customRendererId;
 
   final SymbolRenderer symbolRenderer;
@@ -34,7 +41,7 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
 
   /// Tiling algorithm, which is the way to divide a region into sub-regions of
   /// specified areas, in the treemap.
-  final TileType tileType;
+  final TreeMapTileType tileType;
 
   /// The order to paint this renderer on the canvas.
   final int layoutPaintOrder;
@@ -59,8 +66,8 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
       this.patternStrokeWidthPx = 1.0,
       this.strokeWidthPx = 1.0,
       this.layoutPaintOrder = LayoutViewPaintOrder.treeMap,
-      this.rectPaddingPx = ViewMargin.empty,
-      this.tileType = TileType.squarified,
+      this.rectPaddingPx = _defaultRectPadding,
+      this.tileType = TreeMapTileType.squarified,
       this.labelDecorator,
       Color strokeColor,
       SymbolRenderer symbolRenderer})
@@ -69,16 +76,29 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
 
   @override
   BaseTreeMapRenderer<D> build() {
-    return tileType == TileType.squarified
-        ? SquarifiedTreeMapRenderer<D>(
-            config: this, rendererId: customRendererId)
-        : null; // Currently only squarified tile type is supported.
+    switch (tileType) {
+      case TreeMapTileType.dice:
+        return DiceTreeMapRenderer<D>(
+            config: this, rendererId: customRendererId);
+      case TreeMapTileType.slice:
+        return SliceTreeMapRenderer<D>(
+            config: this, rendererId: customRendererId);
+      case TreeMapTileType.sliceDice:
+        return SliceDiceTreeMapRenderer<D>(
+            config: this, rendererId: customRendererId);
+      default:
+        return SquarifiedTreeMapRenderer<D>(
+            config: this, rendererId: customRendererId);
+    }
   }
 }
 
 /// Tiling algorithm, which is the way to divide a region into subregions of
 /// specified areas, in a treemap.
 ///
+/// * [dice] - Renders rectangles in dice layout.
+/// * [slice] - Renders rectangles in slice layout.
+/// * [sliceDice] - Renders rectangles in slice-and-dice layout.
 /// * [squarified] - Renders rectangles such that their aspect-ratios approach
 /// one as close as possible.
-enum TileType { squarified }
+enum TreeMapTileType { dice, slice, sliceDice, squarified }

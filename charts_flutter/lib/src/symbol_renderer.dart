@@ -15,7 +15,7 @@
 
 import 'dart:math' show Rectangle;
 import 'package:charts_common/common.dart' as common
-    show ChartCanvas, Color, SymbolRenderer;
+    show ChartCanvas, Color, FillPatternType, SymbolRenderer;
 import 'package:flutter/widgets.dart';
 import 'chart_canvas.dart' show ChartCanvas;
 import 'graphics_factory.dart' show GraphicsFactory;
@@ -60,6 +60,7 @@ abstract class CustomSymbolRenderer extends common.SymbolRenderer
   void paint(common.ChartCanvas canvas, Rectangle<num> bounds,
       {List<int> dashPattern,
       common.Color fillColor,
+      common.FillPatternType fillPattern,
       common.Color strokeColor,
       double strokeWidthPx}) {
     // Intentionally ignored (never called).

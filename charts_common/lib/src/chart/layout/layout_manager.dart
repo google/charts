@@ -59,7 +59,7 @@ abstract class LayoutManager {
   bool withinDrawArea(Point<num> point);
 
   /// Walk through the child views and apply the function passed in.
-  void applyToViews(void apply(LayoutView view));
+  void applyToViews(void Function(LayoutView view) apply);
 
   /// Return the child views in the order that they should be drawn.
   List<LayoutView> get paintOrderedViews;

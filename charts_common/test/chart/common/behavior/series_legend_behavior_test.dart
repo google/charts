@@ -30,7 +30,7 @@ import 'package:test/test.dart';
 class ConcreteChart extends BaseChart<String> {
   List<MutableSeries<String>> _seriesList;
 
-  SeriesRenderer<String> _seriesRenderer = new LineRenderer<String>();
+  SeriesRenderer<String> _seriesRenderer = LineRenderer<String>();
 
   ConcreteChart(this._seriesList);
 
@@ -96,29 +96,29 @@ class ConcreteSeriesLegend<D> extends SeriesLegend<D> {
 
 void main() {
   MutableSeries<String> series1;
-  final s1D1 = new MyRow('s1d1', 11);
-  final s1D2 = new MyRow('s1d2', 12);
-  final s1D3 = new MyRow('s1d3', 13);
+  final s1D1 = MyRow('s1d1', 11);
+  final s1D2 = MyRow('s1d2', 12);
+  final s1D3 = MyRow('s1d3', 13);
 
   MutableSeries<String> series2;
-  final s2D1 = new MyRow('s2d1', 21);
-  final s2D2 = new MyRow('s2d2', 22);
-  final s2D3 = new MyRow('s2d3', 23);
+  final s2D1 = MyRow('s2d1', 21);
+  final s2D2 = MyRow('s2d2', 22);
+  final s2D3 = MyRow('s2d3', 23);
 
-  final blue = new Color(r: 0x21, g: 0x96, b: 0xF3);
-  final red = new Color(r: 0xF4, g: 0x43, b: 0x36);
+  final blue = Color(r: 0x21, g: 0x96, b: 0xF3);
+  final red = Color(r: 0xF4, g: 0x43, b: 0x36);
 
   ConcreteChart chart;
 
   setUp(() {
-    series1 = new MutableSeries(new Series<MyRow, String>(
+    series1 = MutableSeries(Series<MyRow, String>(
         id: 's1',
         data: [s1D1, s1D2, s1D3],
         domainFn: (MyRow row, _) => row.campaign,
         measureFn: (MyRow row, _) => row.count,
         colorFn: (_, __) => blue));
 
-    series2 = new MutableSeries(new Series<MyRow, String>(
+    series2 = MutableSeries(Series<MyRow, String>(
         id: 's2',
         data: [s2D1, s2D2, s2D3],
         domainFn: (MyRow row, _) => row.campaign,
@@ -129,9 +129,9 @@ void main() {
   test('Legend entries created on chart post process', () {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
-    final legend = new SeriesLegend<String>(selectionModelType: selectionType);
+    final legend = SeriesLegend<String>(selectionModelType: selectionType);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
     chart.callConfigureSeries();
@@ -155,11 +155,11 @@ void main() {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
     final legend =
-        new ConcreteSeriesLegend<String>(selectionModelType: selectionType);
+        ConcreteSeriesLegend<String>(selectionModelType: selectionType);
 
     legend.defaultHiddenSeries = ['s2'];
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
     chart.callConfigureSeries();
@@ -176,9 +176,9 @@ void main() {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
     final legend =
-        new ConcreteSeriesLegend<String>(selectionModelType: selectionType);
+        ConcreteSeriesLegend<String>(selectionModelType: selectionType);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     legend.hideSeries('s1');
     chart.callOnDraw();
@@ -197,9 +197,9 @@ void main() {
     final seriesList2 = [series1, series2];
     final selectionType = SelectionModelType.info;
     final legend =
-        new ConcreteSeriesLegend<String>(selectionModelType: selectionType);
+        ConcreteSeriesLegend<String>(selectionModelType: selectionType);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
 
     // First hide the series.
@@ -233,9 +233,9 @@ void main() {
   test('selected series legend entry is updated', () {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
-    final legend = new SeriesLegend<String>(selectionModelType: selectionType);
+    final legend = SeriesLegend<String>(selectionModelType: selectionType);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
     chart.callConfigureSeries();
@@ -260,9 +260,9 @@ void main() {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
     final legend =
-        new ConcreteSeriesLegend<String>(selectionModelType: selectionType);
+        ConcreteSeriesLegend<String>(selectionModelType: selectionType);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
 
     // First hide the series.
@@ -327,20 +327,20 @@ void main() {
         (num value) => 'measure ${value?.toStringAsFixed(0)}';
     final secondaryMeasureFormatter =
         (num value) => 'secondary ${value?.toStringAsFixed(0)}';
-    final legend = new SeriesLegend<String>(
+    final legend = SeriesLegend<String>(
         selectionModelType: selectionType,
         measureFormatter: measureFormatter,
         secondaryMeasureFormatter: secondaryMeasureFormatter);
 
     series2.setAttr(measureAxisIdKey, 'secondaryMeasureAxisId');
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
     chart.callConfigureSeries();
     chart.callOnPreProcess();
     chart.callOnPostProcess();
     chart.getSelectionModel(selectionType).updateSelection(
-        [new SeriesDatum(series1, s1D1), new SeriesDatum(series2, s2D1)],
+        [SeriesDatum(series1, s1D1), SeriesDatum(series2, s2D1)],
         [series1, series2]);
 
     final legendEntries = legend.legendState.legendEntries;
@@ -362,12 +362,12 @@ void main() {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
     final measureFormatter = (num value) => '${value?.toStringAsFixed(0)}';
-    final legend = new SeriesLegend<String>(
+    final legend = SeriesLegend<String>(
         selectionModelType: selectionType,
         legendDefaultMeasure: LegendDefaultMeasure.sum,
         measureFormatter: measureFormatter);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
     chart.callConfigureSeries();
@@ -395,12 +395,12 @@ void main() {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
     final measureFormatter = (num value) => '${value?.toStringAsFixed(0)}';
-    final legend = new SeriesLegend<String>(
+    final legend = SeriesLegend<String>(
         selectionModelType: selectionType,
         legendDefaultMeasure: LegendDefaultMeasure.average,
         measureFormatter: measureFormatter);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
     chart.callConfigureSeries();
@@ -428,12 +428,12 @@ void main() {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
     final measureFormatter = (num value) => '${value?.toStringAsFixed(0)}';
-    final legend = new SeriesLegend<String>(
+    final legend = SeriesLegend<String>(
         selectionModelType: selectionType,
         legendDefaultMeasure: LegendDefaultMeasure.firstValue,
         measureFormatter: measureFormatter);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
     chart.callConfigureSeries();
@@ -461,12 +461,12 @@ void main() {
     final seriesList = [series1, series2];
     final selectionType = SelectionModelType.info;
     final measureFormatter = (num value) => '${value?.toStringAsFixed(0)}';
-    final legend = new SeriesLegend<String>(
+    final legend = SeriesLegend<String>(
         selectionModelType: selectionType,
         legendDefaultMeasure: LegendDefaultMeasure.lastValue,
         measureFormatter: measureFormatter);
 
-    chart = new ConcreteChart(seriesList);
+    chart = ConcreteChart(seriesList);
     legend.attachTo(chart);
     chart.callOnDraw();
     chart.callConfigureSeries();

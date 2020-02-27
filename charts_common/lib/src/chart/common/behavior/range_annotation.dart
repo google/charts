@@ -54,7 +54,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   static const _defaultLabelPosition = AnnotationLabelPosition.auto;
   static const _defaultLabelPadding = 5;
   static final _defaultLabelStyle =
-      new TextStyleSpec(fontSize: 12, color: Color.black);
+      TextStyleSpec(fontSize: 12, color: Color.black);
   static const _defaultStrokeWidthPx = 2.0;
 
   /// List of annotations to render on the chart.
@@ -121,20 +121,20 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         extendAxis = extendAxis ?? true,
         labelPadding = labelPadding ?? _defaultLabelPadding,
         defaultStrokeWidthPx = defaultStrokeWidthPx ?? _defaultStrokeWidthPx {
-    _lifecycleListener = new LifecycleListener<D>(
+    _lifecycleListener = LifecycleListener<D>(
         onPostprocess: _updateAxisRange, onAxisConfigured: _updateViewData);
   }
 
   @override
   void attachTo(BaseChart<D> chart) {
     if (!(chart is CartesianChart)) {
-      throw new ArgumentError(
+      throw ArgumentError(
           'RangeAnnotation can only be attached to a CartesianChart');
     }
 
     _chart = chart;
 
-    _view = new _RangeAnnotationLayoutView<D>(
+    _view = _RangeAnnotationLayoutView<D>(
         defaultColor: defaultColor,
         labelPadding: labelPadding,
         chart: chart,
@@ -259,8 +259,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         animatingAnnotation = _annotationMap[key];
       } else {
         // Create a new annotation, positioned at the start and end values.
-        animatingAnnotation = new _AnimatedAnnotation<D>(key: key)
-          ..setNewTarget(new _AnnotationElement<D>()
+        animatingAnnotation = _AnimatedAnnotation<D>(key: key)
+          ..setNewTarget(_AnnotationElement<D>()
             ..annotation = annotationDatum
             ..annotationSegment = annotation
             ..color = color
@@ -282,7 +282,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       _currentKeys.add(key);
 
       // Get the annotation element we are going to setup.
-      final annotationElement = new _AnnotationElement<D>()
+      final annotationElement = _AnnotationElement<D>()
         ..annotation = annotationDatum
         ..annotationSegment = annotation
         ..color = color
@@ -322,7 +322,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
     final startPosition = (axis.getLocation(startValue) * 100).round() / 100;
     final endPosition = (axis.getLocation(endValue) * 100).round() / 100;
 
-    return new _DatumAnnotation(
+    return _DatumAnnotation(
         startPosition: startPosition,
         endPosition: endPosition,
         axisType: axisType);
@@ -362,7 +362,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
       @required this.labelPadding,
       @required this.chart,
       @required this.rangeAnnotation})
-      : this.layoutConfig = new LayoutViewConfig(
+      : layoutConfig = LayoutViewConfig(
             paintOrder: LayoutViewPaintOrder.rangeAnnotation,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
@@ -386,7 +386,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
-    this._drawAreaBounds = drawAreaBounds;
+    _drawAreaBounds = drawAreaBounds;
   }
 
   @override
@@ -483,7 +483,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
     switch (annotationElement.annotation.axisType) {
       case RangeAnnotationAxisType.domain:
-        bounds = new Rectangle<num>(
+        bounds = Rectangle<num>(
             annotationElement.annotation.startPosition,
             _drawAreaBounds.top,
             annotationElement.annotation.endPosition -
@@ -492,7 +492,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         break;
 
       case RangeAnnotationAxisType.measure:
-        bounds = new Rectangle<num>(
+        bounds = Rectangle<num>(
             _drawAreaBounds.left,
             annotationElement.annotation.endPosition,
             _drawAreaBounds.width,
@@ -511,16 +511,16 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
     switch (annotationElement.annotation.axisType) {
       case RangeAnnotationAxisType.domain:
-        points.add(new Point<num>(
+        points.add(Point<num>(
             annotationElement.annotation.startPosition, _drawAreaBounds.top));
-        points.add(new Point<num>(
+        points.add(Point<num>(
             annotationElement.annotation.endPosition, _drawAreaBounds.bottom));
         break;
 
       case RangeAnnotationAxisType.measure:
-        points.add(new Point<num>(
+        points.add(Point<num>(
             _drawAreaBounds.left, annotationElement.annotation.startPosition));
-        points.add(new Point<num>(
+        points.add(Point<num>(
             _drawAreaBounds.right, annotationElement.annotation.endPosition));
         break;
     }
@@ -655,7 +655,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
     switch (calculatedLabelPosition) {
       case AnnotationLabelPosition.margin:
       case AnnotationLabelPosition.auto:
-        throw new ArgumentError(_unresolvedAutoMessage);
+        throw ArgumentError(_unresolvedAutoMessage);
         break;
 
       case AnnotationLabelPosition.outside:
@@ -701,7 +701,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         break;
     }
 
-    return new Point<int>(labelX.round(), labelY.round());
+    return Point<int>(labelX.round(), labelY.round());
   }
 
   /// Gets the resolved location for a vertical domain annotation label element.
@@ -750,7 +750,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
     switch (calculatedLabelPosition) {
       case AnnotationLabelPosition.margin:
       case AnnotationLabelPosition.auto:
-        throw new ArgumentError(_unresolvedAutoMessage);
+        throw ArgumentError(_unresolvedAutoMessage);
         break;
 
       case AnnotationLabelPosition.outside:
@@ -796,7 +796,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         break;
     }
 
-    return new Point<int>(labelX.round(), labelY.round());
+    return Point<int>(labelX.round(), labelY.round());
   }
 
   /// Gets the resolved location for a measure annotation label element.
@@ -869,7 +869,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
     switch (calculatedLabelPosition) {
       case AnnotationLabelPosition.margin:
       case AnnotationLabelPosition.auto:
-        throw new ArgumentError(_unresolvedAutoMessage);
+        throw ArgumentError(_unresolvedAutoMessage);
         break;
 
       case AnnotationLabelPosition.outside:
@@ -909,7 +909,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         break;
     }
 
-    return new Point<int>(labelX.round(), labelY.round());
+    return Point<int>(labelX.round(), labelY.round());
   }
 
   /// Gets the resolved location for a vertical measure annotation label
@@ -971,7 +971,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
     switch (calculatedLabelPosition) {
       case AnnotationLabelPosition.margin:
       case AnnotationLabelPosition.auto:
-        throw new ArgumentError(_unresolvedAutoMessage);
+        throw ArgumentError(_unresolvedAutoMessage);
         break;
 
       case AnnotationLabelPosition.outside:
@@ -1013,7 +1013,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         break;
     }
 
-    return new Point<int>(labelX.round(), labelY.round());
+    return Point<int>(labelX.round(), labelY.round());
   }
 
   /// Resolves [AnnotationLabelPosition.auto] configuration for an annotation
@@ -1059,7 +1059,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
   }
 
   @override
-  Rectangle<int> get componentBounds => this._drawAreaBounds;
+  Rectangle<int> get componentBounds => _drawAreaBounds;
 
   @override
   bool get isSeriesRenderer => false;
@@ -1084,7 +1084,7 @@ class _DatumAnnotation {
 
   factory _DatumAnnotation.from(_DatumAnnotation other,
       [double startPosition, double endPosition]) {
-    return new _DatumAnnotation(
+    return _DatumAnnotation(
         startPosition: startPosition ?? other.startPosition,
         endPosition: endPosition ?? other.endPosition,
         axisType: other.axisType);
@@ -1107,20 +1107,20 @@ class _AnnotationElement<D> {
   double strokeWidthPx;
 
   _AnnotationElement<D> clone() {
-    return new _AnnotationElement<D>()
-      ..annotation = new _DatumAnnotation.from(annotation)
+    return _AnnotationElement<D>()
+      ..annotation = _DatumAnnotation.from(annotation)
       ..annotationSegment = annotationSegment
-      ..color = color != null ? new Color.fromOther(color: color) : null
-      ..startLabel = this.startLabel
-      ..endLabel = this.endLabel
-      ..middleLabel = this.middleLabel
-      ..isRange = this.isRange
-      ..labelAnchor = this.labelAnchor
-      ..labelDirection = this.labelDirection
-      ..labelPosition = this.labelPosition
-      ..labelStyleSpec = this.labelStyleSpec
+      ..color = color != null ? Color.fromOther(color: color) : null
+      ..startLabel = startLabel
+      ..endLabel = endLabel
+      ..middleLabel = middleLabel
+      ..isRange = isRange
+      ..labelAnchor = labelAnchor
+      ..labelDirection = labelDirection
+      ..labelPosition = labelPosition
+      ..labelStyleSpec = labelStyleSpec
       ..dashPattern = dashPattern
-      ..strokeWidthPx = this.strokeWidthPx;
+      ..strokeWidthPx = strokeWidthPx;
   }
 
   void updateAnimationPercent(_AnnotationElement previous,
@@ -1139,7 +1139,7 @@ class _AnnotationElement<D> {
             previousAnnotation.endPosition;
 
     annotation =
-        new _DatumAnnotation.from(targetAnnotation, startPosition, endPosition);
+        _DatumAnnotation.from(targetAnnotation, startPosition, endPosition);
 
     color = getAnimatedColor(previous.color, target.color, animationPercent);
 
@@ -1211,7 +1211,7 @@ class RangeAnnotationTester<D> {
     behavior._view._graphicsFactory = value;
   }
 
-  mockLayout(Rectangle<int> bounds) {
+  void mockLayout(Rectangle<int> bounds) {
     behavior._view.layout(bounds, bounds);
   }
 
