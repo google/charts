@@ -26,7 +26,6 @@ import '../cartesian/axis/axis.dart'
     show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
 import '../cartesian/axis/scale.dart' show RangeBandConfig;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
-import '../common/base_chart.dart' show BaseChart;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
@@ -71,8 +70,10 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     B extends BaseAnimatedBar<D, R>> extends BaseCartesianRenderer<D> {
   final BaseBarRendererConfig config;
 
-  @protected
-  BaseChart<D> chart;
+  // Save the chart.vertical value at the start of every draw cycle. If it
+  // changes, delete all of the cached rendering element information so that we
+  // start with a fresh state.
+  var _lastVertical = true;
 
   /// Store a map of domain+barGroupIndex+category index to bars in a stack.
   ///
@@ -109,6 +110,20 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
+    // If the orientation of the chart changed, delete all data from the last
+    // draw cycle. This allows us to start in a fresh state, so that we do not
+    // get bad animations from the previously drawn data.
+    //
+    // Ideally we should animate the old bars out smoothly in some ways, but
+    // this was the cheapest option.
+    if (_lastVertical != chart.vertical) {
+      _barStackMap.clear();
+      _currentKeys.clear();
+      _currentGroupsStackKeys.clear();
+    }
+
+    _lastVertical = chart.vertical;
+
     var barGroupIndex = 0;
 
     // Maps used to store the final measure offset of the previous series, for
@@ -529,15 +544,6 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       double strokeWidthPx,
       bool measureIsNull,
       bool measureIsNegative});
-
-  @override
-  void onAttach(BaseChart<D> chart) {
-    super.onAttach(chart);
-    // We only need the chart.context.isRtl setting, but context is not yet
-    // available when the default renderer is attached to the chart on chart
-    // creation time, since chart onInit is called after the chart is created.
-    this.chart = chart;
-  }
 
   /// Paints the current bar data on the canvas.
   void paint(ChartCanvas canvas, double animationPercent) {

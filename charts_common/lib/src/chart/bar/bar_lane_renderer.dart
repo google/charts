@@ -18,7 +18,6 @@ import 'dart:collection' show LinkedHashMap;
 import '../../data/series.dart' show AttributeKey;
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
-import '../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../common/chart_canvas.dart' show ChartCanvas;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import 'bar_lane_renderer_config.dart' show BarLaneRendererConfig;
@@ -341,9 +340,11 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
 
   /// Gets the maximum measure value that will fit in the draw area.
   num _getMaxMeasureValue(ImmutableAxis<num> measureAxis) {
-    final pos = (chart as CartesianChart).vertical
+    final pos = chart.vertical
         ? chart.drawAreaBounds.top
-        : isRtl ? chart.drawAreaBounds.left : chart.drawAreaBounds.right;
+        : isRtl
+            ? chart.drawAreaBounds.left
+            : chart.drawAreaBounds.right;
 
     return measureAxis.getDomain(pos.toDouble());
   }
