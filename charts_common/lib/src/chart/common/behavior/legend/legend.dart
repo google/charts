@@ -27,7 +27,8 @@ import '../../../layout/layout_view.dart'
         LayoutViewConfig,
         LayoutViewPositionOrder,
         LayoutViewPaintOrder,
-        ViewMeasuredSizes;
+        ViewMeasuredSizes,
+        layoutPosition;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../chart_canvas.dart' show ChartCanvas;
 import '../../chart_context.dart' show ChartContext;
@@ -283,26 +284,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   /// Get layout position from legend position.
   LayoutPosition get _layoutPosition {
-    LayoutPosition position;
-    switch (_behaviorPosition) {
-      case BehaviorPosition.bottom:
-        position = LayoutPosition.Bottom;
-        break;
-      case BehaviorPosition.end:
-        position = isAxisFlipped ? LayoutPosition.Left : LayoutPosition.Right;
-        break;
-      case BehaviorPosition.inside:
-        position = LayoutPosition.DrawArea;
-        break;
-      case BehaviorPosition.start:
-        position = isAxisFlipped ? LayoutPosition.Right : LayoutPosition.Left;
-        break;
-      case BehaviorPosition.top:
-        position = LayoutPosition.Top;
-        break;
-    }
-
-    return position;
+    return layoutPosition(_behaviorPosition, _outsideJustification, isRtl);
   }
 
   @override
