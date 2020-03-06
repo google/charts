@@ -16,8 +16,6 @@
 import 'dart:math' show Rectangle;
 import 'package:meta/meta.dart';
 
-import '../common/behavior/chart_behavior.dart'
-    show BehaviorPosition, OutsideJustification;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../common/chart_canvas.dart' show ChartCanvas;
 
@@ -207,56 +205,4 @@ abstract class LayoutView {
   /// This component may either render into the chart's draw area, or into a
   /// separate area bounded by the component bounds.
   bool get isSeriesRenderer;
-}
-
-/// Translates a component's [BehaviorPosition] and [OutsideJustification] into
-/// a [LayoutPosition] that a [LayoutManager] can use to place components on the
-/// chart.
-LayoutPosition layoutPosition(BehaviorPosition behaviorPosition,
-    OutsideJustification outsideJustification, bool isRtl) {
-  LayoutPosition position;
-  switch (behaviorPosition) {
-    case BehaviorPosition.bottom:
-      position = LayoutPosition.Bottom;
-      break;
-    case BehaviorPosition.end:
-      position = isRtl ? LayoutPosition.Left : LayoutPosition.Right;
-      break;
-    case BehaviorPosition.inside:
-      position = LayoutPosition.DrawArea;
-      break;
-    case BehaviorPosition.start:
-      position = isRtl ? LayoutPosition.Right : LayoutPosition.Left;
-      break;
-    case BehaviorPosition.top:
-      position = LayoutPosition.Top;
-      break;
-  }
-
-  // If we have a "full" [OutsideJustification], convert the layout position
-  // to the "full" form.
-  if (outsideJustification == OutsideJustification.start ||
-      outsideJustification == OutsideJustification.middle ||
-      outsideJustification == OutsideJustification.end) {
-    switch (position) {
-      case LayoutPosition.Bottom:
-        position = LayoutPosition.FullBottom;
-        break;
-      case LayoutPosition.Left:
-        position = LayoutPosition.FullLeft;
-        break;
-      case LayoutPosition.Top:
-        position = LayoutPosition.FullTop;
-        break;
-      case LayoutPosition.Right:
-        position = LayoutPosition.FullRight;
-        break;
-
-      // Ignore other positions, like DrawArea.
-      default:
-        break;
-    }
-  }
-
-  return position;
 }
