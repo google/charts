@@ -29,7 +29,6 @@ import '../../../layout/layout_view.dart'
         LayoutView,
         LayoutViewConfig,
         LayoutViewPaintOrder,
-        layoutPosition,
         LayoutViewPositionOrder,
         ViewMeasuredSizes;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
@@ -562,8 +561,51 @@ class _ChartTitleLayoutView<D> extends LayoutView {
 
   /// Get layout position from chart title position.
   LayoutPosition get _layoutPosition {
-    return layoutPosition(
-        _config.behaviorPosition, _config.titleOutsideJustification, isRtl);
+    LayoutPosition position;
+    switch (_config.behaviorPosition) {
+      case BehaviorPosition.bottom:
+        position = LayoutPosition.Bottom;
+        break;
+      case BehaviorPosition.end:
+        position = isRtl ? LayoutPosition.Left : LayoutPosition.Right;
+        break;
+      case BehaviorPosition.inside:
+        position = LayoutPosition.DrawArea;
+        break;
+      case BehaviorPosition.start:
+        position = isRtl ? LayoutPosition.Right : LayoutPosition.Left;
+        break;
+      case BehaviorPosition.top:
+        position = LayoutPosition.Top;
+        break;
+    }
+
+    // If we have a "full" [OutsideJustification], convert the layout position
+    // to the "full" form.
+    if (_config.titleOutsideJustification == OutsideJustification.start ||
+        _config.titleOutsideJustification == OutsideJustification.middle ||
+        _config.titleOutsideJustification == OutsideJustification.end) {
+      switch (position) {
+        case LayoutPosition.Bottom:
+          position = LayoutPosition.FullBottom;
+          break;
+        case LayoutPosition.Left:
+          position = LayoutPosition.FullLeft;
+          break;
+        case LayoutPosition.Top:
+          position = LayoutPosition.FullTop;
+          break;
+        case LayoutPosition.Right:
+          position = LayoutPosition.FullRight;
+          break;
+
+        // Ignore other positions, like DrawArea.
+        default:
+          break;
+      }
+    }
+
+    return position;
   }
 
   /// Gets the resolved location for a label element.
