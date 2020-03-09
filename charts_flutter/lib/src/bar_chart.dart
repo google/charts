@@ -31,12 +31,12 @@ import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'package:meta/meta.dart' show immutable;
 import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
-import 'cartesian_chart.dart' show CartesianChart;
+import 'cartesian_chart.dart' show BaseCartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
 import 'user_managed_state.dart' show UserManagedState;
 
 @immutable
-class BarChart extends CartesianChart<String> {
+class BarChart extends BaseCartesianChart<String> {
   final bool vertical;
   final common.BarRendererDecorator barRendererDecorator;
 

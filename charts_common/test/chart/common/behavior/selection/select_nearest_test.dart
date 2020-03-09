@@ -20,11 +20,10 @@ import 'package:charts_common/src/chart/common/behavior/selection/select_nearest
 import 'package:charts_common/src/chart/common/behavior/selection/selection_trigger.dart';
 import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
-import 'package:charts_common/src/chart/common/series_datum.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
+import 'package:charts_common/src/chart/common/series_datum.dart';
 import 'package:charts_common/src/common/gesture_listener.dart';
 import 'package:charts_common/src/data/series.dart';
-
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -110,7 +109,9 @@ void main() {
         id: 'mySeries1',
         data: ['myDatum1', 'myDatum2', 'myDatum3'],
         domainFn: (_, int i) => _series1Data[i],
-        measureFn: (_, __) {}));
+        measureFn: (_, __) {
+          return 0;
+        }));
 
     _details1 = DatumDetails(
         datum: 'myDatum1',
@@ -137,7 +138,9 @@ void main() {
         id: 'mySeries2',
         data: ['myDatum1s2'],
         domainFn: (_, int i) => _series2Data[i],
-        measureFn: (_, __) {}));
+        measureFn: (_, __) {
+          return 0;
+        }));
 
     _details1Series2 = DatumDetails(
         datum: 'myDatum1s2',

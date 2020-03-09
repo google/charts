@@ -1537,6 +1537,8 @@ class _Range<D> {
       _includePointAsDateTime(value);
     } else if (value is String) {
       _includePointAsString(value);
+    } else if (value is Duration) {
+      _includePointAsDuration(value);
     } else {
       throw ('Unsupported object type for LineRenderer domain value: '
           '${value.runtimeType}');
@@ -1557,6 +1559,15 @@ class _Range<D> {
     if ((value as DateTime).isBefore(_start as DateTime)) {
       _start = value;
     } else if ((value as DateTime).isAfter(_end as DateTime)) {
+      _end = value;
+    }
+  }
+
+  /// Extends the range to include value by casting as DateTime objects.
+  void _includePointAsDuration(D value) {
+    if ((value as Duration).inMilliseconds < (_start as Duration).inMilliseconds) {
+      _start = value;
+    } else if ((value as Duration).inMilliseconds > (_end as Duration).inMilliseconds) {
       _end = value;
     }
   }

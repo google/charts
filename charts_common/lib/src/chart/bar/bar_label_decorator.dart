@@ -138,7 +138,6 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       // Get space available inside and outside the bar.
       final totalPadding = labelPadding * 2;
       final insideBarHeight = bounds.height - totalPadding;
-      final outsideBarHeight = drawBounds.height - bounds.height - totalPadding;
 
       var calculatedLabelPosition = labelPosition;
       if (calculatedLabelPosition == BarLabelPosition.auto) {

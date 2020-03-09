@@ -14,7 +14,7 @@
 // limitations under the License.
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
-// EXCLUDE_FROM_GALLERY_DOCS_END
+
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -169,7 +169,7 @@ class _SliderCallbackState extends State<SliderLine> {
     if (_sliderDomainValue != null) {
       children.add(new Padding(
           padding: new EdgeInsets.only(top: 5.0),
-          child: new Text('Slider domain value: ${_sliderDomainValue}')));
+          child: new Text('Slider domain value: $_sliderDomainValue')));
     }
     if (_sliderPosition != null) {
       children.add(new Padding(
@@ -180,7 +180,7 @@ class _SliderCallbackState extends State<SliderLine> {
     if (_sliderDragState != null) {
       children.add(new Padding(
           padding: new EdgeInsets.only(top: 5.0),
-          child: new Text('Slider drag state: ${_sliderDragState}')));
+          child: new Text('Slider drag state: $_sliderDragState')));
     }
 
     return new Column(children: children);

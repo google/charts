@@ -135,7 +135,7 @@ void main() {
         id: 'mySeries1',
         data: [],
         domainFn: (_, __) {},
-        measureFn: (_, __) {}));
+        measureFn: (_, __) {return 0;}));
 
     _details1 = DatumDetails(
         chartPosition: Point(20.0, 80.0),
