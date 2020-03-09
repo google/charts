@@ -41,6 +41,26 @@ export 'src/chart/cartesian/axis/axis.dart'
         NumericAxis,
         OrdinalAxis,
         OrdinalViewport;
+export 'src/chart/cartesian/axis/scale.dart'
+    show
+        Scale,
+        Extents,
+        ScaleOutputExtent,
+        RangeBandType,
+        RangeBandConfig,
+        StepSizeType,
+        StepSizeConfig,
+        MutableScale;
+export 'src/chart/cartesian/axis/tick_provider.dart'
+    show
+        TickProvider,
+        BaseTickProvider;
+export 'src/chart/cartesian/axis/tick_formatter.dart'
+    show
+        TickFormatter,
+        NumericTickFormatter,
+        OrdinalTickFormatter,
+        SimpleTickFormatterBase;
 export 'src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
