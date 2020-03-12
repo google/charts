@@ -25,6 +25,7 @@ import 'bar_renderer.dart' show AnimatedBar, BarRenderer, BarRendererElement;
 import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import 'base_bar_renderer.dart'
     show
+        allBarGroupWeightsKey,
         barGroupCountKey,
         barGroupIndexKey,
         barGroupWeightKey,
@@ -126,6 +127,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
       final barGroupIndex = series.getAttr(barGroupIndexKey);
       final previousBarGroupWeight = series.getAttr(previousBarGroupWeightKey);
       final barGroupWeight = series.getAttr(barGroupWeightKey);
+      final allBarGroupWeights = series.getAttr(allBarGroupWeightsKey);
       final measureAxisPosition = measureAxis.getLocation(0.0);
       final maxMeasureValue = _getMaxMeasureValue(measureAxis);
 
@@ -180,6 +182,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
               barGroupIndex: barGroupIndex,
               previousBarGroupWeight: previousBarGroupWeight,
               barGroupWeight: barGroupWeight,
+              allBarGroupWeights: allBarGroupWeights,
               color: (config as BarLaneRendererConfig).backgroundBarColor,
               details: BarRendererElement<D>(),
               domainValue: domainValue,
@@ -209,6 +212,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
             barGroupIndex: barGroupIndex,
             previousBarGroupWeight: previousBarGroupWeight,
             barGroupWeight: barGroupWeight,
+            allBarGroupWeights: allBarGroupWeights,
             color: (config as BarLaneRendererConfig).backgroundBarColor,
             details: BarRendererElement<D>(),
             domainValue: domainValue,

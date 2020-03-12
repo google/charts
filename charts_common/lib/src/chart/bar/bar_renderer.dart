@@ -30,10 +30,11 @@ import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import 'base_bar_renderer.dart'
     show
         BaseBarRenderer,
+        allBarGroupWeightsKey,
         barGroupCountKey,
         barGroupIndexKey,
-        previousBarGroupWeightKey,
-        barGroupWeightKey;
+        barGroupWeightKey,
+        previousBarGroupWeightKey;
 import 'base_bar_renderer_element.dart'
     show BaseAnimatedBar, BaseBarRendererElement;
 
@@ -82,18 +83,21 @@ class BarRenderer<D>
     final barGroupIndex = series.getAttr(barGroupIndexKey);
     final previousBarGroupWeight = series.getAttr(previousBarGroupWeightKey);
     final barGroupWeight = series.getAttr(barGroupWeightKey);
+    final allBarGroupWeights = series.getAttr(allBarGroupWeightsKey);
     final numBarGroups = series.getAttr(barGroupCountKey);
 
     final bounds = _getBarBounds(
         details.domain,
         domainAxis,
         domainAxis.rangeBand.round(),
+        config.maxBarWidthPx,
         details.measure,
         details.measureOffset,
         measureAxis,
         barGroupIndex,
         previousBarGroupWeight,
         barGroupWeight,
+        allBarGroupWeights,
         numBarGroups);
 
     Point<double> chartPosition;
@@ -142,6 +146,7 @@ class BarRenderer<D>
       int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
+      List<double> allBarGroupWeights,
       int numBarGroups,
       bool measureIsNull,
       bool measureIsNegative}) {
@@ -164,6 +169,7 @@ class BarRenderer<D>
           barGroupIndex: barGroupIndex,
           previousBarGroupWeight: previousBarGroupWeight,
           barGroupWeight: barGroupWeight,
+          allBarGroupWeights: allBarGroupWeights,
           numBarGroups: numBarGroups,
           measureIsNull: measureIsNull,
           measureIsNegative: measureIsNegative));
@@ -189,6 +195,7 @@ class BarRenderer<D>
       int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
+      List<double> allBarGroupWeights,
       int numBarGroups,
       bool measureIsNull,
       bool measureIsNegative}) {
@@ -206,12 +213,14 @@ class BarRenderer<D>
           domainValue,
           domainAxis,
           domainWidth,
+          config.maxBarWidthPx,
           measureValue,
           measureOffsetValue,
           measureAxis,
           barGroupIndex,
           previousBarGroupWeight,
           barGroupWeight,
+          allBarGroupWeights,
           numBarGroups);
   }
 
@@ -378,12 +387,14 @@ class BarRenderer<D>
       D domainValue,
       ImmutableAxis<D> domainAxis,
       int domainWidth,
+      int maxBarWidthPx,
       num measureValue,
       num measureOffsetValue,
       ImmutableAxis<num> measureAxis,
       int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
+      List<double> allBarGroupWeights,
       int numBarGroups) {
     // TODO: Investigate why this is negative for a DateTime domain
     // in RTL mode.
@@ -398,8 +409,23 @@ class BarRenderer<D>
     // Calculate how wide each bar should be within the group of bars. If we
     // only have one series, or are stacked, then barWidth should equal
     // domainWidth.
-    int spacingLoss = (_barGroupInnerPadding * (numBarGroups - 1));
-    int barWidth = ((domainWidth - spacingLoss) * barGroupWeight).round();
+    final spacingLoss = (_barGroupInnerPadding * (numBarGroups - 1));
+    var desiredWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
+
+    if (maxBarWidthPx != null) {
+      desiredWidth = min(desiredWidth, maxBarWidthPx);
+      domainWidth = desiredWidth * numBarGroups + spacingLoss;
+    }
+
+    // If the series was configured with a weight pattern, treat the "max" bar
+    // width as the average max width. The overall total width will still equal
+    // max times number of bars, but this results in a nicer final picture.
+    var barWidth = desiredWidth;
+    if (allBarGroupWeights != null) {
+      barWidth =
+          (desiredWidth * numBarGroups * allBarGroupWeights[barGroupIndex])
+              .round();
+    }
 
     // Make sure that bars are at least one pixel wide, so that they will always
     // be visible on the chart. Ideally we should do something clever with the

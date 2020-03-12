@@ -42,6 +42,9 @@ const barGroupWeightKey = AttributeKey<double>('BarRenderer.barGroupWeight');
 const previousBarGroupWeightKey =
     AttributeKey<double>('BarRenderer.previousBarGroupWeight');
 
+const allBarGroupWeightsKey =
+    AttributeKey<List<double>>('BarRenderer.allBarGroupWeights');
+
 const stackKeyKey = AttributeKey<String>('BarRenderer.stackKey');
 
 const barElementsKey =
@@ -289,6 +292,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
         series.setAttr(barGroupWeightKey, barWeight);
         series.setAttr(previousBarGroupWeightKey, previousBarWeight);
+        series.setAttr(allBarGroupWeightsKey, barWeights);
       }
     });
   }
@@ -367,6 +371,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       final barGroupIndex = series.getAttr(barGroupIndexKey);
       final previousBarGroupWeight = series.getAttr(previousBarGroupWeightKey);
       final barGroupWeight = series.getAttr(barGroupWeightKey);
+      final allBarGroupWeights = series.getAttr(allBarGroupWeightsKey);
       final measureAxisPosition = measureAxis.getLocation(0.0);
 
       var elementsList = series.getAttr(barElementsKey);
@@ -419,6 +424,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
                 barGroupIndex: barGroupIndex,
                 previousBarGroupWeight: previousBarGroupWeight,
                 barGroupWeight: barGroupWeight,
+                allBarGroupWeights: allBarGroupWeights,
                 color: colorFn(barIndex),
                 dashPattern: dashPatternFn(barIndex),
                 details: details,
@@ -464,6 +470,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             barGroupIndex: barGroupIndex,
             previousBarGroupWeight: previousBarGroupWeight,
             barGroupWeight: barGroupWeight,
+            allBarGroupWeights: allBarGroupWeights,
             color: colorFn(barIndex),
             dashPattern: dashPatternFn(barIndex),
             details: details,
@@ -505,6 +512,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
+      List<double> allBarGroupWeights,
       Color color,
       List<int> dashPattern,
       R details,
@@ -528,6 +536,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       {int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
+      List<double> allBarGroupWeights,
       Color color,
       List<int> dashPattern,
       R details,

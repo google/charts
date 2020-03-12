@@ -48,6 +48,7 @@ class MockChart extends Mock implements CartesianChart {}
 
 class FakeBarRenderer<D> extends BarRenderer<D> {
   int paintBarCallCount = 0;
+  List<List<BarRendererElement<D>>> elementsPainted = [];
 
   factory FakeBarRenderer({BarRendererConfig config, String rendererId}) {
     return FakeBarRenderer._internal(config: config, rendererId: rendererId);
@@ -60,6 +61,7 @@ class FakeBarRenderer<D> extends BarRenderer<D> {
   void paintBar(ChartCanvas canvas, double animationPercent,
       Iterable<BarRendererElement<D>> barElements) {
     paintBarCallCount += 1;
+    elementsPainted.add(List.of(barElements));
   }
 }
 
@@ -789,6 +791,62 @@ void main() {
       expect(element.measureOffset, equals(0));
       expect(element.measureOffsetPlusMeasure, equals(5));
       expect(series.measureOffsetFn(0), equals(0));
+    });
+
+    test('with bar max width', () {
+      // Helper to create series list for this test only.
+      List<MutableSeries<String>> _createSeriesList(List<MyRow> data) {
+        final domainAxis = MockAxis<dynamic>();
+        when(domainAxis.rangeBand).thenReturn(100.0);
+        when(domainAxis.getLocation('MyCampaign1')).thenReturn(20.0);
+        when(domainAxis.getLocation('MyCampaign2')).thenReturn(40.0);
+        when(domainAxis.getLocation('MyCampaign3')).thenReturn(60.0);
+        when(domainAxis.getLocation('MyOtherCampaign')).thenReturn(80.0);
+        final measureAxis = MockAxis<num>();
+        when(measureAxis.getLocation(0)).thenReturn(0.0);
+        when(measureAxis.getLocation(5)).thenReturn(5.0);
+        when(measureAxis.getLocation(75)).thenReturn(75.0);
+        when(measureAxis.getLocation(100)).thenReturn(100.0);
+
+        final color = Color.fromHex(code: '#000000');
+
+        final series = MutableSeries<String>(Series<MyRow, String>(
+            id: 'Desktop',
+            domainFn: (MyRow row, _) => row.campaign,
+            measureFn: (MyRow row, _) => row.clickCount,
+            measureOffsetFn: (_, __) => 0,
+            colorFn: (_, __) => color,
+            fillColorFn: (_, __) => color,
+            dashPatternFn: (_, __) => [1],
+            data: data))
+          ..setAttr(domainAxisKey, domainAxis)
+          ..setAttr(measureAxisKey, measureAxis);
+
+        return [series];
+      }
+
+      final canvas = MockCanvas();
+
+      final data = [
+        MyRow('MyCampaign1', 5),
+        MyRow('MyCampaign2', 0),
+        MyRow('MyCampaign3', 100),
+        MyRow('MyOtherCampaign', 75),
+      ];
+      final seriesList = _createSeriesList(data);
+
+      final renderer =
+          makeFakeRenderer(config: BarRendererConfig(maxBarWidthPx: 40));
+
+      renderer.preprocessSeries(seriesList);
+      renderer.update(seriesList, false);
+      renderer.paint(canvas, 1.0);
+
+      expect(renderer.elementsPainted.length, 4);
+      for (var i = 0; i < 4; i++) {
+        final element = renderer.elementsPainted[i].single;
+        expect(element.bounds.width, 40);
+      }
     });
   });
 
