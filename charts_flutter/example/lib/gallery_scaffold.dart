@@ -56,7 +56,7 @@ class _GalleryScaffoldState extends State<GalleryScaffold> {
             new SizedBox(height: 250.0, child: widget.childBuilder()),
           ])),
       floatingActionButton: new FloatingActionButton(
-          child: new Icon(Icons.refresh), onPressed: _handleButtonPress),
+          onPressed: _handleButtonPress, child: new Icon(Icons.refresh)),
     );
   }
 }
