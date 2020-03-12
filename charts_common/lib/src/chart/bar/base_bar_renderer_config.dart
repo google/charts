@@ -57,6 +57,10 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
 
   final int minBarLengthPx;
 
+  // The maximum bar group width in pixels, or null if bars can be arbitrarily
+  // wide.
+  final int maxBarWidthPx;
+
   final FillPatternType fillPattern;
 
   final double stackHorizontalSeparator;
@@ -90,6 +94,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       this.groupingType = BarGroupingType.grouped,
       this.layoutPaintOrder,
       this.minBarLengthPx = 0,
+      this.maxBarWidthPx,
       this.fillPattern,
       this.stackHorizontalSeparator,
       this.strokeWidthPx = 0.0,
@@ -120,6 +125,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
         other.fillPattern == fillPattern &&
         other.groupingType == groupingType &&
         other.minBarLengthPx == minBarLengthPx &&
+        other.maxBarWidthPx == maxBarWidthPx &&
         other.stackHorizontalSeparator == stackHorizontalSeparator &&
         other.strokeWidthPx == strokeWidthPx &&
         other.symbolRenderer == symbolRenderer &&
@@ -133,6 +139,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     hash = hash * 31 + (fillPattern?.hashCode ?? 0);
     hash = hash * 31 + (groupingType?.hashCode ?? 0);
     hash = hash * 31 + (minBarLengthPx?.hashCode ?? 0);
+    hash = hash * 31 + (maxBarWidthPx?.hashCode ?? 0);
     hash = hash * 31 + (stackHorizontalSeparator?.hashCode ?? 0);
     hash = hash * 31 + (strokeWidthPx?.hashCode ?? 0);
     hash = hash * 31 + (symbolRenderer?.hashCode ?? 0);
