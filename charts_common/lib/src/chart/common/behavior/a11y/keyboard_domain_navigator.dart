@@ -240,11 +240,19 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
     if (_chart is CartesianChart) {
       final localChart = _chart as CartesianChart;
       if (localChart.vertical) {
-        allSeriesDatum
-            .sort((a, b) => a.chartPosition.x.compareTo(b.chartPosition.x));
+        allSeriesDatum.sort((a, b) {
+          if (a.chartPosition.x == b.chartPosition.x) {
+            return a.series.seriesIndex.compareTo(b.series.seriesIndex);
+          }
+          return a.chartPosition.x.compareTo(b.chartPosition.x);
+        });
       } else {
-        allSeriesDatum
-            .sort((a, b) => a.chartPosition.y.compareTo(b.chartPosition.y));
+        allSeriesDatum.sort((a, b) {
+          if (a.chartPosition.y == b.chartPosition.y) {
+            return a.series.seriesIndex.compareTo(b.series.seriesIndex);
+          }
+          return a.chartPosition.y.compareTo(b.chartPosition.y);
+        });
       }
     }
 
