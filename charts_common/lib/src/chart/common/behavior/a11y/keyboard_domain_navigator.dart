@@ -258,15 +258,24 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
 
     final detailsByDomain = <D, List<SeriesDatum<D>>>{};
     for (DatumDetails datumDetails in allSeriesDatum) {
-      final domain = datumDetails.domain;
+      // The hovercard is closed when the closest detail has a null measure.
+      // Also, on hovercard close the current selection is cleared, so unless
+      // the details with null measure are skipped, the next domain visited
+      // after a datum with null measure will always be the first one, making
+      // all data after a datum with null measure not accessible by keyboard.
+      // LINT.IfChange
+      if (datumDetails.measure != null) {
+        final domain = datumDetails.domain;
 
-      if (detailsByDomain[domain] == null) {
-        _domains.add(domain);
-        detailsByDomain[domain] = [];
+        if (detailsByDomain[domain] == null) {
+          _domains.add(domain);
+          detailsByDomain[domain] = [];
+        }
+
+        detailsByDomain[domain]
+            .add(SeriesDatum<D>(datumDetails.series, datumDetails.datum));
       }
-
-      detailsByDomain[domain]
-          .add(SeriesDatum<D>(datumDetails.series, datumDetails.datum));
+      // LINT.ThenChange(//depot/google3/third_party/dart/charts_web/lib/src/common/behaviors/hovercard/hovercard.dart)
     }
 
     _datumPairs = <int, List<SeriesDatum<D>>>{};
