@@ -261,7 +261,25 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
-  double getLocation(D domain) => domain != null ? _scale[domain] : null;
+  double getLocation(D domain) {
+    const epsilon = 2e-10;
+    if (domain != null) {
+      var domainLocation = _scale[domain];
+
+      // If domain location is outside of scale range but only outside by less
+      // than epsilon, correct the potential mislocation caused by floating
+      // point computation by moving it inside of scale range.
+      if (domainLocation > _scale.range.max &&
+          domainLocation - epsilon < _scale.range.max) {
+        return domainLocation - epsilon;
+      } else if (domainLocation < _scale.range.min &&
+          domainLocation + epsilon > _scale.range.min) {
+        return domainLocation + epsilon;
+      }
+      return domainLocation;
+    }
+    return null;
+  }
 
   @override
   D getDomain(double location) => _scale.reverse(location);
