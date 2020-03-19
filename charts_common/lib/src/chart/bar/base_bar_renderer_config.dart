@@ -63,7 +63,8 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
 
   final FillPatternType fillPattern;
 
-  final double stackHorizontalSeparator;
+  /// The padding between bar stacks.
+  final int stackedBarPaddingPx;
 
   /// Stroke width of the target line.
   final double strokeWidthPx;
@@ -96,7 +97,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       this.minBarLengthPx = 0,
       this.maxBarWidthPx,
       this.fillPattern,
-      this.stackHorizontalSeparator,
+      this.stackedBarPaddingPx = 1,
       this.strokeWidthPx = 0.0,
       SymbolRenderer symbolRenderer,
       this.weightPattern})
@@ -126,7 +127,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
         other.groupingType == groupingType &&
         other.minBarLengthPx == minBarLengthPx &&
         other.maxBarWidthPx == maxBarWidthPx &&
-        other.stackHorizontalSeparator == stackHorizontalSeparator &&
+        other.stackedBarPaddingPx == stackedBarPaddingPx &&
         other.strokeWidthPx == strokeWidthPx &&
         other.symbolRenderer == symbolRenderer &&
         ListEquality().equals(other.weightPattern, weightPattern);
@@ -140,7 +141,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     hash = hash * 31 + (groupingType?.hashCode ?? 0);
     hash = hash * 31 + (minBarLengthPx?.hashCode ?? 0);
     hash = hash * 31 + (maxBarWidthPx?.hashCode ?? 0);
-    hash = hash * 31 + (stackHorizontalSeparator?.hashCode ?? 0);
+    hash = hash * 31 + (stackedBarPaddingPx?.hashCode ?? 0);
     hash = hash * 31 + (strokeWidthPx?.hashCode ?? 0);
     hash = hash * 31 + (symbolRenderer?.hashCode ?? 0);
     hash = hash * 31 + (weightPattern?.hashCode ?? 0);
