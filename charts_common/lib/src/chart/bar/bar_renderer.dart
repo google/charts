@@ -47,7 +47,7 @@ class BarRenderer<D>
   /// The padding between bar stacks.
   ///
   /// The padding comes out of the bottom of the bar.
-  final _stackedBarPadding = 1;
+  final _stackedBarPaddingPx;
 
   final BarRendererDecorator barRendererDecorator;
 
@@ -62,6 +62,7 @@ class BarRenderer<D>
   @protected
   BarRenderer.internal({BarRendererConfig config, String rendererId})
       : barRendererDecorator = config.barRendererDecorator,
+        _stackedBarPaddingPx = config.stackedBarPaddingPx,
         super(
             config: config,
             rendererId: rendererId,
@@ -252,17 +253,17 @@ class BarRenderer<D>
                 max(
                     0,
                     bar.bounds.top +
-                        (measureIsNegative ? _stackedBarPadding : 0)),
+                        (measureIsNegative ? _stackedBarPaddingPx : 0)),
                 bar.bounds.width,
-                max(0, bar.bounds.height - _stackedBarPadding),
+                max(0, bar.bounds.height - _stackedBarPaddingPx),
               )
             : Rectangle<int>(
                 max(
                     0,
                     bar.bounds.left +
-                        (measureIsNegative ? _stackedBarPadding : 0)),
+                        (measureIsNegative ? _stackedBarPaddingPx : 0)),
                 bar.bounds.top,
-                max(0, bar.bounds.width - _stackedBarPadding),
+                max(0, bar.bounds.width - _stackedBarPaddingPx),
                 bar.bounds.height,
               );
       }
@@ -304,7 +305,7 @@ class BarRenderer<D>
     final barStack = CanvasBarStack(
       bars,
       radius: cornerStrategy.getRadius(maxBarWidth),
-      stackedBarPadding: _stackedBarPadding,
+      stackedBarPadding: _stackedBarPaddingPx,
       roundTopLeft: roundTopLeft,
       roundTopRight: roundTopRight,
       roundBottomLeft: roundBottomLeft,
