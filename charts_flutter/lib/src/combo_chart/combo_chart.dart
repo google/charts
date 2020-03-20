@@ -24,7 +24,7 @@ import 'package:charts_common/common.dart' as common
 import '../behaviors/chart_behavior.dart' show ChartBehavior;
 import '../base_chart.dart' show LayoutConfig;
 import '../base_chart_state.dart' show BaseChartState;
-import '../cartesian_chart.dart' show CartesianChart;
+import '../cartesian_chart.dart' show BaseCartesianChart;
 import '../selection_model_config.dart' show SelectionModelConfig;
 
 /// A numeric combo chart supports rendering each series of data with different
@@ -33,7 +33,7 @@ import '../selection_model_config.dart' show SelectionModelConfig;
 /// Note that if you have DateTime data, you should use [TimeSeriesChart]. We do
 /// not expose a separate DateTimeComboChart because it would just be a copy of
 /// that chart.
-class NumericComboChart extends CartesianChart<num> {
+class NumericComboChart extends BaseCartesianChart<num> {
   NumericComboChart(
     List<common.Series> seriesList, {
     bool animate,
@@ -78,7 +78,7 @@ class NumericComboChart extends CartesianChart<num> {
 
 /// An ordinal combo chart supports rendering each series of data with different
 /// series renderers.
-class OrdinalComboChart extends CartesianChart<String> {
+class OrdinalComboChart extends BaseCartesianChart<String> {
   OrdinalComboChart(
     List<common.Series> seriesList, {
     bool animate,

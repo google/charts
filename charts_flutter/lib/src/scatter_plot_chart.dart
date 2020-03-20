@@ -27,11 +27,11 @@ import 'package:charts_common/common.dart' as common
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
-import 'cartesian_chart.dart' show CartesianChart;
+import 'cartesian_chart.dart' show BaseCartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
 import 'user_managed_state.dart' show UserManagedState;
 
-class ScatterPlotChart extends CartesianChart<num> {
+class ScatterPlotChart extends BaseCartesianChart<num> {
   ScatterPlotChart(
     List<common.Series> seriesList, {
     bool animate,
