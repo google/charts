@@ -16,7 +16,7 @@ dependencies:
   # charts_common: 0.9.0
   charts_common:
      git:
-       url: git@github.com:pinkfish/charts.git
+       url: https://github.com/pinkfish/charts.git
        path: charts_common
   collection: ^1.14.11
   flutter:
