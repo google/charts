@@ -348,11 +348,12 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     final isRtl = chartContext.isRtl;
     final labelElements = _splitLabel(tick.textElement);
     final labelHeight = _getLabelHeight(labelElements);
-    int multiLineLabelOffset = 0;
+    final labelWidth = _getLabelWidth(labelElements);
+    var multiLineLabelOffset = 0;
 
     for (final line in labelElements) {
-      int x = 0;
-      int y = 0;
+      var x = 0;
+      var y = 0;
 
       if (orientation == AxisOrientation.bottom ||
           orientation == AxisOrientation.top) {
@@ -385,7 +386,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
             x = axisBounds.right - labelOffsetFromAxisPx;
             line.textDirection = TextDirection.rtl;
           } else {
-            x = axisBounds.left + labelOffsetFromAxisPx;
+            x = axisBounds.left;
             line.textDirection = TextDirection.ltr;
           }
         } else {
@@ -394,7 +395,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
             x = axisBounds.left + labelOffsetFromAxisPx;
             line.textDirection = TextDirection.ltr;
           } else {
-            x = axisBounds.right - labelOffsetFromAxisPx;
+            x = axisBounds.right;
             line.textDirection = TextDirection.rtl;
           }
         }
