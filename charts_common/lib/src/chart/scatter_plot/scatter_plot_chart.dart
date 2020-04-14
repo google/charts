@@ -40,6 +40,11 @@ class ScatterPlotChart extends NumericCartesianChart {
   @override
   bool get selectNearestByDomain => false;
 
+  /// On scatter plots, overlapping points that contain the click/tap location
+  /// are all added to the selection.
+  @override
+  bool get selectOverlappingPoints => true;
+
   ScatterPlotChart(
       {bool vertical,
       LayoutConfig layoutConfig,

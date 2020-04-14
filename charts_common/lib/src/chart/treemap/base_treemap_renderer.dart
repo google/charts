@@ -176,7 +176,8 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   /// Datum details of nearest rectangles in the treemap.
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride,
+      {bool selectOverlappingPoints = false}) {
     final nearest = <DatumDetails<D>>[];
 
     // Checks if the [chartPoint] is within bounds.

@@ -35,10 +35,10 @@ class FakeRenderer extends BaseSeriesRenderer {
   }
 
   @override
-  List<DatumDetails> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
-    return null;
-  }
+  List<DatumDetails> getNearestDatumDetailPerSeries(Point<double> chartPoint,
+          bool byDomain, Rectangle<int> boundsOverride,
+          {selectOverlappingPoints = false}) =>
+      null;
 
   @override
   void paint(ChartCanvas canvas, double animationPercent) {}

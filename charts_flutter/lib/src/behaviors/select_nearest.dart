@@ -14,7 +14,12 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show ChartBehavior, SelectNearest, SelectionModelType, SelectionTrigger;
+    show
+        ChartBehavior,
+        SelectNearest,
+        SelectionMode,
+        SelectionModelType,
+        SelectionTrigger;
 
 import 'package:meta/meta.dart' show immutable;
 
@@ -35,8 +40,8 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 ///   action - To select an item as an input, drill, or other selection.
 ///
 /// Other options available
-///   expandToDomain - all data points that match the domain value of the
-///       closest data point will be included in the selection. (Default: true)
+///   selectionMode - Optional mode for expanding the selection beyond the
+///       nearest datum. Defaults to expandToDomain.
 ///   selectClosestSeries - mark the series for the closest data point as
 ///       selected. (Default: true)
 ///
@@ -49,14 +54,14 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
 
   final common.SelectionModelType selectionModelType;
   final common.SelectionTrigger eventTrigger;
-  final bool expandToDomain;
+  final common.SelectionMode selectionMode;
   final bool selectAcrossAllDrawAreaComponents;
   final bool selectClosestSeries;
   final int maximumDomainDistancePx;
 
   SelectNearest._internal(
       {this.selectionModelType,
-      this.expandToDomain = true,
+      this.selectionMode = common.SelectionMode.expandToDomain,
       this.selectAcrossAllDrawAreaComponents = false,
       this.selectClosestSeries = true,
       this.eventTrigger,
@@ -66,14 +71,14 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   factory SelectNearest(
       {common.SelectionModelType selectionModelType =
           common.SelectionModelType.info,
-      bool expandToDomain = true,
+      common.SelectionMode selectionMode = common.SelectionMode.expandToDomain,
       bool selectAcrossAllDrawAreaComponents = false,
       bool selectClosestSeries = true,
       common.SelectionTrigger eventTrigger = common.SelectionTrigger.tap,
       int maximumDomainDistancePx}) {
     return new SelectNearest._internal(
         selectionModelType: selectionModelType,
-        expandToDomain: expandToDomain,
+        selectionMode: selectionMode,
         selectAcrossAllDrawAreaComponents: selectAcrossAllDrawAreaComponents,
         selectClosestSeries: selectClosestSeries,
         eventTrigger: eventTrigger,
@@ -111,7 +116,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
     return new common.SelectNearest<D>(
         selectionModelType: selectionModelType,
         eventTrigger: eventTrigger,
-        expandToDomain: expandToDomain,
+        selectionMode: selectionMode,
         selectClosestSeries: selectClosestSeries,
         maximumDomainDistancePx: maximumDomainDistancePx);
   }
@@ -128,7 +133,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
     if (other is SelectNearest) {
       return (selectionModelType == other.selectionModelType) &&
           (eventTrigger == other.eventTrigger) &&
-          (expandToDomain == other.expandToDomain) &&
+          (selectionMode == other.selectionMode) &&
           (selectClosestSeries == other.selectClosestSeries) &&
           (maximumDomainDistancePx == other.maximumDomainDistancePx);
     } else {
@@ -139,7 +144,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   int get hashCode {
     int hashcode = selectionModelType.hashCode;
     hashcode = hashcode * 37 + eventTrigger.hashCode;
-    hashcode = hashcode * 37 + expandToDomain.hashCode;
+    hashcode = hashcode * 37 + selectionMode.hashCode;
     hashcode = hashcode * 37 + selectClosestSeries.hashCode;
     hashcode = hashcode * 37 + maximumDomainDistancePx.hashCode;
     return hashcode;
