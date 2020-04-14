@@ -98,10 +98,15 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// [update] call.
   void paint(ChartCanvas canvas, double animationPercent);
 
-  /// Gets a list the data from each series that is closest to a given point.
+  /// Gets a list of the data from each series that is closest to a given point.
   ///
   /// [chartPoint] represents a point in the chart, such as a point that was
   /// clicked/tapped on by a user.
+  ///
+  /// [selectOverlappingPoints] specifies whether to include all points that
+  /// overlap the tapped position in the result. If specified, the method will
+  /// return either the closest point or all the overlapping points with the
+  /// tapped position.
   ///
   /// [byDomain] specifies whether the nearest data should be defined by domain
   /// distance, or relative Cartesian distance.
@@ -112,7 +117,8 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// will use its own component bounds for filtering out selection events
   /// (usually the chart draw area).
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride);
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride,
+      {bool selectOverlappingPoints = false});
 
   /// Get an expanded set of processed [DatumDetails] for a given [SeriesDatum].
   ///

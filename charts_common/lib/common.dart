@@ -152,7 +152,7 @@ export 'src/chart/common/behavior/range_annotation.dart'
 export 'src/chart/common/behavior/selection/lock_selection.dart'
     show LockSelection;
 export 'src/chart/common/behavior/selection/select_nearest.dart'
-    show SelectNearest;
+    show SelectNearest, SelectionMode;
 export 'src/chart/common/behavior/selection/selection_trigger.dart'
     show SelectionTrigger;
 export 'src/chart/common/behavior/slider/slider.dart'

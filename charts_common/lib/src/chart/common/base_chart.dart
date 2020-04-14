@@ -96,6 +96,12 @@ abstract class BaseChart<D> {
   /// domain value.
   bool get selectNearestByDomain => true;
 
+  /// Whether data should be expanded by to include all points overlaping the
+  /// selection point
+  ///
+  /// Should be true for Scatter plots.
+  bool get selectOverlappingPoints => false;
+
   final _lifecycleListeners = <LifecycleListener<D>>[];
 
   BaseChart({LayoutConfig layoutConfig}) {
@@ -231,7 +237,8 @@ abstract class BaseChart<D> {
     _usingRenderers.forEach((String rendererId) {
       details.addAll(getSeriesRenderer(rendererId)
           .getNearestDatumDetailPerSeries(
-              drawAreaPoint, selectNearestByDomain, boundsOverride));
+              drawAreaPoint, selectNearestByDomain, boundsOverride,
+              selectOverlappingPoints: selectOverlappingPoints));
     });
 
     details.sort((DatumDetails<D> a, DatumDetails<D> b) {

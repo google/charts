@@ -466,8 +466,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
+      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride,
+      {bool selectOverlappingPoints = false}) {
     final nearest = <DatumDetails<D>>[];
+    final inside = <DatumDetails<D>>[];
 
     // Was it even in the component bounds?
     if (!isPointWithinBounds(chartPoint, boundsOverride)) {
@@ -476,9 +478,11 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
     seriesPointMap.values.forEach((List<AnimatedPoint<D>> points) {
       PointRendererElement<D> nearestPoint;
-      double nearestDomainDistance = _maxInitialDistance;
-      double nearestMeasureDistance = _maxInitialDistance;
-      double nearestRelativeDistance = _maxInitialDistance;
+
+      _Distances nearestDistances = _Distances(
+          domainDistance: _maxInitialDistance,
+          measureDistance: _maxInitialDistance,
+          relativeDistance: _maxInitialDistance);
 
       points.forEach((AnimatedPoint<D> point) {
         if (point.overlaySeries) {
@@ -494,54 +498,60 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
         final distances = _getDatumDistance(point, chartPoint);
 
+        if (selectOverlappingPoints) {
+          if (distances.insidePoint) {
+            inside.add(_createDatumDetails(point._currentPoint, distances));
+          }
+        }
+
         if (byDomain) {
-          if ((distances.domainDistance < nearestDomainDistance) ||
-              ((distances.domainDistance == nearestDomainDistance &&
-                  distances.measureDistance < nearestMeasureDistance))) {
+          if ((distances.domainDistance < nearestDistances.domainDistance) ||
+              ((distances.domainDistance == nearestDistances.domainDistance &&
+                  distances.measureDistance <
+                      nearestDistances.measureDistance))) {
             nearestPoint = point._currentPoint;
-            nearestDomainDistance = distances.domainDistance;
-            nearestMeasureDistance = distances.measureDistance;
-            nearestRelativeDistance = distances.relativeDistance;
+            nearestDistances = distances;
           }
         } else {
-          if (distances.relativeDistance < nearestRelativeDistance) {
+          if (distances.relativeDistance < nearestDistances.relativeDistance) {
             nearestPoint = point._currentPoint;
-            nearestDomainDistance = distances.domainDistance;
-            nearestMeasureDistance = distances.measureDistance;
-            nearestRelativeDistance = distances.relativeDistance;
+            nearestDistances = distances;
           }
         }
       });
 
       // Found a point, add it to the list.
       if (nearestPoint != null) {
-        SymbolRenderer nearestSymbolRenderer;
-        if (nearestPoint.symbolRendererId == defaultSymbolRendererId) {
-          nearestSymbolRenderer = symbolRenderer;
-        } else {
-          final id = nearestPoint.symbolRendererId;
-          if (!config.customSymbolRenderers.containsKey(id)) {
-            throw ArgumentError('Invalid custom symbol renderer id "${id}"');
-          }
-
-          nearestSymbolRenderer = config.customSymbolRenderers[id];
-        }
-
-        nearest.add(DatumDetails<D>(
-            datum: nearestPoint.point.datum,
-            domain: nearestPoint.point.domain,
-            series: nearestPoint.point.series,
-            domainDistance: nearestDomainDistance,
-            measureDistance: nearestMeasureDistance,
-            relativeDistance: nearestRelativeDistance,
-            symbolRenderer: nearestSymbolRenderer));
+        nearest.add(_createDatumDetails(nearestPoint, nearestDistances));
       }
     });
 
     // Note: the details are already sorted by domain & measure distance in
-    // base chart.
+    // base chart. If asking for all overlapping points, return the list of
+    // inside points - only if there was overla.
+    return (selectOverlappingPoints && inside.isNotEmpty) ? inside : nearest;
+  }
 
-    return nearest;
+  DatumDetails<D> _createDatumDetails(
+      PointRendererElement<D> point, _Distances distances) {
+    SymbolRenderer pointSymbolRenderer;
+    if (point.symbolRendererId == defaultSymbolRendererId) {
+      pointSymbolRenderer = symbolRenderer;
+    } else {
+      final id = point.symbolRendererId;
+      if (!config.customSymbolRenderers.containsKey(id)) {
+        throw ArgumentError('Invalid custom symbol renderer id "${id}"');
+      }
+      pointSymbolRenderer = config.customSymbolRenderers[id];
+    }
+    return DatumDetails<D>(
+        datum: point.point.datum,
+        domain: point.point.domain,
+        series: point.point.series,
+        domainDistance: distances.domainDistance,
+        measureDistance: distances.measureDistance,
+        relativeDistance: distances.relativeDistance,
+        symbolRenderer: pointSymbolRenderer);
   }
 
   /// Returns a struct containing domain, measure, and relative distance between

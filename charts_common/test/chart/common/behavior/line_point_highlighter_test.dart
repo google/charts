@@ -75,10 +75,10 @@ class MockSeriesRenderer extends BaseSeriesRenderer {
   @override
   void paint(_, __) {}
 
-  List<DatumDetails> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
-    return null;
-  }
+  List<DatumDetails> getNearestDatumDetailPerSeries(Point<double> chartPoint,
+          bool byDomain, Rectangle<int> boundsOverride,
+          {selectOverlappingPoints = false}) =>
+      null;
 
   DatumDetails addPositionToDetailsForSeriesDatum(
       DatumDetails details, SeriesDatum seriesDatum) {

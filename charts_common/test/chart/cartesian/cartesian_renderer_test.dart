@@ -30,7 +30,8 @@ import 'package:test/test.dart';
 class FakeCartesianRenderer extends BaseCartesianRenderer {
   @override
   List<DatumDetails> getNearestDatumDetailPerSeries(Point<double> chartPoint,
-          bool byDomain, Rectangle<int> boundsOverride) =>
+          bool byDomain, Rectangle<int> boundsOverride,
+          {selectOverlappingPoints = false}) =>
       null;
 
   @override
