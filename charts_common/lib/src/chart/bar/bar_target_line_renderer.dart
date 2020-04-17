@@ -244,7 +244,8 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
           points: bar.points,
           stroke: bar.color,
           roundEndCaps: bar.roundEndCaps,
-          strokeWidthPx: bar.strokeWidthPx);
+          strokeWidthPx: bar.strokeWidthPx,
+          dashPattern: bar.dashPattern);
     });
   }
 
