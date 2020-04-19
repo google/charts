@@ -147,7 +147,7 @@ class TextElement implements common.TextElement {
     int fontWeightIndex = 4; // normal
     if (FontWeight.values.length <
         textStyle.fontWeight.asFlutterFontWeightIndex()) {
-      fontWeightIndex = FontWeight.values.length;
+      fontWeightIndex = FontWeight.values.length - 1;
     } else if (textStyle.fontWeight.asFlutterFontWeightIndex() < 0) {
       // use default normal font weight
     } else {
