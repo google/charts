@@ -61,6 +61,21 @@ class DonutAutoLabelChart extends StatelessWidget {
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: data,
+        insideLabelStyleAccessorFn: (LinearSales sales, _) {
+          return new charts.TextStyleSpec(
+            color: charts.MaterialPalette.black,
+            fontWeight: charts.MaterialFontWeight.normal,
+          );
+        },
+        outsideLabelStyleAccessorFn: (LinearSales sales, _) {
+          final color = (sales.year == 2014)
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.yellow.shadeDefault.darker;
+          return new charts.TextStyleSpec(
+            color: color,
+            fontWeight: charts.MaterialFontWeight.normal,
+          );
+        },
         // Set a label accessor to control the text of the arc label.
         labelAccessorFn: (LinearSales row, _) => '${row.year}: ${row.sales}',
       )
@@ -107,6 +122,24 @@ class DonutAutoLabelChart extends StatelessWidget {
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: data,
+        insideLabelStyleAccessorFn: (LinearSales sales, _) {
+          final color = (sales.year == 2014)
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.yellow.shadeDefault.darker;
+          return new charts.TextStyleSpec(
+            color: color,
+            fontWeight: charts.MaterialFontWeight.bold,
+          );
+        },
+        outsideLabelStyleAccessorFn: (LinearSales sales, _) {
+          final color = (sales.year == 2014)
+              ? charts.MaterialPalette.red.shadeDefault
+              : charts.MaterialPalette.yellow.shadeDefault.darker;
+          return new charts.TextStyleSpec(
+            color: color,
+            fontWeight: charts.MaterialFontWeight.bold,
+          );
+        },
         // Set a label accessor to control the text of the arc label.
         labelAccessorFn: (LinearSales row, _) => '${row.year}: ${row.sales}',
       )

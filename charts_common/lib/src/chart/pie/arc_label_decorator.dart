@@ -18,6 +18,7 @@ import 'dart:math' show cos, min, sin, pi, Point, Rectangle;
 import 'package:meta/meta.dart' show immutable, required;
 
 import '../../common/color.dart' show Color;
+import '../../common/font_weight.dart' show FontWeight;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/text_element.dart'
@@ -222,6 +223,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       ..color = labelSpec?.color ?? Color.black
       ..fontFamily = labelSpec?.fontFamily
       ..fontSize = labelSpec?.fontSize ?? 12
+      ..fontWeight = labelSpec?.fontWeight ?? FontWeight.normal
       ..lineHeight = labelSpec?.lineHeight;
   }
 

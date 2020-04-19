@@ -21,8 +21,9 @@ import 'package:charts_common/common.dart' as common
         TextDirection,
         TextMeasurement,
         TextStyle;
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart'
-    show Color, TextBaseline, TextPainter, TextSpan, TextStyle;
+    show Color, TextBaseline, TextPainter, TextSpan, TextStyle, FontWeight;
 
 /// Flutter implementation for text measurement and painter.
 class TextElement implements common.TextElement {
@@ -143,12 +144,24 @@ class TextElement implements common.TextElement {
       textStyle.color.b,
     );
 
+    int fontWeightIndex = 4; // normal
+    if (FontWeight.values.length <
+        textStyle.fontWeight.asFlutterFontWeightIndex()) {
+      fontWeightIndex = FontWeight.values.length;
+    } else if (textStyle.fontWeight.asFlutterFontWeightIndex() < 0) {
+      // use default normal font weight
+    } else {
+      // use what API user set
+      fontWeightIndex = textStyle.fontWeight.asFlutterFontWeightIndex();
+    }
+
     _textPainter = new TextPainter(
         text: new TextSpan(
             text: text,
             style: new TextStyle(
                 color: color,
                 fontSize: textStyle.fontSize.toDouble(),
+                fontWeight: FontWeight.values[fontWeightIndex],
                 fontFamily: textStyle.fontFamily,
                 height: textStyle.lineHeight)))
       ..textDirection = TextDirection.ltr

@@ -236,6 +236,7 @@ export 'src/chart/treemap/treemap_label_decorator.dart'
 export 'src/chart/treemap/treemap_renderer_config.dart'
     show TreeMapRendererConfig, TreeMapTileType;
 export 'src/common/color.dart' show Color;
+export 'src/common/font_weight.dart' show FontWeight;
 export 'src/common/date_time_factory.dart'
     show DateTimeFactory, LocalDateTimeFactory, UTCDateTimeFactory;
 export 'src/common/gesture_listener.dart' show GestureListener;

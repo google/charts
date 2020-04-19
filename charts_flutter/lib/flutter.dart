@@ -196,3 +196,4 @@ export 'src/time_series_chart.dart';
 export 'src/user_managed_state.dart'
     show UserManagedState, UserManagedSelectionModel;
 export 'src/util/color.dart' show ColorUtil;
+export 'src/material_font_weight.dart' show MaterialFontWeight;

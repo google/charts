@@ -14,12 +14,14 @@
 // limitations under the License.
 
 import 'dart:ui' show hashValues;
-import 'package:charts_common/common.dart' as common show Color, TextStyle;
+import 'package:charts_common/common.dart' as common
+    show Color, TextStyle, FontWeight;
 
 class TextStyle implements common.TextStyle {
   int fontSize;
   String fontFamily;
   common.Color color;
+  common.FontWeight fontWeight;
   double lineHeight;
 
   @override
@@ -28,6 +30,7 @@ class TextStyle implements common.TextStyle {
       fontSize == other.fontSize &&
       fontFamily == other.fontFamily &&
       color == other.color &&
+      fontWeight == other.fontWeight &&
       lineHeight == other.lineHeight;
 
   @override

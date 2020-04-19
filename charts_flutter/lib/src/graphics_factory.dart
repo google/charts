@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show GraphicsFactory, LineStyle, TextElement, TextStyle;
+    show GraphicsFactory, LineStyle, TextElement, TextStyle, FontWeight;
 import 'package:flutter/widgets.dart'
     show BuildContext, DefaultTextStyle, MediaQuery;
 import 'line_style.dart' show LineStyle;
