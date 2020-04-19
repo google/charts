@@ -122,21 +122,15 @@ class DonutAutoLabelChart extends StatelessWidget {
         measureFn: (LinearSales sales, _) => sales.sales,
         data: data,
         insideLabelStyleAccessorFn: (LinearSales sales, _) {
-          final color = (sales.year == 2014)
-              ? charts.MaterialPalette.red.shadeDefault
-              : charts.MaterialPalette.yellow.shadeDefault.darker;
           return new charts.TextStyleSpec(
-            color: color,
-            fontWeight: charts.MaterialFontWeight.bold,
+            color: charts.MaterialPalette.black,
+            fontWeight: charts.MaterialFontWeight.w700,
           );
         },
         outsideLabelStyleAccessorFn: (LinearSales sales, _) {
-          final color = (sales.year == 2014)
-              ? charts.MaterialPalette.red.shadeDefault
-              : charts.MaterialPalette.yellow.shadeDefault.darker;
           return new charts.TextStyleSpec(
-            color: color,
-            fontWeight: charts.MaterialFontWeight.bold,
+            color: charts.MaterialPalette.yellow.shadeDefault.darker,
+            fontWeight: charts_common.FontWeight.normal,
           );
         },
         // Set a label accessor to control the text of the arc label.
