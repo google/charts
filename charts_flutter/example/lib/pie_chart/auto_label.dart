@@ -19,6 +19,8 @@
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_common/common.dart' as charts_common;
+
 import 'package:flutter/material.dart';
 
 class DonutAutoLabelChart extends StatelessWidget {
@@ -64,16 +66,13 @@ class DonutAutoLabelChart extends StatelessWidget {
         insideLabelStyleAccessorFn: (LinearSales sales, _) {
           return new charts.TextStyleSpec(
             color: charts.MaterialPalette.black,
-            fontWeight: charts.MaterialFontWeight.normal,
+            fontWeight: charts.MaterialFontWeight.w900,
           );
         },
         outsideLabelStyleAccessorFn: (LinearSales sales, _) {
-          final color = (sales.year == 2014)
-              ? charts.MaterialPalette.red.shadeDefault
-              : charts.MaterialPalette.yellow.shadeDefault.darker;
           return new charts.TextStyleSpec(
-            color: color,
-            fontWeight: charts.MaterialFontWeight.normal,
+            color: charts.MaterialPalette.yellow.shadeDefault.darker,
+            fontWeight: charts_common.FontWeight.bold,
           );
         },
         // Set a label accessor to control the text of the arc label.
