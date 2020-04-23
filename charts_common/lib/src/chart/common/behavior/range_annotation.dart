@@ -85,6 +85,11 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   /// Space before and after label text.
   final int labelPadding;
 
+  /// Configures the order in which the behavior should be painted.
+  /// This value should be relative to LayoutPaintViewOrder.rangeAnnotation.
+  /// (e.g. LayoutViewPaintOrder.rangeAnnotation + 1)
+  final int layoutPaintOrder;
+
   CartesianChart<D> _chart;
 
   _RangeAnnotationLayoutView _view;
@@ -112,7 +117,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       TextStyleSpec defaultLabelStyleSpec,
       bool extendAxis,
       int labelPadding,
-      double defaultStrokeWidthPx})
+      double defaultStrokeWidthPx,
+      int layoutPaintOrder})
       : defaultColor = StyleFactory.style.rangeAnnotationColor,
         defaultLabelAnchor = defaultLabelAnchor ?? _defaultLabelAnchor,
         defaultLabelDirection = defaultLabelDirection ?? _defaultLabelDirection,
@@ -120,7 +126,9 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         defaultLabelStyleSpec = defaultLabelStyleSpec ?? _defaultLabelStyle,
         extendAxis = extendAxis ?? true,
         labelPadding = labelPadding ?? _defaultLabelPadding,
-        defaultStrokeWidthPx = defaultStrokeWidthPx ?? _defaultStrokeWidthPx {
+        defaultStrokeWidthPx = defaultStrokeWidthPx ?? _defaultStrokeWidthPx,
+        layoutPaintOrder =
+            layoutPaintOrder ?? LayoutViewPaintOrder.rangeAnnotation {
     _lifecycleListener = LifecycleListener<D>(
         onPostprocess: _updateAxisRange, onAxisConfigured: _updateViewData);
   }
@@ -138,7 +146,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         defaultColor: defaultColor,
         labelPadding: labelPadding,
         chart: chart,
-        rangeAnnotation: this);
+        rangeAnnotation: this,
+        layoutPaintOrder: layoutPaintOrder);
 
     chart.addView(_view);
 
@@ -341,6 +350,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   final RangeAnnotation rangeAnnotation;
 
+  final layoutPaintOrder;
+
   CartesianChart<D> chart;
 
   bool get isRtl => chart.context.isRtl;
@@ -361,9 +372,10 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
       {@required this.defaultColor,
       @required this.labelPadding,
       @required this.chart,
-      @required this.rangeAnnotation})
+      @required this.rangeAnnotation,
+      @required this.layoutPaintOrder})
       : layoutConfig = LayoutViewConfig(
-            paintOrder: LayoutViewPaintOrder.rangeAnnotation,
+            paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
 
