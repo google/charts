@@ -214,6 +214,8 @@ class SelectNearest<D> implements ChartBehavior<D> {
             .toList();
       case SelectionMode.single:
         return [SeriesDatum<D>(details.first.series, details.first.datum)];
+      default:
+        return null;
     }
   }
 

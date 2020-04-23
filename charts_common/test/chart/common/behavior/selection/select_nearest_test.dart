@@ -110,7 +110,7 @@ void main() {
         id: 'mySeries1',
         data: ['myDatum1', 'myDatum2', 'myDatum3'],
         domainFn: (_, int i) => _series1Data[i],
-        measureFn: (_, __) {}));
+        measureFn: (_, __) => null));
 
     _details1 = DatumDetails(
         datum: 'myDatum1',
@@ -137,7 +137,7 @@ void main() {
         id: 'mySeries2',
         data: ['myDatum1s2'],
         domainFn: (_, int i) => _series2Data[i],
-        measureFn: (_, __) {}));
+        measureFn: (_, __) => null));
 
     _details1Series2 = DatumDetails(
         datum: 'myDatum1s2',
@@ -474,7 +474,7 @@ void main() {
           id: 'overlappingSeries',
           data: ['datum1', 'datum2'],
           domainFn: (_, int i) => _series1Data[i],
-          measureFn: (_, __) {}));
+          measureFn: (_, __) => null));
       // Two points covering the mouse position.
       final details1 = DatumDetails(
           datum: 'datum1',
