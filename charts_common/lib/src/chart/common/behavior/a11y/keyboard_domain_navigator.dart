@@ -93,7 +93,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   }
 
   @protected
-  bool handleLeftArrow() {
+  bool handlePreviousDomain() {
     // Lazily initialize selection domains when a key is pressed after a draw.
     if (_datumPairs == null) {
       _generateSelectionDomains();
@@ -121,7 +121,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   }
 
   @protected
-  bool handleRightArrow() {
+  bool handleNextDomain() {
     // Lazily initialize selection domains when a key is pressed after a draw.
     if (_datumPairs == null) {
       _generateSelectionDomains();
