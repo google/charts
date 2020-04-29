@@ -58,6 +58,12 @@ class GestureListener {
   /// Called when a mouse hovers over the chart. (No tap event).
   final GestureSinglePointCallback onHover;
 
+  /// Called when the chart is focused.
+  final GestureCallback onFocus;
+
+  /// Called when the chart is blured.
+  final GestureCallback onBlur;
+
   /// Called when the tap event has moved beyond a threshold indicating that
   /// the user is dragging.
   ///
@@ -82,20 +88,23 @@ class GestureListener {
   final GestureDragUpdateCallback onDragUpdate;
   final GestureDragEndCallback onDragEnd;
 
-  GestureListener(
-      {GestureSinglePointCallback onTapTest,
-      GestureCancelCallback onTapCancel,
-      this.onLongPress,
-      this.onTap,
-      this.onHover,
-      this.onDragStart,
-      this.onDragUpdate,
-      this.onDragEnd})
-      : this.onTapTest = onTapTest ?? defaultTapTest,
+  GestureListener({
+    GestureSinglePointCallback onTapTest,
+    GestureCancelCallback onTapCancel,
+    this.onLongPress,
+    this.onTap,
+    this.onHover,
+    this.onDragStart,
+    this.onDragUpdate,
+    this.onDragEnd,
+    this.onFocus,
+    this.onBlur,
+  })  : this.onTapTest = onTapTest ?? defaultTapTest,
         this.onTapCancel = onTapCancel ?? defaultTapCancel;
 }
 
 typedef GestureCancelCallback = void Function();
+typedef GestureCallback = bool Function();
 typedef GestureSinglePointCallback = bool Function(Point<double> localPosition);
 
 typedef GestureDragStartCallback = bool Function(Point<double> localPosition);
