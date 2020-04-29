@@ -113,6 +113,16 @@ class ProxyGestureListener {
         listener.onDragEnd(localPosition, scale, pixelsPerSecond));
   }
 
+  bool onFocus() {
+    return _listeners.any((GestureListener listener) =>
+        listener.onFocus != null && listener.onFocus());
+  }
+
+  bool onBlur() {
+    return _listeners.any((GestureListener listener) =>
+        listener.onBlur != null && listener.onBlur());
+  }
+
   List<GestureListener> _cancel(
       {List<GestureListener> all, List<GestureListener> keep}) {
     all.forEach((GestureListener listener) {
