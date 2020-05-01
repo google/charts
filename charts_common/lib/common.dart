@@ -19,7 +19,7 @@ export 'src/chart/bar/bar_label_decorator.dart'
     show BarLabelAnchor, BarLabelDecorator, BarLabelPlacement, BarLabelPosition;
 export 'src/chart/bar/bar_lane_renderer_config.dart' show BarLaneRendererConfig;
 export 'src/chart/bar/bar_renderer.dart'
-    show BarRenderer, ImmutableBarRendererElement;
+    show BarRenderer, BarRendererElement, ImmutableBarRendererElement;
 export 'src/chart/bar/bar_renderer_config.dart'
     show
         BarRendererConfig,
@@ -260,5 +260,5 @@ export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;
 export 'src/common/text_style.dart' show TextStyle;
-export 'src/data/series.dart' show Series, TypedAccessorFn;
+export 'src/data/series.dart' show AttributeKey, Series, TypedAccessorFn;
 export 'src/data/tree.dart' show Tree, TreeNode;
