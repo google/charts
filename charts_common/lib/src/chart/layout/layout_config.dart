@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show min;
+
 /// Collection of configurations that apply to the [LayoutManager].
 class LayoutConfig {
   final MarginSpec leftSpec;
@@ -97,25 +99,41 @@ class MarginSpec {
 
   /// Get the min pixels, given the [totalPixels].
   int getMinPixels(int totalPixels) {
-    if (_minPixel != null) {
-      assert(_minPixel < totalPixels);
-      return _minPixel;
-    } else if (_minPercent != null) {
-      return (totalPixels * (_minPercent / 100)).round();
-    } else {
-      return 0;
+    int result;
+
+    if (totalPixels == null) {
+      totalPixels = 0;
     }
+
+    // All paths must set result
+    if (_minPixel != null) {
+      result = min(_minPixel, totalPixels);
+    } else if (_minPercent != null) {
+      result = (totalPixels * (_minPercent / 100)).round();
+    } else {
+      result = 0;
+    }
+
+    return result >= 0 ? result : 0;
   }
 
   /// Get the max pixels, given the [totalPixels].
   int getMaxPixels(int totalPixels) {
-    if (_maxPixel != null) {
-      assert(_maxPixel < totalPixels);
-      return _maxPixel;
-    } else if (_maxPercent != null) {
-      return (totalPixels * (_maxPercent / 100)).round();
-    } else {
-      return totalPixels;
+    int result;
+
+    if (totalPixels == null) {
+      totalPixels = 0;
     }
+
+    // All paths must set result
+    if (_maxPixel != null) {
+      result = min(_maxPixel, totalPixels);
+    } else if (_maxPercent != null) {
+      result = (totalPixels * (_maxPercent / 100)).round();
+    } else {
+      result = totalPixels;
+    }
+
+    return result >= 0 ? result : 0;
   }
 }
