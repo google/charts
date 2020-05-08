@@ -255,7 +255,8 @@ export 'src/common/symbol_renderer.dart'
         PointSymbolRenderer,
         RectSymbolRenderer,
         RoundedRectSymbolRenderer,
-        SymbolRenderer;
+        SymbolRenderer,
+        TriangleSymbolRenderer;
 export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;
