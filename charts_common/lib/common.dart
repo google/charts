@@ -100,10 +100,16 @@ export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
 export 'src/chart/cartesian/axis/spec/tick_spec.dart' show TickSpec;
 export 'src/chart/cartesian/axis/tick_formatter.dart'
     show SimpleTickFormatterBase, TickFormatter;
+export 'src/chart/cartesian/axis/time/auto_adjusting_date_time_tick_provider.dart'
+    show AutoAdjustingDateTimeTickProvider;
+export 'src/chart/cartesian/axis/time/base_time_stepper.dart'
+    show BaseTimeStepper;
 export 'src/chart/cartesian/axis/time/date_time_extents.dart'
     show DateTimeExtents;
 export 'src/chart/cartesian/axis/time/date_time_tick_formatter.dart'
     show DateTimeTickFormatter;
+export 'src/chart/cartesian/axis/time/time_range_tick_provider_impl.dart'
+    show TimeRangeTickProviderImpl;
 export 'src/chart/cartesian/cartesian_chart.dart'
     show CartesianChart, NumericCartesianChart, OrdinalCartesianChart;
 export 'src/chart/cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
