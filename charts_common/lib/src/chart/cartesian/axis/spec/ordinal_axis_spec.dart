@@ -177,7 +177,7 @@ class FixedPixelSpaceOrdinalScaleSpec implements OrdinalScaleSpec {
   }
 
   @override
-  bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
+  bool operator ==(Object other) => other is FixedPixelSpaceOrdinalScaleSpec;
 
   @override
   int get hashCode => 37;
@@ -198,7 +198,7 @@ class FixedPixelOrdinalScaleSpec implements OrdinalScaleSpec {
   }
 
   @override
-  bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
+  bool operator ==(Object other) => other is FixedPixelOrdinalScaleSpec;
 
   @override
   int get hashCode => 37;
