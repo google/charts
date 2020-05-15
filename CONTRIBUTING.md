@@ -1,2 +1,3 @@
-This project is developed internally at Google and published for external
-consumption, external contributions unfortunately cannot be taken at this time.
+This project is a fork of https://gitbhub.com/google/charrts
+with enhancements by the exafree community. External contributions
+are very welcome.

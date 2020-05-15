@@ -1,29 +1,9 @@
-Charts is a general charting library, currently enabled for the
-[Flutter mobile UI framework](https://flutter.io).
+# Charts Community
 
-See the [online gallery](https://google.github.io/charts/flutter/gallery.html) for supported chart
-types and examples of how to custom components of the chart.
+Charts_community is a fork of [google/charts](https://github.com/google/charts)
 
-*Note*: This is not an official Google product.
+This is necessary as Google is not currently accepting pull requests and there are bugs and features the community feels need to be added.
 
-[![Travis CI Build Status](https://travis-ci.org/google/charts.svg?branch=master)](https://travis-ci.org/google/charts)
+The current proposal is that the master branch of this repo will always be exactly the same as a commit on the master branch of google/charts and will be synchronized with the most current commit as soon as practical. The master branch will then be merged with our release and development branches ASAP. A new release will be created soon thereafter.
 
-## charts_common
-
-[![charts_common pub package](https://img.shields.io/pub/v/charts_common.svg)](https://pub.dartlang.org/packages/charts_common)
-
-A common library for charting packages.
-
-## charts_flutter
-
-[![charts_flutter pub package](https://img.shields.io/pub/v/charts_flutter.svg)](https://pub.dartlang.org/packages/charts_flutter)
-
-A charting package for [Flutter](https://flutter.io), supporting both Android
-and iOS.
-
-All charts packages are licensed under the Apache 2 license, see the
-[LICENSE](LICENSE) and [AUTHORS](AUTHORS) files for details.
-
-## Development
-This project is developed internally at Google and published for external
-consumption, external contributions unfortunately cannot be taken at this time.
+The version number of charts_community will follow Dart’s [package versioning](https://dart.dev/tools/pub/versioning) spec and the value will be the same as google/charts except the minor version field will be incremented by 1 and the patch field will be 0. This means that the charts_community public API will **always** be backwards compatible with google/charts but have new functionality or improvements as stated in [semver spec](https://semver.org/spec/v2.0.0-rc.1.html) rule 8.
