@@ -18,6 +18,7 @@ import 'package:charts_common/src/chart/cartesian/axis/spec/date_time_axis_spec.
 import 'package:charts_common/src/chart/cartesian/axis/spec/ordinal_axis_spec.dart';
 import 'package:charts_common/src/chart/cartesian/axis/spec/numeric_axis_spec.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
+import 'package:charts_common/src/common/date_time_factory.dart';
 import 'package:charts_common/src/chart/time_series/time_series_chart.dart';
 import 'package:charts_common/src/common/graphics_factory.dart';
 
@@ -53,7 +54,7 @@ class FakeOrdinalChart extends OrdinalCartesianChart {
 }
 
 class FakeTimeSeries extends TimeSeriesChart {
-  FakeTimeSeries() {
+  FakeTimeSeries() : super(dateTimeFactory: const LocalDateTimeFactory()) {
     context = MockContext();
     graphicsFactory = MockGraphicsFactory();
   }
