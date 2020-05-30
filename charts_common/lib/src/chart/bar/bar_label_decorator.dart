@@ -311,12 +311,18 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
 
         switch (anchor) {
           case BarLabelAnchor.middle:
-            labelX = (bounds.left +
-                    bounds.width / 2 -
-                    labelElement.measurement.horizontalSliceWidth / 2)
-                .round();
-            labelElement.textDirection =
-                rtl ? TextDirection.rtl : TextDirection.ltr;
+            labelElement.textDirection = rtl ? TextDirection.rtl : TextDirection.ltr;
+            if (rtl) {
+              labelX = (bounds.right -
+                  bounds.width / 2 +
+                  labelElement.measurement.horizontalSliceWidth / 2)
+                  .round();
+            } else {
+              labelX = (bounds.left +
+                  bounds.width / 2 -
+                  labelElement.measurement.horizontalSliceWidth / 2)
+                  .round();
+            }
             break;
 
           case BarLabelAnchor.end:
@@ -336,13 +342,20 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         }
       } else {
         // calculatedLabelPosition == LabelPosition.outside
+        labelElement.textDirection = rtl ? TextDirection.rtl : TextDirection.ltr;
         if (measure < 0 &&
             labelPlacement == BarLabelPlacement.opposeAxisBaseline) {
-          labelX = bounds.left - labelPadding;
-          labelElement.textDirection = TextDirection.rtl;
+          if(rtl){
+            labelX = bounds.right + labelPadding;
+          }else{
+            labelX = bounds.left - labelPadding;
+          }
         } else {
-          labelX = bounds.right + labelPadding;
-          labelElement.textDirection = TextDirection.ltr;
+          if(rtl){
+            labelX = bounds.left - labelPadding;
+          }else{
+            labelX = bounds.right + labelPadding;
+          }
         }
       }
 
