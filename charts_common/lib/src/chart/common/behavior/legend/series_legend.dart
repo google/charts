@@ -36,6 +36,9 @@ class SeriesLegend<D> extends Legend<D> {
   /// List of series IDs that should be hidden by default.
   List<String> _defaultHiddenSeries;
 
+  /// List of series IDs that should not be hideable.
+  List<String> _alwaysVisibleSeries;
+
   /// Whether or not the series legend should show measures on datum selection.
   bool _showMeasures;
 
@@ -77,6 +80,22 @@ class SeriesLegend<D> extends Legend<D> {
   /// Gets a list of series IDs that should be hidden by default on first chart
   /// draw.
   List<String> get defaultHiddenSeries => _defaultHiddenSeries;
+
+  /// Sets a list of series IDs that should always be visible and therefore
+  /// cannot be hidden.
+  ///
+  /// This also shows any series that should always be visible in case
+  /// it was previously hidden.
+  set alwaysVisibleSeries(List<String> alwaysVisibleSeries) {
+    _alwaysVisibleSeries = alwaysVisibleSeries;
+
+    if (_alwaysVisibleSeries != null) {
+      _alwaysVisibleSeries.forEach(showSeries);
+    }
+  }
+
+  /// Gets a list of series IDs that should always be visible.
+  List<String> get alwaysVisibleSeries => _alwaysVisibleSeries;
 
   /// Whether or not the legend should show measures.
   ///
@@ -152,7 +171,9 @@ class SeriesLegend<D> extends Legend<D> {
   /// that it is hidden.
   @protected
   void hideSeries(String seriesId) {
-    _hiddenSeriesList.add(seriesId);
+    if (!isSeriesAlwaysVisible(seriesId)) {
+      _hiddenSeriesList.add(seriesId);
+    }
   }
 
   /// Shows the data for a series on the chart by [seriesId].
@@ -167,5 +188,11 @@ class SeriesLegend<D> extends Legend<D> {
   /// Returns whether or not a given series [seriesId] is currently hidden.
   bool isSeriesHidden(String seriesId) {
     return _hiddenSeriesList.contains(seriesId);
+  }
+
+  /// Returns whether or not a given series is always visible.
+  bool isSeriesAlwaysVisible(String seriesId) {
+    return _alwaysVisibleSeries != null &&
+        _alwaysVisibleSeries.contains(seriesId);
   }
 }
