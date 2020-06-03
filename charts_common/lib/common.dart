@@ -38,15 +38,20 @@ export 'src/chart/cartesian/axis/axis.dart'
         measureAxisIdKey,
         measureAxisKey,
         Axis,
+        AxisOrientation,
         NumericAxis,
         OrdinalAxis,
         OrdinalViewport;
+export 'src/chart/cartesian/axis/draw_strategy/base_tick_draw_strategy.dart'
+    show BaseRenderSpec, BaseTickDrawStrategy;
 export 'src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
     show NoneRenderSpec;
 export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
+export 'src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart'
+    show TickDrawStrategy;
 export 'src/chart/cartesian/axis/numeric_extents.dart' show NumericExtents;
 export 'src/chart/cartesian/axis/spec/axis_spec.dart'
     show
@@ -98,6 +103,7 @@ export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
 export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
     show PercentAxisSpec;
 export 'src/chart/cartesian/axis/spec/tick_spec.dart' show TickSpec;
+export 'src/chart/cartesian/axis/tick.dart' show Tick;
 export 'src/chart/cartesian/axis/tick_formatter.dart'
     show SimpleTickFormatterBase, TickFormatter;
 export 'src/chart/cartesian/axis/time/auto_adjusting_date_time_tick_provider.dart'
