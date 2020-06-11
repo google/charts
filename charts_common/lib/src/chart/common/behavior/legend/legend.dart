@@ -77,6 +77,11 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   List<MutableSeries<D>> _currentSeriesList;
 
+  /// List of series IDs in the order the series should appear in the legend.
+  /// Series that are not specified in the ordering will be sorted
+  /// alphabetically at the bottom.
+  List<String> _customEntryOrder;
+
   /// Save this in order to check if series list have changed and regenerate
   /// the legend entries.
   List<MutableSeries<D>> _postProcessSeriesList;
@@ -148,6 +153,10 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     _titleTextStyle = titleTextStyle;
   }
 
+  set customEntryOrder(List<String> customEntryOrder) {
+    _customEntryOrder = customEntryOrder;
+  }
+
   /// Configures the behavior of the legend when the user taps/clicks on an
   /// entry. Defaults to no behavior.
   ///
@@ -204,6 +213,22 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     // Also update legend entries if the series list has changed.
     if (legendState._selectionModel != selectionModel ||
         _postProcessSeriesList != seriesList) {
+      if (_customEntryOrder != null) {
+        _currentSeriesList.sort((a, b) {
+          final int a_index = _customEntryOrder.indexOf(a.id);
+          final int b_index = _customEntryOrder.indexOf(b.id);
+          if (a_index == -1) {
+            if (a_index == b_index) {
+              return a.displayName.compareTo(b.displayName);
+            }
+            return 1;
+          } else if (b_index == -1) {
+            return -1;
+          }
+          return a_index.compareTo(b_index);
+        });
+      }
+
       legendState._legendEntries =
           legendEntryGenerator.getLegendEntries(_currentSeriesList);
 
