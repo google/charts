@@ -37,11 +37,13 @@ import 'linear/linear_scale.dart' show LinearScale;
 import 'numeric_extents.dart' show NumericExtents;
 import 'numeric_scale.dart' show NumericScale;
 import 'numeric_tick_provider.dart' show NumericTickProvider;
+import 'ordinal_scale.dart' show OrdinalScale;
 import 'ordinal_tick_provider.dart' show OrdinalTickProvider;
+import 'range_axis_tick.dart' show RangeAxisTicks;
+import 'range_tick.dart' show RangeTick;
 import 'scale.dart'
     show MutableScale, RangeBandConfig, RangeBandType, ScaleOutputExtent, Scale;
 import 'simple_ordinal_scale.dart' show SimpleOrdinalScale;
-import 'ordinal_scale.dart' show OrdinalScale;
 import 'tick.dart' show Tick;
 import 'tick_formatter.dart'
     show TickFormatter, OrdinalTickFormatter, NumericTickFormatter;
@@ -349,7 +351,12 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
     // Add new ticks
     providedTicks?.forEach((tick) {
-      final animatedTick = AxisTicks<D>(tick);
+      AxisTicks animatedTick;
+      if (tick is RangeTick) {
+        animatedTick = RangeAxisTicks<D>(tick);
+      } else {
+        animatedTick = AxisTicks<D>(tick);
+      }
       if (_previousScale != null) {
         animatedTick.animateInFrom(_previousScale[tick.value].toDouble());
       }
