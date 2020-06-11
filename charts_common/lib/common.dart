@@ -48,6 +48,8 @@ export 'src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
     show NoneRenderSpec;
+export 'src/chart/cartesian/axis/draw_strategy/range_tick_draw_strategy.dart'
+    show RangeTickRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart'
@@ -98,10 +100,12 @@ export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
         OrdinalTickFormatterSpec,
         OrdinalTickProviderSpec,
         OrdinalScaleSpec,
+        RangeOrdinalTickProviderSpec,
         SimpleOrdinalScaleSpec,
         StaticOrdinalTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
     show PercentAxisSpec;
+export 'src/chart/cartesian/axis/spec/range_tick_spec.dart' show RangeTickSpec;
 export 'src/chart/cartesian/axis/spec/tick_spec.dart' show TickSpec;
 export 'src/chart/cartesian/axis/tick.dart' show Tick;
 export 'src/chart/cartesian/axis/tick_formatter.dart'
@@ -256,22 +260,3 @@ export 'src/common/line_style.dart' show LineStyle;
 export 'src/common/material_palette.dart' show MaterialPalette;
 export 'src/common/performance.dart' show Performance;
 export 'src/common/proxy_gesture_listener.dart' show ProxyGestureListener;
-export 'src/common/rtl_spec.dart' show AxisDirection, RTLSpec;
-export 'src/common/style/material_style.dart' show MaterialStyle;
-export 'src/common/style/style_factory.dart' show StyleFactory;
-export 'src/common/symbol_renderer.dart'
-    show
-        CircleSymbolRenderer,
-        CylinderSymbolRenderer,
-        LineSymbolRenderer,
-        PointSymbolRenderer,
-        RectSymbolRenderer,
-        RoundedRectSymbolRenderer,
-        SymbolRenderer,
-        TriangleSymbolRenderer;
-export 'src/common/text_element.dart'
-    show TextElement, TextDirection, MaxWidthStrategy;
-export 'src/common/text_measurement.dart' show TextMeasurement;
-export 'src/common/text_style.dart' show TextStyle;
-export 'src/data/series.dart' show AttributeKey, Series, TypedAccessorFn;
-export 'src/data/tree.dart' show Tree, TreeNode;
