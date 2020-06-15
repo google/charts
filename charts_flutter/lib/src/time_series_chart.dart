@@ -82,7 +82,8 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
         layoutConfig: layoutConfig?.commonLayoutConfig,
         primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
         secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
-        disjointMeasureAxes: createDisjointMeasureAxes());
+        disjointMeasureAxes: createDisjointMeasureAxes(),
+        dateTimeFactory: dateTimeFactory);
   }
 
   @override
