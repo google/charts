@@ -13,6 +13,8 @@ dependencies:
   logging: any
   meta: ^1.1.1
   vector_math: ^2.0.8
+  timezone: ^0.5.7
+
 
 dev_dependencies:
   mockito: ^4.0.0

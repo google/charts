@@ -14,19 +14,12 @@
 // limitations under the License.
 
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:timezone/timezone.dart' as tz;
 
 /// Interface for factory that creates [DateTime] and [DateFormat].
 ///
 /// This allows for creating of locale specific date time and date format.
 abstract class DateTimeFactory {
-  // TODO: Per cbraun@, we need to allow setting the timezone that
-  // is used globally (along with other settings like which day the week starts
-  // on. Use DateTimeFactory - either return a local DateTime or a UTC date time
-  // based on the setting.
-
-  // TODO: We need to incorporate the time zoned calendar here
-  // because Dart DateTime doesn't do this. TZDateTime implements DateTime, so
-  // we can use DateTime as the interface.
   DateTime createDateTimeFromMilliSecondsSinceEpoch(int millisecondsSinceEpoch);
 
   DateTime createDateTime(int year,
@@ -96,3 +89,25 @@ class UTCDateTimeFactory implements DateTimeFactory {
     return DateFormat(pattern);
   }
 }
+
+/// A TimeZone aware time [DateTimeFactory].
+class TimeZoneAwareDateTimeFactory implements DateTimeFactory {
+  final tz.Location location;
+
+  const TimeZoneAwareDateTimeFactory(this.location) : assert(location != null);
+
+  DateTime createDateTimeFromMilliSecondsSinceEpoch(int millisecondsSinceEpoch) {
+    return tz.TZDateTime.fromMillisecondsSinceEpoch(location, millisecondsSinceEpoch);
+  }
+
+  DateTime createDateTime(int year,
+      [int month = 1, int day = 1, int hour = 0, int minute = 0, int second = 0, int millisecond = 0, int microsecond = 0]) {
+    return tz.TZDateTime(location, year, month, day, hour, minute, second, millisecond, microsecond);
+  }
+
+  /// Returns a [DateFormat].
+  DateFormat createDateFormat(String pattern) {
+    return new DateFormat(pattern);
+  }
+}
+
