@@ -22,7 +22,8 @@ import 'package:charts_common/common.dart' as common
         NumericAxisSpec,
         Series,
         SeriesRendererConfig,
-        TimeSeriesChart;
+        TimeSeriesChart,
+        LocalDateTimeFactory;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'cartesian_chart.dart' show CartesianChart;
@@ -82,7 +83,8 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
         layoutConfig: layoutConfig?.commonLayoutConfig,
         primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
         secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
-        disjointMeasureAxes: createDisjointMeasureAxes());
+        disjointMeasureAxes: createDisjointMeasureAxes(),
+        dateTimeFactory: dateTimeFactory ?? const common.LocalDateTimeFactory());
   }
 
   @override
