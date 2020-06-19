@@ -53,6 +53,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<Color> colorFn;
   AccessorFn<List<int>> dashPatternFn;
   AccessorFn<Color> fillColorFn;
+  AccessorFn<Color> fillBackgroundColorPatternFn;
   AccessorFn<FillPatternType> fillPatternFn;
   AccessorFn<Color> patternColorFn;
   AccessorFn<num> radiusPxFn;
@@ -104,6 +105,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     colorFn = series.colorFn;
     dashPatternFn = series.dashPatternFn;
     fillColorFn = series.fillColorFn;
+    fillBackgroundColorPatternFn = series.fillBackgroundColorPatternFn;
     fillPatternFn = series.fillPatternFn;
     patternColorFn = series.patternColorFn;
     labelAccessorFn = series.labelAccessorFn ?? (i) => domainFn(i).toString();
@@ -147,6 +149,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     colorFn = other.colorFn;
     dashPatternFn = other.dashPatternFn;
     fillColorFn = other.fillColorFn;
+    fillBackgroundColorPatternFn = other.fillBackgroundColorPatternFn;
     fillPatternFn = other.fillPatternFn;
     patternColorFn = other.patternColorFn;
     labelAccessorFn = other.labelAccessorFn;
@@ -246,6 +249,8 @@ abstract class ImmutableSeries<D> {
   AccessorFn<List<int>> get dashPatternFn;
 
   AccessorFn<Color> get fillColorFn;
+
+  AccessorFn<Color> get fillBackgroundColorPatternFn;
 
   AccessorFn<Color> get patternColorFn;
 

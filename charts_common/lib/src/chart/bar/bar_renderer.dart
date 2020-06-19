@@ -137,6 +137,7 @@ class BarRenderer<D>
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       Color fillColor,
+      Color fillBackgroundColorPattern,
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
@@ -160,6 +161,7 @@ class BarRenderer<D>
           measureAxis: measureAxis,
           fillColor: fillColor,
           fillPattern: fillPattern,
+          fillBackgroundColorPattern: fillBackgroundColorPattern,
           strokeWidthPx: strokeWidthPx,
           barGroupIndex: barGroupIndex,
           previousBarGroupWeight: previousBarGroupWeight,
@@ -185,6 +187,7 @@ class BarRenderer<D>
       double measureAxisPosition,
       Color fillColor,
       FillPatternType fillPattern,
+      Color fillBackgroundColorPattern,
       double strokeWidthPx,
       int barGroupIndex,
       double previousBarGroupWeight,
@@ -197,6 +200,7 @@ class BarRenderer<D>
       ..dashPattern = dashPattern
       ..fillColor = fillColor
       ..fillPattern = fillPattern
+      ..fillBackgroundColorPattern = fillBackgroundColorPattern
       ..measureAxisPosition = measureAxisPosition
       ..roundPx = details.roundPx
       ..strokeWidthPx = strokeWidthPx
@@ -261,6 +265,7 @@ class BarRenderer<D>
       bars.add(CanvasRect(bounds,
           dashPattern: bar.dashPattern,
           fill: bar.fillColor,
+          fillBackgroundColorPattern: bar.fillBackgroundColorPattern,
           pattern: bar.fillPattern,
           stroke: bar.color,
           strokeWidthPx: bar.strokeWidthPx));

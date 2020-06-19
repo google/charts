@@ -148,6 +148,7 @@ class ChartCanvas implements common.ChartCanvas {
   void drawRect(Rectangle<num> bounds,
       {common.Color fill,
       common.FillPatternType pattern,
+      common.Color fillPatternBackground,
       common.Color stroke,
       double strokeWidthPx,
       Rectangle<num> drawAreaBounds}) {
@@ -166,7 +167,7 @@ class ChartCanvas implements common.ChartCanvas {
     switch (pattern) {
       case common.FillPatternType.forwardHatch:
         _drawForwardHatchPattern(fillRectBounds, canvas,
-            fill: fill, drawAreaBounds: drawAreaBounds);
+            fill: fill, drawAreaBounds: drawAreaBounds, background: fillPatternBackground);
         break;
 
       case common.FillPatternType.solid:
@@ -262,6 +263,7 @@ class ChartCanvas implements common.ChartCanvas {
       final segment = barStack.segments[barIndex];
       drawRect(segment.bounds,
           fill: segment.fill,
+          fillPatternBackground: segment.fillBackgroundColorPattern,
           pattern: segment.pattern,
           stroke: segment.stroke,
           strokeWidthPx: segment.strokeWidthPx,

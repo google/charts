@@ -23,6 +23,7 @@ class CanvasRect {
   final Rectangle<int> bounds;
   final List<int> dashPattern;
   final Color fill;
+  final Color fillBackgroundColorPattern;
   final FillPatternType pattern;
   final Color stroke;
   final double strokeWidthPx;
@@ -30,6 +31,7 @@ class CanvasRect {
   CanvasRect(this.bounds,
       {this.dashPattern,
       this.fill,
+      this.fillBackgroundColorPattern,
       this.pattern,
       this.stroke,
       this.strokeWidthPx});

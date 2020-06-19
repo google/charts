@@ -67,6 +67,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     seriesList.forEach((MutableSeries<D> series) {
       series.colorFn ??= (_) => _color;
       series.fillColorFn ??= (_) => _color;
+      series.fillBackgroundColorPatternFn ??= (_) => Color.white;
 
       // Fill in missing seriesColor values with the color of the first datum in
       // the series. Note that [Series.colorFn] should always return a color.
@@ -143,6 +144,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       Color fillColor,
+      Color fillBackgroundColorPattern,
       FillPatternType fillPattern,
       int barGroupIndex,
       double previousBarGroupWeight,
@@ -166,6 +168,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
           measureAxis: measureAxis,
           fillColor: fillColor,
           fillPattern: fillPattern,
+          fillBackgroundColorPattern: fillBackgroundColorPattern,
           strokeWidthPx: strokeWidthPx,
           barGroupIndex: barGroupIndex,
           previousBarGroupWeight: previousBarGroupWeight,
@@ -190,6 +193,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       Color fillColor,
+      Color fillBackgroundColorPattern,
       FillPatternType fillPattern,
       double strokeWidthPx,
       int barGroupIndex,
@@ -203,6 +207,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       ..dashPattern = dashPattern
       ..fillColor = fillColor
       ..fillPattern = fillPattern
+      ..fillBackgroundColorPattern = fillBackgroundColorPattern
       ..measureAxisPosition = measureAxisPosition
       ..roundEndCaps = details.roundEndCaps
       ..strokeWidthPx = strokeWidthPx
