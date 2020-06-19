@@ -12,3 +12,7 @@ dependencies:
   intl: ^0.15.2
 flutter:
   uses-material-design: true
+
+dependency_overrides:
+  charts_common:
+    path: ../../charts_common
