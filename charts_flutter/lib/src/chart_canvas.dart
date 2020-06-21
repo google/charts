@@ -33,6 +33,7 @@ import 'canvas/line_painter.dart' show LinePainter;
 import 'canvas/pie_painter.dart' show PiePainter;
 import 'canvas/point_painter.dart' show PointPainter;
 import 'canvas/polygon_painter.dart' show PolygonPainter;
+import 'dart:math' as math;
 
 class ChartCanvas implements common.ChartCanvas {
   /// Pixels to allow to overdraw above the draw area that fades to transparent.
@@ -396,13 +397,14 @@ class ChartCanvas implements common.ChartCanvas {
     // Get the longer side of the bounds here for the size of this square.
     final size = max(bounds.width, bounds.height);
 
+    final isVertical = bounds.height >= bounds.width;
+
     final x0 = bounds.left + size + fillWidthPx;
     final x1 = bounds.left - fillWidthPx;
-    final y0 = bounds.bottom - size - fillWidthPx;
-    final y1 = bounds.bottom + fillWidthPx;
-    final offset = 8;
+    final y0 = bounds.top + size + fillWidthPx;
+    final y1 = bounds.top - fillWidthPx;
 
-    final isVertical = bounds.height >= bounds.width;
+    final offset = 8;
 
     _linePainter ??= new LinePainter();
 
