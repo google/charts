@@ -388,6 +388,7 @@ class ChartCanvas implements common.ChartCanvas {
           drawAreaBounds.top.toDouble(), background);
     }
 
+    canvas.clipRect(_getRect(bounds), doAntiAlias: true);
     canvas.drawRect(_getRect(bounds), _paint);
 
     // As a simplification, we will treat the bounds as a large square and fill
