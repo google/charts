@@ -23,6 +23,7 @@ abstract class BaseBarRendererElement {
   num cumulativeTotal;
   List<int> dashPattern;
   Color fillColor;
+  Color fillBackgroundColorPattern;
   FillPatternType fillPattern;
   double measureAxisPosition;
   num measureOffset;
@@ -41,6 +42,9 @@ abstract class BaseBarRendererElement {
     fillColor = other.fillColor != null
         ? Color.fromOther(color: other.fillColor)
         : null;
+    fillBackgroundColorPattern = other.fillBackgroundColorPattern != null
+        ? Color.fromOther(color: other.fillBackgroundColorPattern)
+        : null;
     fillPattern = other.fillPattern;
     measureAxisPosition = other.measureAxisPosition;
     measureOffset = other.measureOffset;
@@ -55,6 +59,8 @@ abstract class BaseBarRendererElement {
     color = getAnimatedColor(previous.color, target.color, animationPercent);
     fillColor = getAnimatedColor(
         previous.fillColor, target.fillColor, animationPercent);
+    fillBackgroundColorPattern = getAnimatedColor(
+        previous.fillBackgroundColorPattern, target.fillBackgroundColorPattern, animationPercent);
     measureIsNull = target.measureIsNull;
     measureIsNegative = target.measureIsNegative;
   }

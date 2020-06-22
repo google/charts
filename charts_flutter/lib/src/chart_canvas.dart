@@ -33,6 +33,7 @@ import 'canvas/line_painter.dart' show LinePainter;
 import 'canvas/pie_painter.dart' show PiePainter;
 import 'canvas/point_painter.dart' show PointPainter;
 import 'canvas/polygon_painter.dart' show PolygonPainter;
+import 'dart:math' as math;
 
 class ChartCanvas implements common.ChartCanvas {
   /// Pixels to allow to overdraw above the draw area that fades to transparent.
@@ -148,6 +149,7 @@ class ChartCanvas implements common.ChartCanvas {
   void drawRect(Rectangle<num> bounds,
       {common.Color fill,
       common.FillPatternType pattern,
+      common.Color fillPatternBackground,
       common.Color stroke,
       double strokeWidthPx,
       Rectangle<num> drawAreaBounds}) {
@@ -166,7 +168,7 @@ class ChartCanvas implements common.ChartCanvas {
     switch (pattern) {
       case common.FillPatternType.forwardHatch:
         _drawForwardHatchPattern(fillRectBounds, canvas,
-            fill: fill, drawAreaBounds: drawAreaBounds);
+            fill: fill, drawAreaBounds: drawAreaBounds, background: fillPatternBackground);
         break;
 
       case common.FillPatternType.solid:
@@ -262,6 +264,7 @@ class ChartCanvas implements common.ChartCanvas {
       final segment = barStack.segments[barIndex];
       drawRect(segment.bounds,
           fill: segment.fill,
+          fillPatternBackground: segment.fillBackgroundColorPattern,
           pattern: segment.pattern,
           stroke: segment.stroke,
           strokeWidthPx: segment.strokeWidthPx,
@@ -386,6 +389,7 @@ class ChartCanvas implements common.ChartCanvas {
           drawAreaBounds.top.toDouble(), background);
     }
 
+    canvas.clipRect(_getRect(bounds), doAntiAlias: true);
     canvas.drawRect(_getRect(bounds), _paint);
 
     // As a simplification, we will treat the bounds as a large square and fill
@@ -393,13 +397,14 @@ class ChartCanvas implements common.ChartCanvas {
     // Get the longer side of the bounds here for the size of this square.
     final size = max(bounds.width, bounds.height);
 
+    final isVertical = bounds.height >= bounds.width;
+
     final x0 = bounds.left + size + fillWidthPx;
     final x1 = bounds.left - fillWidthPx;
-    final y0 = bounds.bottom - size - fillWidthPx;
-    final y1 = bounds.bottom + fillWidthPx;
-    final offset = 8;
+    final y0 = bounds.top + size + fillWidthPx;
+    final y1 = bounds.top - fillWidthPx;
 
-    final isVertical = bounds.height >= bounds.width;
+    final offset = 8;
 
     _linePainter ??= new LinePainter();
 

@@ -76,12 +76,15 @@ class PatternForwardHatchBarChart extends StatelessWidget {
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: desktopSalesData,
+        fillPatternFn: (OrdinalSales sales, _) =>
+        charts.FillPatternType.forwardHatch
       ),
       new charts.Series<OrdinalSales, String>(
         id: 'Tablet',
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: tableSalesData,
+        fillBackgroundColorPatternFn: (OrdinalSales sales, _) => charts.Color.transparent,
         fillPatternFn: (OrdinalSales sales, _) =>
             charts.FillPatternType.forwardHatch,
       ),
@@ -90,6 +93,9 @@ class PatternForwardHatchBarChart extends StatelessWidget {
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: mobileSalesData,
+        fillBackgroundColorPatternFn: (OrdinalSales sales, _) => charts.Color.black,
+        fillPatternFn: (OrdinalSales sales, _) =>
+        charts.FillPatternType.forwardHatch
       ),
     ];
   }
@@ -139,6 +145,7 @@ class PatternForwardHatchBarChart extends StatelessWidget {
         domainFn: (OrdinalSales sales, _) => sales.year,
         measureFn: (OrdinalSales sales, _) => sales.sales,
         data: tableSalesData,
+        fillBackgroundColorPatternFn: (OrdinalSales sales, _) => charts.Color.black,
         fillPatternFn: (OrdinalSales sales, _) =>
             charts.FillPatternType.forwardHatch,
       ),

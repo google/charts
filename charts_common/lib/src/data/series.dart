@@ -93,6 +93,7 @@ class Series<T, D> {
   /// [FillPatternType] beside `solid` is used. If not provided, then
   /// background color is used.
   final AccessorFn<Color> patternColorFn;
+  final AccessorFn<Color> fillBackgroundColorPatternFn;
 
   final AccessorFn<FillPatternType> fillPatternFn;
   final AccessorFn<num> radiusPxFn;
@@ -120,6 +121,7 @@ class Series<T, D> {
       TypedAccessorFn<T, D> domainUpperBoundFn,
       TypedAccessorFn<T, Color> fillColorFn,
       TypedAccessorFn<T, Color> patternColorFn,
+      TypedAccessorFn<T, Color> fillBackgroundColorPatternFn,
       TypedAccessorFn<T, FillPatternType> fillPatternFn,
       TypedAccessorFn<T, String> keyFn,
       TypedAccessorFn<T, String> labelAccessorFn,
@@ -159,6 +161,9 @@ class Series<T, D> {
     final _patternColorFn = patternColorFn == null
         ? null
         : (int index) => patternColorFn(data[index], index);
+    final _fillBackgroundColorPatternFn = fillBackgroundColorPatternFn == null
+        ? null
+        : (int index) => fillBackgroundColorPatternFn(data[index], index);
     final _fillPatternFn = fillPatternFn == null
         ? null
         : (int index) => fillPatternFn(data[index], index);
@@ -208,6 +213,7 @@ class Series<T, D> {
       fillPatternFn: _fillPatternFn,
       keyFn: _keyFn,
       patternColorFn: _patternColorFn,
+      fillBackgroundColorPatternFn: _fillBackgroundColorPatternFn,
       labelAccessorFn: _labelAccessorFn,
       insideLabelStyleAccessorFn: _insideLabelStyleAccessorFn,
       outsideLabelStyleAccessorFn: _outsideLabelStyleAccessorFn,
@@ -238,6 +244,7 @@ class Series<T, D> {
     this.fillColorFn,
     this.fillPatternFn,
     this.patternColorFn,
+    this.fillBackgroundColorPatternFn,
     this.keyFn,
     this.labelAccessorFn,
     this.insideLabelStyleAccessorFn,
