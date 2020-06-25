@@ -358,15 +358,13 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
         strokeWidthPx: rangeShadeStyle.strokeWidth.toDouble());
 
     // Draw the start and end boundaries of the range.
-    if (isFirst) {
-      canvas.drawLine(
-        points: [rangeStartTickStart, rangeStartTickEnd],
-        dashPattern: lineStyle.dashPattern,
-        fill: lineStyle.color,
-        stroke: lineStyle.color,
-        strokeWidthPx: lineStyle.strokeWidth.toDouble(),
-      );
-    }
+    canvas.drawLine(
+      points: [rangeStartTickStart, rangeStartTickEnd],
+      dashPattern: lineStyle.dashPattern,
+      fill: lineStyle.color,
+      stroke: lineStyle.color,
+      strokeWidthPx: lineStyle.strokeWidth.toDouble(),
+    );
     canvas.drawLine(
       points: [rangeEndTickStart, rangeEndTickEnd],
       dashPattern: lineStyle.dashPattern,
