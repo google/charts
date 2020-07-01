@@ -101,6 +101,10 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
       entry.formattedValue = formattedValue;
       entry.isSelected = selectionModel.selectedSeries
           .any((selectedSeries) => entry.series.id == selectedSeries.id);
+
+      // Set the current selected model index for legend entry.
+      entry.selectedDataIndexes =
+          selectionModel.selectedDatum.map((datum) => datum.index).toList();
     }
   }
 
