@@ -99,6 +99,7 @@ class LegendEntry<D> extends LegendEntryBase {
   final D domain;
   final Color color;
   double value;
+  List<int> selectedDataIndexes;
   String formattedValue;
   bool isSelected;
 
@@ -110,6 +111,7 @@ class LegendEntry<D> extends LegendEntryBase {
       this.datumIndex,
       this.domain,
       this.value,
+      this.selectedDataIndexes,
       this.color,
       this.isSelected = false,
       TextStyleSpec textStyle,
