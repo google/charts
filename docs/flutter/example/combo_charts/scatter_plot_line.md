@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a combo scatter plot chart with a second series rendered as a
 /// line.
 import 'package:charts_flutter/flutter.dart' as charts;

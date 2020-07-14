@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a percentage bar chart which shows each bar as the percentage of
 /// the total series measure value.
 import 'package:flutter/material.dart';

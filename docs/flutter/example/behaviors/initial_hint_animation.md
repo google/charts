@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of initial hint animation behavior.
 ///
 /// To see the animation, please run the example app and select

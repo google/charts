@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of timeseries chart that has a measure axis that does NOT include
 /// zero. It starts at 100 and goes to 140.
 import 'package:charts_flutter/flutter.dart' as charts;

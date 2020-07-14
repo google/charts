@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a scatter plot chart using custom symbols for the points.
 ///
 /// The series has been configured to draw each point as a square by default.

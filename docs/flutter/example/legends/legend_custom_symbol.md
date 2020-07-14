@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Bar chart with custom symbol in legend example.
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;

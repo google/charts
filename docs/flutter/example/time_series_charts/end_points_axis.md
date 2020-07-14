@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a time series chart with an end points domain axis.
 ///
 /// An end points axis generates two ticks, one at each end of the axis range.

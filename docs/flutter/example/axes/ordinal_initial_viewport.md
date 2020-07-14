@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of setting an initial viewport for ordinal axis.
 ///
 /// This allows for specifying the specific range of data to show that differs

@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of using user managed state to programmatically set selection.
 ///
 /// In this example, clicking the "clear selection" button sets the selection

@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of an ordinal combo chart with two series rendered as bars, and a
 /// third rendered as a line.
 import 'package:flutter/material.dart';

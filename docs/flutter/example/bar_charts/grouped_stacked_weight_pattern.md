@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a bar chart with grouped, stacked series oriented vertically with
 /// a custom weight pattern.
 ///

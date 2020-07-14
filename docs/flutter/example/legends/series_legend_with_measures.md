@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Bar chart with example of a legend with customized position, justification,
 /// desired max rows, and padding. These options are shown as an example of how
 /// to use the customizations, they do not necessary have to be used together in

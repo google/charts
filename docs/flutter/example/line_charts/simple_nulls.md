@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a line chart with null measure values.
 ///
 /// Null values will be visible as gaps in lines and area skirts. Any data

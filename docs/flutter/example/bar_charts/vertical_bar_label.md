@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Vertical bar chart with bar label renderer example.
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';

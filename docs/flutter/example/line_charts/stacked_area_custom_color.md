@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a stacked area chart with custom area colors.
 ///
 /// By default, the area skirt for a chart will be drawn with the same color as

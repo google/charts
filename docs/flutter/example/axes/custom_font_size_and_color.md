@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Custom Font Style Example
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;

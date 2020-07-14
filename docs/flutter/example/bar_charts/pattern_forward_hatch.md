@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Forward hatch pattern bar chart example.
 ///
 /// The second series of bars is rendered with a pattern by defining a

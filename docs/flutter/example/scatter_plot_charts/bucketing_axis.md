@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a scatter plot chart with a bucketing measure axis and a legend.
 ///
 /// A bucketing measure axis positions all values beneath a certain threshold

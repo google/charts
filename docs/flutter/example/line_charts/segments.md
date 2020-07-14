@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a stacked area chart with changing styles within each line.
 ///
 /// Each series of data in this example contains different values for color,
