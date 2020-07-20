@@ -382,13 +382,15 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   ///
   /// [drawAreaWidth] is the width of the draw area for the series data in pixel
   /// units, at minimum viewport scale level (1.0). When provided,
+  /// [drawAreaHeight] is the height of the draw area for the series data in
+  /// pixel units, at minimum viewport scale level (1.0). When provided,
   /// [viewportTranslatePx] will be clamped such that the axis cannot be panned
   /// beyond the bounds of the data.
   void setViewportSettings(double viewportScale, double viewportTranslatePx,
-      {int drawAreaWidth}) {
+      {int drawAreaWidth, int drawAreaHeight}) {
     // Don't let the viewport be panned beyond the bounds of the data.
     viewportTranslatePx = _clampTranslatePx(viewportScale, viewportTranslatePx,
-        drawAreaWidth: drawAreaWidth);
+        drawAreaWidth: drawAreaWidth, drawAreaHeight: drawAreaHeight);
 
     _scale.setViewportSettings(viewportScale, viewportTranslatePx);
   }
@@ -412,18 +414,28 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// the data.
   double _clampTranslatePx(
       double viewportScalingFactor, double viewportTranslatePx,
-      {int drawAreaWidth}) {
-    if (drawAreaWidth == null) {
-      return viewportTranslatePx;
+      {int drawAreaWidth, int drawAreaHeight}) {
+    if (isVertical) {
+      if (drawAreaHeight == null) {
+        return viewportTranslatePx;
+      }
+      // Bound the viewport translate to the range of the data.
+      final maxPositiveTranslate =
+          ((drawAreaHeight * viewportScalingFactor) - drawAreaHeight);
+
+      viewportTranslatePx =
+          max(min(viewportTranslatePx, maxPositiveTranslate), 0.0);
+    } else {
+      if (drawAreaWidth == null) {
+        return viewportTranslatePx;
+      }
+      // Bound the viewport translate to the range of the data.
+      final maxNegativeTranslate =
+          -1.0 * ((drawAreaWidth * viewportScalingFactor) - drawAreaWidth);
+
+      viewportTranslatePx =
+          min(max(viewportTranslatePx, maxNegativeTranslate), 0.0);
     }
-
-    // Bound the viewport translate to the range of the data.
-    final maxNegativeTranslate =
-        -1.0 * ((drawAreaWidth * viewportScalingFactor) - drawAreaWidth);
-
-    viewportTranslatePx =
-        min(max(viewportTranslatePx, maxNegativeTranslate), 0.0);
-
     return viewportTranslatePx;
   }
 
