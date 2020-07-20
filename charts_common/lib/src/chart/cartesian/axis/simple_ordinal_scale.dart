@@ -47,6 +47,17 @@ class SimpleOrdinalScale implements OrdinalScale {
   int _viewportDataSize;
   String _viewportStartingDomain;
 
+  // TODO: When there are horizontal bars increasing from where
+  // the domain and measure axis intersects but the desired behavior is
+  // flipped. The plan is to fix this by fixing code to flip the range in the
+  // code.
+  //
+  // If range start is less than range end, then the domain is calculated by
+  // adding the band width. If range start is greater than range end, then the
+  // domain is calculated by subtracting from the band width (ex. horizontal
+  // bar charts where first series is at the bottom of the chart).
+  bool get _isVertical => range.start > range.end;
+
   SimpleOrdinalScale() : _domain = OrdinalScaleDomainInfo();
 
   SimpleOrdinalScale._copy(SimpleOrdinalScale other)
@@ -194,9 +205,13 @@ class SimpleOrdinalScale implements OrdinalScale {
   @override
   void setViewportSettings(double viewportScale, double viewportTranslatePx) {
     _viewportScale = viewportScale;
-    _viewportTranslatePx =
-        min(0.0, max(rangeWidth * (1.0 - viewportScale), viewportTranslatePx));
-
+    if (_isVertical) {
+      _viewportTranslatePx = max(
+          min(-(rangeWidth * (1.0 - viewportScale)), viewportTranslatePx), 0);
+    } else {
+      _viewportTranslatePx =
+          min(max(rangeWidth * (1.0 - viewportScale), viewportTranslatePx), 0);
+    }
     _scaleChanged = true;
   }
 
@@ -223,14 +238,19 @@ class SimpleOrdinalScale implements OrdinalScale {
     }
 
     // Update the scale with zoom level to help find the correct translate.
-    setViewportSettings(
-        _domain.size / min(_viewportDataSize, _domain.size), 0.0);
+    setViewportSettings(_domain.size / min(_viewportDataSize, _domain.size),
+        _isVertical ? double.maxFinite : 0.0);
     _recalculateScale();
     final domainIndex = _domain.indexOf(_viewportStartingDomain);
     if (domainIndex != null) {
-      // Update the translate so that the scale starts half a step before the
-      // chosen domain.
-      final viewportTranslatePx = -(_cachedStepSizePixels * domainIndex);
+      var viewportTranslatePx = 0.0;
+      if (_isVertical) {
+        // Account for the domain values being reversed.
+        viewportTranslatePx =
+            ((_viewportDataSize - domainIndex - 1) * _cachedStepSizePixels);
+      } else {
+        viewportTranslatePx = -(_cachedStepSizePixels * domainIndex);
+      }
       setViewportSettings(_viewportScale, viewportTranslatePx);
     }
   }
@@ -241,7 +261,7 @@ class SimpleOrdinalScale implements OrdinalScale {
       _updateScale();
     }
 
-    return _domain.isEmpty ? 0 : (rangeWidth ~/ _cachedStepSizePixels);
+    return _domain.isEmpty ? 0 : (rangeWidth ~/ _cachedStepSizePixels.abs());
   }
 
   @override
@@ -252,8 +272,17 @@ class SimpleOrdinalScale implements OrdinalScale {
     if (_domain.isEmpty) {
       return null;
     }
-    return _domain.getDomainAtIndex(
-        (-_viewportTranslatePx / _cachedStepSizePixels).ceil().toInt());
+    if (_isVertical) {
+      // Get topmost visible index.
+      var index = (-(rangeWidth + _viewportTranslatePx) / _cachedStepSizePixels)
+              .ceil()
+              .toInt() -
+          1;
+      return _domain.getDomainAtIndex(index);
+    } else {
+      return _domain.getDomainAtIndex(
+          (-_viewportTranslatePx / _cachedStepSizePixels).ceil().toInt());
+    }
   }
 
   @override
@@ -288,16 +317,7 @@ class SimpleOrdinalScale implements OrdinalScale {
     _cachedRangeBandSize = rangeBandPixels;
     _cachedRangeBandShift = rangeBandShift;
 
-    // TODO: When there are horizontal bars increasing from where
-    // the domain and measure axis intersects but the desired behavior is
-    // flipped. The plan is to fix this by fixing code to flip the range in the
-    // code.
-
-    // If range start is less than range end, then the domain is calculated by
-    // adding the band width. If range start is greater than range end, then the
-    // domain is calculated by subtracting from the band width (ex. horizontal
-    // bar charts where first series is at the bottom of the chart).
-    if (range.start > range.end) {
+    if (_isVertical) {
       _cachedStepSizePixels *= -1;
       _cachedRangeBandShift *= -1;
     }
