@@ -26,8 +26,9 @@ import 'graphics_factory.dart' show GraphicsFactory;
 /// If you want to customize the symbol, then use [CustomSymbolRenderer].
 class SymbolRendererCanvas implements SymbolRendererBuilder {
   final common.SymbolRenderer commonSymbolRenderer;
+  final List<int> dashPattern;
 
-  SymbolRendererCanvas(this.commonSymbolRenderer);
+  SymbolRendererCanvas(this.commonSymbolRenderer, this.dashPattern);
 
   @override
   Widget build(BuildContext context,
@@ -39,8 +40,8 @@ class SymbolRendererCanvas implements SymbolRendererBuilder {
     return new SizedBox.fromSize(
         size: size,
         child: new CustomPaint(
-            painter:
-                new _SymbolCustomPaint(context, commonSymbolRenderer, color)));
+            painter: new _SymbolCustomPaint(
+                context, commonSymbolRenderer, color, dashPattern)));
   }
 }
 
@@ -84,8 +85,10 @@ class _SymbolCustomPaint extends CustomPainter {
   final BuildContext context;
   final common.SymbolRenderer symbolRenderer;
   final Color color;
+  final List<int> dashPattern;
 
-  _SymbolCustomPaint(this.context, this.symbolRenderer, this.color);
+  _SymbolCustomPaint(
+      this.context, this.symbolRenderer, this.color, this.dashPattern);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -95,7 +98,9 @@ class _SymbolCustomPaint extends CustomPainter {
         r: color.red, g: color.green, b: color.blue, a: color.alpha);
     symbolRenderer.paint(
         new ChartCanvas(canvas, GraphicsFactory(context)), bounds,
-        fillColor: commonColor, strokeColor: commonColor);
+        fillColor: commonColor,
+        strokeColor: commonColor,
+        dashPattern: dashPattern);
   }
 
   @override
