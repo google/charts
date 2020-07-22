@@ -16,6 +16,21 @@
 import 'dart:math' show max, min, sqrt;
 import 'package:vector_math/vector_math.dart' show Vector2;
 
+const _defaultEpsilon = 2e-10;
+
+/// Takes a value along with an upper and lower bound and returns whether or not
+/// the value falls inclusively within the bounds.
+///
+/// [value] The input number.
+/// [lowerBound] The lower bound.
+/// [upperBound] The upper bound.
+/// [epsilon] Maximum valid difference between [value] and the bounds. Defaults
+/// to 2e-10.
+bool withinBounds(num value, num lowerBound, num upperBound,
+    {double epsilon = _defaultEpsilon}) {
+  return value + epsilon >= lowerBound && value - epsilon <= upperBound;
+}
+
 /// Takes a number and clamps it to within the provided bounds.
 ///
 /// Returns the input number if it is within bounds, or the nearest number

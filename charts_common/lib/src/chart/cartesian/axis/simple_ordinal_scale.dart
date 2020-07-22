@@ -15,6 +15,8 @@
 
 import 'dart:math' show min, max;
 
+import 'package:charts_common/src/common/math.dart';
+
 import 'ordinal_scale.dart' show OrdinalScale;
 import 'ordinal_scale_domain_info.dart' show OrdinalScaleDomainInfo;
 import 'scale.dart'
@@ -287,7 +289,7 @@ class SimpleOrdinalScale implements OrdinalScale {
 
   @override
   bool isRangeValueWithinViewport(double rangeValue) {
-    return range != null && rangeValue >= range.min && rangeValue <= range.max;
+    return withinBounds(rangeValue, range.min, range.max);
   }
 
   @override

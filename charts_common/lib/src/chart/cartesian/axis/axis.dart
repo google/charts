@@ -340,8 +340,14 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
             animatedTick.textElement, tick.textElement)) {
           animatedTick.textElement = tick.textElement;
         }
-        // Update target for all existing ticks
-        animatedTick.setNewTarget(_scale[tick.value]);
+        var newTarget = _scale[tick.value];
+        if (_scale.isRangeValueWithinViewport(newTarget)) {
+          // Update target for all existing ticks
+          animatedTick.setNewTarget(newTarget);
+        } else {
+          // Animate out ticks that are outside the viewport.
+          animatedTick.animateOut(animatedTick.locationPx);
+        }
         providedTicks.remove(tick);
       } else {
         // Animate out ticks that do not exist any more.
@@ -357,10 +363,12 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       } else {
         animatedTick = AxisTicks<D>(tick);
       }
-      if (_previousScale != null) {
-        animatedTick.animateInFrom(_previousScale[tick.value].toDouble());
+      if (_scale.isRangeValueWithinViewport(animatedTick.locationPx)) {
+        if (_previousScale != null) {
+          animatedTick.animateInFrom(_previousScale[tick.value].toDouble());
+        }
+        _axisTicks.add(animatedTick);
       }
-      _axisTicks.add(animatedTick);
     });
 
     _axisTicks.sort();
