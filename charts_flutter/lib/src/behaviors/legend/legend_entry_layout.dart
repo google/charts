@@ -49,7 +49,8 @@ class SimpleLegendEntryLayout implements LegendEntryLayout {
     final SymbolRendererBuilder symbolRendererBuilder =
         legendEntry.symbolRenderer is SymbolRendererBuilder
             ? legendEntry.symbolRenderer
-            : new SymbolRendererCanvas(legendEntry.symbolRenderer);
+            : new SymbolRendererCanvas(
+                legendEntry.symbolRenderer, legendEntry.dashPattern);
 
     return new GestureDetector(
         child: symbolRendererBuilder.build(
