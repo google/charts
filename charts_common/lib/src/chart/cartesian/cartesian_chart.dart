@@ -254,7 +254,11 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   /// Sets the secondary measure axis for the chart, rendered on the end side of
   /// the domain axis.
   set secondaryMeasureAxisSpec(AxisSpec axisSpec) {
-    axisSpec.configure(_secondaryMeasureAxis, context, graphicsFactory);
+    if (axisSpec != null) {
+      axisSpec.configure(_secondaryMeasureAxis, context, graphicsFactory);
+    } else {
+      _secondaryMeasureAxis.resetDefaultConfiguration();
+    }
   }
 
   /// Sets a map of disjoint measure axes for the chart.
@@ -304,7 +308,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   Map<String, List<MutableSeries<D>>> preprocessSeries(
       List<MutableSeries<D>> seriesList) {
     var rendererToSeriesList = super.preprocessSeries(seriesList);
-
+    _useSecondaryMeasureAxis = false;
     // Check if primary or secondary measure axis is being used.
     for (final series in seriesList) {
       final measureAxisId = series.getAttr(measureAxisIdKey);
