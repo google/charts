@@ -122,6 +122,24 @@ abstract class BaseChart<D> {
     configurationChanged();
   }
 
+  bool _chartIsDirty = false;
+
+  /// If the chart configuration has changed and requires a redraw.
+  bool get chartIsDirty => _chartIsDirty;
+
+  /// Resets the chart dirty flag to `false`.
+  void resetChartDirtyFlag() {
+    _chartIsDirty = false;
+  }
+
+  /// Marks the chart as dirty.
+  ///
+  /// When a chart axis or configurable is changed and will require a redraw
+  /// next frame the chart must be marked dirty.
+  void markChartDirty() {
+    _chartIsDirty = true;
+  }
+
   /// Finish configuring components that require context and graphics factory.
   ///
   /// Some components require context and graphics factory to be set again when

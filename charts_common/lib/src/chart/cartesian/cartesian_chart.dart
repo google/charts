@@ -124,11 +124,23 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   /// called.
   AxisSpec<D> _newDomainAxisSpec;
 
-  final Axis<num> _primaryMeasureAxis;
+  AxisSpec<num> _primaryMeasureAxisSpec;
 
-  final Axis<num> _secondaryMeasureAxis;
+  AxisSpec<num> _newPrimaryMeasureAxisSpec;
 
-  final LinkedHashMap<String, NumericAxis> _disjointMeasureAxes;
+  Axis<num> _primaryMeasureAxis;
+
+  AxisSpec<num> _secondaryMeasureAxisSpec;
+
+  AxisSpec<num> _newSecondaryMeasureAxixSpec;
+
+  Axis<num> _secondaryMeasureAxis;
+
+  LinkedHashMap<String, AxisSpec> _disjointMeasureAxesSpec;
+
+  LinkedHashMap<String, AxisSpec> _newDisjointMeasureAxesSpec;
+
+  LinkedHashMap<String, NumericAxis> _disjointMeasureAxes;
 
   /// If set to true, the vertical axis will render the opposite of the default
   /// direction.
@@ -202,6 +214,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   @override
   void configurationChanged() {
     if (_newDomainAxis != null) {
+      markChartDirty();
       if (_domainAxis != null) {
         removeView(_domainAxis);
       }
@@ -219,9 +232,75 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     }
 
     if (_newDomainAxisSpec != null) {
+      markChartDirty();
       _domainAxisSpec = _newDomainAxisSpec;
       _newDomainAxisSpec.configure(_domainAxis, context, graphicsFactory);
       _newDomainAxisSpec = null;
+    }
+
+    if (_primaryMeasureAxisSpec != _newPrimaryMeasureAxisSpec) {
+      markChartDirty();
+      _primaryMeasureAxisSpec = _newPrimaryMeasureAxisSpec;
+      removeView(_primaryMeasureAxis);
+
+      if (_primaryMeasureAxisSpec != null) {
+        _primaryMeasureAxis = _primaryMeasureAxisSpec.createAxis();
+      } else {
+        _primaryMeasureAxis = NumericAxis();
+      }
+
+      _primaryMeasureAxis.tickDrawStrategy = GridlineRendererSpec<num>()
+          .createDrawStrategy(context, graphicsFactory);
+      _primaryMeasureAxis.layoutPaintOrder ??= LayoutViewPaintOrder.measureAxis;
+
+      if (_primaryMeasureAxisSpec != null) {
+        _primaryMeasureAxisSpec.configure(
+            _primaryMeasureAxis, context, graphicsFactory);
+      }
+      addView(_primaryMeasureAxis);
+    }
+
+    if (_secondaryMeasureAxisSpec != _newSecondaryMeasureAxixSpec) {
+      markChartDirty();
+      _secondaryMeasureAxisSpec = _newSecondaryMeasureAxixSpec;
+      removeView(_secondaryMeasureAxis);
+
+      if (_secondaryMeasureAxisSpec != null) {
+        _secondaryMeasureAxis = _secondaryMeasureAxisSpec.createAxis();
+      } else {
+        _secondaryMeasureAxis = NumericAxis();
+      }
+
+      _secondaryMeasureAxis.tickDrawStrategy = GridlineRendererSpec<num>()
+          .createDrawStrategy(context, graphicsFactory);
+      _secondaryMeasureAxis.layoutPaintOrder ??=
+          LayoutViewPaintOrder.measureAxis;
+
+      if (_secondaryMeasureAxisSpec != null) {
+        _secondaryMeasureAxisSpec.configure(
+            _secondaryMeasureAxis, context, graphicsFactory);
+      }
+      addView(_secondaryMeasureAxis);
+    }
+
+    if (_disjointMeasureAxesSpec != _newDisjointMeasureAxesSpec) {
+      markChartDirty();
+      _disjointMeasureAxesSpec = _newDisjointMeasureAxesSpec;
+      _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
+        removeView(axis);
+      });
+
+      _disjointMeasureAxes = LinkedHashMap<String, NumericAxis>();
+      if (_disjointMeasureAxesSpec != null) {
+        _disjointMeasureAxesSpec.forEach((String axisId, AxisSpec axisSpec) {
+          _disjointMeasureAxes[axisId] = axisSpec.createAxis();
+          _disjointMeasureAxes[axisId].tickDrawStrategy =
+              NoneDrawStrategy<num>(context, graphicsFactory);
+          axisSpec.configure(
+              _disjointMeasureAxes[axisId], context, graphicsFactory);
+          addView(_disjointMeasureAxes[axisId]);
+        });
+      }
     }
   }
 
@@ -244,20 +323,27 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     return axis;
   }
 
-  // TODO: Change measure axis spec to create new measure axis.
   /// Sets the primary measure axis for the chart, rendered on the start side of
   /// the domain axis.
   set primaryMeasureAxisSpec(AxisSpec axisSpec) {
-    axisSpec.configure(_primaryMeasureAxis, context, graphicsFactory);
+    _newPrimaryMeasureAxisSpec = axisSpec;
+
+    // Must set the spec to the current axis instance in the case of
+    // errant reads that expect the spec to be changed.
+    if (axisSpec != null && _primaryMeasureAxis != null) {
+      axisSpec.configure(_primaryMeasureAxis, context, graphicsFactory);
+    }
   }
 
   /// Sets the secondary measure axis for the chart, rendered on the end side of
   /// the domain axis.
   set secondaryMeasureAxisSpec(AxisSpec axisSpec) {
-    if (axisSpec != null) {
+    _newSecondaryMeasureAxixSpec = axisSpec;
+
+    // Must set the spec to the current axis instance in the case of
+    // errant reads that expect the spec to be changed.
+    if (axisSpec != null && _secondaryMeasureAxis != null) {
       axisSpec.configure(_secondaryMeasureAxis, context, graphicsFactory);
-    } else {
-      _secondaryMeasureAxis.resetDefaultConfiguration();
     }
   }
 
@@ -279,10 +365,18 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   /// A [LinkedHashMap] is used to ensure consistent ordering when painting the
   /// axes.
   set disjointMeasureAxisSpecs(LinkedHashMap<String, AxisSpec> axisSpecs) {
-    axisSpecs.forEach((String axisId, AxisSpec axisSpec) {
-      axisSpec.configure(
-          _disjointMeasureAxes[axisId], context, graphicsFactory);
-    });
+    _newDisjointMeasureAxesSpec = axisSpecs;
+
+    // Must set the spec to the current axis instance in the case of
+    // errant reads that expect the spec to be changed.
+    if (axisSpecs != null && _disjointMeasureAxes != null) {
+      axisSpecs.forEach((String axisId, AxisSpec axisSpec) {
+        if (_disjointMeasureAxes.containsKey(axisId)) {
+          axisSpec.configure(
+              _disjointMeasureAxes[axisId], context, graphicsFactory);
+        }
+      });
+    }
   }
 
   @override

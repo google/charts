@@ -88,20 +88,17 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       chartState.markChartDirty();
     }
 
-    if (primaryMeasureAxis != null &&
-        primaryMeasureAxis != prev?.primaryMeasureAxis) {
+    if (primaryMeasureAxis != prev?.primaryMeasureAxis) {
       chart.primaryMeasureAxisSpec = primaryMeasureAxis;
       chartState.markChartDirty();
     }
 
-    if (secondaryMeasureAxis != null &&
-        secondaryMeasureAxis != prev?.secondaryMeasureAxis) {
+    if (secondaryMeasureAxis != prev?.secondaryMeasureAxis) {
       chart.secondaryMeasureAxisSpec = secondaryMeasureAxis;
       chartState.markChartDirty();
     }
 
-    if (disjointMeasureAxes != null &&
-        disjointMeasureAxes != prev?.disjointMeasureAxes) {
+    if (disjointMeasureAxes != prev?.disjointMeasureAxes) {
       chart.disjointMeasureAxisSpecs = disjointMeasureAxes;
       chartState.markChartDirty();
     }
