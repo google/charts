@@ -31,5 +31,6 @@ abstract class TreeMapRendererDecorator<D> {
       {@required Rectangle drawBounds,
       @required double animationPercent,
       bool rtl = false,
-      bool renderVertically = false});
+      bool renderVertically = false,
+      bool renderMultiline = false});
 }
