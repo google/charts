@@ -15,12 +15,13 @@
 
 import 'dart:math' show Rectangle, pi;
 
+import 'package:charts_common/src/chart/cartesian/axis/spec/axis_spec.dart';
+import 'package:charts_common/src/chart/common/chart_canvas.dart';
 import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/common/graphics_factory.dart';
 import 'package:charts_common/src/common/text_element.dart';
 import 'package:charts_common/src/common/text_style.dart';
-import 'package:charts_common/src/chart/cartesian/axis/spec/axis_spec.dart';
-import 'package:charts_common/src/chart/common/chart_canvas.dart';
+import 'package:charts_common/src/common/text_utils.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:meta/meta.dart';
 
@@ -44,8 +45,14 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
   /// Padding of the label text.
   final int labelPadding;
 
+  /// Whether or not drawing a label in multiple lines if there is enough
+  /// space.
+  final bool enableMultiline;
+
   TreeMapLabelDecorator(
-      {TextStyleSpec labelStyleSpec, this.labelPadding = _defaultLabelPadding})
+      {TextStyleSpec labelStyleSpec,
+      this.labelPadding = _defaultLabelPadding,
+      this.enableMultiline = false})
       : this.labelStyleSpec = labelStyleSpec ?? _defaultLabelStyle;
 
   @override
@@ -54,7 +61,8 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
       {@required Rectangle drawBounds,
       @required double animationPercent,
       bool rtl = false,
-      bool renderVertically = false}) {
+      bool renderVertically = false,
+      bool renderMultiline = false}) {
     // Decorates the renderer elements when animation is completed.
     if (animationPercent != 1.0) return;
 
@@ -81,17 +89,17 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
         (renderVertically ? rect.width : rect.height) - (labelPadding * 2);
     final maxLabelWidth =
         (renderVertically ? rect.height : rect.width) - (labelPadding * 2);
-
     final labelElement = graphicsFactory.createTextElement(label)
       ..textStyle = datumLabelStyle
-      ..maxWidthStrategy = MaxWidthStrategy.ellipsize
-      ..maxWidth = maxLabelWidth.toInt()
       ..textDirection = rtl ? TextDirection.rtl : TextDirection.ltr;
 
-    // Skips if the label text cannot fit into the rectangle.
-    if (labelElement.measurement.verticalSliceWidth > maxLabelHeight) return;
-    if (labelElement.maxWidth > 0) {
-      _drawLabel(canvas, rect, labelElement,
+    final labelLineHeight = labelElement.measurement.verticalSliceWidth;
+    final multiline = enableMultiline && renderMultiline;
+    final labelElements = wrapLabelLines(labelElement, graphicsFactory,
+        maxLabelWidth, maxLabelHeight, multiline);
+
+    if (labelElements.isNotEmpty) {
+      _drawLabels(canvas, rect, labelLineHeight, labelElements,
           rtl: rtl, rotate: renderVertically);
     }
   }
@@ -115,26 +123,53 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
         : defaultStyle;
   }
 
-  /// Draws a label inside of a treemap renderer element.
-  void _drawLabel(ChartCanvas canvas, Rectangle elementBoundingRect,
-      TextElement labelElement,
+  /// Draws label(s) inside of a treemap renderer element.
+  void _drawLabels(ChartCanvas canvas, Rectangle elementBoundingRect,
+      num labelLineHeight, List<TextElement> labelElements,
       {bool rtl: false, bool rotate: false}) {
-    num x;
+    final len = labelElements.length;
+    var xs = List<num>.filled(len, 0);
+    var ys = List<num>.filled(len, 0);
 
+    // Set x offset for each line.
     if (rotate) {
-      x = elementBoundingRect.left +
-          labelPadding -
-          labelElement.textStyle.fontSize;
+      for (var index = 0; index < len; index++) {
+        xs[index] = elementBoundingRect.right -
+            labelPadding -
+            2 * labelElements[0].textStyle.fontSize -
+            labelLineHeight * index;
+      }
     } else if (rtl) {
-      x = elementBoundingRect.right - labelPadding;
+      for (var index = 0; index < len; index++) {
+        xs[index] = elementBoundingRect.right - labelPadding;
+      }
     } else {
-      x = elementBoundingRect.left + labelPadding;
+      for (var index = 0; index < len; index++) {
+        xs[index] = elementBoundingRect.left + labelPadding;
+      }
     }
-    final y = rtl && rotate
-        ? elementBoundingRect.bottom - labelPadding
-        : elementBoundingRect.top + labelPadding;
+
+    // Set y offset for each line.
+    if (!rotate) {
+      for (var index = 0; index < len; index++) {
+        ys[index] =
+            elementBoundingRect.top + labelPadding + (labelLineHeight * index);
+      }
+    } else if (rtl) {
+      for (var index = 0; index < len; index++) {
+        ys[index] = elementBoundingRect.bottom - labelPadding;
+      }
+    } else {
+      for (var index = 0; index < len; index++) {
+        ys[index] = elementBoundingRect.top + labelPadding;
+      }
+    }
+
     final rotationAngle = rotate ? _90DegreeClockwise : 0.0;
-    canvas.drawText(labelElement, x.toInt(), y.toInt(),
-        rotation: rotationAngle);
+    for (var index = 0; index < len; index++) {
+      canvas.drawText(
+          labelElements[index], xs[index].toInt(), ys[index].toInt(),
+          rotation: rotationAngle);
+    }
   }
 }

@@ -169,7 +169,8 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
           animationPercent: animationPercent,
           rtl: isRtl,
           // only leaf node could possibly render label vertically.
-          renderVertically: element.isLeaf && rect.width < rect.height);
+          renderVertically: element.isLeaf && rect.width < rect.height,
+          renderMultiline: element.isLeaf);
     });
   }
 
