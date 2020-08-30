@@ -34,6 +34,7 @@ export 'package:charts_common/common.dart'
         Axis,
         AxisDirection,
         AxisSpec,
+        BarErrorDecorator,
         BarGroupingType,
         BarLabelAnchor,
         BarLabelDecorator,
