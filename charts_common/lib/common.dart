@@ -258,5 +258,6 @@ export 'src/common/gesture_listener.dart' show GestureListener;
 export 'src/common/graphics_factory.dart' show GraphicsFactory;
 export 'src/common/line_style.dart' show LineStyle;
 export 'src/common/material_palette.dart' show MaterialPalette;
+export 'src/common/palette.dart' show Palette;
 export 'src/common/performance.dart' show Performance;
 export 'src/common/proxy_gesture_listener.dart' show ProxyGestureListener;
