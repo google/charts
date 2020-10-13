@@ -62,7 +62,8 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
       @required double animationPercent,
       bool rtl = false,
       bool renderVertically = false,
-      bool renderMultiline = false}) {
+      bool renderMultiline = false,
+      bool allowLabelOverflow = true}) {
     // Decorates the renderer elements when animation is completed.
     if (animationPercent != 1.0) return;
 
@@ -95,8 +96,9 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
 
     final labelLineHeight = labelElement.measurement.verticalSliceWidth;
     final multiline = enableMultiline && renderMultiline;
-    final labelElements = wrapLabelLines(labelElement, graphicsFactory,
-        maxLabelWidth, maxLabelHeight, multiline);
+    final labelElements = wrapLabelLines(
+        labelElement, graphicsFactory, maxLabelWidth, maxLabelHeight,
+        allowLabelOverflow: allowLabelOverflow, multiline: multiline);
 
     if (labelElements.isNotEmpty) {
       _drawLabels(canvas, rect, labelLineHeight, labelElements,
