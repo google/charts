@@ -69,8 +69,28 @@ class FakeTextStyle implements TextStyle {
 ///
 /// Font size is returned for [verticalSliceWidth] and [baseline].
 class FakeTextElement implements TextElement {
+  final String _text;
+
   @override
-  final String text;
+  String get text {
+    if (maxWidthStrategy == MaxWidthStrategy.ellipsize) {
+      var width = measureTextWidth(_text);
+      var ellipsis = '…';
+      var ellipsisWidth = measureTextWidth(ellipsis);
+      if (width <= maxWidth || width <= ellipsisWidth) {
+        return _text;
+      } else {
+        var len = _text.length;
+        var ellipsizedText = _text;
+        while (width >= maxWidth - ellipsisWidth && len-- > 0) {
+          ellipsizedText = ellipsizedText.substring(0, len);
+          width = measureTextWidth(ellipsizedText);
+        }
+        return ellipsizedText + ellipsis;
+      }
+    }
+    return _text;
+  }
 
   @override
   TextStyle textStyle;
@@ -86,13 +106,17 @@ class FakeTextElement implements TextElement {
 
   double opacity;
 
-  FakeTextElement(this.text);
+  FakeTextElement(this._text);
 
   @override
   TextMeasurement get measurement => TextMeasurement(
-      horizontalSliceWidth: text.length.toDouble(),
+      horizontalSliceWidth: _text.length.toDouble(),
       verticalSliceWidth: textStyle.fontSize.toDouble(),
       baseline: textStyle.fontSize.toDouble());
+
+  double measureTextWidth(String text) {
+    return text.length.toDouble();
+  }
 }
 
 class MockLinePaint extends Mock implements LineStyle {}
