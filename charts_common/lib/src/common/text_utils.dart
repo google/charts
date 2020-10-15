@@ -39,7 +39,7 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
   final maxWidthStrategy =
       labelElement.maxWidthStrategy ?? MaxWidthStrategy.ellipsize;
 
-  if (maxWidth.toInt() == 0 || maxLines == 0) return <TextElement>[];
+  if (maxWidth.toInt() <= 0 || maxLines <= 0) return <TextElement>[];
 
   final createTextElement =
       (String text) => graphicsFactory.createTextElement(text)

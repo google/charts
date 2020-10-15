@@ -45,6 +45,9 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
   /// Padding of the label text.
   final int labelPadding;
 
+  /// Whether or not to allow labels to draw outside of their bounding box.
+  final bool allowLabelOverflow;
+
   /// Whether or not drawing a label in multiple lines if there is enough
   /// space.
   final bool enableMultiline;
@@ -52,6 +55,7 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
   TreeMapLabelDecorator(
       {TextStyleSpec labelStyleSpec,
       this.labelPadding = _defaultLabelPadding,
+      this.allowLabelOverflow = true,
       this.enableMultiline = false})
       : this.labelStyleSpec = labelStyleSpec ?? _defaultLabelStyle;
 
@@ -62,8 +66,7 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
       @required double animationPercent,
       bool rtl = false,
       bool renderVertically = false,
-      bool renderMultiline = false,
-      bool allowLabelOverflow = true}) {
+      bool renderMultiline = false}) {
     // Decorates the renderer elements when animation is completed.
     if (animationPercent != 1.0) return;
 
