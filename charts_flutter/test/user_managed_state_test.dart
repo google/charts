@@ -35,7 +35,12 @@ void main() {
 
     final testChart = new TestChart(selectionChangedListener, onTapSelection);
 
-    await tester.pumpWidget(testChart);
+    await tester.pumpWidget(
+      new Directionality(
+        textDirection: TextDirection.ltr,
+        child: testChart,
+      ),
+    );
 
     expect(currentSelectionModel, isNull);
 
