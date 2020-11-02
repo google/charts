@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:collection' show LinkedHashMap, Queue;
+import 'dart:collection' show Queue;
 import 'dart:math' show MutableRectangle, Point, Rectangle, min;
 
 import 'package:charts_common/src/chart/common/base_chart.dart';
@@ -43,12 +43,11 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
   /// A hash map that allows accessing the renderer element drawn on the chart
   /// from a treemap node.
-  final _treeNodeToRendererElement =
-      LinkedHashMap<TreeNode, TreeMapRendererElement<D>>();
+  final _treeNodeToRendererElement = <TreeNode, TreeMapRendererElement<D>>{};
 
   /// An ordered map of [_AnimatedTreeMapRect] that will get drawn on the
   /// canvas.
-  final _animatedTreeMapRects = LinkedHashMap<D, _AnimatedTreeMapRect<D>>();
+  final _animatedTreeMapRects = <D, _AnimatedTreeMapRect<D>>{};
 
   /// Renderer configuration.
   final TreeMapRendererConfig<D> config;
@@ -236,12 +235,10 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
           StyleFactory.style.getOrderedPalettes(series.data.length);
       final count = colorPalettes.length;
 
-      if (series.fillColorFn == null) {
-        series.fillColorFn = (int index) {
-          TreeNode node = series.data[index];
-          return colorPalettes[node.depth % count].shadeDefault;
-        };
-      }
+      series.fillColorFn ??= (int index) {
+        TreeNode node = series.data[index];
+        return colorPalettes[node.depth % count].shadeDefault;
+      };
 
       // Pattern color and stroke color defaults to the default config stroke
       // color if no accessor is provided.
@@ -255,9 +252,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   @protected
   void assignMissingStrokeWidths(Iterable<MutableSeries<D>> seriesList) {
     for (final series in seriesList) {
-      if (series.strokeWidthPxFn == null) {
-        series.strokeWidthPxFn = (_) => config.strokeWidthPx;
-      }
+      series.strokeWidthPxFn ??= (_) => config.strokeWidthPx;
     }
   }
 

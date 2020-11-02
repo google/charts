@@ -57,7 +57,7 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
       this.labelPadding = _defaultLabelPadding,
       this.allowLabelOverflow = true,
       this.enableMultiline = false})
-      : this.labelStyleSpec = labelStyleSpec ?? _defaultLabelStyle;
+      : labelStyleSpec = labelStyleSpec ?? _defaultLabelStyle;
 
   @override
   void decorate(TreeMapRendererElement<D> rendererElement, ChartCanvas canvas,
@@ -131,7 +131,7 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
   /// Draws label(s) inside of a treemap renderer element.
   void _drawLabels(ChartCanvas canvas, Rectangle elementBoundingRect,
       num labelLineHeight, List<TextElement> labelElements,
-      {bool rtl: false, bool rotate: false}) {
+      {bool rtl = false, bool rotate = false}) {
     final len = labelElements.length;
     var xs = List<num>.filled(len, 0);
     var ys = List<num>.filled(len, 0);
