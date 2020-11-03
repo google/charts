@@ -87,25 +87,28 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
         datumIndex,
         graphicsFactory,
         defaultStyle: labelStyle);
-
     final rect = rendererElement.boundingRect;
+    final labelElement = graphicsFactory.createTextElement(label)
+      ..textStyle = datumLabelStyle
+      ..textDirection = rtl ? TextDirection.rtl : TextDirection.ltr;
+    final labelHeight = labelElement.measurement.verticalSliceWidth;
     final maxLabelHeight =
         (renderVertically ? rect.width : rect.height) - (labelPadding * 2);
     final maxLabelWidth =
         (renderVertically ? rect.height : rect.width) - (labelPadding * 2);
-    final labelElement = graphicsFactory.createTextElement(label)
-      ..textStyle = datumLabelStyle
-      ..textDirection = rtl ? TextDirection.rtl : TextDirection.ltr;
-
-    final labelLineHeight = labelElement.measurement.verticalSliceWidth;
     final multiline = enableMultiline && renderMultiline;
-    final labelElements = wrapLabelLines(
+    final parts = wrapLabelLines(
         labelElement, graphicsFactory, maxLabelWidth, maxLabelHeight,
         allowLabelOverflow: allowLabelOverflow, multiline: multiline);
 
-    if (labelElements.isNotEmpty) {
-      _drawLabels(canvas, rect, labelLineHeight, labelElements,
+    for (var index = 0; index < parts.length; index++) {
+      final segment = _createLabelSegment(
+          rect, labelHeight, parts[index], index,
           rtl: rtl, rotate: renderVertically);
+
+      // Draws a label inside of a treemap renderer element.
+      canvas.drawText(segment.text, segment.xOffet, segment.yOffset,
+          rotation: segment.rotationAngle);
     }
   }
 
@@ -128,53 +131,53 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
         : defaultStyle;
   }
 
-  /// Draws label(s) inside of a treemap renderer element.
-  void _drawLabels(ChartCanvas canvas, Rectangle elementBoundingRect,
-      num labelLineHeight, List<TextElement> labelElements,
+  _TreeMapLabelSegment _createLabelSegment(Rectangle elementBoundingRect,
+      num labelHeight, TextElement labelElement, int position,
       {bool rtl = false, bool rotate = false}) {
-    final len = labelElements.length;
-    var xs = List<num>.filled(len, 0);
-    var ys = List<num>.filled(len, 0);
+    num xOffset;
+    num yOffset;
 
     // Set x offset for each line.
     if (rotate) {
-      for (var index = 0; index < len; index++) {
-        xs[index] = elementBoundingRect.right -
-            labelPadding -
-            2 * labelElements[0].textStyle.fontSize -
-            labelLineHeight * index;
-      }
+      xOffset = elementBoundingRect.right -
+          labelPadding -
+          2 * labelElement.textStyle.fontSize -
+          labelHeight * position;
     } else if (rtl) {
-      for (var index = 0; index < len; index++) {
-        xs[index] = elementBoundingRect.right - labelPadding;
-      }
+      xOffset = elementBoundingRect.right - labelPadding;
     } else {
-      for (var index = 0; index < len; index++) {
-        xs[index] = elementBoundingRect.left + labelPadding;
-      }
+      xOffset = elementBoundingRect.left + labelPadding;
     }
 
     // Set y offset for each line.
     if (!rotate) {
-      for (var index = 0; index < len; index++) {
-        ys[index] =
-            elementBoundingRect.top + labelPadding + (labelLineHeight * index);
-      }
+      yOffset =
+          elementBoundingRect.top + labelPadding + (labelHeight * position);
     } else if (rtl) {
-      for (var index = 0; index < len; index++) {
-        ys[index] = elementBoundingRect.bottom - labelPadding;
-      }
+      yOffset = elementBoundingRect.bottom - labelPadding;
     } else {
-      for (var index = 0; index < len; index++) {
-        ys[index] = elementBoundingRect.top + labelPadding;
-      }
+      yOffset = elementBoundingRect.top + labelPadding;
     }
 
-    final rotationAngle = rotate ? _90DegreeClockwise : 0.0;
-    for (var index = 0; index < len; index++) {
-      canvas.drawText(
-          labelElements[index], xs[index].toInt(), ys[index].toInt(),
-          rotation: rotationAngle);
-    }
+    return _TreeMapLabelSegment(labelElement, xOffset.toInt(), yOffset.toInt(),
+        rotate ? _90DegreeClockwise : 0.0);
   }
+}
+
+/// Represents a segment of a label that will be drawn in a single line.
+class _TreeMapLabelSegment {
+  /// Text to be drawn on the canvas.
+  final TextElement text;
+
+  /// x-coordinate offset for [text].
+  final int xOffet;
+
+  /// y-coordinate offset for [text].
+  final int yOffset;
+
+  /// Rotation angle for drawing [text].
+  final double rotationAngle;
+
+  _TreeMapLabelSegment(
+      this.text, this.xOffet, this.yOffset, this.rotationAngle);
 }
