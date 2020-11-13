@@ -189,7 +189,8 @@ export 'src/chart/common/behavior/zoom/panning_tick_provider.dart'
     show PanningTickProviderMode;
 export 'src/chart/common/canvas_shapes.dart'
     show CanvasBarStack, CanvasPie, CanvasPieSlice, CanvasRect;
-export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
+export 'src/chart/common/chart_canvas.dart'
+    show ChartCanvas, FillPatternType, BlendMode;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
