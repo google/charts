@@ -117,8 +117,12 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// will use its own component bounds for filtering out selection events
   /// (usually the chart draw area).
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride,
-      {bool selectOverlappingPoints = false});
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  });
 
   /// Get an expanded set of processed [DatumDetails] for a given [SeriesDatum].
   ///

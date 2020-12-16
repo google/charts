@@ -1045,8 +1045,12 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride,
-      {bool selectOverlappingPoints = false}) {
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  }) {
     final nearest = <DatumDetails<D>>[];
 
     // Was it even in the component bounds?
