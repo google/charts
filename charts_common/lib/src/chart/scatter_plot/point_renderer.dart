@@ -466,8 +466,12 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride,
-      {bool selectOverlappingPoints = false}) {
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  }) {
     final nearest = <DatumDetails<D>>[];
     final inside = <DatumDetails<D>>[];
 
@@ -504,18 +508,30 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
           }
         }
 
-        if (byDomain) {
-          if ((distances.domainDistance < nearestDistances.domainDistance) ||
-              ((distances.domainDistance == nearestDistances.domainDistance &&
-                  distances.measureDistance <
-                      nearestDistances.measureDistance))) {
-            nearestPoint = point._currentPoint;
-            nearestDistances = distances;
-          }
-        } else {
-          if (distances.relativeDistance < nearestDistances.relativeDistance) {
-            nearestPoint = point._currentPoint;
-            nearestDistances = distances;
+        // If any point was added to the inside list on previous iterations,
+        // we don't need to go through calculating nearest points because we
+        // only return inside list as a result in that case.
+        if (inside.isEmpty) {
+          // Do not consider the points outside event location when
+          // selectExactEventLocation flag is set.
+          if (!selectExactEventLocation || distances.insidePoint) {
+            if (byDomain) {
+              if ((distances.domainDistance <
+                      nearestDistances.domainDistance) ||
+                  ((distances.domainDistance ==
+                          nearestDistances.domainDistance &&
+                      distances.measureDistance <
+                          nearestDistances.measureDistance))) {
+                nearestPoint = point._currentPoint;
+                nearestDistances = distances;
+              }
+            } else {
+              if (distances.relativeDistance <
+                  nearestDistances.relativeDistance) {
+                nearestPoint = point._currentPoint;
+                nearestDistances = distances;
+              }
+            }
           }
         }
       });
@@ -528,7 +544,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
     // Note: the details are already sorted by domain & measure distance in
     // base chart. If asking for all overlapping points, return the list of
-    // inside points - only if there was overla.
+    // inside points - only if there was overlap.
     return (selectOverlappingPoints && inside.isNotEmpty) ? inside : nearest;
   }
 

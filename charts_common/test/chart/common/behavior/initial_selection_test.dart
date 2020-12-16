@@ -35,9 +35,13 @@ class FakeRenderer extends BaseSeriesRenderer {
   }
 
   @override
-  List<DatumDetails> getNearestDatumDetailPerSeries(Point<double> chartPoint,
-          bool byDomain, Rectangle<int> boundsOverride,
-          {selectOverlappingPoints = false}) =>
+  List<DatumDetails> getNearestDatumDetailPerSeries(
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    selectOverlappingPoints = false,
+    selectExactEventLocation = false,
+  }) =>
       null;
 
   @override

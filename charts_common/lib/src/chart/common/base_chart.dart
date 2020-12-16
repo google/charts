@@ -87,6 +87,13 @@ abstract class BaseChart<D> {
 
   final _selectionModels = <SelectionModelType, MutableSelectionModel<D>>{};
 
+  /// Whether selected data should be restricted to only have points that
+  /// cover this event location.
+  ///
+  /// When this is true, selection logic would ignore points that are close to
+  /// event location but does not cover event location.
+  bool get selectExactEventLocation => false;
+
   /// Whether data should be selected by nearest domain distance, or by relative
   /// distance.
   ///
@@ -96,7 +103,7 @@ abstract class BaseChart<D> {
   /// domain value.
   bool get selectNearestByDomain => true;
 
-  /// Whether data should be expanded by to include all points overlaping the
+  /// Whether data should be expanded by to include all points overlapping the
   /// selection point
   ///
   /// Should be true for Scatter plots.
@@ -253,10 +260,14 @@ abstract class BaseChart<D> {
 
     final details = <DatumDetails<D>>[];
     _usingRenderers.forEach((String rendererId) {
-      details.addAll(getSeriesRenderer(rendererId)
-          .getNearestDatumDetailPerSeries(
-              drawAreaPoint, selectNearestByDomain, boundsOverride,
-              selectOverlappingPoints: selectOverlappingPoints));
+      details
+          .addAll(getSeriesRenderer(rendererId).getNearestDatumDetailPerSeries(
+        drawAreaPoint,
+        selectNearestByDomain,
+        boundsOverride,
+        selectOverlappingPoints: selectOverlappingPoints,
+        selectExactEventLocation: selectExactEventLocation,
+      ));
     });
 
     details.sort((DatumDetails<D> a, DatumDetails<D> b) {
