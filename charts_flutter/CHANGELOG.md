@@ -1,4 +1,8 @@
 # 0.9.0
+* Loosened `intl` constraint to allow running on Flutter `beta` and later, which requires the NNBD
+  version of `intl`.
+
+# 0.9.0
 * Internal bug fixes
 * Bump versions in Gemlock file due to security alerts
 
