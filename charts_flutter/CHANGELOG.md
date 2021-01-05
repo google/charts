@@ -1,4 +1,4 @@
-# 0.9.0
+# 0.9.1
 * Loosened `intl` constraint to allow running on Flutter `beta` and later, which requires the NNBD
   version of `intl`.
 
