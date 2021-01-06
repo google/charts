@@ -15,7 +15,7 @@
 
 import 'dart:collection';
 
-import 'package:charts_common/common.dart';
+import 'package:charts_common/src/common/graphics_factory.dart';
 import 'package:charts_common/src/common/text_element.dart';
 
 /// This function breaks original [labelElement] into multiple
