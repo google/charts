@@ -15,6 +15,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
 
 import 'package:charts_flutter/flutter.dart' as charts;
 
@@ -35,7 +36,7 @@ void main() {
 
     final testChart = new TestChart(selectionChangedListener, onTapSelection);
 
-    await tester.pumpWidget(testChart);
+    await tester.pumpWidget(MaterialApp(home: testChart));
 
     expect(currentSelectionModel, isNull);
 
