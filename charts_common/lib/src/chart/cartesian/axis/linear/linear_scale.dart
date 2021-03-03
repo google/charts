@@ -51,7 +51,10 @@ class LinearScale implements NumericScale {
   final LinearScaleViewportSettings _viewportSettings;
   final LinearScaleFunction _scaleFunction = LinearScaleFunction();
 
+  @override
   RangeBandConfig rangeBandConfig = const RangeBandConfig.none();
+
+  @override
   StepSizeConfig stepSizeConfig = const StepSizeConfig.auto();
 
   bool _scaleReady = false;
@@ -105,6 +108,7 @@ class LinearScale implements NumericScale {
     _domainInfo.domainOverride = domainMaxExtent;
   }
 
+  @override
   NumericExtents get domainOverride => _domainInfo.domainOverride;
 
   @override

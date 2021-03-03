@@ -96,6 +96,7 @@ abstract class SeriesRenderer<D> extends LayoutView {
 
   /// Renders the series data on the canvas, using the data generated during the
   /// [update] call.
+  @override
   void paint(ChartCanvas canvas, double animationPercent);
 
   /// Gets a list of the data from each series that is closest to a given point.
@@ -142,10 +143,13 @@ abstract class SeriesRenderer<D> extends LayoutView {
 /// Concrete base class for [SeriesRenderer]s that implements common
 /// functionality.
 abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
+  @override
   final LayoutViewConfig layoutConfig;
 
+  @override
   String rendererId;
 
+  @override
   SymbolRenderer symbolRenderer;
 
   Rectangle<int> _drawAreaBounds;

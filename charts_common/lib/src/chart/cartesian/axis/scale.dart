@@ -191,7 +191,7 @@ class ScaleOutputExtent {
   int get hashCode => start.hashCode + (end.hashCode * 31);
 
   @override
-  String toString() => "ScaleOutputRange($start, $end)";
+  String toString() => 'ScaleOutputRange($start, $end)';
 }
 
 /// Type of RangeBand used to determine the rangeBand size units.

@@ -46,6 +46,7 @@ class MinuteTimeStepper extends BaseTimeStepper {
   @override
   int get typicalStepSizeMs => _millisecondsInMinute;
 
+  @override
   List<int> get allowedTickIncrements => _allowedTickIncrements;
 
   /// Picks a tick start time that guarantees the start of the hour is included.

@@ -24,8 +24,10 @@ import 'axis/axis.dart' show Axis, domainAxisKey, measureAxisKey;
 import 'cartesian_chart.dart' show CartesianChart;
 
 abstract class CartesianRenderer<D> extends SeriesRenderer<D> {
+  @override
   void configureDomainAxes(List<MutableSeries<D>> seriesList);
 
+  @override
   void configureMeasureAxes(List<MutableSeries<D>> seriesList);
 }
 

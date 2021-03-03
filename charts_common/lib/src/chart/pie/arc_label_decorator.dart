@@ -68,6 +68,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
   final bool showLeaderLines;
 
   /// Render the labels on top of series data.
+  @override
   final bool renderAbove = true;
 
   ArcLabelDecorator(

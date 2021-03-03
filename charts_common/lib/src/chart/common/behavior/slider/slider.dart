@@ -607,6 +607,7 @@ enum SliderHandlePosition { middle, top, manual }
 
 /// Layout view component for [Slider].
 class _SliderLayoutView<D> extends LayoutView {
+  @override
   final LayoutViewConfig layoutConfig;
 
   Rectangle<int> _drawAreaBounds;

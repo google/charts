@@ -319,6 +319,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     _seriesLineMap.addEntries(newLineMap);
   }
 
+  @override
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
@@ -913,6 +914,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     _chart = chart;
   }
 
+  @override
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the lines that no longer exist.
     if (animationPercent == 1.0) {
@@ -1130,6 +1132,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     return nearest;
   }
 
+  @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     final series = details.series;

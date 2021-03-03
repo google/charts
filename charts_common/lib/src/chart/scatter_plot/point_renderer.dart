@@ -196,6 +196,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     });
   }
 
+  @override
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
@@ -339,6 +340,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     _chart = chart;
   }
 
+  @override
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the points that no longer exist.
     if (animationPercent == 1.0) {
@@ -624,6 +626,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     );
   }
 
+  @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     final series = details.series;

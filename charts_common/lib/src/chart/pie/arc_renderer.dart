@@ -153,6 +153,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     });
   }
 
+  @override
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
@@ -313,6 +314,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     });
   }
 
+  @override
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the arcs that no longer exist.
     if (animationPercent == 1.0) {

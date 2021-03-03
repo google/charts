@@ -81,6 +81,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     });
   }
 
+  @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     final series = details.series;

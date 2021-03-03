@@ -34,6 +34,7 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
   final PointSymbolRenderer symbolRenderer;
 
   /// Render the bounds shape underneath series data.
+  @override
   final bool renderAbove = false;
 
   ComparisonPointsDecorator({PointSymbolRenderer symbolRenderer})

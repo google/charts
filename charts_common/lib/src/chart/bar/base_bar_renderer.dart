@@ -352,6 +352,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     }
   }
 
+  @override
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
     _currentGroupsStackKeys.clear();
@@ -555,6 +556,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       bool measureIsNegative});
 
   /// Paints the current bar data on the canvas.
+  @override
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the bars that no longer exist.
     if (animationPercent == 1.0) {
