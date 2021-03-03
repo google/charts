@@ -74,17 +74,17 @@ class Slider<D> implements ChartBehavior<D> {
   final SelectionTrigger eventTrigger;
 
   /// Renderer for the handle. Defaults to a rectangle.
-  SymbolRenderer _handleRenderer;
+  final SymbolRenderer _handleRenderer;
 
   /// Custom role ID for this slider
-  String _roleId;
+  final String _roleId;
 
   /// Whether or not the slider will snap onto the nearest datum (by domain
   /// distance) when dragged.
   final bool snapToDatum;
 
   /// Color and size styles for the slider.
-  SliderStyle _style;
+  final SliderStyle _style;
 
   CartesianChart<D> _chart;
 
@@ -152,12 +152,11 @@ class Slider<D> implements ChartBehavior<D> {
       String roleId,
       this.snapToDatum = false,
       SliderStyle style,
-      this.layoutPaintOrder = LayoutViewPaintOrder.slider}) {
-    _handleRenderer = handleRenderer ?? RectSymbolRenderer();
-    _roleId = roleId ?? '';
-    _style = style ?? SliderStyle();
-
-    _domainValue = initialDomainValue;
+      this.layoutPaintOrder = LayoutViewPaintOrder.slider})
+      : _handleRenderer = handleRenderer ?? RectSymbolRenderer(),
+        _roleId = roleId ?? '',
+        _style = style ?? SliderStyle(),
+        _domainValue = initialDomainValue {
     if (_domainValue != null) {
       _dragStateToFireOnPostRender = SliderListenerDragState.initial;
     }
@@ -572,13 +571,13 @@ class SliderStyle {
   }
 
   @override
-  bool operator ==(Object o) {
-    return o is SliderStyle &&
-        fillColor == o.fillColor &&
-        handleOffset == o.handleOffset &&
-        handleSize == o.handleSize &&
-        strokeWidthPx == o.strokeWidthPx &&
-        strokeColor == o.strokeColor;
+  bool operator ==(Object other) {
+    return other is SliderStyle &&
+        fillColor == other.fillColor &&
+        handleOffset == other.handleOffset &&
+        handleSize == other.handleSize &&
+        strokeWidthPx == other.strokeWidthPx &&
+        strokeColor == other.strokeColor;
   }
 
   @override
@@ -618,14 +617,14 @@ class _SliderLayoutView<D> extends LayoutView {
   GraphicsFactory graphicsFactory;
 
   /// Renderer for the handle. Defaults to a rectangle.
-  SymbolRenderer _handleRenderer;
+  final SymbolRenderer _handleRenderer;
 
   /// Rendering data for the slider line and handle.
   _AnimatedSlider _sliderHandle;
 
   _SliderLayoutView(
       {@required int layoutPaintOrder, @required SymbolRenderer handleRenderer})
-      : this.layoutConfig = LayoutViewConfig(
+      : layoutConfig = LayoutViewConfig(
             paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea),
@@ -642,7 +641,7 @@ class _SliderLayoutView<D> extends LayoutView {
 
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
-    this._drawAreaBounds = drawAreaBounds;
+    _drawAreaBounds = drawAreaBounds;
   }
 
   @override

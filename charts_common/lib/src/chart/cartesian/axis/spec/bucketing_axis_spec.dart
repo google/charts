@@ -74,7 +74,7 @@ class BucketingAxisSpec extends NumericAxisSpec {
     bool showBucket,
     this.threshold,
     NumericExtents viewport,
-  })  : this.showBucket = showBucket ?? true,
+  })  : showBucket = showBucket ?? true,
         super(
             renderSpec: renderSpec,
             tickProviderSpec:

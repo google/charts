@@ -378,7 +378,6 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
       ..textStyle = rangeLabelStyle;
 
     final labelElements = splitLabel(rangeLabelTextElement);
-    final labelHeight = getLabelHeight(labelElements);
     final labelWidth = getLabelWidth(labelElements);
 
     // Draw range label on top of range shade.

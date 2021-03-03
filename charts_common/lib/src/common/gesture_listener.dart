@@ -99,8 +99,8 @@ class GestureListener {
     this.onDragEnd,
     this.onFocus,
     this.onBlur,
-  })  : this.onTapTest = onTapTest ?? defaultTapTest,
-        this.onTapCancel = onTapCancel ?? defaultTapCancel;
+  })  : onTapTest = onTapTest ?? defaultTapTest,
+        onTapCancel = onTapCancel ?? defaultTapCancel;
 }
 
 typedef GestureCancelCallback = void Function();

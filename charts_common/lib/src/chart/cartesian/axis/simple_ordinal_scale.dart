@@ -35,7 +35,7 @@ import 'scale.dart'
 /// by [[]].
 class SimpleOrdinalScale implements OrdinalScale {
   final _stepSizeConfig = StepSizeConfig.auto();
-  OrdinalScaleDomainInfo _domain;
+  final OrdinalScaleDomainInfo _domain;
   ScaleOutputExtent _range = ScaleOutputExtent(0, 1);
   double _viewportScale = 1.0;
   double _viewportTranslatePx = 0.0;

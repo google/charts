@@ -86,7 +86,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   final _currentKeys = <String>[];
 
   PointRenderer({String rendererId, PointRendererConfig config})
-      : this.config = config ?? PointRendererConfig(),
+      : config = config ?? PointRendererConfig(),
         pointRendererDecorators = config?.pointRendererDecorators ?? [],
         super(
             rendererId: rendererId ?? 'point',

@@ -47,7 +47,7 @@ class BarRenderer<D>
   /// The padding between bar stacks.
   ///
   /// The padding comes out of the bottom of the bar.
-  final _stackedBarPaddingPx;
+  final int _stackedBarPaddingPx;
 
   final BarRendererDecorator barRendererDecorator;
 
@@ -472,7 +472,7 @@ class BarRenderer<D>
     }
 
     Rectangle<int> bounds;
-    if (this.renderingVertically) {
+    if (renderingVertically) {
       // Rectangle clamps to zero width/height
       bounds = Rectangle<int>(domainStart, measureEnd, domainEnd - domainStart,
           measureStart - measureEnd);
