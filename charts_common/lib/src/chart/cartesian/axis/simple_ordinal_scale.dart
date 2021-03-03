@@ -143,11 +143,11 @@ class SimpleOrdinalScale implements OrdinalScale {
 
   @override
   String reverse(double pixelLocation) {
-    final index = ((pixelLocation -
+    final index = (pixelLocation -
             viewportTranslatePx -
             _range.start -
             _cachedRangeBandShift) /
-        _cachedStepSizePixels);
+        _cachedStepSizePixels;
 
     // The last pixel belongs in the last step even if it tries to round up.
     //
@@ -160,8 +160,7 @@ class SimpleOrdinalScale implements OrdinalScale {
   }
 
   @override
-  bool canTranslate(String domainValue) =>
-      (_domain.indexOf(domainValue) != null);
+  bool canTranslate(String domainValue) => _domain.indexOf(domainValue) != null;
 
   @override
   OrdinalScaleDomainInfo get domain => _domain;
@@ -249,7 +248,7 @@ class SimpleOrdinalScale implements OrdinalScale {
       if (_isVertical) {
         // Account for the domain values being reversed.
         viewportTranslatePx =
-            ((_viewportDataSize - domainIndex - 1) * _cachedStepSizePixels);
+            (_viewportDataSize - domainIndex - 1) * _cachedStepSizePixels;
       } else {
         viewportTranslatePx = -(_cachedStepSizePixels * domainIndex);
       }

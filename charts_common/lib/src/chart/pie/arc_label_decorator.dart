@@ -149,10 +149,10 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
 
       // Get space available inside and outside the arc.
       final totalPadding = labelPadding * 2;
-      final insideArcWidth = (min(
+      final insideArcWidth = min(
               (((arcAngle * 180 / pi) / 360) * (2 * pi * centerRadius)).round(),
               (arcElements.radius - arcElements.innerRadius) - labelPadding)
-          .round());
+          .round();
 
       final leaderLineLength = showLeaderLines ? leaderLineStyleSpec.length : 0;
 

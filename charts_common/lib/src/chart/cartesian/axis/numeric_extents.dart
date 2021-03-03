@@ -92,7 +92,7 @@ class NumericExtents implements Extents<num> {
   }
 
   @override
-  int get hashCode => (min.hashCode + (max.hashCode * 31));
+  int get hashCode => min.hashCode + (max.hashCode * 31);
 
   num get width => max - min;
 

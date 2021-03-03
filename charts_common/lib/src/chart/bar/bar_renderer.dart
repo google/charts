@@ -275,8 +275,8 @@ class BarRenderer<D>
           stroke: bar.color,
           strokeWidthPx: bar.strokeWidthPx));
 
-      maxBarWidth = max(
-          maxBarWidth, (renderingVertically ? bounds.width : bounds.height));
+      maxBarWidth =
+          max(maxBarWidth, renderingVertically ? bounds.width : bounds.height);
     }
 
     bool roundTopLeft;
@@ -410,7 +410,7 @@ class BarRenderer<D>
     // Calculate how wide each bar should be within the group of bars. If we
     // only have one series, or are stacked, then barWidth should equal
     // domainWidth.
-    final spacingLoss = (_barGroupInnerPadding * (numBarGroups - 1));
+    final spacingLoss = _barGroupInnerPadding * (numBarGroups - 1);
     var desiredWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
 
     if (maxBarWidthPx != null) {

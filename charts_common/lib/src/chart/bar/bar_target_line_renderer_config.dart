@@ -77,7 +77,7 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
     return other.overDrawOuterPx == overDrawOuterPx &&
         other.overDrawPx == overDrawPx &&
         other.roundEndCaps == roundEndCaps &&
-        super == (other);
+        super == other;
   }
 
   @override

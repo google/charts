@@ -115,7 +115,7 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
 
     final viewport = scale.viewportDomain;
     for (final tickProvider in tickProviders) {
-      final isLastProvider = (tickProvider == lastTickProvider);
+      final isLastProvider = tickProvider == lastTickProvider;
       if (isLastProvider ||
           tickProvider.providesSufficientTicksForRange(viewport)) {
         return tickProvider.getTicks(

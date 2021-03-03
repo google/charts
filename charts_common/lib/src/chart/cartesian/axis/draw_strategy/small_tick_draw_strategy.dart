@@ -76,7 +76,7 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
         (other is SmallTickRendererSpec &&
             lineStyle == other.lineStyle &&
             tickLengthPx == other.tickLengthPx &&
-            super == (other));
+            super == other);
   }
 
   @override

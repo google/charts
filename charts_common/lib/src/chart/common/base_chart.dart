@@ -648,9 +648,10 @@ abstract class BaseChart<D> {
     }
   }
 
-  bool get animatingThisDraw => (transition != null &&
+  bool get animatingThisDraw =>
+      transition != null &&
       transition.inMilliseconds > 0 &&
-      !_animationsTemporarilyDisabled);
+      !_animationsTemporarilyDisabled;
 
   @protected
   void fireOnDraw(List<MutableSeries<D>> seriesList) {

@@ -656,8 +656,8 @@ class _ChartTitleLayoutView<D> extends LayoutView {
       var padding = 0.0 + _config.innerPadding;
       if (isPrimaryTitle) {
         padding +=
-            ((subTitleHeight > 0 ? _config.titlePadding + subTitleHeight : 0) +
-                titleHeight);
+            (subTitleHeight > 0 ? _config.titlePadding + subTitleHeight : 0) +
+                titleHeight;
       } else {
         padding += subTitleHeight;
       }

@@ -518,10 +518,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
             if (byDomain) {
               if ((distances.domainDistance <
                       nearestDistances.domainDistance) ||
-                  ((distances.domainDistance ==
+                  (distances.domainDistance ==
                           nearestDistances.domainDistance &&
                       distances.measureDistance <
-                          nearestDistances.measureDistance))) {
+                          nearestDistances.measureDistance)) {
                 nearestPoint = point._currentPoint;
                 nearestDistances = distances;
               }
@@ -613,7 +613,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       // [chartPoint] is located inside the datum.
       relativeDistance = min(relativeDistance, relativeDistanceBounds);
     } else {
-      insidePoint = (relativeDistance < radiusPx);
+      insidePoint = relativeDistance < radiusPx;
     }
 
     return _Distances(
@@ -797,17 +797,17 @@ class PointRendererElement<D> {
     fillColor = getAnimatedColor(
         previous.fillColor, target.fillColor, animationPercent);
 
-    radiusPx = (((target.radiusPx - previous.radiusPx) * animationPercent) +
-        previous.radiusPx);
+    radiusPx = (target.radiusPx - previous.radiusPx) * animationPercent +
+        previous.radiusPx;
 
     boundsLineRadiusPx =
-        (((target.boundsLineRadiusPx - previous.boundsLineRadiusPx) *
+        ((target.boundsLineRadiusPx - previous.boundsLineRadiusPx) *
                 animationPercent) +
-            previous.boundsLineRadiusPx);
+            previous.boundsLineRadiusPx;
 
     strokeWidthPx =
-        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx);
+        ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx;
   }
 }
 

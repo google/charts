@@ -80,7 +80,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
     return identical(this, other) ||
         (other is OrdinalAxisSpec &&
             viewport == other.viewport &&
-            super == (other));
+            super == other);
   }
 
   @override

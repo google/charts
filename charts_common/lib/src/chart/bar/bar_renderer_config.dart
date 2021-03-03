@@ -69,7 +69,7 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
     if (!(other is BarRendererConfig)) {
       return false;
     }
-    return other.cornerStrategy == cornerStrategy && super == (other);
+    return other.cornerStrategy == cornerStrategy && super == other;
   }
 
   @override
