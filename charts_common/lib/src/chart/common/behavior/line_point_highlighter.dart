@@ -106,6 +106,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was provided by the selection model.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   var _seriesPointMap = LinkedHashMap<String, _AnimatedPoint<D>>();
 
   // Store a list of points that exist in the series data.

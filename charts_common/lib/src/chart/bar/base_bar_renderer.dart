@@ -88,6 +88,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   /// as the data was given to the chart. For the case where both grouping and
   /// stacking are disabled, this means that bars for data later in the series
   /// will be drawn "on top of" bars earlier in the series.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _barStackMap = LinkedHashMap<String, List<B>>();
 
   // Store a list of bar stacks that exist in the series data.
@@ -98,6 +99,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   final _currentKeys = <String>[];
 
   /// Stores a list of stack keys for each group key.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _currentGroupsStackKeys = LinkedHashMap<D, Set<String>>();
 
   /// Optimization for getNearest to avoid scanning all data if possible.
@@ -462,7 +464,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         // Store off stack keys for each bar group to help getNearest identify
         // groups of stacks.
         _currentGroupsStackKeys
-            .putIfAbsent(domainValue, () => Set<String>())
+            .putIfAbsent(domainValue, () => <String>{})
             .add(barStackMapKey);
 
         // Get the barElement we are going to setup.

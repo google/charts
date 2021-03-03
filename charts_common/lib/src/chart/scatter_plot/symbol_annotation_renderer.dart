@@ -59,6 +59,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
   var _currentHeight = 0;
 
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _seriesInfo = LinkedHashMap<String, _SeriesInfo<D>>();
 
   SymbolAnnotationRenderer(

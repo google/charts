@@ -63,10 +63,12 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
   /// as the data was given to the chart. For the case where both grouping and
   /// stacking are disabled, this means that bars for data later in the series
   /// will be drawn "on top of" bars earlier in the series.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _barLaneStackMap = LinkedHashMap<String, List<AnimatedBar<D>>>();
 
   /// Store a map of flags to track whether all measure values for a given
   /// domain value are null, for every series on the chart.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _allMeasuresForDomainNullMap = LinkedHashMap<D, bool>();
 
   factory BarLaneRenderer({BarLaneRendererConfig config, String rendererId}) {
@@ -89,7 +91,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
       final domainFn = series.domainFn;
       final measureFn = series.rawMeasureFn;
 
-      final domainValues = Set<D>();
+      final domainValues = <D>{};
 
       for (var barIndex = 0; barIndex < series.data.length; barIndex++) {
         final domain = domainFn(barIndex);

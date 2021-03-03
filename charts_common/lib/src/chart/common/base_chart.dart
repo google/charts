@@ -66,7 +66,7 @@ abstract class BaseChart<D> {
   /// initial draw cycle (e.g. a [Legend] may hide some series).
   List<MutableSeries<D>> _currentSeriesList;
 
-  Set<String> _usingRenderers = Set<String>();
+  Set<String> _usingRenderers = <String>{};
   Map<String, List<MutableSeries<D>>> _rendererToSeriesList;
 
   final _seriesRenderers = <String, SeriesRenderer<D>>{};
@@ -585,7 +585,7 @@ abstract class BaseChart<D> {
     Map<String, List<MutableSeries<D>>> rendererToSeriesList = {};
 
     var unusedRenderers = _usingRenderers;
-    _usingRenderers = Set<String>();
+    _usingRenderers = <String>{};
 
     // Build map of rendererIds to SeriesLists.
     seriesList.forEach((MutableSeries<D> series) {
