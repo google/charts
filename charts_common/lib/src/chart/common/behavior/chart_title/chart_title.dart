@@ -272,7 +272,8 @@ class _ChartTitleLayoutView<D> extends LayoutView {
   Rectangle<int> _componentBounds;
   Rectangle<int> _drawAreaBounds;
 
-  GraphicsFactory _graphicsFactory;
+  @override
+  GraphicsFactory graphicsFactory;
 
   /// Cached layout element for the title text.
   ///
@@ -298,14 +299,6 @@ class _ChartTitleLayoutView<D> extends LayoutView {
         paintOrder: layoutPaintOrder,
         position: _layoutPosition,
         positionOrder: LayoutViewPositionOrder.chartTitle);
-  }
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
   }
 
   /// Sets the configuration for the title behavior.

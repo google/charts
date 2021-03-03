@@ -51,7 +51,9 @@ import 'symbol_annotation_renderer_config.dart'
 class SymbolAnnotationRenderer<D> extends PointRenderer<D>
     implements LayoutView {
   Rectangle<int> _componentBounds;
-  GraphicsFactory _graphicsFactory;
+
+  @override
+  GraphicsFactory graphicsFactory;
 
   CartesianChart<D> _chart;
 
@@ -217,14 +219,6 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
             .drawAxisLine(canvas, domainAxis.axisOrientation, bounds);
       });
     }
-  }
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
   }
 
   //
