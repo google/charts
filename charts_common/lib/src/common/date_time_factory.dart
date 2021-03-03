@@ -46,11 +46,13 @@ abstract class DateTimeFactory {
 class LocalDateTimeFactory implements DateTimeFactory {
   const LocalDateTimeFactory();
 
+  @override
   DateTime createDateTimeFromMilliSecondsSinceEpoch(
       int millisecondsSinceEpoch) {
     return DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
   }
 
+  @override
   DateTime createDateTime(int year,
       [int month = 1,
       int day = 1,
@@ -64,21 +66,22 @@ class LocalDateTimeFactory implements DateTimeFactory {
   }
 
   /// Returns a [DateFormat].
-  DateFormat createDateFormat(String pattern) {
-    return DateFormat(pattern);
-  }
+  @override
+  DateFormat createDateFormat(String pattern) => DateFormat(pattern);
 }
 
 /// An UTC time [DateTimeFactory].
 class UTCDateTimeFactory implements DateTimeFactory {
   const UTCDateTimeFactory();
 
+  @override
   DateTime createDateTimeFromMilliSecondsSinceEpoch(
       int millisecondsSinceEpoch) {
     return DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch,
         isUtc: true);
   }
 
+  @override
   DateTime createDateTime(int year,
       [int month = 1,
       int day = 1,
@@ -92,7 +95,6 @@ class UTCDateTimeFactory implements DateTimeFactory {
   }
 
   /// Returns a [DateFormat].
-  DateFormat createDateFormat(String pattern) {
-    return DateFormat(pattern);
-  }
+  @override
+  DateFormat createDateFormat(String pattern) => DateFormat(pattern);
 }

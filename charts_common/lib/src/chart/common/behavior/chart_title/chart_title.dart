@@ -259,6 +259,7 @@ class ChartTitle<D> implements ChartBehavior<D> {
 class _ChartTitleLayoutView<D> extends LayoutView {
   LayoutViewConfig _layoutConfig;
 
+  @override
   LayoutViewConfig get layoutConfig => _layoutConfig;
 
   /// Stores all of the configured properties of the behavior.

@@ -56,6 +56,7 @@ class LayoutManagerImpl implements LayoutManager {
       : this.config = config ?? LayoutConfig();
 
   /// Add one [LayoutView].
+  @override
   void addView(LayoutView view) {
     _views.add(view);
     _drawAreaBoundsOutdated = true;
@@ -64,6 +65,7 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   /// Remove one [LayoutView].
+  @override
   void removeView(LayoutView view) {
     if (_views.remove(view)) {
       _drawAreaBoundsOutdated = true;
@@ -73,6 +75,7 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   /// Returns true if [view] is already attached.
+  @override
   bool isAttached(LayoutView view) => _views.contains(view);
 
   /// Get all layout components in the order to be drawn.

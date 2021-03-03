@@ -139,6 +139,7 @@ class _BucketingFormatter extends SimpleTickFormatterBase<num> {
   SimpleTickFormatterBase<num> originalFormatter;
 
   /// Formats a single tick value.
+  @override
   String formatValue(num value) {
     if (value < threshold) {
       return '';

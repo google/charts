@@ -42,8 +42,10 @@ import '../layout/layout_view.dart' show LayoutViewConfig;
 ///   series.
 abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
+  @override
   final String customRendererId;
 
+  @override
   final SymbolRenderer symbolRenderer;
 
   /// Dash pattern for the stroke line around the edges of the bar.
@@ -87,6 +89,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   /// Not used for stacked bars.
   final List<int> weightPattern;
 
+  @override
   final rendererAttributes = RendererAttributes();
 
   BaseBarRendererConfig(
@@ -133,7 +136,8 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
         ListEquality().equals(other.weightPattern, weightPattern);
   }
 
-  int get hashcode {
+  @override
+  int get hashCode {
     var hash = 1;
     hash = hash * 31 + (customRendererId?.hashCode ?? 0);
     hash = hash * 31 + (dashPattern?.hashCode ?? 0);

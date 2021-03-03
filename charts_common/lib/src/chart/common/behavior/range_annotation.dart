@@ -342,6 +342,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 }
 
 class _RangeAnnotationLayoutView<D> extends LayoutView {
+  @override
   final LayoutViewConfig layoutConfig;
 
   final Color defaultColor;

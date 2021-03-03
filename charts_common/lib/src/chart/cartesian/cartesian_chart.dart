@@ -60,6 +60,7 @@ class NumericCartesianChart extends CartesianChart<num> {
             disjointMeasureAxes: disjointMeasureAxes);
 
   @protected
+  @override
   void initDomainAxis() {
     _domainAxis.tickDrawStrategy = SmallTickRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory);
@@ -82,6 +83,7 @@ class OrdinalCartesianChart extends CartesianChart<String> {
             disjointMeasureAxes: disjointMeasureAxes);
 
   @protected
+  @override
   void initDomainAxis() {
     _domainAxis
       ..tickDrawStrategy = SmallTickRendererSpec<String>()
@@ -173,6 +175,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     });
   }
 
+  @override
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     super.init(context, graphicsFactory);
 

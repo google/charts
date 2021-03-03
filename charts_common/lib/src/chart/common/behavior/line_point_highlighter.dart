@@ -275,6 +275,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 }
 
 class _LinePointLayoutView<D> extends LayoutView {
+  @override
   final LayoutViewConfig layoutConfig;
 
   final LinePointHighlighterFollowLineType showHorizontalFollowLine;

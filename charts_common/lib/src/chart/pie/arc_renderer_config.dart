@@ -27,13 +27,16 @@ import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 /// Configuration for an [ArcRenderer].
 class ArcRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
+  @override
   final String customRendererId;
 
   /// List of decorators applied to rendered arcs.
   final List<ArcRendererDecorator> arcRendererDecorators;
 
+  @override
   final SymbolRenderer symbolRenderer;
 
+  @override
   final rendererAttributes = RendererAttributes();
 
   /// Total arc length, in radians.

@@ -74,6 +74,7 @@ class BarRenderer<D>
         emptyCategoryUsesSinglePalette: true);
   }
 
+  @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     final series = details.series;
@@ -499,12 +500,20 @@ abstract class ImmutableBarRendererElement<D> {
 
 class BarRendererElement<D> extends BaseBarRendererElement
     implements ImmutableBarRendererElement<D> {
+  @override
   ImmutableSeries<D> series;
+
+  @override
   Rectangle<int> bounds;
+
   int roundPx;
+
+  @override
   int index;
+
   dynamic _datum;
 
+  @override
   dynamic get datum => _datum;
 
   set datum(dynamic datum) {
@@ -571,6 +580,7 @@ class AnimatedBar<D> extends BaseAnimatedBar<D, BarRendererElement<D>> {
         0);
   }
 
+  @override
   BarRendererElement<D> getCurrentBar(double animationPercent) {
     final BarRendererElement<D> bar = super.getCurrentBar(animationPercent);
 

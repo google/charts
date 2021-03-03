@@ -22,10 +22,13 @@ import 'line_renderer.dart' show LineRenderer;
 /// Configuration for a line renderer.
 class LineRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
+  @override
   final String customRendererId;
 
+  @override
   final SymbolRenderer symbolRenderer;
 
+  @override
   final rendererAttributes = RendererAttributes();
 
   /// Radius of points on the line, if [includePoints] is enabled.
