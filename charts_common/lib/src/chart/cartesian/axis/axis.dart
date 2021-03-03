@@ -86,28 +86,16 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
   final MutableScale<D> _defaultScale;
 
-  MutableScale<D> _scale;
-
   /// [Scale] of this axis.
-  MutableScale<D> get scale => _scale;
-
-  set scale(MutableScale<D> scale) {
-    _scale = scale;
-  }
+  MutableScale<D> scale;
 
   /// Previous [Scale] of this axis, used to calculate tick animation.
   MutableScale<D> _previousScale;
 
   final TickProvider<D> _defaultTickProvider;
 
-  TickProvider<D> _tickProvider;
-
   /// [TickProvider] for this axis.
-  TickProvider<D> get tickProvider => _tickProvider;
-
-  set tickProvider(TickProvider<D> tickProvider) {
-    _tickProvider = tickProvider;
-  }
+  TickProvider<D> tickProvider;
 
   final TickFormatter<D> _defaultTickFormatter;
 
@@ -136,9 +124,12 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// If the output range should be reversed.
   bool reverseOutputRange = false;
 
-  /// Whether or not the axis will configure the viewport to have "niced" ticks
-  /// around the domain values.
-  bool _autoViewport = _autoViewportDefault;
+  /// Configures whether the viewport should be reset back to default values
+  /// when the domain is reset.
+  ///
+  /// This should generally be disabled when the viewport will be managed
+  /// externally, e.g. from pan and zoom behaviors.
+  bool autoViewport = _autoViewportDefault;
 
   /// If the axis line should always be drawn.
   bool forceDrawAxisLine;
@@ -157,7 +148,6 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
   Rectangle<int> _componentBounds;
   Rectangle<int> _drawAreaBounds;
-  GraphicsFactory _graphicsFactory;
 
   /// Order for chart layout painting.
   ///
@@ -165,40 +155,24 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// that the domain axis line appears on top of any measure axis grid lines.
   int layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
 
-  Axis(
-      {TickProvider<D> tickProvider,
-      TickFormatter<D> tickFormatter,
-      MutableScale<D> scale})
+  Axis({this.tickProvider, TickFormatter<D> tickFormatter, this.scale})
       : _defaultScale = scale,
-        _scale = scale,
         _defaultTickProvider = tickProvider,
-        _tickProvider = tickProvider,
         _defaultTickFormatter = tickFormatter,
         _tickFormatter = tickFormatter;
 
   @protected
-  MutableScale<D> get mutableScale => _scale;
+  MutableScale<D> get mutableScale => scale;
 
   /// Rangeband for this axis.
   @override
-  double get rangeBand => _scale.rangeBand;
+  double get rangeBand => scale.rangeBand;
 
   @override
-  double get stepSize => _scale.stepSize;
+  double get stepSize => scale.stepSize;
 
   @override
-  ScaleOutputExtent get range => _scale.range;
-
-  /// Configures whether the viewport should be reset back to default values
-  /// when the domain is reset.
-  ///
-  /// This should generally be disabled when the viewport will be managed
-  /// externally, e.g. from pan and zoom behaviors.
-  set autoViewport(bool autoViewport) {
-    _autoViewport = autoViewport;
-  }
-
-  bool get autoViewport => _autoViewport;
+  ScaleOutputExtent get range => scale.range;
 
   void setRangeBandConfig(RangeBandConfig rangeBandConfig) {
     mutableScale.rangeBandConfig = rangeBandConfig;
@@ -215,15 +189,15 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       return;
     }
 
-    _scale.addDomain(domain);
+    scale.addDomain(domain);
   }
 
   void resetDefaultConfiguration() {
     forceDrawAxisLine = null;
-    _autoViewport = _autoViewportDefault;
-    _scale = _defaultScale;
+    autoViewport = _autoViewportDefault;
+    scale = _defaultScale;
     _tickFormatter = _defaultTickFormatter;
-    _tickProvider = _defaultTickProvider;
+    tickProvider = _defaultTickProvider;
   }
 
   void resetDomains() {
@@ -250,11 +224,11 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     // regression for b/110371453.
     _formatterValueCache.clear();
 
-    _scale.resetDomain();
+    scale.resetDomain();
     reverseOutputRange = false;
 
-    if (_autoViewport) {
-      _scale.resetViewportSettings();
+    if (autoViewport) {
+      scale.resetViewportSettings();
     }
 
     // TODO: Reset rangeband and step size when we port over config
@@ -266,16 +240,16 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   double getLocation(D domain) {
     const epsilon = 2e-10;
     if (domain != null) {
-      var domainLocation = _scale[domain];
+      var domainLocation = scale[domain];
 
       // If domain location is outside of scale range but only outside by less
       // than epsilon, correct the potential mislocation caused by floating
       // point computation by moving it inside of scale range.
-      if (domainLocation > _scale.range.max &&
-          domainLocation - epsilon < _scale.range.max) {
+      if (domainLocation > scale.range.max &&
+          domainLocation - epsilon < scale.range.max) {
         return domainLocation - epsilon;
-      } else if (domainLocation < _scale.range.min &&
-          domainLocation + epsilon > _scale.range.min) {
+      } else if (domainLocation < scale.range.min &&
+          domainLocation + epsilon > scale.range.min) {
         return domainLocation + epsilon;
       }
       return domainLocation;
@@ -284,15 +258,15 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   }
 
   @override
-  D getDomain(double location) => _scale.reverse(location);
+  D getDomain(double location) => scale.reverse(location);
 
   @override
   int compareDomainValueToViewport(D domain) {
-    return _scale.compareDomainValueToViewport(domain);
+    return scale.compareDomainValueToViewport(domain);
   }
 
   void setOutputRange(int start, int end) {
-    _scale.range = ScaleOutputExtent(start, end);
+    scale.range = ScaleOutputExtent(start, end);
   }
 
   /// Request update ticks from tick provider and update the painted ticks.
@@ -312,12 +286,12 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     _providedTicks = tickProvider.getTicks(
         context: context,
         graphicsFactory: graphicsFactory,
-        scale: _scale,
+        scale: scale,
         formatter: tickFormatter,
         formatterValueCache: _formatterValueCache,
         tickDrawStrategy: tickDrawStrategy,
         orientation: axisOrientation,
-        viewportExtensionEnabled: _autoViewport);
+        viewportExtensionEnabled: autoViewport);
   }
 
   /// Updates the ticks that are actually used for drawing.
@@ -340,8 +314,8 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
             animatedTick.textElement, tick.textElement)) {
           animatedTick.textElement = tick.textElement;
         }
-        var newTarget = _scale[tick.value];
-        if (_scale.isRangeValueWithinViewport(newTarget)) {
+        var newTarget = scale[tick.value];
+        if (scale.isRangeValueWithinViewport(newTarget)) {
           // Update target for all existing ticks
           animatedTick.setNewTarget(newTarget);
         } else {
@@ -351,7 +325,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
         providedTicks.remove(tick);
       } else {
         // Animate out ticks that do not exist any more.
-        animatedTick.animateOut(_scale[animatedTick.value].toDouble());
+        animatedTick.animateOut(scale[animatedTick.value].toDouble());
       }
     }
 
@@ -363,7 +337,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       } else {
         animatedTick = AxisTicks<D>(tick);
       }
-      if (_scale.isRangeValueWithinViewport(animatedTick.locationPx)) {
+      if (scale.isRangeValueWithinViewport(animatedTick.locationPx)) {
         if (_previousScale != null) {
           animatedTick.animateInFrom(_previousScale[tick.value].toDouble());
         }
@@ -375,7 +349,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
     // Save a copy of the current scale to be used as the previous scale when
     // ticks are updated.
-    _previousScale = _scale.copy();
+    _previousScale = scale.copy();
   }
 
   /// Configures the zoom and translate.
@@ -400,7 +374,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     viewportTranslatePx = _clampTranslatePx(viewportScale, viewportTranslatePx,
         drawAreaWidth: drawAreaWidth, drawAreaHeight: drawAreaHeight);
 
-    _scale.setViewportSettings(viewportScale, viewportTranslatePx);
+    scale.setViewportSettings(viewportScale, viewportTranslatePx);
   }
 
   /// Returns the current viewport scale.
@@ -409,14 +383,14 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// value of 2.0 would map the data to an output of double the range so you
   /// only see half the data in the viewport.  This is the equivalent to
   /// zooming.  Its value is likely >= 1.0.
-  double get viewportScalingFactor => _scale.viewportScalingFactor;
+  double get viewportScalingFactor => scale.viewportScalingFactor;
 
   /// Returns the current pixel viewport offset
   ///
   /// The translate is used by the scale function when it applies the scale.
   /// This is the equivalent to panning.  Its value is likely <= 0 to pan the
   /// data to the left.
-  double get viewportTranslatePx => _scale?.viewportTranslatePx;
+  double get viewportTranslatePx => scale?.viewportTranslatePx;
 
   /// Clamps a possible change in domain translation to fit within the range of
   /// the data.
@@ -452,12 +426,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   //
 
   @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
-  }
+  GraphicsFactory graphicsFactory;
 
   @override
   LayoutViewConfig get layoutConfig => LayoutViewConfig(
@@ -534,8 +503,8 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
         ? ScaleOutputExtent(outputEnd, outputStart)
         : ScaleOutputExtent(outputStart, outputEnd);
 
-    if (_scale.range != outputRange) {
-      _scale.range = outputRange;
+    if (scale.range != outputRange) {
+      scale.range = outputRange;
     }
 
     _updateProvidedTicks();
@@ -591,7 +560,7 @@ class NumericAxis extends Axis<num> {
 
   void setScaleViewport(NumericExtents viewport) {
     autoViewport = false;
-    (_scale as NumericScale).viewportDomain = viewport;
+    (scale as NumericScale).viewportDomain = viewport;
   }
 }
 
@@ -608,7 +577,7 @@ class OrdinalAxis extends Axis<String> {
 
   void setScaleViewport(OrdinalViewport viewport) {
     autoViewport = false;
-    (_scale as OrdinalScale)
+    (scale as OrdinalScale)
         .setViewport(viewport.dataSize, viewport.startingDomain);
   }
 
@@ -628,7 +597,7 @@ class OrdinalAxis extends Axis<String> {
     // By resetting the viewport after layout, we guarantee the correct range
     // was used to apply the viewport and behaviors that update the viewport
     // based on translate and scale changes will not be affected (pan/zoom).
-    (_scale as OrdinalScale).setViewport(null, null);
+    (scale as OrdinalScale).setViewport(null, null);
   }
 }
 
@@ -662,7 +631,7 @@ class AxisTester<D> {
 
   List<AxisTicks<D>> get axisTicks => _axis._axisTicks;
 
-  MutableScale<D> get scale => _axis._scale;
+  MutableScale<D> get scale => _axis.scale;
 
   List<D> get axisValues => axisTicks.map((t) => t.value).toList();
 }

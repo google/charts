@@ -361,7 +361,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
-  GraphicsFactory _graphicsFactory;
+  @override
+  GraphicsFactory graphicsFactory;
 
   /// Store a map of series drawn on the chart, mapped by series name.
   ///
@@ -382,14 +383,6 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   set annotationMap(LinkedHashMap<String, _AnimatedAnnotation<D>> value) {
     _annotationMap = value;
-  }
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
   }
 
   @override
@@ -1221,7 +1214,7 @@ class RangeAnnotationTester<D> {
   RangeAnnotationTester(this.behavior);
 
   set graphicsFactory(GraphicsFactory value) {
-    behavior._view._graphicsFactory = value;
+    behavior._view.graphicsFactory = value;
   }
 
   void mockLayout(Rectangle<int> bounds) {

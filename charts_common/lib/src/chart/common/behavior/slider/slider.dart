@@ -614,7 +614,8 @@ class _SliderLayoutView<D> extends LayoutView {
 
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
-  GraphicsFactory _graphicsFactory;
+  @override
+  GraphicsFactory graphicsFactory;
 
   /// Renderer for the handle. Defaults to a rectangle.
   SymbolRenderer _handleRenderer;
@@ -632,14 +633,6 @@ class _SliderLayoutView<D> extends LayoutView {
 
   set sliderHandle(_AnimatedSlider value) {
     _sliderHandle = value;
-  }
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
   }
 
   @override

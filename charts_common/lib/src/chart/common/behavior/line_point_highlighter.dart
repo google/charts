@@ -294,7 +294,8 @@ class _LinePointLayoutView<D> extends LayoutView {
 
   final SymbolRenderer symbolRenderer;
 
-  GraphicsFactory _graphicsFactory;
+  @override
+  GraphicsFactory graphicsFactory;
 
   /// Store a map of series drawn on the chart, mapped by series name.
   ///
@@ -317,14 +318,6 @@ class _LinePointLayoutView<D> extends LayoutView {
 
   set seriesPointMap(LinkedHashMap<String, _AnimatedPoint<D>> value) {
     _seriesPointMap = value;
-  }
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
   }
 
   @override

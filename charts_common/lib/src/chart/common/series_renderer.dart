@@ -156,7 +156,8 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
 
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
-  GraphicsFactory _graphicsFactory;
+  @override
+  GraphicsFactory graphicsFactory;
 
   BaseSeriesRenderer({
     @required this.rendererId,
@@ -166,14 +167,6 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
             paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
-  }
 
   @override
   void onAttach(BaseChart<D> chart) {}
