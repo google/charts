@@ -945,7 +945,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (area != null) {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(area.positionExtent),
-                fill: area.areaColor != null ? area.areaColor : area.color,
+                fill: area.areaColor ?? area.color,
                 points: area.points);
           }
         });
@@ -963,7 +963,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (bound != null) {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(bound.positionExtent),
-                fill: bound.areaColor != null ? bound.areaColor : bound.color,
+                fill: bound.areaColor ?? bound.color,
                 points: bound.points);
           }
         });
@@ -1546,7 +1546,8 @@ class _Range<D> {
     } else if (value is String) {
       _includePointAsString(value);
     } else {
-      throw ('Unsupported object type for LineRenderer domain value: '
+      throw ArgumentError(
+          'Unsupported object type for LineRenderer domain value: '
           '${value.runtimeType}');
     }
   }

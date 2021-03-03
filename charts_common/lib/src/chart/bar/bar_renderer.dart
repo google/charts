@@ -289,18 +289,18 @@ class BarRenderer<D>
       // Negative bars should be rounded towards the negative axis direction.
       // In vertical mode, this is the bottom. In horizontal mode, this is the
       // left side of the chart for LTR, or the right side for RTL.
-      roundTopLeft = !renderingVertically && !isRtl ? true : false;
-      roundTopRight = !renderingVertically && isRtl ? true : false;
-      roundBottomLeft = renderingVertically || !isRtl ? true : false;
-      roundBottomRight = renderingVertically || isRtl ? true : false;
+      roundTopLeft = !renderingVertically && !isRtl;
+      roundTopRight = !renderingVertically && isRtl;
+      roundBottomLeft = renderingVertically || !isRtl;
+      roundBottomRight = renderingVertically || isRtl;
     } else {
       // Positive bars should be rounded towards the positive axis direction.
       // In vertical mode, this is the top. In horizontal mode, this is the
       // right side of the chart for LTR, or the left side for RTL.
-      roundTopLeft = renderingVertically || isRtl ? true : false;
-      roundTopRight = isRtl ? false : true;
-      roundBottomLeft = isRtl ? true : false;
-      roundBottomRight = renderingVertically || isRtl ? false : true;
+      roundTopLeft = renderingVertically || isRtl;
+      roundTopRight = !isRtl;
+      roundBottomLeft = isRtl;
+      roundBottomRight = !(renderingVertically || isRtl);
     }
 
     final barStack = CanvasBarStack(
@@ -455,7 +455,7 @@ class BarRenderer<D>
 
     int domainEnd = domainStart + barWidth;
 
-    measureValue = measureValue != null ? measureValue : 0;
+    measureValue ??= 0;
 
     // Calculate measure locations. Stacked bars should have their
     // offset calculated previously.

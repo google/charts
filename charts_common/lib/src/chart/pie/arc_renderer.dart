@@ -690,31 +690,21 @@ class _AnimatedArc<D> {
 
   /// Returns the [startAngle] of the new target element, without updating
   /// animation state.
-  double get newTargetArcStartAngle {
-    return _targetArc != null ? _targetArc.startAngle : null;
-  }
+  double get newTargetArcStartAngle => _targetArc?.startAngle;
 
   /// Returns the [endAngle] of the new target element, without updating
   /// animation state.
-  double get currentArcEndAngle {
-    return _currentArc != null ? _currentArc.endAngle : null;
-  }
+  double get currentArcEndAngle => _currentArc?.endAngle;
 
   /// Returns the [startAngle] of the currently rendered element, without
   /// updating animation state.
-  double get currentArcStartAngle {
-    return _currentArc != null ? _currentArc.startAngle : null;
-  }
+  double get currentArcStartAngle => _currentArc?.startAngle;
 
   /// Returns the [endAngle] of the new target element, without updating
   /// animation state.
-  double get previousArcEndAngle {
-    return _previousArc != null ? _previousArc.endAngle : null;
-  }
+  double get previousArcEndAngle => _previousArc?.endAngle;
 
   /// Returns the [startAngle] of the previously rendered element, without
   /// updating animation state.
-  double get previousArcStartAngle {
-    return _previousArc != null ? _previousArc.startAngle : null;
-  }
+  double get previousArcStartAngle => _previousArc?.startAngle;
 }

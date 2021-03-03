@@ -313,6 +313,7 @@ class TriangleSymbolRenderer extends SymbolRenderer {
   }
 
   @override
+  // ignore: hash_and_equals
   bool operator ==(Object other) =>
       other is TriangleSymbolRenderer && super == other;
 }

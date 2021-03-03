@@ -71,15 +71,10 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
           labelRotation: labelRotation);
 
   @override
+  // ignore: hash_and_equals
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other is GridlineRendererSpec && super == other);
-  }
-
-  @override
-  int get hashCode {
-    int hashcode = super.hashCode;
-    return hashcode;
   }
 }
 

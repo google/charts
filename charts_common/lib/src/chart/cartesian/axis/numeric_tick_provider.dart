@@ -188,7 +188,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     steps.sort();
 
     final stepSet = Set.from(steps);
-    _allowedSteps = List<double>(stepSet.length * 3);
+    _allowedSteps = List<double>.filled(stepSet.length * 3, 0);
     int stepIndex = 0;
     for (double step in stepSet) {
       assert(1.0 <= step && step < 10.0);
@@ -495,13 +495,12 @@ class NumericTickProvider extends BaseTickProvider<num> {
   }
 
   List<double> _getTickValues(_TickStepInfo steps, int tickCount) {
-    final tickValues = List<double>(tickCount);
     // We have our size and start, assign all the tick values to the given array.
-    for (int i = 0; i < tickCount; i++) {
-      tickValues[i] = dataToAxisUnitConverter.invert(
-          _removeRoundingErrors(steps.tickStart + (i * steps.stepSize)));
-    }
-    return tickValues;
+    return [
+      for (int i = 0; i < tickCount; i++)
+        dataToAxisUnitConverter.invert(
+            _removeRoundingErrors(steps.tickStart + (i * steps.stepSize))),
+    ];
   }
 
   /// Given the axisDimensions update the tick counts given they are not fixed.
