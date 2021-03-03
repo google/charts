@@ -31,7 +31,7 @@ import 'per_series_legend_entry_generator.dart';
 /// By default this behavior creates a legend entry per series.
 class SeriesLegend<D> extends Legend<D> {
   /// List of currently hidden series, by ID.
-  final _hiddenSeriesList = Set<String>();
+  final _hiddenSeriesList = <String>{};
 
   /// List of series IDs that should be hidden by default.
   List<String> _defaultHiddenSeries;

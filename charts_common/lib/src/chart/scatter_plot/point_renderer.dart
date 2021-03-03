@@ -75,6 +75,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
   @protected
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   var seriesPointMap = LinkedHashMap<String, List<AnimatedPoint<D>>>();
 
   // Store a list of lines that exist in the series data.

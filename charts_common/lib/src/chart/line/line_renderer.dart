@@ -135,7 +135,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       final styleSegments = <_LineRendererElement<D>>[];
       var styleSegmentsIndex = 0;
 
-      final usedKeys = Set<String>();
+      final usedKeys = <String>{};
 
       // Configure style segments for each series.
       String previousSegmentKey;

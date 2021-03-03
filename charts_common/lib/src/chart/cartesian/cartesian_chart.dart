@@ -293,6 +293,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
         removeView(axis);
       });
 
+      // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
       _disjointMeasureAxes = LinkedHashMap<String, NumericAxis>();
       if (_disjointMeasureAxesSpec != null) {
         _disjointMeasureAxesSpec.forEach((String axisId, AxisSpec axisSpec) {

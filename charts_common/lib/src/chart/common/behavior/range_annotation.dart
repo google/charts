@@ -100,6 +100,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _annotationMap = LinkedHashMap<String, _AnimatedAnnotation<D>>();
 
   // Store a list of annotations that exist in the current annotation list.
