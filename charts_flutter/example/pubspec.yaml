@@ -11,6 +11,6 @@ dependencies:
   flutter_test:
     sdk: flutter
   meta: ^1.1.1
-  intl: ">=0.17.0 < 0.18.0"
+  intl: ">=0.15.2 < 0.18.0"
 flutter:
   uses-material-design: true
