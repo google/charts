@@ -181,6 +181,7 @@ class DateTimeEndPointsTickProviderSpec implements DateTimeTickProviderSpec {
   }
 
   @override
+  // ignore: hash_and_equals
   bool operator ==(Object other) => other is DateTimeEndPointsTickProviderSpec;
 }
 

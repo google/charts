@@ -114,7 +114,7 @@ class NoCornerStrategy extends ConstCornerStrategy {
   const NoCornerStrategy() : super(0);
 
   @override
-  bool operator ==(other) => (other is NoCornerStrategy) ? true : false;
+  bool operator ==(other) => other is NoCornerStrategy;
 
   @override
   int get hashCode => 31;

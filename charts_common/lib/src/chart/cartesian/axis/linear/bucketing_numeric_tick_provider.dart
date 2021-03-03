@@ -76,11 +76,13 @@ class BucketingNumericTickProvider extends NumericTickProvider {
     TickHint<num> tickHint,
   }) {
     if (_threshold == null) {
-      throw ('Bucketing threshold must be set before getting ticks.');
+      throw ArgumentError(
+          'Bucketing threshold must be set before getting ticks.');
     }
 
     if (_showBucket == null) {
-      throw ('The showBucket flag must be set before getting ticks.');
+      throw ArgumentError(
+          'The showBucket flag must be set before getting ticks.');
     }
 
     final localFormatter = _BucketingFormatter()

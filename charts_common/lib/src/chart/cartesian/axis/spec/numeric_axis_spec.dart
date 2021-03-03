@@ -190,6 +190,7 @@ class NumericEndPointsTickProviderSpec implements NumericTickProviderSpec {
   }
 
   @override
+  // ignore: hash_and_equals
   bool operator ==(Object other) => other is NumericEndPointsTickProviderSpec;
 }
 

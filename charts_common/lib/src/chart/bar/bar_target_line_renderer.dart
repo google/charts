@@ -326,7 +326,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
 
     int domainEnd = domainStart + barWidth + overDrawStartPx + overDrawEndPx;
 
-    measureValue = measureValue != null ? measureValue : 0;
+    measureValue = measureValue ?? 0;
 
     // Calculate measure locations. Stacked bars should have their
     // offset calculated previously.

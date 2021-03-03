@@ -218,7 +218,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             details.barStackIndex = prevDetail.barStackIndex + 1;
           }
 
-          details.cumulativeTotal = measure != null ? measure : 0;
+          details.cumulativeTotal = measure ?? 0;
 
           // Get the previous series' measure offset.
           var measureOffset = measureOffsetFn(barIndex);
@@ -230,7 +230,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
           // And overwrite the details measure offset.
           details.measureOffset = measureOffset;
-          var measureValue = (measure != null ? measure : 0);
+          var measureValue = measure ?? 0;
           details.measureOffsetPlusMeasure = measureOffset + measureValue;
 
           categoryToDetailsMap[stackKey] = details;
