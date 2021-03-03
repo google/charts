@@ -390,13 +390,13 @@ class Slider<D> implements ChartBehavior<D> {
       // Clamp the position to the edge of the viewport.
       positionY = clamp(positionY, viewBounds.top, viewBounds.bottom);
 
-      final positionXChanged = (_previousDomainCenterPoint != null &&
-          positionX != _previousDomainCenterPoint.x);
+      final positionXChanged = _previousDomainCenterPoint != null &&
+          positionX != _previousDomainCenterPoint.x;
 
       final positionYChanged =
-          (_style.handlePosition == SliderHandlePosition.manual &&
+          _style.handlePosition == SliderHandlePosition.manual &&
               _handleBounds != null &&
-              positionY != previousYPosition);
+              positionY != previousYPosition;
 
       positionChanged = positionXChanged || positionYChanged;
 
@@ -732,8 +732,8 @@ class _SliderElement<D> {
     stroke = getAnimatedColor(previous.stroke, target.stroke, animationPercent);
 
     strokeWidthPx =
-        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx);
+        ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx;
   }
 }
 

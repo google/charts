@@ -218,11 +218,11 @@ class LayoutManagerImpl implements LayoutManager {
     // Prevents the app from crashing by rendering overlapping content instead.
     final drawAreaWidth = max(
       _minDrawWidth,
-      (width - measurements.leftWidth - measurements.rightWidth),
+      width - measurements.leftWidth - measurements.rightWidth,
     );
     final drawAreaHeight = max(
       _minDrawHeight,
-      (height - measurements.bottomHeight - measurements.topHeight),
+      height - measurements.bottomHeight - measurements.topHeight,
     );
 
     // Bounds for the draw area.
@@ -263,8 +263,8 @@ class LayoutManagerImpl implements LayoutManager {
   Iterable<LayoutView> _viewsForPositions(LayoutPosition p1,
       [LayoutPosition p2]) {
     return positionOrderedViews.where((LayoutView view) =>
-        (view.layoutConfig.position == p1 ||
-            (p2 != null && view.layoutConfig.position == p2)));
+        view.layoutConfig.position == p1 ||
+        (p2 != null && view.layoutConfig.position == p2));
   }
 
   /// Measure and return size measurements.

@@ -1005,8 +1005,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         : clamp(extent.start, drawBounds.left, drawBounds.right);
 
     final right = isRtl
-        ? clamp((extent.start), drawBounds.left, drawBounds.right)
-        : clamp((extent.end), drawBounds.left, drawBounds.right);
+        ? clamp(extent.start, drawBounds.left, drawBounds.right)
+        : clamp(extent.end, drawBounds.left, drawBounds.right);
 
     return Rectangle<num>(
         left,
@@ -1093,8 +1093,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
           if (byDomain) {
             if ((domainDistance < nearestDomainDistance) ||
-                ((domainDistance == nearestDomainDistance &&
-                    measureDistance < nearestMeasureDistance))) {
+                ((domainDistance == nearestDomainDistance) &&
+                    (measureDistance < nearestMeasureDistance))) {
               nearestPoint = p;
               nearestDomainDistance = domainDistance;
               nearestMeasureDistance = measureDistance;
@@ -1246,8 +1246,8 @@ class _LineRendererElement<D> {
     }
 
     strokeWidthPx =
-        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx);
+        ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx;
   }
 }
 

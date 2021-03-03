@@ -429,7 +429,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       }
       // Bound the viewport translate to the range of the data.
       final maxPositiveTranslate =
-          ((drawAreaHeight * viewportScalingFactor) - drawAreaHeight);
+          (drawAreaHeight * viewportScalingFactor) - drawAreaHeight;
 
       viewportTranslatePx =
           max(min(viewportTranslatePx, maxPositiveTranslate), 0.0);

@@ -128,7 +128,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
             continue;
           }
 
-          final percentOfSeries = (measure / seriesMeasureTotal);
+          final percentOfSeries = measure / seriesMeasureTotal;
           var angle = arcLength * percentOfSeries;
           var endAngle = startAngle + angle;
 

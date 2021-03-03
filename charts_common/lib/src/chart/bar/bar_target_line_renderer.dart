@@ -274,7 +274,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     // Calculate how wide each bar target line should be within the group of
     // bar target lines. If we only have one series, or are stacked, then
     // barWidth should equal domainWidth.
-    int spacingLoss = (_barGroupInnerPadding * (numBarGroups - 1));
+    int spacingLoss = _barGroupInnerPadding * (numBarGroups - 1);
     int desiredWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
 
     if (config.maxBarWidthPx != null) {

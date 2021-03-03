@@ -61,7 +61,7 @@ class OrdinalScaleDomainInfo {
 
   String get last => _domainList.isEmpty ? null : _domainList.last;
 
-  bool get isEmpty => (_index == 0);
+  bool get isEmpty => _index == 0;
   bool get isNotEmpty => !isEmpty;
 
   OrdinalExtents get extent => OrdinalExtents.all(_domainList);

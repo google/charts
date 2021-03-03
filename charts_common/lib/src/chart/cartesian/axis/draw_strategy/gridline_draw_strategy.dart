@@ -73,7 +73,7 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is GridlineRendererSpec && super == (other));
+        (other is GridlineRendererSpec && super == other);
   }
 
   @override

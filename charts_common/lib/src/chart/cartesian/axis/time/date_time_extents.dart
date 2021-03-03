@@ -29,5 +29,5 @@ class DateTimeExtents extends Extents<DateTime> {
   }
 
   @override
-  int get hashCode => (start.hashCode + (end.hashCode * 37));
+  int get hashCode => start.hashCode + (end.hashCode * 37);
 }

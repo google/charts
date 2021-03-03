@@ -61,5 +61,5 @@ class EndPointsTimeAxisSpec extends DateTimeAxisSpec {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is EndPointsTimeAxisSpec && super == (other));
+      (other is EndPointsTimeAxisSpec && super == other);
 }

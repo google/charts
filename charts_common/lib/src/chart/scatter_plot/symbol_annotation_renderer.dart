@@ -73,7 +73,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
-    var localConfig = (config as SymbolAnnotationRendererConfig);
+    var localConfig = config as SymbolAnnotationRendererConfig;
 
     _seriesInfo.clear();
 

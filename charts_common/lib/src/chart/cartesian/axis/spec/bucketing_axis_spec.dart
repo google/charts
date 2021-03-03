@@ -112,7 +112,7 @@ class BucketingAxisSpec extends NumericAxisSpec {
       (other is BucketingAxisSpec &&
           showBucket == other.showBucket &&
           threshold == other.threshold &&
-          super == (other));
+          super == other);
 
   @override
   int get hashCode {

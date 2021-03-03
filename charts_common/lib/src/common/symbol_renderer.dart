@@ -110,7 +110,7 @@ class RoundedRectSymbolRenderer extends SymbolRenderer {
   bool operator ==(Object other) {
     return other is RoundedRectSymbolRenderer &&
         other.radius == radius &&
-        super == (other);
+        super == other;
   }
 
   @override
@@ -193,7 +193,7 @@ class LineSymbolRenderer extends SymbolRenderer {
   bool operator ==(Object other) {
     return other is LineSymbolRenderer &&
         other.strokeWidth == strokeWidth &&
-        super == (other);
+        super == other;
   }
 
   @override
@@ -235,7 +235,7 @@ class CircleSymbolRenderer extends SymbolRenderer {
 
   @override
   bool operator ==(Object other) =>
-      other is CircleSymbolRenderer && super == (other);
+      other is CircleSymbolRenderer && super == other;
 
   @override
   int get hashCode {
@@ -269,7 +269,7 @@ class RectSymbolRenderer extends SymbolRenderer {
 
   @override
   bool operator ==(Object other) =>
-      other is RectSymbolRenderer && super == (other);
+      other is RectSymbolRenderer && super == other;
 
   @override
   int get hashCode {

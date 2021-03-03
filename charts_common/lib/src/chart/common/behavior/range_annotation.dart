@@ -584,7 +584,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
       }
     }
 
-    return (maxWidth).round();
+    return maxWidth.round();
   }
 
   /// Gets the resolved location for a label element.
@@ -1156,8 +1156,8 @@ class _AnnotationElement<D> {
     color = getAnimatedColor(previous.color, target.color, animationPercent);
 
     strokeWidthPx =
-        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx);
+        ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx;
   }
 }
 

@@ -63,7 +63,7 @@ class RangeTickProvider<D> extends TickProvider<D> {
       }
 
       // Save off whether all ticks have labels.
-      allTicksHaveLabels &= (spec.label != null);
+      allTicksHaveLabels &= spec.label != null;
     }
 
     // Use the formatter's label if the tick spec does not provide one.

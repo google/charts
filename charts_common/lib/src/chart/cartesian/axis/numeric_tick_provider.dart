@@ -413,7 +413,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     // If the range contains zero, ensure that zero is a tick.
     if (high >= 0 && low <= 0) {
       // determine the ratio of regions that are above the zero axis.
-      final posRegionRatio = (high > 0 ? min(1.0, high / (high - low)) : 0.0);
+      final posRegionRatio = high > 0 ? min(1.0, high / (high - low)) : 0.0;
       var positiveRegionCount = (regionCount * posRegionRatio).ceil();
       var negativeRegionCount = regionCount - positiveRegionCount;
       // Ensure that negative regions are not excluded, unless there are no
@@ -455,7 +455,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
         final tmpStepSize = _removeRoundingErrors(step * favoredTensBase);
 
         // If prefer whole number, then don't allow a step that isn't one.
-        if (dataIsInWholeNumbers && (tmpStepSize).round() != tmpStepSize) {
+        if (dataIsInWholeNumbers && tmpStepSize.round() != tmpStepSize) {
           continue;
         }
 
@@ -478,7 +478,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
         final tmpStepSize = _removeRoundingErrors(step * diffTensBase);
 
         // If prefer whole number, then don't allow a step that isn't one.
-        if (dataIsInWholeNumbers && (tmpStepSize).round() != tmpStepSize) {
+        if (dataIsInWholeNumbers && tmpStepSize.round() != tmpStepSize) {
           continue;
         }
 

@@ -92,9 +92,7 @@ class NumericAxisSpec extends AxisSpec<num> {
 
   @override
   bool operator ==(Object other) =>
-      other is NumericAxisSpec &&
-      viewport == other.viewport &&
-      super == (other);
+      other is NumericAxisSpec && viewport == other.viewport && super == other;
 
   @override
   int get hashCode {

@@ -122,7 +122,7 @@ class RangeTickRendererSpec<D> extends SmallTickRendererSpec<D> {
         (other is RangeTickRendererSpec &&
             lineStyle == other.lineStyle &&
             tickLengthPx == other.tickLengthPx &&
-            super == (other));
+            super == other);
   }
 
   @override
@@ -275,14 +275,14 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
             ),
             rangeShadeOffsetFromAxisPx + rangeShadeHeightPx);
       } else {
-        return (max(
+        return max(
                 prevMax,
                 calculateHeightForRotatedLabel(
                   labelRotation,
                   getLabelHeight(labelElements),
                   getLabelWidth(labelElements),
                 )) +
-            labelOffsetFromAxisPx);
+            labelOffsetFromAxisPx;
       }
     }).round();
 

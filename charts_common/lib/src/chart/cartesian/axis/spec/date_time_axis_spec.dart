@@ -92,9 +92,7 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
 
   @override
   bool operator ==(Object other) =>
-      other is DateTimeAxisSpec &&
-      viewport == other.viewport &&
-      super == (other);
+      other is DateTimeAxisSpec && viewport == other.viewport && super == other;
 
   @override
   int get hashCode {

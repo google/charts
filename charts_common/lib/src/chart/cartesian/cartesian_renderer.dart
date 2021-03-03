@@ -189,7 +189,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
       // Straddling viewport?
       // Return previous index as the nearest start of the viewport.
       if (comparisonValue == 1 && prevComparisonValue == -1) {
-        return (searchIndex - 1);
+        return searchIndex - 1;
       }
 
       // Before start? Update startIndex

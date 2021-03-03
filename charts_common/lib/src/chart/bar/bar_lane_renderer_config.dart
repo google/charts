@@ -89,7 +89,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
     return other.backgroundBarColor == backgroundBarColor &&
         other.emptyLaneLabel == emptyLaneLabel &&
         other.mergeEmptyLanes == mergeEmptyLanes &&
-        super == (other);
+        super == other;
   }
 
   @override
