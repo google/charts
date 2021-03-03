@@ -38,7 +38,7 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
   final bool renderAbove = false;
 
   ComparisonPointsDecorator({PointSymbolRenderer symbolRenderer})
-      : this.symbolRenderer = symbolRenderer ?? CylinderSymbolRenderer();
+      : symbolRenderer = symbolRenderer ?? CylinderSymbolRenderer();
 
   @override
   void decorate(PointRendererElement<D> pointElement, ChartCanvas canvas,

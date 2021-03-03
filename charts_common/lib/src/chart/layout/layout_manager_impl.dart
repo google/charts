@@ -52,8 +52,7 @@ class LayoutManagerImpl implements LayoutManager {
   bool _viewsNeedPositionSort = true;
 
   /// Create a new [LayoutManager].
-  LayoutManagerImpl({LayoutConfig config})
-      : this.config = config ?? LayoutConfig();
+  LayoutManagerImpl({LayoutConfig config}) : config = config ?? LayoutConfig();
 
   /// Add one [LayoutView].
   @override

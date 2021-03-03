@@ -104,7 +104,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       this.strokeWidthPx = 0.0,
       SymbolRenderer symbolRenderer,
       this.weightPattern})
-      : this.symbolRenderer = symbolRenderer ?? RoundedRectSymbolRenderer();
+      : symbolRenderer = symbolRenderer ?? RoundedRectSymbolRenderer();
 
   /// Whether or not the bars should be organized into groups.
   bool get grouped =>

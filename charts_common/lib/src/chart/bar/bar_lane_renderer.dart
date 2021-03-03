@@ -22,7 +22,6 @@ import '../common/chart_canvas.dart' show ChartCanvas;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import 'bar_lane_renderer_config.dart' show BarLaneRendererConfig;
 import 'bar_renderer.dart' show AnimatedBar, BarRenderer, BarRendererElement;
-import 'bar_renderer_decorator.dart' show BarRendererDecorator;
 import 'base_bar_renderer.dart'
     show
         allBarGroupWeightsKey,
@@ -50,8 +49,6 @@ const domainValuesKey = AttributeKey<Set>('BarLaneRenderer.domainValues');
 /// swim lanes may optionally be merged together into one wide lane that covers
 /// the full domain range band width.
 class BarLaneRenderer<D> extends BarRenderer<D> {
-  final BarRendererDecorator barRendererDecorator;
-
   /// Store a map of domain+barGroupIndex+category index to bar lanes in a
   /// stack.
   ///
@@ -78,8 +75,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
   }
 
   BarLaneRenderer._internal({BarLaneRendererConfig config, String rendererId})
-      : barRendererDecorator = config.barRendererDecorator,
-        super.internal(config: config, rendererId: rendererId);
+      : super.internal(config: config, rendererId: rendererId);
 
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
@@ -120,7 +116,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
 
     // Add gray bars to render under every bar stack.
     seriesList.forEach((ImmutableSeries<D> series) {
-      Set<D> domainValues = series.getAttr(domainValuesKey) as Set<D>;
+      var domainValues = series.getAttr(domainValuesKey) as Set<D>;
 
       final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
       final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;

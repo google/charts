@@ -348,7 +348,6 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     final isRtl = chartContext.isRtl;
     final labelElements = splitLabel(tick.textElement);
     final labelHeight = getLabelHeight(labelElements);
-    final labelWidth = getLabelWidth(labelElements);
     var multiLineLabelOffset = 0;
 
     for (final line in labelElements) {

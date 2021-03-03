@@ -86,7 +86,7 @@ class LineRendererConfig<D> extends LayoutViewConfig
       this.areaOpacity = 0.1,
       this.roundEndCaps = false,
       SymbolRenderer symbolRenderer})
-      : this.symbolRenderer = symbolRenderer ?? LineSymbolRenderer();
+      : symbolRenderer = symbolRenderer ?? LineSymbolRenderer();
 
   @override
   LineRenderer<D> build() {

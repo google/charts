@@ -85,9 +85,8 @@ class OrdinalCartesianChart extends CartesianChart<String> {
   @protected
   @override
   void initDomainAxis() {
-    _domainAxis
-      ..tickDrawStrategy = SmallTickRendererSpec<String>()
-          .createDrawStrategy(context, graphicsFactory);
+    _domainAxis.tickDrawStrategy = SmallTickRendererSpec<String>()
+        .createDrawStrategy(context, graphicsFactory);
   }
 }
 

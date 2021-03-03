@@ -352,7 +352,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   final RangeAnnotation rangeAnnotation;
 
-  final layoutPaintOrder;
+  final int layoutPaintOrder;
 
   CartesianChart<D> chart;
 
