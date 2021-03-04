@@ -89,7 +89,10 @@ class TestChartState extends State<TestChart> {
       defaultInteractions: false,
     );
 
-    return new GestureDetector(child: chart, onTap: handleOnTap);
+    return new Directionality(
+      textDirection: TextDirection.ltr,
+      child: new GestureDetector(child: chart, onTap: handleOnTap),
+    );
   }
 
   void handleOnTap() {
