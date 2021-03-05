@@ -1,14 +1,18 @@
 name: example
 description: Charts-Flutter Demo
+
+environment:
+  sdk: '>=2.10.0 <3.0.0'
+
 dependencies:
   charts_flutter:
     path: ../
-  cupertino_icons: ^0.1.0
+  cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  meta: ^1.1.1
-  intl: ^0.15.2
+  meta: ^1.3.0
+  intl: ^0.17.0
 flutter:
   uses-material-design: true
