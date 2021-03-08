@@ -1,5 +1,7 @@
 name: example
 description: Charts-Flutter Demo
+environment:
+  sdk: '>=1.23.0 <3.0.0'
 dependencies:
   charts_flutter:
     path: ../
@@ -9,6 +11,6 @@ dependencies:
   flutter_test:
     sdk: flutter
   meta: ^1.1.1
-  intl: ^0.15.2
+  intl: ">=0.15.2 < 0.18.0"
 flutter:
   uses-material-design: true
