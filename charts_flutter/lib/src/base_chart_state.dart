@@ -68,7 +68,9 @@ class BaseChartState<D> extends State<BaseChart<D>>
 
   @override
   void requestRebuild() {
-    setState(() {});
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
