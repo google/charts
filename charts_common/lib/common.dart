@@ -261,3 +261,26 @@ export 'src/common/line_style.dart' show LineStyle;
 export 'src/common/material_palette.dart' show MaterialPalette;
 export 'src/common/performance.dart' show Performance;
 export 'src/common/proxy_gesture_listener.dart' show ProxyGestureListener;
+export 'src/common/rtl_spec.dart' show AxisDirection, RTLSpec;
+export 'src/common/style/material_style.dart' show MaterialStyle;
+export 'src/common/style/style_factory.dart' show StyleFactory;
+export 'src/common/symbol_renderer.dart'
+    show
+        CircleSymbolRenderer,
+        CylinderSymbolRenderer,
+        LineSymbolRenderer,
+        PointSymbolRenderer,
+        RectSymbolRenderer,
+        RectangleRangeSymbolRenderer,
+        RoundedRectSymbolRenderer,
+        SymbolRenderer,
+        TriangleSymbolRenderer;
+export 'src/common/text_element.dart'
+    show TextElement, TextDirection, MaxWidthStrategy;
+export 'src/common/text_measurement.dart' show TextMeasurement;
+export 'src/common/text_style.dart' show TextStyle;
+export 'src/data/series.dart' show AttributeKey, Series, TypedAccessorFn;
+export 'src/data/tree.dart' show Tree, TreeNode;
+//
+// DO NOT ADD ANYTHING BELOW THIS. IT WILL BREAK OPENSOURCE.
+//
