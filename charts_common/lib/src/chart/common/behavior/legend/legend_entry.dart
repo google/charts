@@ -99,6 +99,7 @@ class LegendEntry<D> extends LegendEntryBase {
   final D domain;
   final Color color;
   double value;
+  List<int> selectedDataIndexes;
   String formattedValue;
   bool isSelected;
 
@@ -110,6 +111,7 @@ class LegendEntry<D> extends LegendEntryBase {
       this.datumIndex,
       this.domain,
       this.value,
+      this.selectedDataIndexes,
       this.color,
       this.isSelected = false,
       TextStyleSpec textStyle,
@@ -135,4 +137,19 @@ class LegendEntry<D> extends LegendEntryBase {
   /// Get the native symbol renderer stored in the series.
   SymbolRenderer get symbolRenderer =>
       series.getAttr(rendererKey).symbolRenderer;
+
+  /// Gets the dash pattern for the symbol from the given datum and series.
+  ///
+  /// Use the dash pattern from the datum if available, otherwise fall back to
+  /// generic series dash pattern.
+  List<int> get dashPattern {
+    if (series.dashPatternFn != null) {
+      if (datumIndex != null) {
+        return series.dashPatternFn(datumIndex);
+      } else {
+        return series.dashPatternFn(0);
+      }
+    }
+    return null;
+  }
 }

@@ -49,6 +49,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _seriesArcMap = LinkedHashMap<String, _AnimatedArcList<D>>();
 
   // Store a list of arcs that exist in the series data.
@@ -128,7 +129,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
             continue;
           }
 
-          final percentOfSeries = (measure / seriesMeasureTotal);
+          final percentOfSeries = measure / seriesMeasureTotal;
           var angle = arcLength * percentOfSeries;
           var endAngle = startAngle + angle;
 
@@ -153,6 +154,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     });
   }
 
+  @override
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
@@ -313,6 +315,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     });
   }
 
+  @override
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the arcs that no longer exist.
     if (animationPercent == 1.0) {
@@ -470,7 +473,12 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  }) {
     final nearest = <DatumDetails<D>>[];
 
     // Was it even in the component bounds?
@@ -682,31 +690,21 @@ class _AnimatedArc<D> {
 
   /// Returns the [startAngle] of the new target element, without updating
   /// animation state.
-  double get newTargetArcStartAngle {
-    return _targetArc != null ? _targetArc.startAngle : null;
-  }
+  double get newTargetArcStartAngle => _targetArc?.startAngle;
 
   /// Returns the [endAngle] of the new target element, without updating
   /// animation state.
-  double get currentArcEndAngle {
-    return _currentArc != null ? _currentArc.endAngle : null;
-  }
+  double get currentArcEndAngle => _currentArc?.endAngle;
 
   /// Returns the [startAngle] of the currently rendered element, without
   /// updating animation state.
-  double get currentArcStartAngle {
-    return _currentArc != null ? _currentArc.startAngle : null;
-  }
+  double get currentArcStartAngle => _currentArc?.startAngle;
 
   /// Returns the [endAngle] of the new target element, without updating
   /// animation state.
-  double get previousArcEndAngle {
-    return _previousArc != null ? _previousArc.endAngle : null;
-  }
+  double get previousArcEndAngle => _previousArc?.endAngle;
 
   /// Returns the [startAngle] of the previously rendered element, without
   /// updating animation state.
-  double get previousArcStartAngle {
-    return _previousArc != null ? _previousArc.startAngle : null;
-  }
+  double get previousArcStartAngle => _previousArc?.startAngle;
 }

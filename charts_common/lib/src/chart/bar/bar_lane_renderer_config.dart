@@ -51,7 +51,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
     int layoutPaintOrder = LayoutViewPaintOrder.bar,
     this.mergeEmptyLanes = false,
     int minBarLengthPx = 0,
-    double stackHorizontalSeparator,
+    int stackedBarPaddingPx = 1,
     double strokeWidthPx = 0.0,
     BarRendererDecorator barRendererDecorator,
     SymbolRenderer symbolRenderer,
@@ -67,7 +67,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
           layoutPaintOrder: layoutPaintOrder,
           minBarLengthPx: minBarLengthPx,
           fillPattern: fillPattern,
-          stackHorizontalSeparator: stackHorizontalSeparator,
+          stackedBarPaddingPx: stackedBarPaddingPx,
           strokeWidthPx: strokeWidthPx,
           symbolRenderer: symbolRenderer,
           weightPattern: weightPattern,
@@ -89,7 +89,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
     return other.backgroundBarColor == backgroundBarColor &&
         other.emptyLaneLabel == emptyLaneLabel &&
         other.mergeEmptyLanes == mergeEmptyLanes &&
-        super == (other);
+        super == other;
   }
 
   @override

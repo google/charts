@@ -76,11 +76,13 @@ class BucketingNumericTickProvider extends NumericTickProvider {
     TickHint<num> tickHint,
   }) {
     if (_threshold == null) {
-      throw ('Bucketing threshold must be set before getting ticks.');
+      throw ArgumentError(
+          'Bucketing threshold must be set before getting ticks.');
     }
 
     if (_showBucket == null) {
-      throw ('The showBucket flag must be set before getting ticks.');
+      throw ArgumentError(
+          'The showBucket flag must be set before getting ticks.');
     }
 
     final localFormatter = _BucketingFormatter()
@@ -139,6 +141,7 @@ class _BucketingFormatter extends SimpleTickFormatterBase<num> {
   SimpleTickFormatterBase<num> originalFormatter;
 
   /// Formats a single tick value.
+  @override
   String formatValue(num value) {
     if (value < threshold) {
       return '';

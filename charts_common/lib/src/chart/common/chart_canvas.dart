@@ -75,12 +75,15 @@ abstract class ChartCanvas {
   /// [stroke] and [strokeWidthPx] configure the color and thickness of the
   /// outer edge of the point. Both must be provided together for a line to
   /// appear.
+  ///
+  /// [blendMode] Blend mode to be used when drawing this point on canvas.
   void drawPoint(
       {Point point,
       double radius,
       Color fill,
       Color stroke,
-      double strokeWidthPx});
+      double strokeWidthPx,
+      BlendMode blendMode});
 
   /// Renders a polygon shape described by a set of points.
   ///
@@ -165,3 +168,34 @@ Color getAnimatedColor(Color previous, Color target, double animationPercent) {
 /// * [solid] defines a simple bar filled with the fill color. This is the
 ///   default pattern for bars.
 enum FillPatternType { forwardHatch, solid }
+
+/// Defines the blend modes to use for drawing on canvas.
+enum BlendMode {
+  color,
+  colorBurn,
+  colorDodge,
+  darken,
+  defaultMode,
+  difference,
+  exclusion,
+  hardLight,
+  hue,
+  lighten,
+  luminosity,
+  multiply,
+  overlay,
+  saturation,
+  screen,
+  softLight,
+  copy,
+  destinationAtop,
+  destinationIn,
+  destinationOut,
+  destinationOver,
+  lighter,
+  sourceAtop,
+  sourceIn,
+  sourceOut,
+  sourceOver,
+  xor
+}

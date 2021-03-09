@@ -51,12 +51,15 @@ import 'symbol_annotation_renderer_config.dart'
 class SymbolAnnotationRenderer<D> extends PointRenderer<D>
     implements LayoutView {
   Rectangle<int> _componentBounds;
-  GraphicsFactory _graphicsFactory;
+
+  @override
+  GraphicsFactory graphicsFactory;
 
   CartesianChart<D> _chart;
 
   var _currentHeight = 0;
 
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _seriesInfo = LinkedHashMap<String, _SeriesInfo<D>>();
 
   SymbolAnnotationRenderer(
@@ -73,7 +76,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {
-    var localConfig = (config as SymbolAnnotationRendererConfig);
+    var localConfig = config as SymbolAnnotationRendererConfig;
 
     _seriesInfo.clear();
 
@@ -217,14 +220,6 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
             .drawAxisLine(canvas, domainAxis.axisOrientation, bounds);
       });
     }
-  }
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
   }
 
   //

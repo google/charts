@@ -52,6 +52,7 @@ class PanningTickProvider<D> implements TickProvider<D> {
     _mode = mode;
   }
 
+  @override
   List<Tick<D>> getTicks({
     @required ChartContext context,
     @required GraphicsFactory graphicsFactory,

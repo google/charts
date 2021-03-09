@@ -13,21 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:charts_common/src/chart/cartesian/axis/scale.dart'
+    show RangeBandConfig;
 import 'package:meta/meta.dart' show immutable;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis, OrdinalAxis, OrdinalViewport;
+import '../ordinal_scale.dart' show OrdinalScale;
 import '../ordinal_tick_provider.dart' show OrdinalTickProvider;
+import '../range_tick_provider.dart' show RangeTickProvider;
+import '../simple_ordinal_scale.dart' show SimpleOrdinalScale;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../tick_formatter.dart' show OrdinalTickFormatter;
 import 'axis_spec.dart'
     show AxisSpec, TickProviderSpec, TickFormatterSpec, ScaleSpec, RenderSpec;
 import 'tick_spec.dart' show TickSpec;
-import '../ordinal_scale.dart' show OrdinalScale;
-import '../simple_ordinal_scale.dart' show SimpleOrdinalScale;
-import 'package:charts_common/src/chart/cartesian/axis/scale.dart'
-    show RangeBandConfig;
 
 /// [AxisSpec] specialized for ordinal/non-continuous axes typically for bars.
 @immutable
@@ -79,7 +80,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
     return identical(this, other) ||
         (other is OrdinalAxisSpec &&
             viewport == other.viewport &&
-            super == (other));
+            super == other);
   }
 
   @override
@@ -111,7 +112,7 @@ class BasicOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   int get hashCode => 37;
 }
 
-/// [TickProviderSpec] that allows you to specific the ticks to be used.
+/// [TickProviderSpec] that allows you to specify the ticks to be used.
 @immutable
 class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   final List<TickSpec<String>> tickSpecs;
@@ -126,6 +127,25 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is StaticOrdinalTickProviderSpec && tickSpecs == other.tickSpecs);
+
+  @override
+  int get hashCode => tickSpecs.hashCode;
+}
+
+/// [TickProviderSpec] that allows you to provide range ticks and normal ticks.
+@immutable
+class RangeOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
+  final List<TickSpec<String>> tickSpecs;
+  const RangeOrdinalTickProviderSpec(this.tickSpecs);
+
+  @override
+  RangeTickProvider<String> createTickProvider(ChartContext context) =>
+      RangeTickProvider<String>(tickSpecs);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RangeOrdinalTickProviderSpec && tickSpecs == other.tickSpecs);
 
   @override
   int get hashCode => tickSpecs.hashCode;

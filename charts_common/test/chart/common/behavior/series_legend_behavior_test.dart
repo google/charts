@@ -92,6 +92,11 @@ class ConcreteSeriesLegend<D> extends SeriesLegend<D> {
   bool isSeriesHidden(String seriesId) {
     return super.isSeriesHidden(seriesId);
   }
+
+  @override
+  bool isSeriesAlwaysVisible(String seriesId) {
+    return super.isSeriesAlwaysVisible(seriesId);
+  }
 }
 
 void main() {
@@ -228,6 +233,29 @@ void main() {
     expect(seriesList2, hasLength(2));
     expect(seriesList2[0].id, equals('s1'));
     expect(seriesList2[1].id, equals('s2'));
+  });
+
+  test('always visible series are visible even after hide called', () {
+    final seriesList = [series1, series2];
+    final selectionType = SelectionModelType.info;
+    final legend =
+        ConcreteSeriesLegend<String>(selectionModelType: selectionType);
+
+    legend.alwaysVisibleSeries = ['s1'];
+
+    legend.hideSeries('s1');
+    legend.hideSeries('s2');
+    chart = ConcreteChart(seriesList);
+    legend.attachTo(chart);
+    chart.callOnDraw();
+    chart.callConfigureSeries();
+    chart.callOnPreProcess();
+
+    expect(legend.isSeriesHidden('s1'), isFalse);
+    expect(legend.isSeriesHidden('s2'), isTrue);
+
+    expect(seriesList, hasLength(1));
+    expect(seriesList[0].id, equals('s1'));
   });
 
   test('selected series legend entry is updated', () {

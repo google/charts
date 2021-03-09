@@ -164,11 +164,18 @@ class PanBehavior<D> implements ChartBehavior<D> {
 
     double domainScalingFactor = domainAxis.viewportScalingFactor;
 
-    double domainChange =
-        domainAxis.viewportTranslatePx + localPosition.x - _lastPosition.x;
+    double domainChange = 0.0;
+    if (domainAxis.isVertical) {
+      domainChange =
+          domainAxis.viewportTranslatePx + localPosition.y - _lastPosition.y;
+    } else {
+      domainChange =
+          domainAxis.viewportTranslatePx + localPosition.x - _lastPosition.x;
+    }
 
     domainAxis.setViewportSettings(domainScalingFactor, domainChange,
-        drawAreaWidth: chart.drawAreaBounds.width);
+        drawAreaWidth: chart.drawAreaBounds.width,
+        drawAreaHeight: chart.drawAreaBounds.height);
 
     _lastPosition = localPosition;
 

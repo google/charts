@@ -29,7 +29,6 @@ import '../tick.dart' show Tick;
 import 'base_tick_draw_strategy.dart' show BaseRenderSpec, BaseTickDrawStrategy;
 import 'tick_draw_strategy.dart' show TickDrawStrategy;
 
-///
 @immutable
 class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
   final LineStyleSpec lineStyle;
@@ -77,7 +76,7 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
         (other is SmallTickRendererSpec &&
             lineStyle == other.lineStyle &&
             tickLengthPx == other.tickLengthPx &&
-            super == (other));
+            super == other);
   }
 
   @override
@@ -127,6 +126,39 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
       @required Rectangle<int> drawAreaBounds,
       @required bool isFirst,
       @required bool isLast}) {
+    var tickPositions = calculateTickPositions(
+      tick,
+      orientation,
+      axisBounds,
+      drawAreaBounds,
+      tickLength,
+    );
+    Point<num> tickStart = tickPositions.first;
+    Point<num> tickEnd = tickPositions.last;
+
+    canvas.drawLine(
+      points: [tickStart, tickEnd],
+      dashPattern: lineStyle.dashPattern,
+      fill: lineStyle.color,
+      stroke: lineStyle.color,
+      strokeWidthPx: lineStyle.strokeWidth.toDouble(),
+    );
+
+    drawLabel(canvas, tick,
+        orientation: orientation,
+        axisBounds: axisBounds,
+        drawAreaBounds: drawAreaBounds,
+        isFirst: isFirst,
+        isLast: isLast);
+  }
+
+  List<Point<num>> calculateTickPositions(
+    Tick<D> tick,
+    AxisOrientation orientation,
+    Rectangle<int> axisBounds,
+    Rectangle<int> drawAreaBounds,
+    int tickLength,
+  ) {
     Point<num> tickStart;
     Point<num> tickEnd;
     switch (orientation) {
@@ -153,20 +185,6 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
         tickEnd = Point(axisBounds.right, y);
         break;
     }
-
-    canvas.drawLine(
-      points: [tickStart, tickEnd],
-      dashPattern: lineStyle.dashPattern,
-      fill: lineStyle.color,
-      stroke: lineStyle.color,
-      strokeWidthPx: lineStyle.strokeWidth.toDouble(),
-    );
-
-    drawLabel(canvas, tick,
-        orientation: orientation,
-        axisBounds: axisBounds,
-        drawAreaBounds: drawAreaBounds,
-        isFirst: isFirst,
-        isLast: isLast);
+    return [tickStart, tickEnd];
   }
 }

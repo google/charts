@@ -27,7 +27,8 @@ import '../../../layout/layout_view.dart'
         LayoutViewConfig,
         LayoutViewPositionOrder,
         LayoutViewPaintOrder,
-        ViewMeasuredSizes;
+        ViewMeasuredSizes,
+        layoutPosition;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../chart_canvas.dart' show ChartCanvas;
 import '../../chart_context.dart' show ChartContext;
@@ -54,27 +55,43 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   final legendState = LegendState<D>();
   final LegendEntryGenerator<D> legendEntryGenerator;
 
-  String _title;
+  /// The title text to display before legend entries.
+  String title;
 
   BaseChart _chart;
   LifecycleListener<D> _lifecycleListener;
 
   Rectangle<int> _componentBounds;
   Rectangle<int> _drawAreaBounds;
-  GraphicsFactory _graphicsFactory;
 
-  BehaviorPosition _behaviorPosition = BehaviorPosition.end;
-  OutsideJustification _outsideJustification =
+  @override
+  GraphicsFactory graphicsFactory;
+
+  BehaviorPosition behaviorPosition = BehaviorPosition.end;
+  OutsideJustification outsideJustification =
       OutsideJustification.startDrawArea;
-  InsideJustification _insideJustification = InsideJustification.topStart;
-  LegendCellPadding _cellPadding;
-  LegendCellPadding _legendPadding;
+  InsideJustification insideJustification = InsideJustification.topStart;
+  LegendCellPadding cellPadding;
+  LegendCellPadding legendPadding;
 
-  TextStyleSpec _titleTextStyle;
+  /// Text style of the legend title text.
+  TextStyleSpec titleTextStyle;
 
-  LegendTapHandling _legendTapHandling = LegendTapHandling.hide;
+  /// Configures the behavior of the legend when the user taps/clicks on an
+  /// entry. Defaults to no behavior.
+  ///
+  /// Tapping on a legend entry will update the data visible on the chart. For
+  /// example, when [LegendTapHandling.hide] is configured, the series or datum
+  /// associated with that entry will be removed from the chart. Tapping on that
+  /// entry a second time will make the data visible again.
+  LegendTapHandling legendTapHandling = LegendTapHandling.hide;
 
   List<MutableSeries<D>> _currentSeriesList;
+
+  /// List of series IDs in the order the series should appear in the legend.
+  /// Series that are not specified in the ordering will be sorted
+  /// alphabetically at the bottom.
+  List<String> _customEntryOrder;
 
   /// Save this in order to check if series list have changed and regenerate
   /// the legend entries.
@@ -94,45 +111,6 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     legendEntryGenerator.entryTextStyle = entryTextStyle;
   }
 
-  String get title => _title;
-
-  /// Sets title text to display before legend entries.
-  set title(String title) {
-    _title = title;
-  }
-
-  BehaviorPosition get behaviorPosition => _behaviorPosition;
-
-  set behaviorPosition(BehaviorPosition behaviorPosition) {
-    _behaviorPosition = behaviorPosition;
-  }
-
-  OutsideJustification get outsideJustification => _outsideJustification;
-
-  set outsideJustification(OutsideJustification outsideJustification) {
-    _outsideJustification = outsideJustification;
-  }
-
-  InsideJustification get insideJustification => _insideJustification;
-
-  set insideJustification(InsideJustification insideJustification) {
-    _insideJustification = insideJustification;
-  }
-
-  LegendCellPadding get cellPadding => _cellPadding;
-
-  set cellPadding(LegendCellPadding cellPadding) {
-    _cellPadding = cellPadding;
-  }
-
-  LegendCellPadding get legendPadding => _legendPadding;
-
-  set legendPadding(LegendCellPadding legendPadding) {
-    _legendPadding = legendPadding;
-  }
-
-  LegendTapHandling get legendTapHandling => _legendTapHandling;
-
   /// Text style of the legend entry text.
   TextStyleSpec get entryTextStyle => legendEntryGenerator.entryTextStyle;
 
@@ -140,22 +118,8 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     legendEntryGenerator.entryTextStyle = entryTextStyle;
   }
 
-  /// Text style of the legend title text.
-  TextStyleSpec get titleTextStyle => _titleTextStyle;
-
-  set titleTextStyle(TextStyleSpec titleTextStyle) {
-    _titleTextStyle = titleTextStyle;
-  }
-
-  /// Configures the behavior of the legend when the user taps/clicks on an
-  /// entry. Defaults to no behavior.
-  ///
-  /// Tapping on a legend entry will update the data visible on the chart. For
-  /// example, when [LegendTapHandling.hide] is configured, the series or datum
-  /// associated with that entry will be removed from the chart. Tapping on that
-  /// entry a second time will make the data visible again.
-  set legendTapHandling(LegendTapHandling legendTapHandling) {
-    _legendTapHandling = legendTapHandling;
+  set customEntryOrder(List<String> customEntryOrder) {
+    _customEntryOrder = customEntryOrder;
   }
 
   /// Whether or not the legend show overlay series.
@@ -203,6 +167,22 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     // Also update legend entries if the series list has changed.
     if (legendState._selectionModel != selectionModel ||
         _postProcessSeriesList != seriesList) {
+      if (_customEntryOrder != null) {
+        _currentSeriesList.sort((a, b) {
+          final int a_index = _customEntryOrder.indexOf(a.id);
+          final int b_index = _customEntryOrder.indexOf(b.id);
+          if (a_index == -1) {
+            if (a_index == b_index) {
+              return a.displayName.compareTo(b.displayName);
+            }
+            return 1;
+          } else if (b_index == -1) {
+            return -1;
+          }
+          return a_index.compareTo(b_index);
+        });
+      }
+
       legendState._legendEntries =
           legendEntryGenerator.getLegendEntries(_currentSeriesList);
 
@@ -266,14 +246,6 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   bool get isAxisFlipped => _chart.context.isRtl;
 
   @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
-  }
-
-  @override
   LayoutViewConfig get layoutConfig {
     return LayoutViewConfig(
         position: _layoutPosition,
@@ -283,26 +255,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   /// Get layout position from legend position.
   LayoutPosition get _layoutPosition {
-    LayoutPosition position;
-    switch (_behaviorPosition) {
-      case BehaviorPosition.bottom:
-        position = LayoutPosition.Bottom;
-        break;
-      case BehaviorPosition.end:
-        position = isAxisFlipped ? LayoutPosition.Left : LayoutPosition.Right;
-        break;
-      case BehaviorPosition.inside:
-        position = LayoutPosition.DrawArea;
-        break;
-      case BehaviorPosition.start:
-        position = isAxisFlipped ? LayoutPosition.Right : LayoutPosition.Left;
-        break;
-      case BehaviorPosition.top:
-        position = LayoutPosition.Top;
-        break;
-    }
-
-    return position;
+    return layoutPosition(behaviorPosition, outsideJustification, isRtl);
   }
 
   @override

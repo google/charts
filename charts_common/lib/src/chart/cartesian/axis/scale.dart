@@ -15,6 +15,8 @@
 
 import 'dart:math' as math show max, min;
 
+import 'package:charts_common/src/common/math.dart';
+
 import '../../../common/style/style_factory.dart' show StyleFactory;
 
 /// Scale used to convert data input domain units to output range units.
@@ -170,7 +172,7 @@ class ScaleOutputExtent {
   int get min => math.min(start, end);
   int get max => math.max(start, end);
 
-  bool containsValue(double value) => value >= min && value <= max;
+  bool containsValue(double value) => withinBounds(value, min, max);
 
   /// Returns the difference between the extents.
   ///
@@ -189,7 +191,7 @@ class ScaleOutputExtent {
   int get hashCode => start.hashCode + (end.hashCode * 31);
 
   @override
-  String toString() => "ScaleOutputRange($start, $end)";
+  String toString() => 'ScaleOutputRange($start, $end)';
 }
 
 /// Type of RangeBand used to determine the rangeBand size units.

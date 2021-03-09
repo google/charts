@@ -106,6 +106,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was provided by the selection model.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   var _seriesPointMap = LinkedHashMap<String, _AnimatedPoint<D>>();
 
   // Store a list of points that exist in the series data.
@@ -275,6 +276,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 }
 
 class _LinePointLayoutView<D> extends LayoutView {
+  @override
   final LayoutViewConfig layoutConfig;
 
   final LinePointHighlighterFollowLineType showHorizontalFollowLine;
@@ -293,7 +295,8 @@ class _LinePointLayoutView<D> extends LayoutView {
 
   final SymbolRenderer symbolRenderer;
 
-  GraphicsFactory _graphicsFactory;
+  @override
+  GraphicsFactory graphicsFactory;
 
   /// Store a map of series drawn on the chart, mapped by series name.
   ///
@@ -316,14 +319,6 @@ class _LinePointLayoutView<D> extends LayoutView {
 
   set seriesPointMap(LinkedHashMap<String, _AnimatedPoint<D>> value) {
     _seriesPointMap = value;
-  }
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
   }
 
   @override
@@ -580,9 +575,9 @@ class _PointRendererElement<D> {
         _lerpDouble(previous.radiusPx, target.radiusPx, animationPercent);
 
     if (target.strokeWidthPx != null && previous.strokeWidthPx != null) {
-      strokeWidthPx = (((target.strokeWidthPx - previous.strokeWidthPx) *
-              animationPercent) +
-          previous.strokeWidthPx);
+      strokeWidthPx =
+          ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+              previous.strokeWidthPx;
     } else {
       strokeWidthPx = null;
     }

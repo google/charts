@@ -22,43 +22,99 @@ import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../common/chart_canvas.dart' show FillPatternType;
 
 class MutableSeries<D> extends ImmutableSeries<D> {
+  @override
   final String id;
+
+  @override
   String displayName;
+
+  @override
   bool overlaySeries;
+
+  @override
   String seriesCategory;
+
+  @override
   Color seriesColor;
+
+  @override
   int seriesIndex;
 
   /// Sum of the measure values for the series.
+  @override
   num seriesMeasureTotal;
 
+  @override
   List data;
 
+  @override
   AccessorFn<String> keyFn;
 
+  @override
   AccessorFn<D> domainFn;
+
+  @override
   AccessorFn<DomainFormatter<D>> domainFormatterFn;
+
+  @override
   AccessorFn<D> domainLowerBoundFn;
+
+  @override
   AccessorFn<D> domainUpperBoundFn;
+
+  @override
   AccessorFn<num> measureFn;
+
+  @override
   AccessorFn<MeasureFormatter> measureFormatterFn;
+
+  @override
   AccessorFn<num> measureLowerBoundFn;
+
+  @override
   AccessorFn<num> measureUpperBoundFn;
+
+  @override
   AccessorFn<num> measureOffsetFn;
+
+  @override
   AccessorFn<num> rawMeasureFn;
+
+  @override
   AccessorFn<num> rawMeasureLowerBoundFn;
+
+  @override
   AccessorFn<num> rawMeasureUpperBoundFn;
 
+  @override
   AccessorFn<Color> areaColorFn;
+
+  @override
   AccessorFn<Color> colorFn;
+
+  @override
   AccessorFn<List<int>> dashPatternFn;
+
+  @override
   AccessorFn<Color> fillColorFn;
+
+  @override
   AccessorFn<FillPatternType> fillPatternFn;
+
+  @override
   AccessorFn<Color> patternColorFn;
+
+  @override
   AccessorFn<num> radiusPxFn;
+  @override
   AccessorFn<num> strokeWidthPxFn;
+  @override
   AccessorFn<String> labelAccessorFn;
+
+  @override
   AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;
+
+  @override
   AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
 
   final _attrs = SeriesAttributes();
@@ -160,14 +216,13 @@ class MutableSeries<D> extends ImmutableSeries<D> {
     domainAxis = other.domainAxis;
   }
 
-  void setAttr<R>(AttributeKey<R> key, R value) {
-    _attrs.setAttr(key, value);
-  }
+  @override
+  void setAttr<R>(AttributeKey<R> key, R value) => _attrs.setAttr(key, value);
 
-  R getAttr<R>(AttributeKey<R> key) {
-    return _attrs.getAttr(key);
-  }
+  @override
+  R getAttr<R>(AttributeKey<R> key) => _attrs.getAttr(key);
 
+  @override
   bool operator ==(Object other) =>
       other is MutableSeries && data == other.data && id == other.id;
 

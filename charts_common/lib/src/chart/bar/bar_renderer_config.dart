@@ -36,7 +36,8 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
     BarGroupingType groupingType,
     int layoutPaintOrder = LayoutViewPaintOrder.bar,
     int minBarLengthPx = 0,
-    double stackHorizontalSeparator,
+    int maxBarWidthPx,
+    int stackedBarPaddingPx = 1,
     double strokeWidthPx = 0.0,
     this.barRendererDecorator,
     SymbolRenderer symbolRenderer,
@@ -47,8 +48,9 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
           groupingType: groupingType ?? BarGroupingType.grouped,
           layoutPaintOrder: layoutPaintOrder,
           minBarLengthPx: minBarLengthPx,
+          maxBarWidthPx: maxBarWidthPx,
           fillPattern: fillPattern,
-          stackHorizontalSeparator: stackHorizontalSeparator,
+          stackedBarPaddingPx: stackedBarPaddingPx,
           strokeWidthPx: strokeWidthPx,
           symbolRenderer: symbolRenderer,
           weightPattern: weightPattern,
@@ -67,7 +69,7 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
     if (!(other is BarRendererConfig)) {
       return false;
     }
-    return other.cornerStrategy == cornerStrategy && super == (other);
+    return other.cornerStrategy == cornerStrategy && super == other;
   }
 
   @override
@@ -112,7 +114,7 @@ class NoCornerStrategy extends ConstCornerStrategy {
   const NoCornerStrategy() : super(0);
 
   @override
-  bool operator ==(other) => (other is NoCornerStrategy) ? true : false;
+  bool operator ==(other) => other is NoCornerStrategy;
 
   @override
   int get hashCode => 31;
