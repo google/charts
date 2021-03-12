@@ -95,7 +95,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   void configureSeries(List<MutableSeries<D>> seriesList) {
     assignMissingColors(seriesList, emptyCategoryUsesSinglePalette: false);
 
-    seriesList.forEach((MutableSeries series) {
+    seriesList.forEach((series) {
       // Add a default area color function which applies the configured
       // areaOpacity value to the datum's current color.
       series.areaColorFn ??= (int index) {
@@ -372,12 +372,12 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       // later to display only the relevant parts of data. This ensures that
       // styles that visually depend on the start location, such as dash
       // patterns, are not disrupted by other changes in style.
-      styleSegments.forEach((_LineRendererElement styleSegment) {
+      styleSegments.forEach((styleSegment) {
         final styleKey = styleSegment.styleKey;
 
         // If we already have an AnimatingPoint for that index, use it.
         var animatingElements = elementsList.firstWhere(
-            (_AnimatedElements elements) => elements.styleKey == styleKey,
+            (elements) => elements.styleKey == styleKey,
             orElse: () => null);
 
         if (animatingElements != null) {
@@ -941,7 +941,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             .expand<_AnimatedArea<D>>((List<_AnimatedArea<D>> areas) => areas)
             .map<_AreaRendererElement<D>>((_AnimatedArea<D> animatingArea) =>
                 animatingArea?.getCurrentArea(animationPercent))
-            .forEach((_AreaRendererElement area) {
+            .forEach((area) {
           if (area != null) {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(area.positionExtent),
@@ -959,7 +959,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             .expand<_AnimatedArea<D>>((List<_AnimatedArea<D>> bounds) => bounds)
             .map<_AreaRendererElement<D>>((_AnimatedArea<D> animatingBounds) =>
                 animatingBounds?.getCurrentArea(animationPercent))
-            .forEach((_AreaRendererElement bound) {
+            .forEach((bound) {
           if (bound != null) {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(bound.positionExtent),
@@ -977,7 +977,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             .expand<_AnimatedLine<D>>((List<_AnimatedLine<D>> lines) => lines)
             .map<_LineRendererElement<D>>((_AnimatedLine<D> animatingLine) =>
                 animatingLine?.getCurrentLine(animationPercent))
-            .forEach((_LineRendererElement line) {
+            .forEach((line) {
           if (line != null) {
             canvas.drawLine(
                 clipBounds: _getClipBoundsForExtent(line.positionExtent),
@@ -1469,21 +1469,21 @@ class _AnimatedElements<D> {
   bool get animatingOut {
     var areasAnimatingOut = true;
     if (areas != null) {
-      for (_AnimatedArea area in areas) {
+      for (final area in areas) {
         areasAnimatingOut = areasAnimatingOut && area.animatingOut;
       }
     }
 
     var linesAnimatingOut = true;
     if (lines != null) {
-      for (_AnimatedLine line in lines) {
+      for (final line in lines) {
         linesAnimatingOut = linesAnimatingOut && line.animatingOut;
       }
     }
 
     var boundsAnimatingOut = true;
     if (bounds != null) {
-      for (_AnimatedArea bound in bounds) {
+      for (final bound in bounds) {
         boundsAnimatingOut = boundsAnimatingOut && bound.animatingOut;
       }
     }
@@ -1494,21 +1494,21 @@ class _AnimatedElements<D> {
   bool get overlaySeries {
     var areasOverlaySeries = true;
     if (areas != null) {
-      for (_AnimatedArea area in areas) {
+      for (final area in areas) {
         areasOverlaySeries = areasOverlaySeries && area.overlaySeries;
       }
     }
 
     var linesOverlaySeries = true;
     if (lines != null) {
-      for (_AnimatedLine line in lines) {
+      for (final line in lines) {
         linesOverlaySeries = linesOverlaySeries && line.overlaySeries;
       }
     }
 
     var boundsOverlaySeries = true;
     if (bounds != null) {
-      for (_AnimatedArea bound in bounds) {
+      for (final bound in bounds) {
         boundsOverlaySeries = boundsOverlaySeries && bound.overlaySeries;
       }
     }

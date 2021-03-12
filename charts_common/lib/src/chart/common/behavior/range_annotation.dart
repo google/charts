@@ -172,7 +172,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
     if (extendAxis) {
       final domainAxis = _chart.domainAxis;
 
-      annotations.forEach((AnnotationSegment annotation) {
+      annotations.forEach((annotation) {
         Axis axis;
 
         switch (annotation.axisType) {
@@ -199,7 +199,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   void _updateViewData() {
     _currentKeys.clear();
 
-    annotations.forEach((AnnotationSegment annotation) {
+    annotations.forEach((annotation) {
       Axis axis;
 
       switch (annotation.axisType) {

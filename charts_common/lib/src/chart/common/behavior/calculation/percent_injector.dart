@@ -65,7 +65,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
   /// Resets the state of the behavior when new data is drawn on the chart.
   void _onData(List<MutableSeries<D>> seriesList) {
     // Reset tracking of percentage injection for new data.
-    seriesList.forEach((MutableSeries series) {
+    seriesList.forEach((series) {
       series.setAttr(percentInjectedKey, false);
     });
   }
@@ -77,7 +77,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
   /// the [seriesList] between chart redraws.
   void _preProcess(List<MutableSeries<D>> seriesList) {
     var percentInjected = true;
-    seriesList.forEach((MutableSeries series) {
+    seriesList.forEach((series) {
       percentInjected = percentInjected && series.getAttr(percentInjectedKey);
     });
 
@@ -95,7 +95,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
 
         // Walk the series and compute the domain total. Series total is
         // automatically computed by [MutableSeries].
-        seriesList.forEach((MutableSeries series) {
+        seriesList.forEach((series) {
           final seriesCategory = series.seriesCategory;
           final rawMeasureFn = series.rawMeasureFn;
           final domainFn = series.domainFn;
@@ -118,7 +118,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
         });
 
         // Add percent of domain and series accessor functions.
-        seriesList.forEach((MutableSeries series) {
+        seriesList.forEach((series) {
           // Replace the default measure accessor with one that computes the
           // percentage.
           series.measureFn = (int index) {
@@ -183,7 +183,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
         break;
 
       case PercentInjectorTotalType.series:
-        seriesList.forEach((MutableSeries series) {
+        seriesList.forEach((series) {
           // Replace the default measure accessor with one that computes the
           // percentage.
           series.measureFn = (int index) =>

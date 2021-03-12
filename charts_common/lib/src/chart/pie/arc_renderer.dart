@@ -192,9 +192,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         var arcKey = '__no_data__';
 
         // If we already have an AnimatingArc for that index, use it.
-        var animatingArc = arcList.arcs.firstWhere(
-            (_AnimatedArc arc) => arc.key == arcKey,
-            orElse: () => null);
+        var animatingArc = arcList.arcs
+            .firstWhere((arc) => arc.key == arcKey, orElse: () => null);
 
         arcList.center = center;
         arcList.radius = radius;
@@ -236,9 +235,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           var arcKey = '${series.id}__${domainValue.toString()}';
 
           // If we already have an AnimatingArc for that index, use it.
-          var animatingArc = arcList.arcs.firstWhere(
-              (_AnimatedArc arc) => arc.key == arcKey,
-              orElse: () => null);
+          var animatingArc = arcList.arcs
+              .firstWhere((arc) => arc.key == arcKey, orElse: () => null);
 
           arcList.center = center;
           arcList.radius = radius;
@@ -299,7 +297,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
           // Find the nearest start angle of the next arc that still exists in
           // the data.
-          for (_AnimatedArc nextArc
+          for (final nextArc
               in arcList.arcs.where((arc) => _currentKeys.contains(arc.key))) {
             final nextArcStartAngle = nextArc.newTargetArcStartAngle;
 
@@ -346,7 +344,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       arcList.arcs
           .map<ArcRendererElement<D>>((_AnimatedArc<D> animatingArc) =>
               animatingArc.getCurrentArc(animationPercent))
-          .forEach((ArcRendererElement arc) {
+          .forEach((arc) {
         circleSectors
             .add(CanvasPieSlice(arc.startAngle, arc.endAngle, fill: arc.color));
 
@@ -356,8 +354,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       // Decorate the arcs with decorators that should appear below the main
       // series data.
       arcRendererDecorators
-          .where((ArcRendererDecorator decorator) => !decorator.renderAbove)
-          .forEach((ArcRendererDecorator decorator) {
+          .where((decorator) => !decorator.renderAbove)
+          .forEach((decorator) {
         decorator.decorate(arcElementsList, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: animationPercent,
@@ -372,8 +370,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       // Decorate the arcs with decorators that should appear above the main
       // series data. This is the typical place for labels.
       arcRendererDecorators
-          .where((ArcRendererDecorator decorator) => decorator.renderAbove)
-          .forEach((ArcRendererDecorator decorator) {
+          .where((decorator) => decorator.renderAbove)
+          .forEach((decorator) {
         decorator.decorate(arcElementsList, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: animationPercent,
@@ -548,7 +546,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       {@required bool emptyCategoryUsesSinglePalette}) {
     int maxMissing = 0;
 
-    seriesList.forEach((MutableSeries series) {
+    seriesList.forEach((series) {
       if (series.colorFn == null) {
         maxMissing = max(maxMissing, series.data.length);
       }
@@ -558,7 +556,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       final colorPalettes = StyleFactory.style.getOrderedPalettes(1);
       final colorPalette = colorPalettes[0].makeShades(maxMissing);
 
-      seriesList.forEach((MutableSeries series) {
+      seriesList.forEach((series) {
         series.colorFn ??= (index) => colorPalette[index];
       });
     }

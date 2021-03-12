@@ -223,7 +223,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
       if (!emptyCategoryUsesSinglePalette && !hasSpecifiedCategory) {
         final palettes = StyleFactory.style.getOrderedPalettes(maxMissing);
         int index = 0;
-        seriesList.forEach((MutableSeries series) {
+        seriesList.forEach((series) {
           if (series.colorFn == null) {
             final color = palettes[index % palettes.length].shadeDefault;
             index++;
@@ -263,7 +263,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         missingColorCountPerCategory[category] = 0;
       });
 
-      seriesList.forEach((MutableSeries series) {
+      seriesList.forEach((series) {
         if (series.colorFn == null) {
           final category = series.seriesCategory ?? defaultCategory;
 
@@ -279,7 +279,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
         series.fillColorFn ??= (int index) => series.colorFn(index);
       });
     } else {
-      seriesList.forEach((MutableSeries series) {
+      seriesList.forEach((series) {
         // Fill color defaults to the series color if no accessor is provided.
         series.fillColorFn ??= (int index) => series.colorFn(index);
       });
@@ -287,7 +287,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
 
     // Fill in any missing seriesColor values with the color of the first datum
     // in the series. Note that [Series.colorFn] should always return a color.
-    seriesList.forEach((MutableSeries series) {
+    seriesList.forEach((series) {
       if (series.seriesColor == null) {
         try {
           series.seriesColor = series.colorFn(0);

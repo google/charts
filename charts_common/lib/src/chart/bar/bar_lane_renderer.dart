@@ -166,8 +166,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
             barStackMapKey, () => <AnimatedBar<D>>[]);
 
         // If we already have an AnimatingBar for that index, use it.
-        var animatingBar = barStackList.firstWhere(
-            (AnimatedBar bar) => bar.key == barKey,
+        var animatingBar = barStackList.firstWhere((bar) => bar.key == barKey,
             orElse: () => null);
 
         // If we don't have any existing bar element, create a new bar and have
@@ -274,8 +273,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
               barStackMapKey, () => <AnimatedBar<D>>[]);
 
           // If we already have an AnimatingBar for that index, use it.
-          var animatingBar = barStackList.firstWhere(
-              (AnimatedBar bar) => bar.key == barKey,
+          var animatingBar = barStackList.firstWhere((bar) => bar.key == barKey,
               orElse: () => null);
 
           // If we don't have any existing bar element, create a new bar and have

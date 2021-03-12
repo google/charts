@@ -258,9 +258,8 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         final pointKey = keyFn(index);
 
         // If we already have an AnimatingPoint for that index, use it.
-        var animatingPoint = pointList.firstWhere(
-            (AnimatedPoint point) => point.key == pointKey,
-            orElse: () => null);
+        var animatingPoint = pointList
+            .firstWhere((point) => point.key == pointKey, orElse: () => null);
 
         // If we don't have any existing arc element, create a new arc and
         // have it animate in from the position of the previous arc's end
@@ -362,12 +361,12 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       points
           .map<PointRendererElement<D>>((AnimatedPoint<D> animatingPoint) =>
               animatingPoint.getCurrentPoint(animationPercent))
-          .forEach((PointRendererElement point) {
+          .forEach((point) {
         // Decorate the points with decorators that should appear below the main
         // series data.
         pointRendererDecorators
-            .where((PointRendererDecorator decorator) => !decorator.renderAbove)
-            .forEach((PointRendererDecorator decorator) {
+            .where((decorator) => !decorator.renderAbove)
+            .forEach((decorator) {
           decorator.decorate(point, canvas, graphicsFactory,
               drawBounds: componentBounds,
               animationPercent: animationPercent,
@@ -407,8 +406,8 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         // Decorate the points with decorators that should appear above the main
         // series data. This is the typical place for labels.
         pointRendererDecorators
-            .where((PointRendererDecorator decorator) => decorator.renderAbove)
-            .forEach((PointRendererDecorator decorator) {
+            .where((decorator) => decorator.renderAbove)
+            .forEach((decorator) {
           decorator.decorate(point, canvas, graphicsFactory,
               drawBounds: componentBounds,
               animationPercent: animationPercent,

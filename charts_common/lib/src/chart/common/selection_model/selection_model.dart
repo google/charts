@@ -58,7 +58,7 @@ class SelectionModel<D> {
     final selectedDataMap = <String, List<D>>{};
 
     if (selectedDataConfig != null) {
-      for (SeriesDatumConfig config in selectedDataConfig) {
+      for (final config in selectedDataConfig) {
         selectedDataMap[config.seriesId] ??= <D>[];
         selectedDataMap[config.seriesId].add(config.domainValue);
       }

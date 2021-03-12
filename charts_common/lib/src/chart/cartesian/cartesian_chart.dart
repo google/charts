@@ -295,7 +295,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
       _disjointMeasureAxes = LinkedHashMap<String, NumericAxis>();
       if (_disjointMeasureAxesSpec != null) {
-        _disjointMeasureAxesSpec.forEach((String axisId, AxisSpec axisSpec) {
+        _disjointMeasureAxesSpec.forEach((axisId, axisSpec) {
           _disjointMeasureAxes[axisId] = axisSpec.createAxis();
           _disjointMeasureAxes[axisId].tickDrawStrategy =
               NoneDrawStrategy<num>(context, graphicsFactory);
@@ -373,7 +373,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     // Must set the spec to the current axis instance in the case of
     // errant reads that expect the spec to be changed.
     if (axisSpecs != null && _disjointMeasureAxes != null) {
-      axisSpecs.forEach((String axisId, AxisSpec axisSpec) {
+      axisSpecs.forEach((axisId, axisSpec) {
         if (_disjointMeasureAxes.containsKey(axisId)) {
           axisSpec.configure(
               _disjointMeasureAxes[axisId], context, graphicsFactory);

@@ -715,8 +715,8 @@ abstract class BaseChart<D> {
     }
     _behaviorStack.clear();
     _behaviorRoleMap.clear();
-    _selectionModels.values.forEach((MutableSelectionModel selectionModel) =>
-        selectionModel.clearAllListeners());
+    _selectionModels.values
+        .forEach((selectionModel) => selectionModel.clearAllListeners());
   }
 }
 

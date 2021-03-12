@@ -17,7 +17,6 @@ import 'package:meta/meta.dart' show protected;
 
 import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
-import '../../datum_details.dart' show DatumDetails;
 import '../../processed_series.dart' show MutableSeries;
 import '../../selection_model/selection_model.dart' show SelectionModelType;
 import '../../series_datum.dart' show SeriesDatum;
@@ -257,7 +256,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
     }
 
     final detailsByDomain = <D, List<SeriesDatum<D>>>{};
-    for (DatumDetails datumDetails in allSeriesDatum) {
+    for (final datumDetails in allSeriesDatum) {
       // The hovercard is closed when the closest detail has a null measure.
       // Also, on hovercard close the current selection is cleared, so unless
       // the details with null measure are skipped, the next domain visited
