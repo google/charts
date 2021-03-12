@@ -347,7 +347,7 @@ class _LinePointLayoutView<D> extends LayoutView {
         }
       });
 
-      keysToRemove.forEach((String key) => _seriesPointMap.remove(key));
+      keysToRemove.forEach(_seriesPointMap.remove);
     }
 
     final points = <_PointRendererElement<D>>[];
@@ -673,20 +673,8 @@ class LinePointHighlighterTester<D> {
 
   LinePointHighlighterTester(this.behavior);
 
-  int getSelectionLength() {
-    return behavior._seriesPointMap.length;
-  }
+  int getSelectionLength() => behavior._seriesPointMap.length;
 
-  bool isDatumSelected(D datum) {
-    var contains = false;
-
-    behavior._seriesPointMap.forEach((String key, _AnimatedPoint<D> point) {
-      if (point._currentPoint.point.datum == datum) {
-        contains = true;
-        return;
-      }
-    });
-
-    return contains;
-  }
+  bool isDatumSelected(D datum) => behavior._seriesPointMap.values
+      .any((point) => point._currentPoint.point.datum == datum);
 }

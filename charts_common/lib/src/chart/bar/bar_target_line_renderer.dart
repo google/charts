@@ -351,16 +351,17 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   @override
   Rectangle<int> getBoundsForBar(_BarTargetLineRendererElement bar) {
     final points = bar.points;
-    int top;
-    int bottom;
-    int left;
-    int right;
-    points.forEach((Point<int> p) {
-      top = top != null ? min(top, p.y) : p.y;
-      left = left != null ? min(left, p.x) : p.x;
-      bottom = bottom != null ? max(bottom, p.y) : p.y;
-      right = right != null ? max(right, p.x) : p.x;
-    });
+    assert(points.isNotEmpty);
+    var top = points.first.y;
+    var bottom = points.first.y;
+    var left = points.first.x;
+    var right = points.first.x;
+    for (final point in points.skip(1)) {
+      top = min(top, point.y);
+      left = min(left, point.x);
+      bottom = max(bottom, point.y);
+      right = max(right, point.x);
+    }
     return Rectangle<int>(left, top, right - left, bottom - top);
   }
 }

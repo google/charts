@@ -340,7 +340,7 @@ class LayoutManagerImpl implements LayoutManager {
 
   @override
   void applyToViews(void Function(LayoutView view) apply) {
-    _views.forEach((view) => apply(view));
+    _views.forEach(apply);
   }
 }
 

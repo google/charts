@@ -412,7 +412,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         }
       });
 
-      keysToRemove.forEach((String key) => _annotationMap.remove(key));
+      keysToRemove.forEach(_annotationMap.remove);
     }
 
     _annotationMap.forEach((String key, _AnimatedAnnotation<D> annotation) {

@@ -354,7 +354,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         }
       });
 
-      keysToRemove.forEach((String key) => seriesPointMap.remove(key));
+      keysToRemove.forEach(seriesPointMap.remove);
     }
 
     seriesPointMap.forEach((String key, List<AnimatedPoint<D>> points) {

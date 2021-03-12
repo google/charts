@@ -89,10 +89,8 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
       currentLineElements.add(currentElement);
     } else {
       // If the new word can not fit in the left space of the line.
-      var currentLineString = '';
-      currentLineElements.forEach((element) {
-        currentLineString += element.text;
-      });
+      var currentLineString =
+          currentLineElements.map((element) => element.text).join();
       currentLineNumber++;
       currentLineElements = [];
       currentWidth = 0;
@@ -130,10 +128,8 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
   }
 
   if (currentLineElements.isNotEmpty) {
-    var currentLineString = '';
-    currentLineElements.forEach((element) {
-      currentLineString += element.text;
-    });
+    final currentLineString =
+        currentLineElements.map((element) => element.text).join();
 
     final labelElement = createTextElement(currentLineString);
     labelElements.add(labelElement);

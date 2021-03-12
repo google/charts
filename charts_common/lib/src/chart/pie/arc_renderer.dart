@@ -513,17 +513,17 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       }
 
       arcList.arcs.forEach((_AnimatedArc<D> arc) {
-        if (innerRadius <= distance && distance <= radius) {
-          if (arc.currentArcStartAngle <= chartPointAngle &&
-              chartPointAngle <= arc.currentArcEndAngle) {
-            nearest.add(DatumDetails<D>(
-              series: arcList.series,
-              datum: arc.datum,
-              domain: arc.domain,
-              domainDistance: 0.0,
-              measureDistance: 0.0,
-            ));
-          }
+        if (innerRadius <= distance &&
+            distance <= radius &&
+            arc.currentArcStartAngle <= chartPointAngle &&
+            chartPointAngle <= arc.currentArcEndAngle) {
+          nearest.add(DatumDetails<D>(
+            series: arcList.series,
+            datum: arc.datum,
+            domain: arc.domain,
+            domainDistance: 0.0,
+            measureDistance: 0.0,
+          ));
         }
       });
     });
