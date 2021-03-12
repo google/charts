@@ -133,9 +133,11 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
     // Maps used to store the final measure offset of the previous series, for
     // each domain value.
-    final posDomainToStackKeyToDetailsMap = {};
-    final negDomainToStackKeyToDetailsMap = {};
-    final categoryToIndexMap = {};
+    final posDomainToStackKeyToDetailsMap =
+        <D, Map<String, BaseBarRendererElement>>{};
+    final negDomainToStackKeyToDetailsMap =
+        <D, Map<String, BaseBarRendererElement>>{};
+    final categoryToIndexMap = <String, int>{};
 
     // Keep track of the largest bar stack size. This should be 1 for grouped
     // bars, and it should be the size of the tallest stack for stacked or
@@ -209,8 +211,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
               ? posDomainToStackKeyToDetailsMap
               : negDomainToStackKeyToDetailsMap;
 
-          var categoryToDetailsMap =
-              domainToCategoryToDetailsMap.putIfAbsent(domain, () => {});
+          var categoryToDetailsMap = domainToCategoryToDetailsMap.putIfAbsent(
+              domain, () => <String, BaseBarRendererElement>{});
 
           var prevDetail = categoryToDetailsMap[stackKey];
 
@@ -734,7 +736,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       D domainValue, Point<double> chartPoint) {
     return List<DatumDetails<D>>.from(_getSegmentsForDomainValue(domainValue,
             where: (BaseAnimatedBar<D, R> bar) => !bar.series.overlaySeries)
-        .map((BaseAnimatedBar<D, R> bar) {
+        .map<DatumDetails<D>>((BaseAnimatedBar<D, R> bar) {
       final barBounds = getBoundsForBar(bar.currentBar);
       final segmentDomainDistance =
           _getDistance(chartPoint.y.round(), barBounds.top, barBounds.bottom);

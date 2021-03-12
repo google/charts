@@ -148,7 +148,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         final labelMaxWidth = labelElements
             .map(
                 (labelElement) => labelElement.measurement.horizontalSliceWidth)
-            .fold(0, (max, current) => max > current ? max : current);
+            .fold<double>(0, (max, current) => max > current ? max : current);
 
         // Total label height depends on the label element's text style.
         final totalLabelHeight = _getTotalLabelHeight(labelElements);

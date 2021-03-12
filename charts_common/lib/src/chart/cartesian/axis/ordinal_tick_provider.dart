@@ -51,7 +51,7 @@ class OrdinalTickProvider extends BaseTickProvider<String> {
   }
 
   @override
-  bool operator ==(other) => other is OrdinalTickProvider;
+  bool operator ==(Object other) => other is OrdinalTickProvider;
 
   @override
   int get hashCode => 31;

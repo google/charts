@@ -122,15 +122,18 @@ class SelectionModel<D> {
 
   @override
   bool operator ==(Object other) {
-    return other is SelectionModel &&
-        ListEquality().equals(_selectedDatum, other.selectedDatum) &&
-        ListEquality().equals(_selectedSeries, other.selectedSeries);
+    return other is SelectionModel<D> &&
+        ListEquality<SeriesDatum<D>>()
+            .equals(_selectedDatum, other.selectedDatum) &&
+        ListEquality<ImmutableSeries<D>>()
+            .equals(_selectedSeries, other.selectedSeries);
   }
 
   @override
   int get hashCode {
-    int hashcode = ListEquality().hash(_selectedDatum);
-    hashcode = hashcode * 37 + ListEquality().hash(_selectedSeries);
+    var hashcode = ListEquality<SeriesDatum<D>>().hash(_selectedDatum);
+    hashcode = hashcode * 37 +
+        ListEquality<ImmutableSeries<D>>().hash(_selectedSeries);
     return hashcode;
   }
 }
@@ -177,8 +180,10 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
     final copyOfSelectionModel = SelectionModel.fromOther(this);
     _updatedListeners.forEach((listener) => listener(copyOfSelectionModel));
 
-    final changed = !ListEquality().equals(origSelectedDatum, _selectedDatum) ||
-        !ListEquality().equals(origSelectedSeries, _selectedSeries);
+    final changed = !ListEquality<SeriesDatum<D>>()
+            .equals(origSelectedDatum, _selectedDatum) ||
+        !ListEquality<ImmutableSeries<D>>()
+            .equals(origSelectedSeries, _selectedSeries);
     if (notifyListeners && changed) {
       _changedListeners.forEach((listener) => listener(copyOfSelectionModel));
     }

@@ -45,7 +45,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   num seriesMeasureTotal;
 
   @override
-  List data;
+  List<dynamic> data;
 
   @override
   AccessorFn<String> keyFn;

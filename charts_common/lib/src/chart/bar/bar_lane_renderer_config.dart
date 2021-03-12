@@ -79,14 +79,12 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is BarLaneRendererConfig)) {
-      return false;
-    }
-    return other.backgroundBarColor == backgroundBarColor &&
+    return other is BarLaneRendererConfig &&
+        other.backgroundBarColor == backgroundBarColor &&
         other.emptyLaneLabel == emptyLaneLabel &&
         other.mergeEmptyLanes == mergeEmptyLanes &&
         super == other;

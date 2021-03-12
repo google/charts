@@ -99,7 +99,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
   }
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       other is StaticTickProvider && tickSpec == other.tickSpec;
 
   @override

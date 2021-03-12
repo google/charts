@@ -35,6 +35,7 @@ import '../../../layout/layout_view.dart'
         ViewMeasuredSizes;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../behavior/chart_behavior.dart' show ChartBehavior;
+import '../../processed_series.dart' show MutableSeries;
 import '../../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../selection/selection_trigger.dart' show SelectionTrigger;
 
@@ -235,7 +236,7 @@ class Slider<D> implements ChartBehavior<D> {
     return true;
   }
 
-  bool _onDragEnd(Point<double> chartPoint, __, ___) {
+  bool _onDragEnd(Point<double> chartPoint, double __, double ___) {
     // If the selection is delayed (waiting for long press), then quit early.
     if (_delaySelect) {
       return false;
@@ -279,7 +280,7 @@ class Slider<D> implements ChartBehavior<D> {
   }
 
   /// Sets the drag state to "initial" when new data is drawn on the chart.
-  void _setInitialDragState(_) {
+  void _setInitialDragState(List<MutableSeries<D>> _) {
     _dragStateToFireOnPostRender = SliderListenerDragState.initial;
   }
 
@@ -312,7 +313,7 @@ class Slider<D> implements ChartBehavior<D> {
   }
 
   /// Fires a [SliderListenerDragState] change event if needed.
-  void _fireChangeEvent(_) {
+  void _fireChangeEvent(ChartCanvas _) {
     if (SliderListenerDragState == null ||
         _sliderEventListener.onChange == null) {
       return;

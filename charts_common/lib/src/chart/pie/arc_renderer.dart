@@ -100,7 +100,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
       var totalAngle = 0.0;
 
-      var measures = [];
+      var measures = <num>[];
 
       if (series.data.isEmpty) {
         // If the series has no data, generate an empty arc element that
@@ -655,7 +655,7 @@ class _AnimatedArc<D> {
   /// data that has been removed from the series.
   ///
   /// Animates the angle of the arc to [endAngle], in radians.
-  void animateOut(endAngle) {
+  void animateOut(double endAngle) {
     var newTarget = _currentArc.clone();
 
     // Animate the arc out by setting the angles to 0.

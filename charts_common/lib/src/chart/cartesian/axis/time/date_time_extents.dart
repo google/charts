@@ -24,7 +24,7 @@ class DateTimeExtents extends Extents<DateTime> {
   DateTimeExtents({@required this.start, @required this.end});
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     return other is DateTimeExtents && start == other.start && end == other.end;
   }
 

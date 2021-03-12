@@ -71,7 +71,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
 
   /// Resets any hidden series data when new data is drawn on the chart.
   @protected
-  void onData(_) {
+  void onData(List<MutableSeries<D>> _) {
     _domains = null;
     _datumPairs = null;
     _currentIndex = NO_SELECTION;
@@ -148,12 +148,12 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   }
 
   /// Triggers when the left or right arrow keys are pressed.
-  void _doNavigate(domainIndex) {
+  void _doNavigate(int domainIndex) {
     _selectDomainIndex(SelectionModelType.info, domainIndex);
   }
 
   /// Triggers when the Enter or Space key is pressed.
-  void selectDomain(domainIndex) {
+  void selectDomain(int domainIndex) {
     _selectDomainIndex(SelectionModelType.action, domainIndex);
   }
 
@@ -232,7 +232,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   /// Processes chart data and generates a mapping of domain index to datum
   /// details at that domain.
   void _generateSelectionDomains() {
-    _domains = [];
+    _domains = <D>[];
 
     final allSeriesDatum = _chart.getAllDatumDetails();
 
@@ -289,7 +289,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   }
 
   /// Gets the datum/series pairs for the given domainIndex.
-  List<SeriesDatum<D>> _getDatumPairs(domainIndex) =>
+  List<SeriesDatum<D>> _getDatumPairs(int domainIndex) =>
       _datumPairs[domainIndex] ?? <SeriesDatum<D>>[];
 
   @override

@@ -184,7 +184,7 @@ class ScaleOutputExtent {
   int get width => diff.abs();
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       other is ScaleOutputExtent && start == other.start && end == other.end;
 
   @override

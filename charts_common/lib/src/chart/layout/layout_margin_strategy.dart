@@ -21,13 +21,13 @@ class SizeList {
   final _sizes = <int>[];
   int _total = 0;
 
-  int operator [](i) => _sizes[i];
+  int operator [](int i) => _sizes[i];
 
   int get total => _total;
 
   int get length => _sizes.length;
 
-  void add(size) {
+  void add(int size) {
     _sizes.add(size);
     _total += size;
   }
@@ -47,7 +47,7 @@ class _DesiredViewSizes {
     minimumSizes.add(minimum);
   }
 
-  void adjustedTo(maxSize) {
+  void adjustedTo(int maxSize) {
     if (maxSize < preferredSizes.total) {
       int delta = preferredSizes.total - maxSize;
       for (int i = preferredSizes.length - 1; i >= 0; i--) {

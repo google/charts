@@ -87,7 +87,7 @@ class NumericExtents implements Extents<num> {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     return other is NumericExtents && min == other.min && max == other.max;
   }
 

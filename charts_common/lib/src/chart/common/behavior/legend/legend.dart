@@ -105,7 +105,11 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     return (value == null) ? '' : _decimalPattern.format(value);
   }
 
-  Legend({this.selectionModelType, this.legendEntryGenerator, entryTextStyle}) {
+  Legend({
+    this.selectionModelType,
+    this.legendEntryGenerator,
+    TextStyleSpec entryTextStyle,
+  }) {
     _lifecycleListener = LifecycleListener(
         onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
     legendEntryGenerator.entryTextStyle = entryTextStyle;

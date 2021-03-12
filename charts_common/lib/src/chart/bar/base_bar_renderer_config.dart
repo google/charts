@@ -117,14 +117,12 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       groupingType == BarGroupingType.groupedStacked;
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is BaseBarRendererConfig)) {
-      return false;
-    }
-    return other.customRendererId == customRendererId &&
+    return other is BaseBarRendererConfig &&
+        other.customRendererId == customRendererId &&
         other.dashPattern == dashPattern &&
         other.fillPattern == fillPattern &&
         other.groupingType == groupingType &&
@@ -133,7 +131,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
         other.stackedBarPaddingPx == stackedBarPaddingPx &&
         other.strokeWidthPx == strokeWidthPx &&
         other.symbolRenderer == symbolRenderer &&
-        ListEquality().equals(other.weightPattern, weightPattern);
+        ListEquality<int>().equals(other.weightPattern, weightPattern);
   }
 
   @override

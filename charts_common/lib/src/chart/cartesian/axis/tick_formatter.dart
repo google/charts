@@ -56,7 +56,7 @@ class OrdinalTickFormatter extends SimpleTickFormatterBase<String> {
   String formatValue(String value) => value;
 
   @override
-  bool operator ==(other) => other is OrdinalTickFormatter;
+  bool operator ==(Object other) => other is OrdinalTickFormatter;
 
   @override
   int get hashCode => 31;
@@ -99,7 +99,7 @@ class NumericTickFormatter extends SimpleTickFormatterBase<num> {
   String formatValue(num value) => formatter(value);
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       other is NumericTickFormatter && formatter == other.formatter;
 
   @override

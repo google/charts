@@ -203,7 +203,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
     // Build a list of sorted series IDs as we iterate through the list, used
     // later for sorting.
-    final sortedSeriesIds = [];
+    final sortedSeriesIds = <String>[];
 
     seriesList.forEach((ImmutableSeries<D> series) {
       sortedSeriesIds.add(series.id);
@@ -318,8 +318,10 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     // Sort the renderer elements to be in the same order as the series list.
     // They may get disordered between chart draw cycles if a behavior adds or
     // removes series from the list (e.g. click to hide on legends).
-    seriesPointMap = LinkedHashMap.fromIterable(sortedSeriesIds,
-        key: (k) => k, value: (k) => seriesPointMap[k]);
+    seriesPointMap = LinkedHashMap<String, List<AnimatedPoint<D>>>.fromIterable(
+        sortedSeriesIds,
+        key: (dynamic k) => k,
+        value: (dynamic k) => seriesPointMap[k]);
 
     // Animate out points that don't exist anymore.
     seriesPointMap.forEach((String key, List<AnimatedPoint<D>> points) {

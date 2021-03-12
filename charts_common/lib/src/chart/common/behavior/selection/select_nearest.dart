@@ -220,7 +220,7 @@ class SelectNearest<D> implements ChartBehavior<D> {
     }
   }
 
-  bool _onDeselectAll(_, __, ___) {
+  bool _onDeselectAll(Point<double> _, double __, double ___) {
     // If the selection is delayed (waiting for long press), then quit early.
     if (_delaySelect) {
       return false;

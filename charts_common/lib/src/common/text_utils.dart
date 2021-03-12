@@ -142,7 +142,7 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
 ///
 /// Returns a list of [TextElement] with length of 2.
 List<TextElement> _splitLabel(
-    String text, Function createTextElement, num maxWidth) {
+    String text, TextElement Function(String) createTextElement, num maxWidth) {
   var l = 0;
   var r = text.length - 1;
   var m = ((l + r) / 2).floor();
@@ -169,7 +169,7 @@ List<TextElement> _splitLabel(
 
 /// Tests whether or not a given text element fits in the available space.
 bool _doesLabelFit(bool allowLabelOverflow, TextElement textElement,
-    num maxWidth, Function createTextElement) {
+    num maxWidth, TextElement Function(String) createTextElement) {
   if (textElement.maxWidthStrategy != MaxWidthStrategy.ellipsize ||
       allowLabelOverflow) {
     return true;

@@ -41,7 +41,7 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   BarTargetLineRendererConfig(
       {String customRendererId,
       List<int> dashPattern,
-      groupingType = BarGroupingType.grouped,
+      BarGroupingType groupingType = BarGroupingType.grouped,
       int layoutPaintOrder = LayoutViewPaintOrder.barTargetLine,
       int minBarLengthPx = 0,
       this.overDrawOuterPx,
@@ -67,14 +67,12 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is BarTargetLineRendererConfig)) {
-      return false;
-    }
-    return other.overDrawOuterPx == overDrawOuterPx &&
+    return other is BarTargetLineRendererConfig &&
+        other.overDrawOuterPx == overDrawOuterPx &&
         other.overDrawPx == overDrawPx &&
         other.roundEndCaps == roundEndCaps &&
         super == other;

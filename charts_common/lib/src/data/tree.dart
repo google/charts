@@ -65,7 +65,7 @@ class Tree<T, D> {
   final TreeAttributes attributes = TreeAttributes();
 
   factory Tree({
-    @required id,
+    @required String id,
     @required TreeNode<T> root,
     @required TypedAccessorFn<T, D> domainFn,
     @required TypedAccessorFn<T, num> measureFn,

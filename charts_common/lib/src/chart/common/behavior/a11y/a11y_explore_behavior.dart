@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' show Point;
 import '../../../../common/gesture_listener.dart' show GestureListener;
 import '../../base_chart.dart' show BaseChart;
 import '../chart_behavior.dart' show ChartBehavior;
@@ -65,7 +66,7 @@ abstract class A11yExploreBehavior<D> implements ChartBehavior<D> {
     }
   }
 
-  bool _toggleExploreMode(_) {
+  bool _toggleExploreMode(Point<double> _) {
     if (_exploreModeOn) {
       _exploreModeOn = false;
       // Ask native platform to turn off explore mode.

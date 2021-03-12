@@ -62,14 +62,13 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is BarRendererConfig)) {
-      return false;
-    }
-    return other.cornerStrategy == cornerStrategy && super == other;
+    return other is BarRendererConfig &&
+        other.cornerStrategy == cornerStrategy &&
+        super == other;
   }
 
   @override
@@ -95,14 +94,11 @@ class ConstCornerStrategy implements CornerStrategy {
   int getRadius(_) => radius;
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is ConstCornerStrategy)) {
-      return false;
-    }
-    return other.radius == radius;
+    return other is ConstCornerStrategy && other.radius == radius;
   }
 
   @override

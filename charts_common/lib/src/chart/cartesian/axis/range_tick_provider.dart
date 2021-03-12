@@ -130,7 +130,7 @@ class RangeTickProvider<D> extends TickProvider<D> {
   }
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       other is RangeTickProvider && tickSpec == other.tickSpec;
 
   @override
