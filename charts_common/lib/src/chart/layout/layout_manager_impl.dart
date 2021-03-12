@@ -81,7 +81,7 @@ class LayoutManagerImpl implements LayoutManager {
   @override
   List<LayoutView> get paintOrderedViews {
     if (_viewsNeedPaintSort) {
-      _paintOrderedViews = List<LayoutView>.from(_views);
+      _paintOrderedViews = List.of(_views);
 
       _paintOrderedViews.sort((LayoutView v1, LayoutView v2) =>
           v1.layoutConfig.paintOrder.compareTo(v2.layoutConfig.paintOrder));
@@ -95,7 +95,7 @@ class LayoutManagerImpl implements LayoutManager {
   @override
   List<LayoutView> get positionOrderedViews {
     if (_viewsNeedPositionSort) {
-      _positionOrderedViews = List<LayoutView>.from(_views);
+      _positionOrderedViews = List.of(_views);
 
       _positionOrderedViews.sort((LayoutView v1, LayoutView v2) => v1
           .layoutConfig.positionOrder

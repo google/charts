@@ -1184,10 +1184,10 @@ class _LineRendererElement<D> {
 
   _LineRendererElement<D> clone() {
     return _LineRendererElement<D>()
-      ..points = List<_DatumPoint<D>>.from(points)
+      ..points = List.of(points)
       ..color = color != null ? Color.fromOther(color: color) : null
       ..areaColor = areaColor != null ? Color.fromOther(color: areaColor) : null
-      ..dashPattern = dashPattern != null ? List<int>.from(dashPattern) : null
+      ..dashPattern = dashPattern != null ? List.of(dashPattern) : null
       ..domainExtent = domainExtent
       ..measureAxisPosition = measureAxisPosition
       ..positionExtent = positionExtent
@@ -1335,7 +1335,7 @@ class _AreaRendererElement<D> {
 
   _AreaRendererElement<D> clone() {
     return _AreaRendererElement<D>()
-      ..points = List<_DatumPoint<D>>.from(points)
+      ..points = List.of(points)
       ..color = color != null ? Color.fromOther(color: color) : null
       ..areaColor = areaColor != null ? Color.fromOther(color: areaColor) : null
       ..domainExtent = domainExtent

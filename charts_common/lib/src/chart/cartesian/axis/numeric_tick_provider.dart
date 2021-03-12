@@ -187,7 +187,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     assert(steps != null && steps.isNotEmpty);
     steps.sort();
 
-    final stepSet = Set.from(steps);
+    final stepSet = Set.of(steps);
     _allowedSteps = List<double>.filled(stepSet.length * 3, 0);
     int stepIndex = 0;
     for (double step in stepSet) {

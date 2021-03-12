@@ -483,7 +483,7 @@ abstract class BaseChart<D> {
     }
 
     var processedSeriesList =
-        List<MutableSeries<D>>.from(seriesList.map(makeSeries));
+        List.of(seriesList.map<MutableSeries<D>>(makeSeries));
 
     // Allow listeners to manipulate the seriesList.
     fireOnDraw(processedSeriesList);

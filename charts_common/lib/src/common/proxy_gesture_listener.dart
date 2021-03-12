@@ -134,7 +134,7 @@ class ProxyGestureListener {
   }
 
   bool _populateActiveListeners(Point<double> localPosition) {
-    var localListeners = List<GestureListener>.from(_listeners);
+    var localListeners = List.of(_listeners);
 
     var previouslyClaimed = false;
     localListeners.forEach((GestureListener listener) {

@@ -300,7 +300,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       return;
     }
 
-    final providedTicks = List.from(_providedTicks ?? []);
+    final providedTicks = List.of(_providedTicks ?? []);
 
     for (AxisTicks<D> animatedTick in _axisTicks) {
       final tick = providedTicks?.firstWhere(

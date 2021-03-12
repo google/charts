@@ -48,8 +48,8 @@ class SelectionModel<D> {
 
   /// Create a deep copy of the selection model.
   SelectionModel.fromOther(SelectionModel<D> other) {
-    _selectedDatum = List.from(other._selectedDatum);
-    _selectedSeries = List.from(other._selectedSeries);
+    _selectedDatum = List.of(other._selectedDatum);
+    _selectedSeries = List.of(other._selectedSeries);
   }
 
   /// Create selection model from configuration.

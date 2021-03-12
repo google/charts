@@ -140,7 +140,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   /// Store off a copy of the series list for use when we render the legend.
   void _preProcess(List<MutableSeries<D>> seriesList) {
-    _currentSeriesList = List.from(seriesList);
+    _currentSeriesList = List.of(seriesList);
     preProcessSeriesList(seriesList);
   }
 
