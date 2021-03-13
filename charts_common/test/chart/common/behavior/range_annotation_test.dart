@@ -38,23 +38,23 @@ class ConcreteChart extends LineChart {
   final _primaryMeasureAxis = ConcreteNumericAxis();
 
   @override
-  LifecycleListener addLifecycleListener(LifecycleListener listener) {
+  LifecycleListener<num> addLifecycleListener(LifecycleListener<num> listener) {
     lastListener = listener;
     return super.addLifecycleListener(listener);
   }
 
   @override
-  bool removeLifecycleListener(LifecycleListener listener) {
+  bool removeLifecycleListener(LifecycleListener<num> listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
     return super.removeLifecycleListener(listener);
   }
 
   @override
-  Axis get domainAxis => _domainAxis;
+  Axis<num> get domainAxis => _domainAxis;
 
   @override
-  Axis getMeasureAxis({String axisId}) => _primaryMeasureAxis;
+  Axis<num> getMeasureAxis({String axisId}) => _primaryMeasureAxis;
 }
 
 class ConcreteNumericAxis extends Axis<num> {

@@ -206,10 +206,10 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
               previousOutsideLabelY,
               previousLabelLeftOfChart);
 
-          // List destructuring..
+          // List destructuring.
           if (l != null) {
-            previousLabelLeftOfChart = l[0];
-            previousOutsideLabelY = l[1];
+            previousLabelLeftOfChart = l[0] as bool;
+            previousOutsideLabelY = l[1] as int;
           }
         }
       }
@@ -260,7 +260,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
   }
 
   /// Draws a label outside of an arc.
-  List _drawOutsideLabel(
+  List<Object> _drawOutsideLabel(
       ChartCanvas canvas,
       Rectangle drawBounds,
       ArcRendererElementList<D> arcElements,

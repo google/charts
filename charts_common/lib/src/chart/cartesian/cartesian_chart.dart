@@ -43,6 +43,7 @@ import 'axis/draw_strategy/none_draw_strategy.dart' show NoneDrawStrategy;
 import 'axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
 import 'axis/spec/axis_spec.dart' show AxisSpec;
+import 'axis/spec/numeric_axis_spec.dart' show NumericAxisSpec;
 
 class NumericCartesianChart extends CartesianChart<num> {
   NumericCartesianChart(
@@ -137,9 +138,9 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
   Axis<num> _secondaryMeasureAxis;
 
-  LinkedHashMap<String, AxisSpec> _disjointMeasureAxesSpec;
+  LinkedHashMap<String, NumericAxisSpec> _disjointMeasureAxesSpec;
 
-  LinkedHashMap<String, AxisSpec> _newDisjointMeasureAxesSpec;
+  LinkedHashMap<String, NumericAxisSpec> _newDisjointMeasureAxesSpec;
 
   LinkedHashMap<String, NumericAxis> _disjointMeasureAxes;
 
@@ -192,7 +193,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     });
   }
 
-  Axis get domainAxis => _domainAxis;
+  Axis<D> get domainAxis => _domainAxis;
 
   /// Allows the chart to configure the domain axis when it is created.
   @protected
@@ -200,7 +201,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
   /// Create a new domain axis and save the new spec to be applied during
   /// [configurationChanged].
-  set domainAxisSpec(AxisSpec axisSpec) {
+  set domainAxisSpec(AxisSpec<D> axisSpec) {
     if (_domainAxisSpec != axisSpec) {
       _newDomainAxis = createDomainAxisFromSpec(axisSpec);
       _newDomainAxisSpec = axisSpec;
@@ -310,8 +311,8 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   /// Gets the measure axis matching the provided id.
   ///
   /// If none is provided, this returns the primary measure axis.
-  Axis getMeasureAxis({String axisId}) {
-    Axis axis;
+  Axis<num> getMeasureAxis({String axisId}) {
+    Axis<num> axis;
     if (axisId == Axis.secondaryMeasureAxisId) {
       axis = _secondaryMeasureAxis;
     } else if (axisId == Axis.primaryMeasureAxisId) {
@@ -328,7 +329,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
   /// Sets the primary measure axis for the chart, rendered on the start side of
   /// the domain axis.
-  set primaryMeasureAxisSpec(AxisSpec axisSpec) {
+  set primaryMeasureAxisSpec(AxisSpec<num> axisSpec) {
     _newPrimaryMeasureAxisSpec = axisSpec;
 
     // Must set the spec to the current axis instance in the case of
@@ -340,7 +341,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
   /// Sets the secondary measure axis for the chart, rendered on the end side of
   /// the domain axis.
-  set secondaryMeasureAxisSpec(AxisSpec axisSpec) {
+  set secondaryMeasureAxisSpec(AxisSpec<num> axisSpec) {
     _newSecondaryMeasureAxixSpec = axisSpec;
 
     // Must set the spec to the current axis instance in the case of
@@ -367,7 +368,8 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   ///
   /// A [LinkedHashMap] is used to ensure consistent ordering when painting the
   /// axes.
-  set disjointMeasureAxisSpecs(LinkedHashMap<String, AxisSpec> axisSpecs) {
+  set disjointMeasureAxisSpecs(
+      LinkedHashMap<String, NumericAxisSpec> axisSpecs) {
     _newDisjointMeasureAxesSpec = axisSpecs;
 
     // Must set the spec to the current axis instance in the case of

@@ -55,10 +55,9 @@ class RangeTickProvider<D> extends TickProvider<D> {
       // with the values specified.
       if (scale is NumericScale || scale is DateTimeScale) {
         scale.addDomain(spec.value);
-        if (spec is RangeTickSpec) {
-          final rangeSpec = spec as RangeTickSpec;
-          scale.addDomain(rangeSpec.rangeStartValue);
-          scale.addDomain(rangeSpec.rangeEndValue);
+        if (spec is RangeTickSpec<D>) {
+          scale.addDomain(spec.rangeStartValue);
+          scale.addDomain(spec.rangeEndValue);
         }
       }
 

@@ -125,13 +125,13 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
 
   @override
   ViewMeasuredSizes measureHorizontallyDrawnTicks(
-      List<Tick> ticks, int maxWidth, int maxHeight) {
+      List<Tick<D>> ticks, int maxWidth, int maxHeight) {
     return ViewMeasuredSizes(preferredWidth: 0, preferredHeight: 0);
   }
 
   @override
   ViewMeasuredSizes measureVerticallyDrawnTicks(
-      List<Tick> ticks, int maxWidth, int maxHeight) {
+      List<Tick<D>> ticks, int maxWidth, int maxHeight) {
     return ViewMeasuredSizes(preferredWidth: 0, preferredHeight: 0);
   }
 }

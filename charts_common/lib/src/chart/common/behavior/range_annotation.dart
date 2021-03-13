@@ -302,12 +302,12 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
     for (final annotation in annotations) {
       switch (annotation.axisType) {
         case RangeAnnotationAxisType.domain:
-          updateAnnotation<D>(_chart.domainAxis, annotation);
+          updateAnnotation(_chart.domainAxis, annotation);
           break;
 
         case RangeAnnotationAxisType.measure:
           // We expect an empty axisId to get us the primary measure axis.
-          updateAnnotation<num>(
+          updateAnnotation(
               _chart.getMeasureAxis(axisId: annotation.axisId), annotation);
           break;
       }

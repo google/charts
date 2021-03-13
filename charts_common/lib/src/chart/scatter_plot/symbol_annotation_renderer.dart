@@ -63,7 +63,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   final _seriesInfo = LinkedHashMap<String, _SeriesInfo<D>>();
 
   SymbolAnnotationRenderer(
-      {String rendererId, SymbolAnnotationRendererConfig config})
+      {String rendererId, SymbolAnnotationRendererConfig<D> config})
       : super(rendererId: rendererId ?? 'symbolAnnotation', config: config);
 
   //
@@ -197,7 +197,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   }
 
   @override
-  void onDetach(BaseChart chart) {
+  void onDetach(BaseChart<D> chart) {
     chart.removeView(this);
   }
 

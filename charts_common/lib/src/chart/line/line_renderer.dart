@@ -43,9 +43,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   static const drawBoundTopExtensionPx = 5;
   static const drawBoundBottomExtensionPx = 5;
 
-  final LineRendererConfig config;
+  final LineRendererConfig<D> config;
 
-  PointRenderer _pointRenderer;
+  PointRenderer<D> _pointRenderer;
 
   BaseChart<D> _chart;
 
@@ -67,10 +67,10 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   // data.
   final _currentKeys = <String>[];
 
-  factory LineRenderer({String rendererId, LineRendererConfig config}) {
+  factory LineRenderer({String rendererId, LineRendererConfig<D> config}) {
     return LineRenderer._internal(
         rendererId: rendererId ?? 'line',
-        config: config ?? LineRendererConfig());
+        config: config ?? LineRendererConfig<D>());
   }
 
   LineRenderer._internal({String rendererId, this.config})
@@ -389,10 +389,13 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
               styleSegment,
               stackIndex > 0 ? previousInitialPointList[stackIndex - 1] : null,
               true);
-          final lineElementList = lineAndArea[0];
-          final areaElementList = lineAndArea[1];
-          final allPointList = lineAndArea[2];
-          final boundsElementList = lineAndArea[3];
+          final lineElementList =
+              lineAndArea[0] as List<_LineRendererElement<D>>;
+          final areaElementList =
+              lineAndArea[1] as List<_AreaRendererElement<D>>;
+          final allPointList = lineAndArea[2] as List<_DatumPoint<D>>;
+          final boundsElementList =
+              lineAndArea[3] as List<_AreaRendererElement<D>>;
 
           // Create the line elements.
           final animatingLines = <_AnimatedLine<D>>[];
@@ -446,10 +449,11 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         // Create a new line using the final point locations.
         final lineAndArea = _createLineAndAreaElements(series, styleSegment,
             stackIndex > 0 ? previousPointList[stackIndex - 1] : null, false);
-        final lineElementList = lineAndArea[0];
-        final areaElementList = lineAndArea[1];
-        final allPointList = lineAndArea[2];
-        final boundsElementList = lineAndArea[3];
+        final lineElementList = lineAndArea[0] as List<_LineRendererElement<D>>;
+        final areaElementList = lineAndArea[1] as List<_AreaRendererElement<D>>;
+        final allPointList = lineAndArea[2] as List<_DatumPoint<D>>;
+        final boundsElementList =
+            lineAndArea[3] as List<_AreaRendererElement<D>>;
 
         for (var index = 0; index < lineElementList.length; index++) {
           final lineElement = lineElementList[index];
@@ -563,9 +567,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   /// [initializeFromZero] controls whether we generate elements with measure
   /// values of 0, or using series data. This should be true when calculating
   /// point positions to animate in from the measure axis.
-  List _createLineAndAreaElements(
+  List<Object> _createLineAndAreaElements(
       ImmutableSeries<D> series,
-      _LineRendererElement styleSegment,
+      _LineRendererElement<D> styleSegment,
       List<_DatumPoint<D>> previousPointList,
       bool initializeFromZero) {
     final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
@@ -712,7 +716,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   /// stack.
   ///
   /// [series] the series that this line represents.
-  List _createLineAndAreaSegmentsForSeries(
+  List<List<List<_DatumPoint<D>>>> _createLineAndAreaSegmentsForSeries(
       List<_DatumPoint<D>> pointList,
       List<_DatumPoint<D>> previousPointList,
       ImmutableSeries<D> series,
@@ -888,7 +892,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   ///
   /// [details] represents the element details for a line segment.
   _Range<num> _createPositionExtent(
-      ImmutableSeries<D> series, _LineRendererElement details) {
+      ImmutableSeries<D> series, _LineRendererElement<D> details) {
     final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
 
     // Convert the domain extent into axis positions.
@@ -1196,8 +1200,8 @@ class _LineRendererElement<D> {
       ..roundEndCaps = roundEndCaps;
   }
 
-  void updateAnimationPercent(_LineRendererElement previous,
-      _LineRendererElement target, double animationPercent) {
+  void updateAnimationPercent(_LineRendererElement<D> previous,
+      _LineRendererElement<D> target, double animationPercent) {
     Point lastPoint;
 
     int pointIndex;
@@ -1344,8 +1348,8 @@ class _AreaRendererElement<D> {
       ..styleKey = styleKey;
   }
 
-  void updateAnimationPercent(_AreaRendererElement previous,
-      _AreaRendererElement target, double animationPercent) {
+  void updateAnimationPercent(_AreaRendererElement<D> previous,
+      _AreaRendererElement<D> target, double animationPercent) {
     Point lastPoint;
 
     int pointIndex;

@@ -31,7 +31,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
   final String customRendererId;
 
   /// List of decorators applied to rendered arcs.
-  final List<ArcRendererDecorator> arcRendererDecorators;
+  final List<ArcRendererDecorator<D>> arcRendererDecorators;
 
   @override
   final SymbolRenderer symbolRenderer;

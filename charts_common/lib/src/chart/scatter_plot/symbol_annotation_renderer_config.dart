@@ -45,7 +45,7 @@ class SymbolAnnotationRendererConfig<D> extends PointRendererConfig<D> {
 
   SymbolAnnotationRendererConfig(
       {String customRendererId,
-      List<PointRendererDecorator> pointRendererDecorators,
+      List<PointRendererDecorator<D>> pointRendererDecorators,
       double radiusPx = 5.0,
       SymbolRenderer symbolRenderer,
       Map<String, SymbolRenderer> customSymbolRenderers,
@@ -57,7 +57,7 @@ class SymbolAnnotationRendererConfig<D> extends PointRendererConfig<D> {
             customRendererId: customRendererId,
             pointRendererDecorators: pointRendererDecorators ??
                 [
-                  ComparisonPointsDecorator(
+                  ComparisonPointsDecorator<D>(
                       symbolRenderer: RectangleRangeSymbolRenderer())
                 ],
             radiusPx: radiusPx,

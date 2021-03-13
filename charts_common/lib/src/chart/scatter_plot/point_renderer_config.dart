@@ -30,7 +30,7 @@ class PointRendererConfig<D> extends LayoutViewConfig
   final int layoutPaintOrder;
 
   /// List of decorators applied to rendered points.
-  final List<PointRendererDecorator> pointRendererDecorators;
+  final List<PointRendererDecorator<D>> pointRendererDecorators;
 
   /// Renderer used to draw the points. Defaults to a circle.
   @override

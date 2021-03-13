@@ -187,7 +187,7 @@ class DatumDetails<D> {
       Point<double> chartPosition,
       Point<double> chartPositionLower,
       Point<double> chartPositionUpper,
-      DomainFormatter domainFormatter,
+      DomainFormatter<D> domainFormatter,
       double domainDistance,
       double measureDistance,
       double radiusPx,

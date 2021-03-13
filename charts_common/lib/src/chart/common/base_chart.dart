@@ -174,7 +174,7 @@ abstract class BaseChart<D> {
     _gestureProxy.remove(listener);
   }
 
-  LifecycleListener addLifecycleListener(LifecycleListener<D> listener) {
+  LifecycleListener<D> addLifecycleListener(LifecycleListener<D> listener) {
     _lifecycleListeners.add(listener);
     return listener;
   }
@@ -203,7 +203,7 @@ abstract class BaseChart<D> {
   SeriesRenderer<D> get defaultRenderer =>
       getSeriesRenderer(SeriesRenderer.defaultRendererId);
 
-  void addSeriesRenderer(SeriesRenderer renderer) {
+  void addSeriesRenderer(SeriesRenderer<D> renderer) {
     String rendererId = renderer.rendererId;
 
     SeriesRenderer<D> previousRenderer = _seriesRenderers[rendererId];

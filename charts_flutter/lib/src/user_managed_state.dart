@@ -45,7 +45,7 @@ class UserManagedState<D> {
 /// has been processed.
 class UserManagedSelectionModel<D> {
   final List<String> selectedSeriesConfig;
-  final List<common.SeriesDatumConfig> selectedDataConfig;
+  final List<common.SeriesDatumConfig<D>> selectedDataConfig;
   common.SelectionModel<D> _model;
 
   /// Creates a [UserManagedSelectionModel] that holds [SelectionModel].
@@ -61,10 +61,10 @@ class UserManagedSelectionModel<D> {
   /// to a [SelectionModel] when [getModel] provides a processed series list.
   UserManagedSelectionModel.fromConfig(
       {List<String> selectedSeriesConfig,
-      List<common.SeriesDatumConfig> selectedDataConfig})
+      List<common.SeriesDatumConfig<D>> selectedDataConfig})
       : this.selectedSeriesConfig = selectedSeriesConfig ?? <String>[],
         this.selectedDataConfig =
-            selectedDataConfig ?? <common.SeriesDatumConfig>[];
+            selectedDataConfig ?? <common.SeriesDatumConfig<D>>[];
 
   /// Gets the selection model. If the model is null, create one from
   /// configuration and the processed [seriesList] passed in.

@@ -289,9 +289,13 @@ class Slider<D> implements ChartBehavior<D> {
 
     // If not set in the constructor, initial position for the handle is the
     // center of the draw area.
-    _domainValue ??= _chart.domainAxis
-        .getDomain(_view.drawBounds.left + _view.drawBounds.width / 2)
-        .round();
+    if (_domainValue == null) {
+      final newDomainValue = _chart.domainAxis
+          .getDomain(_view.drawBounds.left + _view.drawBounds.width / 2);
+      _domainValue = (newDomainValue is double)
+          ? (newDomainValue.round().toDouble() as D)
+          : newDomainValue;
+    }
 
     // Possibly move the slider, if the axis values have changed since the last
     // chart draw.

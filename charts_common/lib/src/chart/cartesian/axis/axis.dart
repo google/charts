@@ -331,7 +331,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
     // Add new ticks
     providedTicks?.forEach((tick) {
-      AxisTicks animatedTick;
+      AxisTicks<D> animatedTick;
       if (tick is RangeTick) {
         animatedTick = RangeAxisTicks<D>(tick);
       } else {
@@ -566,9 +566,9 @@ class NumericAxis extends Axis<num> {
 
 class OrdinalAxis extends Axis<String> {
   OrdinalAxis({
-    TickDrawStrategy tickDrawStrategy,
-    TickProvider tickProvider,
-    TickFormatter tickFormatter,
+    TickDrawStrategy<String> tickDrawStrategy,
+    TickProvider<String> tickProvider,
+    TickFormatter<String> tickFormatter,
   }) : super(
           tickProvider: tickProvider ?? const OrdinalTickProvider(),
           tickFormatter: tickFormatter ?? const OrdinalTickFormatter(),

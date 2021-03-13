@@ -64,9 +64,9 @@ const defaultSymbolRendererId = '__default__';
 const _maxInitialDistance = 10000.0;
 
 class PointRenderer<D> extends BaseCartesianRenderer<D> {
-  final PointRendererConfig config;
+  final PointRendererConfig<D> config;
 
-  final List<PointRendererDecorator> pointRendererDecorators;
+  final List<PointRendererDecorator<D>> pointRendererDecorators;
 
   BaseChart<D> _chart;
 
@@ -85,8 +85,8 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   // data.
   final _currentKeys = <String>[];
 
-  PointRenderer({String rendererId, PointRendererConfig config})
-      : config = config ?? PointRendererConfig(),
+  PointRenderer({String rendererId, PointRendererConfig<D> config})
+      : config = config ?? PointRendererConfig<D>(),
         pointRendererDecorators = config?.pointRendererDecorators ?? [],
         super(
             rendererId: rendererId ?? 'point',
@@ -751,8 +751,8 @@ class PointRendererElement<D> {
       ..symbolRendererId = symbolRendererId;
   }
 
-  void updateAnimationPercent(PointRendererElement previous,
-      PointRendererElement target, double animationPercent) {
+  void updateAnimationPercent(PointRendererElement<D> previous,
+      PointRendererElement<D> target, double animationPercent) {
     final targetPoint = target.point;
     final previousPoint = previous.point;
 

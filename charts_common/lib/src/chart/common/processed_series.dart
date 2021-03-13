@@ -119,8 +119,8 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
   final _attrs = SeriesAttributes();
 
-  Axis measureAxis;
-  Axis domainAxis;
+  Axis<num> measureAxis;
+  Axis<D> domainAxis;
 
   MutableSeries(Series<dynamic, D> series) : id = series.id {
     displayName = series.displayName ?? series.id;

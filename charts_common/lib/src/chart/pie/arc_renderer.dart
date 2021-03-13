@@ -41,7 +41,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
   final ArcRendererConfig<D> config;
 
-  final List<ArcRendererDecorator> arcRendererDecorators;
+  final List<ArcRendererDecorator<D>> arcRendererDecorators;
 
   BaseChart<D> _chart;
 
@@ -59,7 +59,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   // data.
   final _currentKeys = <String>[];
 
-  factory ArcRenderer({String rendererId, ArcRendererConfig config}) {
+  factory ArcRenderer({String rendererId, ArcRendererConfig<D> config}) {
     return ArcRenderer._internal(
         rendererId: rendererId ?? 'line',
         config: config ?? ArcRendererConfig());
@@ -542,7 +542,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
   /// Assigns colors to series that are missing their colorFn.
   @override
-  void assignMissingColors(Iterable<MutableSeries> seriesList,
+  void assignMissingColors(Iterable<MutableSeries<D>> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
     int maxMissing = 0;
 
@@ -608,8 +608,8 @@ class ArcRendererElement<D> {
       ..series = series;
   }
 
-  void updateAnimationPercent(ArcRendererElement previous,
-      ArcRendererElement target, double animationPercent) {
+  void updateAnimationPercent(ArcRendererElement<D> previous,
+      ArcRendererElement<D> target, double animationPercent) {
     startAngle =
         ((target.startAngle - previous.startAngle) * animationPercent) +
             previous.startAngle;
