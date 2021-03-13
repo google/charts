@@ -30,7 +30,7 @@ class AxisSpec<D> {
   final RenderSpec<D> renderSpec;
   final TickProviderSpec<D> tickProviderSpec;
   final TickFormatterSpec<D> tickFormatterSpec;
-  final ScaleSpec scaleSpec;
+  final ScaleSpec<D> scaleSpec;
 
   const AxisSpec({
     this.renderSpec,
@@ -41,12 +41,12 @@ class AxisSpec<D> {
   });
 
   factory AxisSpec.from(
-    AxisSpec other, {
+    AxisSpec<D> other, {
     RenderSpec<D> renderSpec,
     TickProviderSpec<D> tickProviderSpec,
     TickFormatterSpec<D> tickFormatterSpec,
     bool showAxisLine,
-    ScaleSpec scaleSpec,
+    ScaleSpec<D> scaleSpec,
   }) {
     return AxisSpec(
       renderSpec: renderSpec ?? other.renderSpec,

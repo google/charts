@@ -32,7 +32,7 @@ abstract class TickDrawStrategy<D> {
   void decorateTicks(List<Tick<D>> ticks);
 
   /// Returns a [CollisionReport] indicating if there are any collisions.
-  CollisionReport collides(List<Tick<D>> ticks, AxisOrientation orientation);
+  CollisionReport<D> collides(List<Tick<D>> ticks, AxisOrientation orientation);
 
   /// Returns measurement of ticks drawn vertically.
   ViewMeasuredSizes measureVerticallyDrawnTicks(

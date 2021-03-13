@@ -141,7 +141,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   bool lockAxis = false;
 
   /// Ticks provided by the tick provider.
-  List<Tick> _providedTicks;
+  List<Tick<D>> _providedTicks;
 
   /// Ticks used by the axis for drawing.
   final _axisTicks = <AxisTicks<D>>[];
@@ -300,7 +300,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
       return;
     }
 
-    final providedTicks = List.of(_providedTicks ?? []);
+    final providedTicks = List.of(_providedTicks ?? <Tick<D>>[]);
 
     for (AxisTicks<D> animatedTick in _axisTicks) {
       final tick = providedTicks?.firstWhere(

@@ -63,8 +63,8 @@ class NumericAxisSpec extends AxisSpec<num> {
   factory NumericAxisSpec.from(
     NumericAxisSpec other, {
     RenderSpec<num> renderSpec,
-    TickProviderSpec tickProviderSpec,
-    TickFormatterSpec tickFormatterSpec,
+    TickProviderSpec<num> tickProviderSpec,
+    TickFormatterSpec<num> tickFormatterSpec,
     bool showAxisLine,
     NumericExtents viewport,
   }) {

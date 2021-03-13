@@ -17,11 +17,11 @@ import 'package:meta/meta.dart' show required;
 import 'tick.dart' show Tick;
 
 /// A report that contains a list of ticks and if they collide.
-class CollisionReport {
+class CollisionReport<D> {
   /// If [ticks] collide.
   final bool ticksCollide;
 
-  final List<Tick> ticks;
+  final List<Tick<D>> ticks;
 
   final bool alternateTicksUsed;
 

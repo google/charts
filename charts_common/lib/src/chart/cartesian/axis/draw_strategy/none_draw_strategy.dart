@@ -67,11 +67,12 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   @override
-  CollisionReport collides(List<Tick> ticks, AxisOrientation orientation) =>
+  CollisionReport<D> collides(
+          List<Tick<D>> ticks, AxisOrientation orientation) =>
       CollisionReport(ticksCollide: false, ticks: ticks);
 
   @override
-  void decorateTicks(List<Tick> ticks) {
+  void decorateTicks(List<Tick<D>> ticks) {
     // Even though no text is rendered, the text style for each element should
     // still be set to handle the case of the draw strategy being switched to
     // a different draw strategy. The new draw strategy will try to animate

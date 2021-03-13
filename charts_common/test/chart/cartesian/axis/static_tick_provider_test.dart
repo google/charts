@@ -42,20 +42,20 @@ class FakeNumericTickFormatter implements TickFormatter<num> {
   }
 }
 
-class MockDrawStrategy extends Mock implements BaseTickDrawStrategy {}
+class MockDrawStrategy<D> extends Mock implements BaseTickDrawStrategy<D> {}
 
 void main() {
   ChartContext context;
   GraphicsFactory graphicsFactory;
   TickFormatter formatter;
-  BaseTickDrawStrategy drawStrategy;
+  BaseTickDrawStrategy<num> drawStrategy;
   LinearScale scale;
 
   setUp(() {
     context = MockChartContext();
     graphicsFactory = MockGraphicsFactory();
     formatter = MockNumericTickFormatter();
-    drawStrategy = MockDrawStrategy();
+    drawStrategy = MockDrawStrategy<num>();
     scale = LinearScale()..range = ScaleOutputExtent(0, 300);
   });
 

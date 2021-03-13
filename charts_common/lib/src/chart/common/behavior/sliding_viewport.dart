@@ -32,7 +32,7 @@ class SlidingViewport<D> implements ChartBehavior<D> {
 
   SlidingViewport([this.selectionModelType = SelectionModelType.info]);
 
-  void _selectionChanged(SelectionModel selectionModel) {
+  void _selectionChanged(SelectionModel<D> selectionModel) {
     if (selectionModel.hasAnySelection == false) {
       return;
     }
@@ -64,7 +64,7 @@ class SlidingViewport<D> implements ChartBehavior<D> {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart
         .getSelectionModel(selectionModelType)
         .removeSelectionChangedListener(_selectionChanged);

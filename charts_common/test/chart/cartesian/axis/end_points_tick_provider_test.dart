@@ -60,7 +60,7 @@ class FakeDrawStrategy<D> extends BaseTickDrawStrategy<D> {
       : super(null, FakeGraphicsFactory());
 
   @override
-  CollisionReport collides(List<Tick<D>> ticks, _) {
+  CollisionReport<D> collides(List<Tick<D>> ticks, _) {
     final ticksCollide = ticks.length >= collidesAfterTickCount;
     final alternateTicksUsed = ticks.length >= alternateRenderingAfterTickCount;
 

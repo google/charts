@@ -207,7 +207,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     @required NumericScale scale,
     @required TickFormatter<num> formatter,
     @required Map<num, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
+    @required TickDrawStrategy<num> tickDrawStrategy,
     @required TickHint<num> tickHint,
   }) {
     final stepSize = (tickHint.end - tickHint.start) / (tickHint.tickCount - 1);
@@ -241,7 +241,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     @required NumericScale scale,
     @required TickFormatter<num> formatter,
     @required Map<num, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
+    @required TickDrawStrategy<num> tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
     TickHint<num> tickHint,

@@ -98,7 +98,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 
   BaseChart<D> _chart;
 
-  _LinePointLayoutView _view;
+  _LinePointLayoutView<D> _view;
 
   LifecycleListener<D> _lifecycleListener;
 
@@ -166,7 +166,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart.removeView(_view);
     chart
         .getSelectionModel(selectionModelType)
@@ -174,7 +174,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     chart.removeLifecycleListener(_lifecycleListener);
   }
 
-  void _selectionChanged(SelectionModel selectionModel) {
+  void _selectionChanged(SelectionModel<D> selectionModel) {
     _chart.redraw(skipLayout: true, skipAnimation: true);
   }
 
@@ -555,8 +555,8 @@ class _PointRendererElement<D> {
       ..symbolRenderer = symbolRenderer;
   }
 
-  void updateAnimationPercent(_PointRendererElement previous,
-      _PointRendererElement target, double animationPercent) {
+  void updateAnimationPercent(_PointRendererElement<D> previous,
+      _PointRendererElement<D> target, double animationPercent) {
     final targetPoint = target.point;
     final previousPoint = previous.point;
 

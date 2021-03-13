@@ -70,7 +70,7 @@ class BucketingNumericTickProvider extends NumericTickProvider {
     @required NumericScale scale,
     @required TickFormatter<num> formatter,
     @required Map<num, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
+    @required TickDrawStrategy<num> tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
     TickHint<num> tickHint,

@@ -26,7 +26,8 @@ class SquarifiedTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
   /// Golden ratio.
   final _ratio = .5 * (1 + math.sqrt(5));
 
-  SquarifiedTreeMapRenderer({String rendererId, TreeMapRendererConfig config})
+  SquarifiedTreeMapRenderer(
+      {String rendererId, TreeMapRendererConfig<D> config})
       : super(
             config: config ??
                 TreeMapRendererConfig(tileType: TreeMapTileType.squarified),

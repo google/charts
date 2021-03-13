@@ -35,7 +35,8 @@ import 'treemap_renderer_element.dart';
 ///
 /// Each element contains a bounding rectangle for rendering.
 const treeMapElementsKey =
-    AttributeKey<Iterable<TreeMapRendererElement>>('TreeMapRenderer.elements');
+    AttributeKey<Iterable<TreeMapRendererElement<Object>>>(
+        'TreeMapRenderer.elements');
 
 abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   /// Default renderer ID for treemap.
@@ -53,7 +54,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   final TreeMapRendererConfig<D> config;
 
   /// Decorator for rendering treemap node label.
-  final TreeMapLabelDecorator labelDecorator;
+  final TreeMapLabelDecorator<D> labelDecorator;
 
   BaseChart<D> _chart;
 

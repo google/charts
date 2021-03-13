@@ -42,13 +42,13 @@ String domainVocalization<D>(List<SeriesDatum<D>> seriesDatums) {
 
 /// Behavior that generates semantic nodes for each domain.
 class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
-  final VocalizationCallback _vocalizationCallback;
+  final VocalizationCallback<D> _vocalizationCallback;
   LifecycleListener<D> _lifecycleListener;
   CartesianChart<D> _chart;
   List<MutableSeries<D>> _seriesList;
 
   DomainA11yExploreBehavior(
-      {VocalizationCallback vocalizationCallback,
+      {VocalizationCallback<D> vocalizationCallback,
       ExploreModeTrigger exploreModeTrigger,
       double minimumWidth,
       String exploreModeEnabledAnnouncement,
@@ -129,7 +129,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart.removeLifecycleListener(_lifecycleListener);
   }
 

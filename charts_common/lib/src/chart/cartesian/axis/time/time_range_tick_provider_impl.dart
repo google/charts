@@ -71,7 +71,7 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
     @required DateTimeScale scale,
     @required TickFormatter<DateTime> formatter,
     @required Map<DateTime, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
+    @required TickDrawStrategy<DateTime> tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
     TickHint<DateTime> tickHint,

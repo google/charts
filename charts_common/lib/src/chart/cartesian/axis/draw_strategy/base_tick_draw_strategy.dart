@@ -163,7 +163,8 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   @override
-  CollisionReport collides(List<Tick<D>> ticks, AxisOrientation orientation) {
+  CollisionReport<D> collides(
+      List<Tick<D>> ticks, AxisOrientation orientation) {
     // TODO: Collision analysis for rotated labels are not
     // supported yet.
 

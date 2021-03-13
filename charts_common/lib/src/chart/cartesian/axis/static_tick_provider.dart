@@ -43,7 +43,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
     @required MutableScale<D> scale,
     @required TickFormatter<D> formatter,
     @required Map<D, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
+    @required TickDrawStrategy<D> tickDrawStrategy,
     @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
     TickHint<D> tickHint,
