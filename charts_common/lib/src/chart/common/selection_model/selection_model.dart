@@ -73,7 +73,7 @@ class SelectionModel<D> {
           final domainFn = series.domainFn;
 
           for (var i = 0; i < series.data.length; i++) {
-            final datum = series.data[i];
+            final Object datum = series.data[i];
 
             if (selectedDataMap[series.id].contains(domainFn(i))) {
               _selectedDatum.add(SeriesDatum(series, datum));
@@ -98,7 +98,7 @@ class SelectionModel<D> {
   bool get hasDatumSelection => _selectedDatum.isNotEmpty;
 
   bool isDatumSelected(ImmutableSeries<D> series, int index) {
-    final datum = index == null ? null : series.data[index];
+    final Object datum = index == null ? null : series.data[index];
     return _selectedDatum.contains(SeriesDatum(series, datum));
   }
 

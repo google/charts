@@ -225,7 +225,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       var elementsList = series.getAttr(pointElementsKey);
 
       for (var index = 0; index < series.data.length; index++) {
-        final datum = series.data[index];
+        final Object datum = series.data[index];
         final details = elementsList[index];
 
         D domainValue = domainFn(index);
@@ -423,7 +423,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
   @protected
   DatumPoint<D> getPoint(
-      final datum,
+      Object datum,
       D domainValue,
       D domainLowerBoundValue,
       D domainUpperBoundValue,

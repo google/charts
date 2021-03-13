@@ -228,7 +228,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         var previousEndAngle = config.startAngle;
 
         for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
-          final datum = series.data[arcIndex];
+          final Object datum = series.data[arcIndex];
           final details = elementsList[arcIndex];
           D domainValue = details.domain;
 
@@ -413,7 +413,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   /// Returns an expanded [DatumDetails] object that contains location data.
   DatumDetails<D> getExpandedDatumDetails(SeriesDatum<D> seriesDatum) {
     final series = seriesDatum.series;
-    final datum = seriesDatum.datum;
+    final Object datum = seriesDatum.datum;
     final datumIndex = seriesDatum.index;
 
     final domain = series.domainFn(datumIndex);

@@ -328,8 +328,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   /// [startValue] and [endValue] are dynamic because they can be different data
   /// types for domain and measure axes, e.g. DateTime and num for a TimeSeries
   /// chart.
-  _DatumAnnotation _getAnnotationDatum(dynamic startValue, dynamic endValue,
-      ImmutableAxis axis, RangeAnnotationAxisType axisType) {
+  _DatumAnnotation _getAnnotationDatum(Object startValue, Object endValue,
+      ImmutableAxis<Object> axis, RangeAnnotationAxisType axisType) {
     // Remove floating point rounding errors by rounding to 2 decimal places of
     // precision. The difference in the canvas is negligible.
     final startPosition = (axis.getLocation(startValue) * 100).round() / 100;

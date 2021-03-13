@@ -28,7 +28,7 @@ class DiceTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
 
   /// Uses dicing as the tiling algorithm for this tree map.
   @override
-  void tile(TreeNode node) {
+  void tile(TreeNode<Object> node) {
     final children = node.children;
     if (children.isNotEmpty) {
       final rect = availableLayoutBoundingRect(node);

@@ -44,7 +44,8 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
   /// A hash map that allows accessing the renderer element drawn on the chart
   /// from a treemap node.
-  final _treeNodeToRendererElement = <TreeNode, TreeMapRendererElement<D>>{};
+  final _treeNodeToRendererElement =
+      <TreeNode<Object>, TreeMapRendererElement<D>>{};
 
   /// An ordered map of [_AnimatedTreeMapRect] that will get drawn on the
   /// canvas.
@@ -95,7 +96,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
       // Populates [treeNodeToRendererElement] map entries.
       for (var i = 0; i < count; i++) {
-        final TreeNode node = series.data[i];
+        final TreeNode<Object> node = series.data[i];
         _treeNodeToRendererElement[node] = _createRendererElement(series, i)
           ..isLeaf = !node.hasChildren;
       }
@@ -104,7 +105,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   }
 
   /// Tiling algorithm for dividing a region into subregions of specified areas.
-  void tile(TreeNode node);
+  void tile(TreeNode<Object> node);
 
   @override
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimating) {
@@ -115,12 +116,12 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
     for (final series in seriesList) {
       if (series.data.isNotEmpty) {
-        final root = series.data.first;
+        final Object root = series.data.first;
         // Configures the renderer element for root node.
         _configureRootRendererElement(root);
 
         // Applies tiling algorithm to each node.
-        for (final TreeNode node in series.data) {
+        for (final TreeNode<Object> node in series.data) {
           tile(node);
           final element = _getRendererElement(node)..refreshPaintProperties();
           final rect = _createAnimatedTreeMapRect(element);
@@ -189,7 +190,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     if (!isPointWithinBounds(chartPoint, boundsOverride)) return nearest;
 
     final root = _treeNodeToRendererElement.entries.first.key;
-    final queue = Queue<TreeNode>()..add(root);
+    final queue = Queue<TreeNode<Object>>()..add(root);
 
     while (queue.isNotEmpty) {
       final node = queue.removeFirst();
@@ -241,7 +242,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       final count = colorPalettes.length;
 
       series.fillColorFn ??= (int index) {
-        TreeNode node = series.data[index];
+        TreeNode<Object> node = series.data[index];
         return colorPalettes[node.depth % count].shadeDefault;
       };
 
@@ -266,7 +267,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   ///
   /// Available bounding rectangle is computed after padding is applied.
   @protected
-  MutableRectangle availableLayoutBoundingRect(TreeNode node) {
+  MutableRectangle availableLayoutBoundingRect(TreeNode<Object> node) {
     final element = _getRendererElement(node);
     final rect = element.boundingRect;
     final padding = config.rectPaddingPx;
@@ -293,7 +294,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   /// [scaleFactor] should be calculated based on the available layout area and
   /// the measure which the available layout area represents.
   @protected
-  void scaleArea(Iterable<TreeNode> children, num scaleFactor) {
+  void scaleArea(Iterable<TreeNode<Object>> children, num scaleFactor) {
     for (final child in children) {
       final element = _getRendererElement(child);
       final area = element.measure * (scaleFactor < 0 ? 0 : scaleFactor);
@@ -303,7 +304,8 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
   /// Gets the measure for a tree [node].
   @protected
-  num measureForTreeNode(TreeNode node) => _getRendererElement(node).measure;
+  num measureForTreeNode(TreeNode<Object> node) =>
+      _getRendererElement(node).measure;
 
   /// Gets the area of a [Rectangle].
   @protected
@@ -311,7 +313,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
   /// Gets the area for a tree [node].
   @protected
-  num areaForTreeNode(TreeNode node) => _getRendererElement(node).area;
+  num areaForTreeNode(TreeNode<Object> node) => _getRendererElement(node).area;
 
   /// Positions each renderer element in [nodes] within the [boundingRect].
   ///
@@ -328,7 +330,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   ///                 width
   /// ```
   @protected
-  void position(Iterable<TreeNode> nodes, MutableRectangle boundingRect,
+  void position(Iterable<TreeNode<Object>> nodes, MutableRectangle boundingRect,
       num side, num layoutArea) {
     var top = boundingRect.top;
     var left = boundingRect.left;
@@ -363,7 +365,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     }
   }
 
-  void _configureRootRendererElement(TreeNode root) {
+  void _configureRootRendererElement(TreeNode<Object> root) {
     // Root should take up the entire [drawBounds] area.
     _getRendererElement(root)
       ..boundingRect = drawBounds
@@ -400,7 +402,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
         ..index = index
         ..series = series;
 
-  TreeMapRendererElement<D> _getRendererElement(TreeNode node) {
+  TreeMapRendererElement<D> _getRendererElement(TreeNode<Object> node) {
     final element = _treeNodeToRendererElement[node];
     assert(
         element != null, 'There is no associated renderer element for $node.');

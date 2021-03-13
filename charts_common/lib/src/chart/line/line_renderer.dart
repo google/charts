@@ -683,7 +683,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
     // Generate [_DatumPoints]s for the series data.
     for (var index = 0; index < series.data.length; index++) {
-      final datum = series.data[index];
+      final Object datum = series.data[index];
 
       // TODO: Animate from the nearest lines in the stack.
       var measure = measureFn(index);

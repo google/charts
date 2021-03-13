@@ -247,7 +247,7 @@ class SelectNearest<D> implements ChartBehavior<D> {
           domainLowerBoundFn != null && domainUpperBoundFn != null;
 
       for (var i = 0; i < series.data.length; i++) {
-        final datum = series.data[i];
+        final Object datum = series.data[i];
         final domain = domainFn(i);
 
         // Don't re-add the nearest details.

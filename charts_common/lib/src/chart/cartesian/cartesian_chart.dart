@@ -538,7 +538,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
     getSelectionModel(type).selectedDatum.forEach((seriesDatum) {
       final series = seriesDatum.series;
-      final datum = seriesDatum.datum;
+      final Object datum = seriesDatum.datum;
       final datumIndex = seriesDatum.index;
 
       final domain = series.domainFn(datumIndex);

@@ -73,7 +73,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
 
     for (MutableSeries<D> series in _seriesList) {
       for (var index = 0; index < series.data.length; index++) {
-        final datum = series.data[index];
+        final Object datum = series.data[index];
         D domain = series.domainFn(index);
 
         domainSeriesDatum[domain] ??= <SeriesDatum<D>>[];

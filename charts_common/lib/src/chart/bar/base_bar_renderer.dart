@@ -388,7 +388,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       _prevDomainAxis = domainAxis;
 
       for (var barIndex = 0; barIndex < series.data.length; barIndex++) {
-        final datum = series.data[barIndex];
+        final Object datum = series.data[barIndex];
         BaseBarRendererElement details = elementsList[barIndex];
         D domainValue = domainFn(barIndex);
 

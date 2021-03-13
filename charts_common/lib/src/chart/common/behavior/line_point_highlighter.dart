@@ -195,7 +195,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
       }
 
       final series = detail.series;
-      final datum = detail.datum;
+      final Object datum = detail.datum;
 
       final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
       final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;

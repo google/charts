@@ -259,7 +259,8 @@ abstract class ImmutableSeries<D> {
   /// Sum of the measure values for the series.
   num get seriesMeasureTotal;
 
-  List get data;
+  // Uses `dynamic` for convenience to callers.
+  List<dynamic> get data;
 
   /// [keyFn] defines a globally unique identifier for each datum.
   ///
