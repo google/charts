@@ -58,7 +58,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   static const _defaultStrokeWidthPx = 2.0;
 
   /// List of annotations to render on the chart.
-  final List<AnnotationSegment> annotations;
+  final List<AnnotationSegment<Object>> annotations;
 
   /// Default color for annotations.
   final Color defaultColor;
@@ -170,14 +170,13 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   void _updateAxisRange(List<MutableSeries<D>> seriesList) {
     // Extend the axis range if enabled.
     if (extendAxis) {
-      final domainAxis = _chart.domainAxis;
-
-      annotations.forEach((annotation) {
-        Axis axis;
+      for (final annotation in annotations) {
+        // Either an Axis<D> and Axis<num>.
+        Axis<Object> axis;
 
         switch (annotation.axisType) {
           case RangeAnnotationAxisType.domain:
-            axis = domainAxis;
+            axis = _chart.domainAxis;
             break;
 
           case RangeAnnotationAxisType.measure:
@@ -192,27 +191,19 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         } else if (annotation is LineAnnotationSegment) {
           axis.addDomainValue(annotation.value);
         }
-      });
+      }
     }
   }
 
   void _updateViewData() {
     _currentKeys.clear();
 
-    annotations.forEach((annotation) {
-      Axis axis;
-
-      switch (annotation.axisType) {
-        case RangeAnnotationAxisType.domain:
-          axis = _chart.domainAxis;
-          break;
-
-        case RangeAnnotationAxisType.measure:
-          // We expect an empty axisId to get us the primary measure axis.
-          axis = _chart.getMeasureAxis(axisId: annotation.axisId);
-          break;
-      }
-
+    // The values (T) can match the data type of the domain (D) or measure axis
+    // (num).
+    void updateAnnotation<T>(
+      Axis<T> axis,
+      AnnotationSegment<Object> annotation,
+    ) {
       final key = annotation.key;
 
       final color = annotation.color ?? defaultColor;
@@ -247,10 +238,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
       final isRange = annotation is RangeAnnotationSegment;
 
-      // The values can match the data type of the domain (D) or measure axis
-      // (num).
-      dynamic startValue;
-      dynamic endValue;
+      /*late final*/ T startValue;
+      /*late final*/ T endValue;
 
       if (annotation is RangeAnnotationSegment) {
         startValue = annotation.startValue;
@@ -264,7 +253,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
           _getAnnotationDatum(startValue, endValue, axis, annotation.axisType);
 
       // If we already have a animatingAnnotation for that index, use it.
-      _AnimatedAnnotation<D> animatingAnnotation;
+      /*late final*/ _AnimatedAnnotation<D> animatingAnnotation;
       if (_annotationMap.containsKey(key)) {
         animatingAnnotation = _annotationMap[key];
       } else {
@@ -308,11 +297,25 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         ..strokeWidthPx = strokeWidthPx;
 
       animatingAnnotation.setNewTarget(annotationElement);
-    });
+    }
+
+    for (final annotation in annotations) {
+      switch (annotation.axisType) {
+        case RangeAnnotationAxisType.domain:
+          updateAnnotation<D>(_chart.domainAxis, annotation);
+          break;
+
+        case RangeAnnotationAxisType.measure:
+          // We expect an empty axisId to get us the primary measure axis.
+          updateAnnotation<num>(
+              _chart.getMeasureAxis(axisId: annotation.axisId), annotation);
+          break;
+      }
+    }
 
     // Animate out annotations that don't exist anymore.
     _annotationMap.forEach((String key, _AnimatedAnnotation<D> annotation) {
-      if (_currentKeys.contains(annotation.key) != true) {
+      if (!_currentKeys.contains(annotation.key)) {
         annotation.animateOut();
       }
     });

@@ -43,10 +43,10 @@ class SquarifiedTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
   /// Squarify algorithm from Charted:
   /// https://cs.corp.google.com/piper///depot/google3/third_party/dart/charted/lib/layout/src/treemap_layout.dart?l=158
   @override
-  void tile(TreeNode node) {
+  void tile(TreeNode<Object> node) {
     final children = node.children;
     if (children.isNotEmpty) {
-      final remainingNodes = Queue<TreeNode>.from(children);
+      final remainingNodes = Queue.of(children);
       final rect = availableLayoutBoundingRect(node);
       final analyzer = _SquarifyRatioAnalyzer(_ratio, areaForTreeNode);
 
@@ -91,14 +91,14 @@ class _SquarifyRatioAnalyzer {
   final num _ratio;
 
   /// List of processing nodes.
-  final nodes = <TreeNode>[];
+  final nodes = <TreeNode<Object>>[];
 
   var _layoutArea = 0.0;
 
   _SquarifyRatioAnalyzer(this._ratio, this._areaFn);
 
   /// Adds a node for processing.
-  void addNode(TreeNode node) {
+  void addNode(TreeNode<Object> node) {
     nodes.add(node);
     _layoutArea += _areaFn(node);
   }
@@ -147,4 +147,4 @@ class _SquarifyRatioAnalyzer {
 }
 
 /// A function type that returns area for a tree [node].
-typedef AreaFn = num Function(TreeNode node);
+typedef AreaFn = num Function(TreeNode<Object> node);

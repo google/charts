@@ -36,7 +36,8 @@ import 'base_bar_renderer_element.dart' show BaseBarRendererElement;
 ///
 /// In grouped stacked mode, this list will contain a combination of domain
 /// value and series category.
-const domainValuesKey = AttributeKey<Set>('BarLaneRenderer.domainValues');
+const domainValuesKey =
+    AttributeKey<Set<Object>>('BarLaneRenderer.domainValues');
 
 /// Renders series data as a series of bars with lanes.
 ///
@@ -132,7 +133,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
       // Create a fake series for [BarLabelDecorator] to use when looking up the
       // index of each datum.
       final laneSeries = MutableSeries<D>.clone(seriesList[0]);
-      laneSeries.data = [];
+      laneSeries.data = <Object>[];
 
       // Don't render any labels on the swim lanes.
       laneSeries.labelAccessorFn = (int index) => '';
@@ -252,7 +253,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
       // index of each datum. We don't care about any other series values for
       // the merged lanes, so just clone the first series.
       final mergedSeries = MutableSeries<D>.clone(seriesList[0]);
-      mergedSeries.data = [];
+      mergedSeries.data = <Object>[];
 
       // Add a label accessor that returns the empty lane label.
       mergedSeries.labelAccessorFn =

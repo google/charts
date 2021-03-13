@@ -53,7 +53,7 @@ abstract class TimeStepIterator extends Iterator<DateTime> {
 }
 
 /// Factory that creates TimeStepIterator with the set tickIncrement value.
-abstract class TimeStepIteratorFactory extends Iterable {
+abstract class TimeStepIteratorFactory extends Iterable<DateTime> {
   /// Get iterator and optionally set the tickIncrement.
   @override
   TimeStepIterator get iterator;

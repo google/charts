@@ -38,7 +38,7 @@ import 'point_renderer_config.dart' show PointRendererConfig;
 import 'point_renderer_decorator.dart' show PointRendererDecorator;
 
 const pointElementsKey =
-    AttributeKey<List<PointRendererElement>>('PointRenderer.elements');
+    AttributeKey<List<PointRendererElement<Object>>>('PointRenderer.elements');
 
 const pointSymbolRendererFnKey =
     AttributeKey<AccessorFn<String>>('PointRenderer.symbolRendererFn');

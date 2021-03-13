@@ -783,7 +783,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 }
 
 /// Iterable wrapping the seriesList that returns the ReversedSeriesItertor.
-class _ReversedSeriesIterable<S extends ImmutableSeries> extends Iterable<S> {
+class _ReversedSeriesIterable<S extends ImmutableSeries<Object>>
+    extends Iterable<S> {
   final List<S> seriesList;
 
   _ReversedSeriesIterable(this.seriesList);
@@ -797,7 +798,8 @@ class _ReversedSeriesIterable<S extends ImmutableSeries> extends Iterable<S> {
 /// This is needed because for grouped stacked bars, the category stays in the
 /// order it was passed in for the grouping, but the series is flipped so that
 /// the first series of that category is on the top of the stack.
-class _ReversedSeriesIterator<S extends ImmutableSeries> extends Iterator<S> {
+class _ReversedSeriesIterator<S extends ImmutableSeries<Object>>
+    extends Iterator<S> {
   final List<S> _list;
   final _visitIndex = <int>[];
   int _current;
