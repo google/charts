@@ -128,7 +128,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
   /// Formats the measure value using the appropriate measure formatter
   /// function for the series.
-  String _getFormattedMeasureValue(ImmutableSeries series, num measure) {
+  String _getFormattedMeasureValue(ImmutableSeries<D> series, num measure) {
     return (series.getAttr(measureAxisIdKey) == Axis.secondaryMeasureAxisId)
         ? secondaryMeasureFormatter(measure)
         : measureFormatter(measure);

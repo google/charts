@@ -50,7 +50,7 @@ import '../selection/selection_trigger.dart' show SelectionTrigger;
 ///   longPressHold - Mouse/Touch for a while on the handle, then drag across
 ///       the data.
 class Slider<D> implements ChartBehavior<D> {
-  _SliderLayoutView _view;
+  _SliderLayoutView<D> _view;
 
   GestureListener _gestureListener;
 
@@ -90,7 +90,7 @@ class Slider<D> implements ChartBehavior<D> {
   CartesianChart<D> _chart;
 
   /// Rendering data for the slider line and handle.
-  _AnimatedSlider _sliderHandle;
+  _AnimatedSlider<D> _sliderHandle;
 
   bool _delaySelect = false;
 
@@ -285,7 +285,7 @@ class Slider<D> implements ChartBehavior<D> {
   }
 
   void _updateViewData() {
-    _sliderHandle ??= _AnimatedSlider();
+    _sliderHandle ??= _AnimatedSlider<D>();
 
     // If not set in the constructor, initial position for the handle is the
     // center of the draw area.
@@ -302,7 +302,7 @@ class Slider<D> implements ChartBehavior<D> {
     _moveSliderToDomain(_domainValue);
 
     // Move the handle to the current event position.
-    final element = _SliderElement()
+    final element = _SliderElement<D>()
       ..domainCenterPoint =
           Point<int>(_domainCenterPoint.x, _domainCenterPoint.y)
       ..buttonBounds = Rectangle<int>(_handleBounds.left, _handleBounds.top,
@@ -625,7 +625,7 @@ class _SliderLayoutView<D> extends LayoutView {
   final SymbolRenderer _handleRenderer;
 
   /// Rendering data for the slider line and handle.
-  _AnimatedSlider _sliderHandle;
+  _AnimatedSlider<D> _sliderHandle;
 
   _SliderLayoutView(
       {@required int layoutPaintOrder, @required SymbolRenderer handleRenderer})
@@ -635,7 +635,7 @@ class _SliderLayoutView<D> extends LayoutView {
             positionOrder: LayoutViewPositionOrder.drawArea),
         _handleRenderer = handleRenderer;
 
-  set sliderHandle(_AnimatedSlider value) {
+  set sliderHandle(_AnimatedSlider<D> value) {
     _sliderHandle = value;
   }
 
@@ -691,10 +691,10 @@ class _SliderElement<D> {
       ..strokeWidthPx = strokeWidthPx;
   }
 
-  void updateAnimationPercent(
-      _SliderElement previous, _SliderElement target, double animationPercent) {
-    final _SliderElement localPrevious = previous;
-    final _SliderElement localTarget = target;
+  void updateAnimationPercent(_SliderElement<D> previous,
+      _SliderElement<D> target, double animationPercent) {
+    final _SliderElement<D> localPrevious = previous;
+    final _SliderElement<D> localTarget = target;
 
     final previousPoint = localPrevious.domainCenterPoint;
     final targetPoint = localTarget.domainCenterPoint;
@@ -849,5 +849,5 @@ class SliderTester<D> {
     behavior._view.layout(componentBounds, drawAreaBounds);
   }
 
-  _SliderLayoutView get view => behavior._view;
+  _SliderLayoutView<D> get view => behavior._view;
 }

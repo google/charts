@@ -28,7 +28,8 @@ class InitialSelection<D> implements ChartBehavior<D> {
   final List<String> selectedSeriesConfig;
 
   /// List of [SeriesDatumConfig] that represents the initially selected datums.
-  final List<SeriesDatumConfig> selectedDataConfig;
+  // TODO: Use `List<SeriesDatumConfig<D>>`.
+  final List<SeriesDatumConfig<Object>> selectedDataConfig;
 
   BaseChart<D> _chart;
   LifecycleListener<D> _lifecycleListener;

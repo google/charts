@@ -92,7 +92,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
   CartesianChart<D> _chart;
 
-  _RangeAnnotationLayoutView _view;
+  _RangeAnnotationLayoutView<D> _view;
 
   LifecycleListener<D> _lifecycleListener;
 
@@ -165,7 +165,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
   /// Sub-classes can override this method to control label visibility.
   @protected
-  bool shouldShowLabels(AnnotationSegment annotation) => true;
+  bool shouldShowLabels(AnnotationSegment<Object> annotation) => true;
 
   void _updateAxisRange(List<MutableSeries<D>> seriesList) {
     // Extend the axis range if enabled.
@@ -353,7 +353,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   final int labelPadding;
 
-  final RangeAnnotation rangeAnnotation;
+  final RangeAnnotation<D> rangeAnnotation;
 
   final int layoutPaintOrder;
 
@@ -1103,7 +1103,7 @@ class _DatumAnnotation {
 
 class _AnnotationElement<D> {
   _DatumAnnotation annotation;
-  AnnotationSegment annotationSegment;
+  AnnotationSegment<Object> annotationSegment;
   Color color;
   String startLabel;
   String endLabel;
@@ -1133,8 +1133,11 @@ class _AnnotationElement<D> {
       ..strokeWidthPx = strokeWidthPx;
   }
 
-  void updateAnimationPercent(_AnnotationElement previous,
-      _AnnotationElement target, double animationPercent) {
+  void updateAnimationPercent(
+    _AnnotationElement<D> previous,
+    _AnnotationElement<D> target,
+    double animationPercent,
+  ) {
     final targetAnnotation = target.annotation;
     final previousAnnotation = previous.annotation;
 
