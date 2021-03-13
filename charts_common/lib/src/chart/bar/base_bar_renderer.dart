@@ -71,7 +71,10 @@ const barElementsKey =
 ///   series.
 abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     B extends BaseAnimatedBar<D, R>> extends BaseCartesianRenderer<D> {
-  final BaseBarRendererConfig config;
+  // `config` can't be a `BaseBarRendererConfig<D>` because `BarLaneRenderer<D>`
+  // passes a `BarLaneRendererConfig`, but `BarLaneRendererConfig` is a
+  // `BarRendererConfig<String>`.
+  final BaseBarRendererConfig<Object> config;
 
   // Save the chart.vertical value at the start of every draw cycle. If it
   // changes, delete all of the cached rendering element information so that we
@@ -770,7 +773,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   ///
   /// All other types, use the in order iterator.
   @protected
-  Iterable<S> getOrderedSeriesList<S extends ImmutableSeries>(
+  Iterable<S> getOrderedSeriesList<S extends ImmutableSeries<D>>(
       List<S> seriesList) {
     return (renderingVertically && config.stacked)
         ? config.grouped

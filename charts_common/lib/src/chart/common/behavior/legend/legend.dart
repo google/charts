@@ -58,7 +58,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   /// The title text to display before legend entries.
   String title;
 
-  BaseChart _chart;
+  BaseChart<D> _chart;
   LifecycleListener<D> _lifecycleListener;
 
   Rectangle<int> _componentBounds;
@@ -199,7 +199,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   // need to handle when series data changes, selection should be reset
 
   /// Update the legend state with [selectionModel] and request legend update.
-  void _selectionChanged(SelectionModel selectionModel) {
+  void _selectionChanged(SelectionModel<D> selectionModel) {
     legendState._selectionModel = selectionModel;
     _updateLegendEntries();
   }
@@ -230,7 +230,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart
         .getSelectionModel(selectionModelType)
         .removeSelectionChangedListener(_selectionChanged);
@@ -240,7 +240,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   }
 
   @protected
-  BaseChart get chart => _chart;
+  BaseChart<D> get chart => _chart;
 
   @override
   String get role => 'legend-${selectionModelType.toString()}';
@@ -294,10 +294,10 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 /// Stores legend data used by native legend content builder.
 class LegendState<D> {
   List<LegendEntry<D>> _legendEntries;
-  SelectionModel _selectionModel;
+  SelectionModel<D> _selectionModel;
 
   List<LegendEntry<D>> get legendEntries => _legendEntries;
-  SelectionModel get selectionModel => _selectionModel;
+  SelectionModel<D> get selectionModel => _selectionModel;
 }
 
 /// Stores legend cell padding, in percents or pixels.

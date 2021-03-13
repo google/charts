@@ -53,7 +53,7 @@ class DomainOutliner<D> implements ChartBehavior<D> {
     _lifecycleListener = LifecycleListener<D>(onPostprocess: _outline);
   }
 
-  void _selectionChange(SelectionModel selectionModel) {
+  void _selectionChange(SelectionModel<D> selectionModel) {
     _chart.redraw(skipLayout: true, skipAnimation: true);
   }
 

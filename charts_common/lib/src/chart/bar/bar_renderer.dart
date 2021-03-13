@@ -49,9 +49,9 @@ class BarRenderer<D>
   /// The padding comes out of the bottom of the bar.
   final int _stackedBarPaddingPx;
 
-  final BarRendererDecorator barRendererDecorator;
+  final BarRendererDecorator<D> barRendererDecorator;
 
-  factory BarRenderer({BarRendererConfig config, String rendererId}) {
+  factory BarRenderer({BarRendererConfig<D> config, String rendererId}) {
     rendererId ??= 'bar';
     config ??= BarRendererConfig();
     return BarRenderer.internal(config: config, rendererId: rendererId);
@@ -60,7 +60,7 @@ class BarRenderer<D>
   /// This constructor is protected because it is used by child classes, which
   /// cannot call the factory in their own constructors.
   @protected
-  BarRenderer.internal({BarRendererConfig config, String rendererId})
+  BarRenderer.internal({BarRendererConfig<Object> config, String rendererId})
       : barRendererDecorator = config.barRendererDecorator,
         _stackedBarPaddingPx = config.stackedBarPaddingPx,
         super(
@@ -485,7 +485,7 @@ class BarRenderer<D>
   }
 
   @override
-  Rectangle<int> getBoundsForBar(BarRendererElement bar) => bar.bounds;
+  Rectangle<int> getBoundsForBar(BarRendererElement<D> bar) => bar.bounds;
 }
 
 abstract class ImmutableBarRendererElement<D> {
@@ -523,7 +523,7 @@ class BarRendererElement<D> extends BaseBarRendererElement
 
   BarRendererElement();
 
-  BarRendererElement.clone(BarRendererElement other) : super.clone(other) {
+  BarRendererElement.clone(BarRendererElement<D> other) : super.clone(other) {
     series = other.series;
     bounds = other.bounds;
     roundPx = other.roundPx;
@@ -534,8 +534,8 @@ class BarRendererElement<D> extends BaseBarRendererElement
   @override
   void updateAnimationPercent(BaseBarRendererElement previous,
       BaseBarRendererElement target, double animationPercent) {
-    final BarRendererElement localPrevious = previous;
-    final BarRendererElement localTarget = target;
+    final BarRendererElement<D> localPrevious = previous;
+    final BarRendererElement<D> localTarget = target;
 
     final previousBounds = localPrevious.bounds;
     final targetBounds = localTarget.bounds;
@@ -570,7 +570,7 @@ class AnimatedBar<D> extends BaseAnimatedBar<D, BarRendererElement<D>> {
 
   @override
   void animateElementToMeasureAxisPosition(BaseBarRendererElement target) {
-    final BarRendererElement localTarget = target;
+    final BarRendererElement<D> localTarget = target;
 
     // TODO: Animate out bars in the middle of a stack.
     localTarget.bounds = Rectangle<int>(
@@ -592,6 +592,6 @@ class AnimatedBar<D> extends BaseAnimatedBar<D, BarRendererElement<D>> {
   }
 
   @override
-  BarRendererElement<D> clone(BarRendererElement bar) =>
+  BarRendererElement<D> clone(BarRendererElement<D> bar) =>
       BarRendererElement<D>.clone(bar);
 }

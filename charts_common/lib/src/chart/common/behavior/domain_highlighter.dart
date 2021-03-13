@@ -38,12 +38,12 @@ class DomainHighlighter<D> implements ChartBehavior<D> {
         LifecycleListener<D>(onPostprocess: _updateColorFunctions);
   }
 
-  void _selectionChanged(SelectionModel selectionModel) {
+  void _selectionChanged(SelectionModel<D> selectionModel) {
     _chart.redraw(skipLayout: true, skipAnimation: true);
   }
 
   void _updateColorFunctions(List<MutableSeries<D>> seriesList) {
-    SelectionModel selectionModel =
+    SelectionModel<D> selectionModel =
         _chart.getSelectionModel(selectionModelType);
     seriesList.forEach((MutableSeries<D> series) {
       final origColorFn = series.colorFn;
@@ -71,7 +71,7 @@ class DomainHighlighter<D> implements ChartBehavior<D> {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart
         .getSelectionModel(selectionModelType)
         .removeSelectionChangedListener(_selectionChanged);

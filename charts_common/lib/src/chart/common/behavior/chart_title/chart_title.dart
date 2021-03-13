@@ -60,7 +60,7 @@ class ChartTitle<D> implements ChartBehavior<D> {
 
   BaseChart<D> _chart;
 
-  _ChartTitleLayoutView _view;
+  _ChartTitleLayoutView<D> _view;
 
   LifecycleListener<D> _lifecycleListener;
 

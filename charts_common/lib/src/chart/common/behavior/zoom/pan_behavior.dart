@@ -33,10 +33,10 @@ class PanBehavior<D> implements ChartBehavior<D> {
   GestureListener _listener;
 
   /// Wrapped domain tick provider for pan and zoom behavior.
-  PanningTickProvider _domainAxisTickProvider;
+  PanningTickProvider<D> _domainAxisTickProvider;
 
   @protected
-  PanningTickProvider get domainAxisTickProvider => _domainAxisTickProvider;
+  PanningTickProvider<D> get domainAxisTickProvider => _domainAxisTickProvider;
 
   @override
   String get role => 'Pan';

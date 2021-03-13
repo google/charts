@@ -53,7 +53,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
     int minBarLengthPx = 0,
     int stackedBarPaddingPx = 1,
     double strokeWidthPx = 0.0,
-    BarRendererDecorator barRendererDecorator,
+    BarRendererDecorator<String> barRendererDecorator,
     SymbolRenderer symbolRenderer,
     Color backgroundBarColor,
     List<int> weightPattern,

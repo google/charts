@@ -62,7 +62,7 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
   final double patternStrokeWidthPx;
 
   /// Decorator for optionally decorating treemap rectangle label.
-  final TreeMapLabelDecorator labelDecorator;
+  final TreeMapLabelDecorator<D> labelDecorator;
 
   TreeMapRendererConfig(
       {this.customRendererId,

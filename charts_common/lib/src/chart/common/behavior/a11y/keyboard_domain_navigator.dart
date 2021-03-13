@@ -41,7 +41,7 @@ import '../chart_behavior.dart' show ChartBehavior;
 /// the natural order of the page, but you have the option to use whatever
 /// fine-tuned order works best.
 abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
-  BaseChart _chart;
+  BaseChart<D> _chart;
   LifecycleListener<D> _lifecycleListener;
 
   /// An ordered list of the available domains.

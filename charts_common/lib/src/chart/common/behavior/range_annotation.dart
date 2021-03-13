@@ -156,7 +156,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart.removeView(_view);
     chart.removeLifecycleListener(_lifecycleListener);
 

@@ -27,7 +27,7 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   final CornerStrategy cornerStrategy;
 
   /// Decorator for optionally decorating painted bars.
-  final BarRendererDecorator barRendererDecorator;
+  final BarRendererDecorator<D> barRendererDecorator;
 
   BarRendererConfig({
     String customRendererId,
