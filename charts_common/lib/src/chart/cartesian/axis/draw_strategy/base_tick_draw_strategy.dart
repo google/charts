@@ -84,14 +84,14 @@ abstract class BaseRenderSpec<D> implements RenderSpec<D> {
 
   @override
   int get hashCode {
-    var hashcode = labelStyle?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + labelAnchor?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + labelJustification?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + labelOffsetFromTickPx?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + labelOffsetFromAxisPx?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + minimumPaddingBetweenLabelsPx?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + labelRotation?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + axisLineStyle?.hashCode ?? 0;
+    var hashcode = labelStyle.hashCode;
+    hashcode = (hashcode * 37) + labelAnchor.hashCode;
+    hashcode = (hashcode * 37) + labelJustification.hashCode;
+    hashcode = (hashcode * 37) + labelOffsetFromTickPx.hashCode;
+    hashcode = (hashcode * 37) + labelOffsetFromAxisPx.hashCode;
+    hashcode = (hashcode * 37) + minimumPaddingBetweenLabelsPx.hashCode;
+    hashcode = (hashcode * 37) + labelRotation.hashCode;
+    hashcode = (hashcode * 37) + axisLineStyle.hashCode;
     return hashcode;
   }
 }

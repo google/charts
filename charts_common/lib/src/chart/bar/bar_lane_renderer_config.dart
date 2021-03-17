@@ -93,9 +93,9 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   @override
   int get hashCode {
     var hash = super.hashCode;
-    hash = hash * 31 + (backgroundBarColor?.hashCode ?? 0);
-    hash = hash * 31 + (emptyLaneLabel?.hashCode ?? 0);
-    hash = hash * 31 + (mergeEmptyLanes?.hashCode ?? 0);
+    hash = hash * 31 + backgroundBarColor.hashCode;
+    hash = hash * 31 + emptyLaneLabel.hashCode;
+    hash = hash * 31 + mergeEmptyLanes.hashCode;
     return hash;
   }
 }

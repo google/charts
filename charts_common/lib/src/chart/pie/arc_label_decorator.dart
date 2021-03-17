@@ -402,9 +402,9 @@ class ArcLabelLeaderLineStyleSpec {
 
   @override
   int get hashCode {
-    var hashcode = color?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + thickness?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + length?.hashCode ?? 0;
+    var hashcode = color.hashCode;
+    hashcode = (hashcode * 37) + thickness.hashCode;
+    hashcode = (hashcode * 37) + length.hashCode;
     return hashcode;
   }
 }

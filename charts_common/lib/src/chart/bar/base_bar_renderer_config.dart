@@ -137,16 +137,16 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   @override
   int get hashCode {
     var hash = 1;
-    hash = hash * 31 + (customRendererId?.hashCode ?? 0);
-    hash = hash * 31 + (dashPattern?.hashCode ?? 0);
-    hash = hash * 31 + (fillPattern?.hashCode ?? 0);
-    hash = hash * 31 + (groupingType?.hashCode ?? 0);
-    hash = hash * 31 + (minBarLengthPx?.hashCode ?? 0);
-    hash = hash * 31 + (maxBarWidthPx?.hashCode ?? 0);
-    hash = hash * 31 + (stackedBarPaddingPx?.hashCode ?? 0);
-    hash = hash * 31 + (strokeWidthPx?.hashCode ?? 0);
-    hash = hash * 31 + (symbolRenderer?.hashCode ?? 0);
-    hash = hash * 31 + (weightPattern?.hashCode ?? 0);
+    hash = hash * 31 + customRendererId.hashCode;
+    hash = hash * 31 + dashPattern.hashCode;
+    hash = hash * 31 + fillPattern.hashCode;
+    hash = hash * 31 + groupingType.hashCode;
+    hash = hash * 31 + minBarLengthPx.hashCode;
+    hash = hash * 31 + maxBarWidthPx.hashCode;
+    hash = hash * 31 + stackedBarPaddingPx.hashCode;
+    hash = hash * 31 + strokeWidthPx.hashCode;
+    hash = hash * 31 + symbolRenderer.hashCode;
+    hash = hash * 31 + weightPattern.hashCode;
     return hash;
   }
 }

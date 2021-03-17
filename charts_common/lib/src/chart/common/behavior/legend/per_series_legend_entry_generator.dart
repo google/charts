@@ -194,7 +194,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
   @override
   int get hashCode {
-    var hashcode = measureFormatter?.hashCode ?? 0;
+    var hashcode = measureFormatter.hashCode;
     hashcode = (hashcode * 37) + secondaryMeasureFormatter.hashCode;
     hashcode = (hashcode * 37) + legendDefaultMeasure.hashCode;
     hashcode = (hashcode * 37) + entryTextStyle.hashCode;

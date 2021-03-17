@@ -588,12 +588,12 @@ class SliderStyle {
 
   @override
   int get hashCode {
-    var hashcode = fillColor?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + handleOffset?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + handleSize?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + strokeWidthPx?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + strokeColor?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + handlePosition?.hashCode ?? 0;
+    var hashcode = fillColor.hashCode;
+    hashcode = (hashcode * 37) + handleOffset.hashCode;
+    hashcode = (hashcode * 37) + handleSize.hashCode;
+    hashcode = (hashcode * 37) + strokeWidthPx.hashCode;
+    hashcode = (hashcode * 37) + strokeColor.hashCode;
+    hashcode = (hashcode * 37) + handlePosition.hashCode;
     return hashcode;
   }
 }

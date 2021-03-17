@@ -81,9 +81,9 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   @override
   int get hashCode {
     var hash = 1;
-    hash = hash * 31 + (overDrawOuterPx?.hashCode ?? 0);
-    hash = hash * 31 + (overDrawPx?.hashCode ?? 0);
-    hash = hash * 31 + (roundEndCaps?.hashCode ?? 0);
+    hash = hash * 31 + overDrawOuterPx.hashCode;
+    hash = hash * 31 + overDrawPx.hashCode;
+    hash = hash * 31 + roundEndCaps.hashCode;
     return hash;
   }
 }

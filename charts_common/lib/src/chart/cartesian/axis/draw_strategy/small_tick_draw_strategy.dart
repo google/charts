@@ -81,8 +81,8 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
 
   @override
   int get hashCode {
-    var hashcode = lineStyle?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + tickLengthPx?.hashCode ?? 0;
+    var hashcode = lineStyle.hashCode;
+    hashcode = (hashcode * 37) + tickLengthPx.hashCode;
     hashcode = (hashcode * 37) + super.hashCode;
     return hashcode;
   }

@@ -136,7 +136,7 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
       other is AutoDateTimeTickProviderSpec && includeTime == other.includeTime;
 
   @override
-  int get hashCode => includeTime?.hashCode ?? 0;
+  int get hashCode => includeTime.hashCode;
 }
 
 /// [TickProviderSpec] that sets up time ticks with days increments only.
@@ -164,7 +164,7 @@ class DayTickProviderSpec implements DateTimeTickProviderSpec {
       other is DayTickProviderSpec && increments == other.increments;
 
   @override
-  int get hashCode => increments?.hashCode ?? 0;
+  int get hashCode => increments.hashCode;
 }
 
 /// [TickProviderSpec] that sets up time ticks at the two end points of the axis
@@ -235,9 +235,9 @@ class TimeFormatterSpec {
 
   @override
   int get hashCode {
-    var hashcode = format?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + transitionFormat?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + noonFormat?.hashCode ?? 0;
+    var hashcode = format.hashCode;
+    hashcode = (hashcode * 37) + transitionFormat.hashCode;
+    hashcode = (hashcode * 37) + noonFormat.hashCode;
     return hashcode;
   }
 }
@@ -357,11 +357,11 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   int get hashCode {
-    var hashcode = minute?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + hour?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + day?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + month?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + year?.hashCode ?? 0;
+    var hashcode = minute.hashCode;
+    hashcode = (hashcode * 37) + hour.hashCode;
+    hashcode = (hashcode * 37) + day.hashCode;
+    hashcode = (hashcode * 37) + month.hashCode;
+    hashcode = (hashcode * 37) + year.hashCode;
     return hashcode;
   }
 }

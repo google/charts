@@ -169,11 +169,11 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
 
   @override
   int get hashCode {
-    var hashcode = zeroBound?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + dataIsInWholeNumbers?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + desiredTickCount?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + desiredMinTickCount?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + desiredMaxTickCount?.hashCode ?? 0;
+    var hashcode = zeroBound.hashCode;
+    hashcode = (hashcode * 37) + dataIsInWholeNumbers.hashCode;
+    hashcode = (hashcode * 37) + desiredTickCount.hashCode;
+    hashcode = (hashcode * 37) + desiredMinTickCount.hashCode;
+    hashcode = (hashcode * 37) + desiredMaxTickCount.hashCode;
     return hashcode;
   }
 }

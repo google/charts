@@ -116,20 +116,10 @@ class RangeTickRendererSpec<D> extends SmallTickRendererSpec<D> {
           labelRotation: labelRotation);
 
   @override
+  // ignore: hash_and_equals
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is RangeTickRendererSpec &&
-            lineStyle == other.lineStyle &&
-            tickLengthPx == other.tickLengthPx &&
-            super == other);
-  }
-
-  @override
-  int get hashCode {
-    var hashcode = lineStyle?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + tickLengthPx?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + super.hashCode;
-    return hashcode;
+        (other is RangeTickRendererSpec && super == other);
   }
 }
 
