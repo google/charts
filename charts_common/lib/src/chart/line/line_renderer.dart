@@ -282,7 +282,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   /// would be be rendered on top of the old ones, no matter the order of the
   /// new series list.
   void _mergeIntoSeriesMap(List<ImmutableSeries<D>> seriesList) {
-    List<MapEntry<String, List<_AnimatedElements<D>>>> newLineMap = [];
+    final newLineMap = <MapEntry<String, List<_AnimatedElements<D>>>>[];
 
     seriesList.forEach((ImmutableSeries<D> series) {
       final key = series.id;
@@ -291,7 +291,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       // the new seriesList in the same order they appear, stopping at the first
       // series that is still in the list. We need to maintain them in the same
       // order animate them out smoothly.
-      bool checkNext = true;
+      var checkNext = true;
       while (checkNext && _seriesLineMap.isNotEmpty) {
         final firstKey = _seriesLineMap.keys.first;
         if (!seriesList.any((s) => s.id == firstKey)) {
@@ -324,11 +324,11 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     _currentKeys.clear();
 
     // List of final points for the previous line in a stack.
-    List<List<_DatumPoint<D>>> previousPointList = [];
+    final previousPointList = <List<_DatumPoint<D>>>[];
 
     // List of initial points for the previous line in a stack, animated in from
     // the measure axis.
-    List<List<_DatumPoint<D>>> previousInitialPointList = [];
+    final previousInitialPointList = <List<_DatumPoint<D>>>[];
 
     _mergeIntoSeriesMap(seriesList);
 
@@ -1069,9 +1069,9 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
     _seriesLineMap.values.forEach((List<_AnimatedElements<D>> seriesSegments) {
       _DatumPoint<D> nearestPoint;
-      double nearestDomainDistance = 10000.0;
-      double nearestMeasureDistance = 10000.0;
-      double nearestRelativeDistance = 10000.0;
+      var nearestDomainDistance = 10000.0;
+      var nearestMeasureDistance = 10000.0;
+      var nearestRelativeDistance = 10000.0;
 
       seriesSegments.forEach((_AnimatedElements<D> segment) {
         if (segment.overlaySeries) {

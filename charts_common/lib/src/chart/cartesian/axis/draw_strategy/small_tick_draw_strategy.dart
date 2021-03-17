@@ -81,7 +81,7 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
 
   @override
   int get hashCode {
-    int hashcode = lineStyle?.hashCode ?? 0;
+    var hashcode = lineStyle?.hashCode ?? 0;
     hashcode = (hashcode * 37) + tickLengthPx?.hashCode ?? 0;
     hashcode = (hashcode * 37) + super.hashCode;
     return hashcode;
@@ -133,8 +133,8 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
       drawAreaBounds,
       tickLength,
     );
-    Point<num> tickStart = tickPositions.first;
-    Point<num> tickEnd = tickPositions.last;
+    final tickStart = tickPositions.first;
+    final tickEnd = tickPositions.last;
 
     canvas.drawLine(
       points: [tickStart, tickEnd],
@@ -163,23 +163,23 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
     Point<num> tickEnd;
     switch (orientation) {
       case AxisOrientation.top:
-        double x = tick.locationPx;
+        final x = tick.locationPx;
         tickStart = Point(x, axisBounds.bottom - tickLength);
         tickEnd = Point(x, axisBounds.bottom);
         break;
       case AxisOrientation.bottom:
-        double x = tick.locationPx;
+        final x = tick.locationPx;
         tickStart = Point(x, axisBounds.top);
         tickEnd = Point(x, axisBounds.top + tickLength);
         break;
       case AxisOrientation.right:
-        double y = tick.locationPx;
+        final y = tick.locationPx;
 
         tickStart = Point(axisBounds.left, y);
         tickEnd = Point(axisBounds.left + tickLength, y);
         break;
       case AxisOrientation.left:
-        double y = tick.locationPx;
+        final y = tick.locationPx;
 
         tickStart = Point(axisBounds.right - tickLength, y);
         tickEnd = Point(axisBounds.right, y);

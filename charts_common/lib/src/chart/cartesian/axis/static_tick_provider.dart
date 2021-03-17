@@ -50,9 +50,9 @@ class StaticTickProvider<D> extends TickProvider<D> {
   }) {
     final ticks = <Tick<D>>[];
 
-    bool allTicksHaveLabels = true;
+    var allTicksHaveLabels = true;
 
-    for (TickSpec<D> spec in tickSpec) {
+    for (final spec in tickSpec) {
       // When static ticks are being used with a numeric axis, extend the axis
       // with the values specified.
       if (scale is NumericScale || scale is DateTimeScale) {

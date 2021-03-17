@@ -21,7 +21,6 @@ import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../../common/line_style.dart' show LineStyle;
 import '../../../../common/material_palette.dart' show MaterialPalette;
 import '../../../../common/style/style_factory.dart' show StyleFactory;
-import '../../../../common/text_element.dart' show TextElement;
 import '../../../../common/text_style.dart' show TextStyle;
 import '../../../common/chart_canvas.dart' show ChartCanvas;
 import '../../../common/chart_context.dart' show ChartContext;
@@ -127,7 +126,7 @@ class RangeTickRendererSpec<D> extends SmallTickRendererSpec<D> {
 
   @override
   int get hashCode {
-    int hashcode = lineStyle?.hashCode ?? 0;
+    var hashcode = lineStyle?.hashCode ?? 0;
     hashcode = (hashcode * 37) + tickLengthPx?.hashCode ?? 0;
     hashcode = (hashcode * 37) + super.hashCode;
     return hashcode;
@@ -374,8 +373,7 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
     );
 
     // Prepare range label.
-    TextElement rangeLabelTextElement = tick.textElement
-      ..textStyle = rangeLabelStyle;
+    final rangeLabelTextElement = tick.textElement..textStyle = rangeLabelStyle;
 
     final labelElements = splitLabel(rangeLabelTextElement);
     final labelWidth = getLabelWidth(labelElements);

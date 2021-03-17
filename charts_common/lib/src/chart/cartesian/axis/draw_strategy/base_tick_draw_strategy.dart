@@ -84,7 +84,7 @@ abstract class BaseRenderSpec<D> implements RenderSpec<D> {
 
   @override
   int get hashCode {
-    int hashcode = labelStyle?.hashCode ?? 0;
+    var hashcode = labelStyle?.hashCode ?? 0;
     hashcode = (hashcode * 37) + labelAnchor?.hashCode ?? 0;
     hashcode = (hashcode * 37) + labelJustification?.hashCode ?? 0;
     hashcode = (hashcode * 37) + labelOffsetFromTickPx?.hashCode ?? 0;
@@ -148,7 +148,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
 
   @override
   void decorateTicks(List<Tick<D>> ticks) {
-    for (Tick<D> tick in ticks) {
+    for (final tick in ticks) {
       // If no style at all, set the default style.
       if (tick.textElement.textStyle == null) {
         tick.textElement.textStyle = labelStyle;
@@ -189,8 +189,8 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       }
     });
 
-    double previousEnd = double.negativeInfinity;
-    bool collides = false;
+    var previousEnd = double.negativeInfinity;
+    var collides = false;
 
     for (final tick in ticks) {
       final tickSize = tick.textElement.measurement;

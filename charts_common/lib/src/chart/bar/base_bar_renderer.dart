@@ -389,8 +389,8 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
       for (var barIndex = 0; barIndex < series.data.length; barIndex++) {
         final Object datum = series.data[barIndex];
-        BaseBarRendererElement details = elementsList[barIndex];
-        D domainValue = domainFn(barIndex);
+        final details = elementsList[barIndex];
+        final domainValue = domainFn(barIndex);
 
         final measureValue = measureFn(barIndex);
         final measureIsNull = measureValue == null;
@@ -580,7 +580,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
       // When cleaning up the animation, also clean up the keys used to lookup
       // if a bar is selected.
-      for (String key in keysToRemove) {
+      for (final key in keysToRemove) {
         _barStackMap.remove(key);
         _currentKeys.remove(key);
       }
@@ -650,7 +650,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
       D nearestDomain;
 
       // TODO: Optimize this with a binary search based on chartX.
-      for (DatumDetails<D> detail in nearest) {
+      for (final detail in nearest) {
         if (byDomain) {
           if (detail.domainDistance < minDomainDistance ||
               (detail.domainDistance == minDomainDistance &&

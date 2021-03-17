@@ -204,9 +204,9 @@ abstract class BaseChart<D> {
       getSeriesRenderer(SeriesRenderer.defaultRendererId);
 
   void addSeriesRenderer(SeriesRenderer<D> renderer) {
-    String rendererId = renderer.rendererId;
+    final rendererId = renderer.rendererId;
 
-    SeriesRenderer<D> previousRenderer = _seriesRenderers[rendererId];
+    final previousRenderer = _seriesRenderers[rendererId];
     if (previousRenderer != null) {
       removeView(previousRenderer);
       previousRenderer.onDetach(this);
@@ -218,7 +218,7 @@ abstract class BaseChart<D> {
   }
 
   SeriesRenderer<D> getSeriesRenderer(String rendererId) {
-    SeriesRenderer<D> renderer = _seriesRenderers[rendererId];
+    var renderer = _seriesRenderers[rendererId];
 
     // Special case, if we are asking for the default and we haven't made it
     // yet, then make it now.
@@ -274,7 +274,7 @@ abstract class BaseChart<D> {
       // Sort so that the nearest one is first.
       // Special sort, sort by domain distance first, then by measure distance.
       if (selectNearestByDomain) {
-        int domainDiff = a.domainDistance.compareTo(b.domainDistance);
+        final domainDiff = a.domainDistance.compareTo(b.domainDistance);
         if (domainDiff == 0) {
           return a.measureDistance.compareTo(b.measureDistance);
         }
@@ -305,7 +305,7 @@ abstract class BaseChart<D> {
 
     // Pass each selected datum to the appropriate series renderer to get full
     // details appropriate to its series type.
-    for (SeriesDatum<D> seriesDatum in selectionModel.selectedDatum) {
+    for (final seriesDatum in selectionModel.selectedDatum) {
       final rendererId = seriesDatum.series.getAttr(rendererIdKey);
       details.add(
           getSeriesRenderer(rendererId).getDetailsForSeriesDatum(seriesDatum));
@@ -323,7 +323,7 @@ abstract class BaseChart<D> {
       return details;
     }
 
-    for (MutableSeries<D> series in _currentSeriesList) {
+    for (final series in _currentSeriesList) {
       final rendererId = series.getAttr(rendererIdKey);
 
       if (!includeOverlaySeries && series.overlaySeries) {
@@ -491,7 +491,7 @@ abstract class BaseChart<D> {
     // Set an index on the series list.
     // This can be used by listeners of selection to determine the order of
     // series, because the selection details are not returned in this order.
-    int seriesIndex = 0;
+    var seriesIndex = 0;
     processedSeriesList.forEach((series) => series.seriesIndex = seriesIndex++);
 
     // Initially save a reference to processedSeriesList. After drawInternal
@@ -560,13 +560,13 @@ abstract class BaseChart<D> {
 
   /// Preprocess series to assign missing color functions.
   void configureSeries(List<MutableSeries<D>> seriesList) {
-    Map<String, List<MutableSeries<D>>> rendererToSeriesList = {};
+    final rendererToSeriesList = <String, List<MutableSeries<D>>>{};
 
     // Build map of rendererIds to SeriesLists. This map can't be re-used later
     // in the preprocessSeries call because some behaviors might alter the
     // seriesList.
     seriesList.forEach((MutableSeries<D> series) {
-      String rendererId = series.getAttr(rendererIdKey);
+      final rendererId = series.getAttr(rendererIdKey);
       rendererToSeriesList.putIfAbsent(rendererId, () => []).add(series);
     });
 
@@ -582,14 +582,14 @@ abstract class BaseChart<D> {
   /// Build a map of rendererId to series.
   Map<String, List<MutableSeries<D>>> preprocessSeries(
       List<MutableSeries<D>> seriesList) {
-    Map<String, List<MutableSeries<D>>> rendererToSeriesList = {};
+    final rendererToSeriesList = <String, List<MutableSeries<D>>>{};
 
     var unusedRenderers = _usingRenderers;
     _usingRenderers = <String>{};
 
     // Build map of rendererIds to SeriesLists.
     seriesList.forEach((MutableSeries<D> series) {
-      String rendererId = series.getAttr(rendererIdKey);
+      final rendererId = series.getAttr(rendererIdKey);
       rendererToSeriesList.putIfAbsent(rendererId, () => []).add(series);
 
       _usingRenderers.add(rendererId);
@@ -598,11 +598,10 @@ abstract class BaseChart<D> {
 
     // Allow unused renderers to render out content.
     unusedRenderers
-        .forEach((String rendererId) => rendererToSeriesList[rendererId] = []);
+        .forEach((rendererId) => rendererToSeriesList[rendererId] = []);
 
     // Have each renderer preprocess their seriesLists.
-    rendererToSeriesList
-        .forEach((String rendererId, List<MutableSeries<D>> seriesList) {
+    rendererToSeriesList.forEach((rendererId, seriesList) {
       getSeriesRenderer(rendererId).preprocessSeries(seriesList);
     });
 

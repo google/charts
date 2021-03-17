@@ -122,7 +122,7 @@ class LayoutManagerImpl implements LayoutManager {
     var componentBounds = drawableViews?.first?.componentBounds;
 
     if (componentBounds != null) {
-      for (LayoutView view in drawableViews.skip(1)) {
+      for (final view in drawableViews.skip(1)) {
         if (view.componentBounds != null) {
           componentBounds = componentBounds.boundingBox(view.componentBounds);
         }

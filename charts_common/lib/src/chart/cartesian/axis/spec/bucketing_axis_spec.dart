@@ -116,7 +116,7 @@ class BucketingAxisSpec extends NumericAxisSpec {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + showBucket.hashCode;
     hashcode = (hashcode * 37) + threshold.hashCode;
     return hashcode;

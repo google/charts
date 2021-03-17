@@ -311,8 +311,8 @@ class _ChartTitleLayoutView<D> extends LayoutView {
   ViewMeasuredSizes measure(int maxWidth, int maxHeight) {
     int minWidth;
     int minHeight;
-    int preferredWidth = 0;
-    int preferredHeight = 0;
+    var preferredWidth = 0;
+    var preferredHeight = 0;
 
     // Always assume that we need outer padding and title padding, but only add
     // in the sub-title padding if we have one. Title is required, but sub-title
@@ -595,8 +595,8 @@ class _ChartTitleLayoutView<D> extends LayoutView {
       TextElement textElement,
       double titleHeight,
       double subTitleHeight) {
-    int labelX = 0;
-    int labelY = 0;
+    var labelX = 0;
+    var labelY = 0;
 
     switch (_config.titleOutsideJustification) {
       case OutsideJustification.middle:
@@ -670,8 +670,8 @@ class _ChartTitleLayoutView<D> extends LayoutView {
       TextElement textElement,
       double titleHeight,
       double subTitleHeight) {
-    int labelX = 0;
-    int labelY = 0;
+    var labelX = 0;
+    var labelY = 0;
 
     switch (_config.titleOutsideJustification) {
       case OutsideJustification.middle:

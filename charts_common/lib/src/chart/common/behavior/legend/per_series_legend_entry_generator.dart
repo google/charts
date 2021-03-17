@@ -20,7 +20,6 @@ import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
 import '../../selection_model/selection_model.dart';
-import '../../series_datum.dart' show SeriesDatum;
 import 'legend_entry.dart';
 import 'legend_entry_generator.dart';
 
@@ -84,7 +83,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     // Hash set of series ID's that use the secondary measure axis
     final secondaryAxisSeriesIDs = HashSet<String>();
 
-    for (SeriesDatum<D> selectedDatum in selectionModel.selectedDatum) {
+    for (final selectedDatum in selectionModel.selectedDatum) {
       final series = selectedDatum.series;
       final seriesId = series.id;
       final measure = series.measureFn(selectedDatum.index) ?? 0;
@@ -117,7 +116,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   }
 
   void _resetLegendEntryMeasures(List<LegendEntry<D>> legendEntries) {
-    for (LegendEntry<D> entry in legendEntries) {
+    for (final entry in legendEntries) {
       entry.value = null;
       entry.formattedValue = null;
       entry.isSelected = false;
@@ -145,7 +144,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     // Map of series ID and the formatted measure for that series.
     final seriesAndFormattedMeasure = <String, String>{};
 
-    for (MutableSeries<D> series in seriesList) {
+    for (final series in seriesList) {
       final seriesId = series.id;
       num calculatedMeasure;
 
@@ -195,7 +194,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
   @override
   int get hashCode {
-    int hashcode = measureFormatter?.hashCode ?? 0;
+    var hashcode = measureFormatter?.hashCode ?? 0;
     hashcode = (hashcode * 37) + secondaryMeasureFormatter.hashCode;
     hashcode = (hashcode * 37) + legendDefaultMeasure.hashCode;
     hashcode = (hashcode * 37) + entryTextStyle.hashCode;

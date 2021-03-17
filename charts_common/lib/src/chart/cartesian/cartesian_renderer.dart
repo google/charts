@@ -76,7 +76,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
       }
 
       if (renderingVertically) {
-        for (int i = 0; i < series.data.length; i++) {
+        for (var i = 0; i < series.data.length; i++) {
           domainAxis.addDomainValue(domainFn(i));
 
           if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
@@ -91,7 +91,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
       } else {
         // When rendering horizontally, domains are displayed from top to bottom
         // in order to match visual display in legend.
-        for (int i = series.data.length - 1; i >= 0; i--) {
+        for (var i = series.data.length - 1; i >= 0; i--) {
           domainAxis.addDomainValue(domainFn(i));
 
           if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
@@ -148,7 +148,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     final measureLowerBoundFn = series.measureLowerBoundFn;
     final measureUpperBoundFn = series.measureUpperBoundFn;
 
-    for (int i = startIndex; i <= endIndex; i++) {
+    for (var i = startIndex; i <= endIndex; i++) {
       final measure = measureFn(i);
       final measureOffset = measureOffsetFn(i);
 
@@ -180,8 +180,8 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
     // Binary search for the start of the viewport.
     while (end >= start) {
-      int searchIndex = ((end - start) / 2).floor() + start;
-      int prevIndex = searchIndex - 1;
+      final searchIndex = ((end - start) / 2).floor() + start;
+      final prevIndex = searchIndex - 1;
 
       var comparisonValue =
           domainAxis.compareDomainValueToViewport(domainFn(searchIndex));
@@ -237,12 +237,12 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
     // Binary search for the start of the viewport.
     while (end >= start) {
-      int searchIndex = ((end - start) / 2).floor() + start;
-      int prevIndex = searchIndex - 1;
+      final searchIndex = ((end - start) / 2).floor() + start;
+      final prevIndex = searchIndex - 1;
 
-      int comparisonValue =
+      final comparisonValue =
           domainAxis.compareDomainValueToViewport(domainFn(searchIndex));
-      int prevComparisonValue =
+      final prevComparisonValue =
           domainAxis.compareDomainValueToViewport(domainFn(prevIndex));
 
       // Found end?

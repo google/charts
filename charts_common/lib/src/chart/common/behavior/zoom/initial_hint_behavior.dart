@@ -229,7 +229,7 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
     final scaleFactor = _lerpDouble(
         _initialViewportScalingFactor, _targetViewportScalingFactor, percent);
 
-    double translatePx = _lerpDouble(
+    var translatePx = _lerpDouble(
         _initialViewportTranslatePx, _targetViewportTranslatePx, percent);
 
     // If there is a scale factor animation, need to scale the translatePx so

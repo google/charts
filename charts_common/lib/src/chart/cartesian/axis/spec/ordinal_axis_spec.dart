@@ -85,7 +85,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + viewport.hashCode;
     return hashcode;
   }
@@ -189,12 +189,9 @@ class FixedPixelSpaceOrdinalScaleSpec implements OrdinalScaleSpec {
   const FixedPixelSpaceOrdinalScaleSpec(this.pixelSpaceBetweenBars);
 
   @override
-  OrdinalScale createScale() {
-    SimpleOrdinalScale scale = SimpleOrdinalScale();
-    scale.rangeBandConfig =
+  OrdinalScale createScale() => SimpleOrdinalScale()
+    ..rangeBandConfig =
         RangeBandConfig.fixedPixelSpaceBetweenStep(pixelSpaceBetweenBars);
-    return scale;
-  }
 
   @override
   bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
@@ -211,11 +208,8 @@ class FixedPixelOrdinalScaleSpec implements OrdinalScaleSpec {
   const FixedPixelOrdinalScaleSpec(this.pixels);
 
   @override
-  OrdinalScale createScale() {
-    SimpleOrdinalScale scale = SimpleOrdinalScale();
-    scale.rangeBandConfig = RangeBandConfig.fixedPixel(pixels);
-    return scale;
-  }
+  OrdinalScale createScale() => SimpleOrdinalScale()
+    ..rangeBandConfig = RangeBandConfig.fixedPixel(pixels);
 
   @override
   bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;

@@ -80,9 +80,9 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
     _seriesInfo.clear();
 
-    double offset = 0.0;
+    var offset = 0.0;
 
-    seriesList.forEach((MutableSeries<D> series) {
+    seriesList.forEach((series) {
       final seriesKey = series.id;
 
       // Default to the configured radius if none was defined by the series.

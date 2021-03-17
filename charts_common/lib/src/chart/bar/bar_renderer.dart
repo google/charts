@@ -238,7 +238,7 @@ class BarRenderer<D>
         renderingVertically ? barElements.first : barElements.last;
 
     // Find the max bar width from each segment to calculate corner radius.
-    int maxBarWidth = 0;
+    var maxBarWidth = 0;
 
     var measureIsNegative = false;
 
@@ -441,19 +441,19 @@ class BarRenderer<D>
 
     // Calculate the start and end of the bar, taking into account accumulated
     // padding for grouped bars.
-    int previousAverageWidth = adjustedBarGroupIndex > 0
+    final previousAverageWidth = adjustedBarGroupIndex > 0
         ? ((domainWidth - spacingLoss) *
                 (previousBarGroupWeight / adjustedBarGroupIndex))
             .round()
         : 0;
 
-    int domainStart = (domainAxis.getLocation(domainValue) -
+    final domainStart = (domainAxis.getLocation(domainValue) -
             (domainWidth / 2) +
             (previousAverageWidth + _barGroupInnerPadding) *
                 adjustedBarGroupIndex)
         .round();
 
-    int domainEnd = domainStart + barWidth;
+    final domainEnd = domainStart + barWidth;
 
     measureValue ??= 0;
 
@@ -582,7 +582,7 @@ class AnimatedBar<D> extends BaseAnimatedBar<D, BarRendererElement<D>> {
 
   @override
   BarRendererElement<D> getCurrentBar(double animationPercent) {
-    final BarRendererElement<D> bar = super.getCurrentBar(animationPercent);
+    final bar = super.getCurrentBar(animationPercent);
 
     // Update with series and datum information to pass to bar decorator.
     bar.series = series;

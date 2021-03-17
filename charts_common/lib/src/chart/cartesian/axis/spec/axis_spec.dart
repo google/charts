@@ -98,7 +98,7 @@ class AxisSpec<D> {
 
   @override
   int get hashCode {
-    int hashcode = renderSpec?.hashCode ?? 0;
+    var hashcode = renderSpec?.hashCode ?? 0;
     hashcode = (hashcode * 37) + tickProviderSpec.hashCode;
     hashcode = (hashcode * 37) + tickFormatterSpec.hashCode;
     hashcode = (hashcode * 37) + showAxisLine.hashCode;
@@ -158,7 +158,7 @@ class TextStyleSpec {
 
   @override
   int get hashCode {
-    int hashcode = fontFamily?.hashCode ?? 0;
+    var hashcode = fontFamily?.hashCode ?? 0;
     hashcode = (hashcode * 37) + fontSize?.hashCode ?? 0;
     hashcode = (hashcode * 37) + lineHeight?.hashCode ?? 0;
     hashcode = (hashcode * 37) + color?.hashCode ?? 0;
@@ -186,7 +186,7 @@ class LineStyleSpec {
 
   @override
   int get hashCode {
-    int hashcode = color?.hashCode ?? 0;
+    var hashcode = color?.hashCode ?? 0;
     hashcode = (hashcode * 37) + dashPattern?.hashCode ?? 0;
     hashcode = (hashcode * 37) + thickness?.hashCode ?? 0;
     return hashcode;

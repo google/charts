@@ -113,8 +113,7 @@ class LinearScale implements NumericScale {
 
   @override
   int compareDomainValueToViewport(num domainValue) {
-    NumericExtents dataExtent =
-        _viewportSettings.domainExtent ?? _domainInfo.extent;
+    final dataExtent = _viewportSettings.domainExtent ?? _domainInfo.extent;
     return dataExtent.compareValue(domainValue);
   }
 

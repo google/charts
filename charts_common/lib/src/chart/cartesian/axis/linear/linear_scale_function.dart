@@ -57,17 +57,17 @@ class LinearScaleFunction {
       LinearScaleDomainInfo domainInfo,
       RangeBandConfig rangeBandConfig,
       StepSizeConfig stepSizeConfig) {
-    double rangeDiff = viewportSettings.range.diff.toDouble();
+    final rangeDiff = viewportSettings.range.diff.toDouble();
     // Note: if you provided a nicing function that extends the domain, we won't
     // muck with the extended side.
-    bool hasHalfStepAtStart =
+    final hasHalfStepAtStart =
         domainInfo.extent.min == domainInfo.dataDomainStart;
-    bool hasHalfStepAtEnd = domainInfo.extent.max == domainInfo.dataDomainEnd;
+    final hasHalfStepAtEnd = domainInfo.extent.max == domainInfo.dataDomainEnd;
 
     // Determine the stepSize and reserved range values.
     // The percentage of the step reserved from the scale's range due to the
     // possible half step at the start and end.
-    double reservedRangePercentOfStep =
+    final reservedRangePercentOfStep =
         getStepReservationPercent(hasHalfStepAtStart, hasHalfStepAtEnd);
     _updateStepSizeAndScaleFactor(viewportSettings, domainInfo, rangeDiff,
         reservedRangePercentOfStep, rangeBandConfig, stepSizeConfig);
@@ -97,11 +97,11 @@ class LinearScaleFunction {
       rangeTranslate =
           viewportSettings.range.start + (viewportSettings.range.diff / 2);
     } else {
-      bool hasHalfStepAtStart =
+      final hasHalfStepAtStart =
           domainInfo.extent.min == domainInfo.dataDomainStart;
       // The pixel shift of the scale function due to the half a step at the
       // beginning.
-      double reservedRangePixelShift =
+      final reservedRangePixelShift =
           hasHalfStepAtStart ? (stepSizePixels / 2.0) : 0.0;
 
       rangeTranslate = viewportSettings.range.start +
@@ -155,7 +155,7 @@ class LinearScaleFunction {
     if (rangeBandConfig.type != RangeBandType.none) {
       switch (stepSizeConfig.type) {
         case StepSizeType.autoDetect:
-          double minimumDetectedDomainStep =
+          final minimumDetectedDomainStep =
               domainInfo.minimumDetectedDomainStep.toDouble();
           if (minimumDetectedDomainStep != null &&
               minimumDetectedDomainStep.isFinite) {
@@ -172,7 +172,7 @@ class LinearScaleFunction {
           return;
         case StepSizeType.fixedPixels:
           stepSizePixels = stepSizeConfig.size;
-          double reservedRangeForStepPixels =
+          final reservedRangeForStepPixels =
               stepSizePixels * reservedRangePercentOfStep;
           scalingFactor = domainDiff == 0
               ? 1.0
@@ -181,8 +181,8 @@ class LinearScaleFunction {
                   domainDiff;
           return;
         case StepSizeType.fixedDomain:
-          double domainStepWidth = stepSizeConfig.size;
-          double totalDomainDiff =
+          final domainStepWidth = stepSizeConfig.size;
+          final totalDomainDiff =
               domainDiff + (domainStepWidth * reservedRangePercentOfStep);
           scalingFactor = totalDomainDiff == 0
               ? 1.0

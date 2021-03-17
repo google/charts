@@ -115,7 +115,7 @@ class RoundedRectSymbolRenderer extends SymbolRenderer {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + radius.hashCode;
     return hashcode;
   }
@@ -198,7 +198,7 @@ class LineSymbolRenderer extends SymbolRenderer {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + strokeWidth.hashCode;
     return hashcode;
   }
@@ -239,7 +239,7 @@ class CircleSymbolRenderer extends SymbolRenderer {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + runtimeType.hashCode;
     return hashcode;
   }
@@ -273,7 +273,7 @@ class RectSymbolRenderer extends SymbolRenderer {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + runtimeType.hashCode;
     return hashcode;
   }

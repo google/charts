@@ -162,9 +162,9 @@ class PanBehavior<D> implements ChartBehavior<D> {
     // steps.
     _domainAxisTickProvider.mode = PanningTickProviderMode.stepSizeLocked;
 
-    double domainScalingFactor = domainAxis.viewportScalingFactor;
+    final domainScalingFactor = domainAxis.viewportScalingFactor;
 
-    double domainChange = 0.0;
+    var domainChange = 0.0;
     if (domainAxis.isVertical) {
       domainChange =
           domainAxis.viewportTranslatePx + localPosition.y - _lastPosition.y;

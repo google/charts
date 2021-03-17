@@ -34,7 +34,7 @@ abstract class Palette {
         : _getSteppedColor(shadeDefault, (colorCnt * 2) - 1, colorCnt * 2);
 
     // Divide the space between 255 and c500 evenly according to the colorCnt.
-    for (int i = 1; i < colorCnt; i++) {
+    for (var i = 1; i < colorCnt; i++) {
       colors.add(_getSteppedColor(shadeDefault, i, colorCnt,
           darker: shadeDefault.darker, lighter: lighterColor));
     }

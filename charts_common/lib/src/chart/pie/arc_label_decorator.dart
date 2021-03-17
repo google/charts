@@ -316,7 +316,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
   /// Detects whether the current outside label collides with the previous label.
   bool _detectOutsideLabelCollision(num labelY, bool labelLeftOfChart,
       num previousOutsideLabelY, bool previousLabelLeftOfChart) {
-    bool collides = false;
+    var collides = false;
 
     // Given that labels are vertically centered, we can assume they will
     // collide if the current label's Y coordinate +/- the font size
@@ -402,7 +402,7 @@ class ArcLabelLeaderLineStyleSpec {
 
   @override
   int get hashCode {
-    int hashcode = color?.hashCode ?? 0;
+    var hashcode = color?.hashCode ?? 0;
     hashcode = (hashcode * 37) + thickness?.hashCode ?? 0;
     hashcode = (hashcode * 37) + length?.hashCode ?? 0;
     return hashcode;

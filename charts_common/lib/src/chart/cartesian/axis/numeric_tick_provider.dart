@@ -189,8 +189,8 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
     final stepSet = Set.of(steps);
     _allowedSteps = List<double>.filled(stepSet.length * 3, 0);
-    int stepIndex = 0;
-    for (double step in stepSet) {
+    var stepIndex = 0;
+    for (final step in stepSet) {
       assert(1.0 <= step && step < 10.0);
       _allowedSteps[stepIndex] = _removeRoundingErrors(step / 100);
       _allowedSteps[stepSet.length + stepIndex] =
@@ -275,13 +275,13 @@ class NumericTickProvider extends BaseTickProvider<num> {
       _updateTickCounts(axisUnitsHigh, axisUnitsLow);
 
       // Only create a copy of the scale if [viewportExtensionEnabled].
-      NumericScale mutableScale =
+      final mutableScale =
           viewportExtensionEnabled ? scale.copy() as NumericScale : null;
 
       // Walk to available tick count from max to min looking for the first one
       // that gives you the least amount of range used. If a non colliding tick
       // count is not found use the min tick count to generate ticks.
-      for (int tickCount = _maxTickCount;
+      for (var tickCount = _maxTickCount;
           tickCount >= _minTickCount;
           tickCount--) {
         final stepInfo =
@@ -453,7 +453,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       final favoredTensBase = (_getEnclosingPowerOfTen(favoredNum)).abs();
 
       // Check each step size and see if it would contain the "favored" value
-      for (double step in _allowedSteps) {
+      for (final step in _allowedSteps) {
         final tmpStepSize = _removeRoundingErrors(step * favoredTensBase);
 
         // If prefer whole number, then don't allow a step that isn't one.
@@ -465,7 +465,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
         // But wait until the last step to prevent the cost of the formatter.
         // Potentially store the formatted strings in TickStepInfo?
         if (tmpStepSize * favoredRegionCount >= favoredNum) {
-          double stepStart = negativeRegionCount > 0
+          final stepStart = negativeRegionCount > 0
               ? (-1 * tmpStepSize * negativeRegionCount)
               : 0.0;
           return _TickStepInfo(tmpStepSize, stepStart);
@@ -476,7 +476,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       final diffTensBase = _getEnclosingPowerOfTen(high - low);
       // Walk the step sizes calculating a starting point and seeing if the high
       // end is included in the range given that step size.
-      for (double step in _allowedSteps) {
+      for (final step in _allowedSteps) {
         final tmpStepSize = _removeRoundingErrors(step * diffTensBase);
 
         // If prefer whole number, then don't allow a step that isn't one.
@@ -486,7 +486,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
         // TODO: Skip steps that format to the same string.
         // But wait until the last step to prevent the cost of the formatter.
-        double tmpStepStart = _getStepLessThan(low.toDouble(), tmpStepSize);
+        final tmpStepStart = _getStepLessThan(low.toDouble(), tmpStepSize);
         if (tmpStepStart + (tmpStepSize * regionCount) >= high) {
           return _TickStepInfo(tmpStepSize, tmpStepStart);
         }
@@ -522,7 +522,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       tmpMinNumMajorTicks = max(_desiredMinTickCount, absoluteMinTicks);
       tmpMaxNumMajorTicks = max(_desiredMaxTickCount, tmpMinNumMajorTicks);
     } else {
-      double minPixelsPerTick = MIN_DIPS_BETWEEN_TICKS.toDouble();
+      final minPixelsPerTick = MIN_DIPS_BETWEEN_TICKS.toDouble();
       tmpMinNumMajorTicks = absoluteMinTicks;
       tmpMaxNumMajorTicks =
           max(absoluteMinTicks, (_rangeWidth / minPixelsPerTick).floor());

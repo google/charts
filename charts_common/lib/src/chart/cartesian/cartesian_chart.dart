@@ -388,7 +388,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
   @override
   MutableSeries<D> makeSeries(Series<dynamic, D> series) {
-    MutableSeries<D> s = super.makeSeries(series);
+    final s = super.makeSeries(series);
 
     s.measureOffsetFn ??= (_) => 0;
 

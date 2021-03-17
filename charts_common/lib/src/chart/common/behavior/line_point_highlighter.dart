@@ -35,7 +35,6 @@ import '../../layout/layout_view.dart'
         ViewMeasuredSizes;
 import '../base_chart.dart' show BaseChart, LifecycleListener;
 import '../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
-import '../datum_details.dart' show DatumDetails;
 import '../processed_series.dart' show ImmutableSeries;
 import '../selection_model/selection_model.dart'
     show SelectionModel, SelectionModelType;
@@ -190,7 +189,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     // ignore: prefer_collection_literals
     final newSeriesMap = LinkedHashMap<String, _AnimatedPoint<D>>();
 
-    for (DatumDetails<D> detail in selectedDatumDetails) {
+    for (final detail in selectedDatumDetails) {
       if (detail == null) {
         continue;
       }
@@ -203,7 +202,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 
       final lineKey = series.id;
 
-      double radiusPx = (detail.radiusPx != null)
+      final radiusPx = (detail.radiusPx != null)
           ? detail.radiusPx.toDouble() + radiusPaddingPx
           : defaultRadiusPx;
 
@@ -361,7 +360,7 @@ class _LinePointLayoutView<D> extends LayoutView {
     final endPointPerValueVertical = <int, int>{};
     final endPointPerValueHorizontal = <int, int>{};
 
-    for (_PointRendererElement<D> pointElement in points) {
+    for (final pointElement in points) {
       if (pointElement.point.x == null || pointElement.point.y == null) {
         continue;
       }
@@ -416,7 +415,7 @@ class _LinePointLayoutView<D> extends LayoutView {
     final rtl = chart.context.isRtl;
 
     // Draw the follow lines first, below all of the highlight shapes.
-    for (_PointRendererElement<D> pointElement in points) {
+    for (final pointElement in points) {
       if (pointElement.point.x == null || pointElement.point.y == null) {
         continue;
       }
@@ -491,7 +490,7 @@ class _LinePointLayoutView<D> extends LayoutView {
     }
 
     // Draw the highlight shapes on top of all follow lines.
-    for (_PointRendererElement<D> pointElement in points) {
+    for (final pointElement in points) {
       if (pointElement.point.x == null || pointElement.point.y == null) {
         continue;
       }

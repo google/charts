@@ -56,7 +56,7 @@ class SeriesDatumConfig<D> {
 
   @override
   int get hashCode {
-    int hashcode = seriesId.hashCode;
+    var hashcode = seriesId.hashCode;
     hashcode = hashcode * 37 + domainValue.hashCode;
     return hashcode;
   }

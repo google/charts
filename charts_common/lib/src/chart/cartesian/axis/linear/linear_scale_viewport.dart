@@ -84,7 +84,7 @@ class LinearScaleViewportSettings {
     // If we are loading from the viewport, then update the scalingFactor given
     // the viewport size compared to the data size.
     if (_manualDomainExtent) {
-      double viewportDomainDiff = _domainExtent?.width?.toDouble();
+      final viewportDomainDiff = _domainExtent?.width?.toDouble();
       if (domainInfo.domainDiff != 0.0) {
         scalingFactor = domainInfo.domainDiff / viewportDomainDiff;
       } else {
@@ -115,11 +115,9 @@ class LinearScaleViewportSettings {
 
     // Make sure that the viewportSettings.translatePx is sane if desired.
     if (!keepViewportWithinData) {
-      int rangeDiff = range.diff.toInt();
-
       // Make sure we don't translate beyond the max domain extent.
       translatePx = math.min(0.0, translatePx);
-      translatePx = math.max(rangeDiff * (1.0 - scalingFactor), translatePx);
+      translatePx = math.max(range.diff * (1.0 - scalingFactor), translatePx);
     }
   }
 
@@ -130,8 +128,8 @@ class LinearScaleViewportSettings {
     // If we didn't load from the viewport extent, then update them given the
     // current scale configuration.
     if (!_manualDomainExtent) {
-      double viewportDomainDiff = domainInfo.domainDiff / scalingFactor;
-      double viewportStart =
+      final viewportDomainDiff = domainInfo.domainDiff / scalingFactor;
+      final viewportStart =
           (-translatePx / scaleScalingFactor) + domainInfo.extent.min;
       _domainExtent =
           NumericExtents(viewportStart, viewportStart + viewportDomainDiff);

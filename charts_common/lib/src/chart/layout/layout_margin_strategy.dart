@@ -49,9 +49,9 @@ class _DesiredViewSizes {
 
   void adjustedTo(int maxSize) {
     if (maxSize < preferredSizes.total) {
-      int delta = preferredSizes.total - maxSize;
-      for (int i = preferredSizes.length - 1; i >= 0; i--) {
-        int viewAvailablePx = preferredSizes[i] - minimumSizes[i];
+      var delta = preferredSizes.total - maxSize;
+      for (var i = preferredSizes.length - 1; i >= 0; i--) {
+        final viewAvailablePx = preferredSizes[i] - minimumSizes[i];
 
         if (viewAvailablePx < delta) {
           // We need even more than this one view can give up, so assign the
@@ -75,7 +75,7 @@ abstract class VerticalMarginStrategy {
       @required int height,
       @required int fullHeight}) {
     final measuredWidths = _DesiredViewSizes();
-    int remainingWidth = maxWidth;
+    var remainingWidth = maxWidth;
 
     views.forEach((LayoutView view) {
       final params = view.layoutConfig;
@@ -117,7 +117,7 @@ class LeftMarginLayoutStrategy extends VerticalMarginStrategy {
       Rectangle<int> fullBounds, Rectangle<int> drawAreaBounds) {
     var prevBoundsRight = drawAreaBounds.left;
 
-    int i = 0;
+    var i = 0;
     views.forEach((LayoutView view) {
       final params = view.layoutConfig;
 
@@ -147,8 +147,8 @@ class RightMarginLayoutStrategy extends VerticalMarginStrategy {
       Rectangle<int> fullBounds, Rectangle<int> drawAreaBounds) {
     var prevBoundsLeft = drawAreaBounds.right;
 
-    int i = 0;
-    views.forEach((LayoutView view) {
+    var i = 0;
+    views.forEach((view) {
       final params = view.layoutConfig;
 
       final width = measuredSizes[i];
@@ -175,7 +175,7 @@ abstract class HorizontalMarginStrategy {
   SizeList measure(Iterable<LayoutView> views,
       {@required int maxHeight, @required int width, @required int fullWidth}) {
     final measuredHeights = _DesiredViewSizes();
-    int remainingHeight = maxHeight;
+    var remainingHeight = maxHeight;
 
     views.forEach((LayoutView view) {
       final params = view.layoutConfig;
@@ -217,7 +217,7 @@ class TopMarginLayoutStrategy extends HorizontalMarginStrategy {
       Rectangle<int> fullBounds, Rectangle<int> drawAreaBounds) {
     var prevBoundsBottom = drawAreaBounds.top;
 
-    int i = 0;
+    var i = 0;
     views.forEach((LayoutView view) {
       final params = view.layoutConfig;
 
@@ -248,8 +248,8 @@ class BottomMarginLayoutStrategy extends HorizontalMarginStrategy {
       Rectangle<int> fullBounds, Rectangle<int> drawAreaBounds) {
     var prevBoundsTop = drawAreaBounds.bottom;
 
-    int i = 0;
-    views.forEach((LayoutView view) {
+    var i = 0;
+    views.forEach((view) {
       final params = view.layoutConfig;
 
       final height = measuredSizes[i];

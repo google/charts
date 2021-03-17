@@ -71,10 +71,10 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
 
     final domainSeriesDatum = <D, List<SeriesDatum<D>>>{};
 
-    for (MutableSeries<D> series in _seriesList) {
+    for (final series in _seriesList) {
       for (var index = 0; index < series.data.length; index++) {
         final Object datum = series.data[index];
-        D domain = series.domainFn(index);
+        final domain = series.domainFn(index);
 
         domainSeriesDatum[domain] ??= <SeriesDatum<D>>[];
         domainSeriesDatum[domain].add(SeriesDatum<D>(series, datum));
@@ -184,7 +184,7 @@ class _DomainA11yNode extends A11yNode implements Comparable<_DomainA11yNode> {
   int compareTo(_DomainA11yNode other) {
     // Ordered by smaller location first, unless rendering vertically and RTL,
     // then flip to sort by larger location first.
-    int result = location.compareTo(other.location);
+    var result = location.compareTo(other.location);
 
     if (renderVertically && isRtl && result != 0) {
       result = -result;

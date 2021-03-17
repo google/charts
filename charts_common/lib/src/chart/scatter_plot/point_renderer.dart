@@ -228,18 +228,14 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         final Object datum = series.data[index];
         final details = elementsList[index];
 
-        D domainValue = domainFn(index);
-        D domainLowerBoundValue =
-            domainLowerBoundFn != null ? domainLowerBoundFn(index) : null;
-        D domainUpperBoundValue =
-            domainUpperBoundFn != null ? domainUpperBoundFn(index) : null;
+        final domainValue = domainFn(index);
+        final domainLowerBoundValue = domainLowerBoundFn?.call(index);
+        final domainUpperBoundValue = domainUpperBoundFn?.call(index);
 
-        num measureValue = measureFn(index);
-        num measureLowerBoundValue =
-            measureLowerBoundFn != null ? measureLowerBoundFn(index) : null;
-        num measureUpperBoundValue =
-            measureUpperBoundFn != null ? measureUpperBoundFn(index) : null;
-        num measureOffsetValue = measureOffsetFn(index);
+        final measureValue = measureFn(index);
+        final measureLowerBoundValue = measureLowerBoundFn?.call(index);
+        final measureUpperBoundValue = measureUpperBoundFn?.call(index);
+        final measureOffsetValue = measureOffsetFn(index);
 
         // Create a new point using the final location.
         final point = getPoint(
@@ -487,17 +483,17 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     seriesPointMap.values.forEach((List<AnimatedPoint<D>> points) {
       PointRendererElement<D> nearestPoint;
 
-      _Distances nearestDistances = _Distances(
+      var nearestDistances = _Distances(
           domainDistance: _maxInitialDistance,
           measureDistance: _maxInitialDistance,
           relativeDistance: _maxInitialDistance);
 
-      points.forEach((AnimatedPoint<D> point) {
+      points.forEach((point) {
         if (point.overlaySeries) {
           return;
         }
 
-        Point p = point._currentPoint.point;
+        final p = point._currentPoint.point;
 
         // Don't look at points not in the drawArea.
         if (p.x < componentBounds.left || p.x > componentBounds.right) {

@@ -97,7 +97,7 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + viewport.hashCode;
     return hashcode;
   }
@@ -235,7 +235,7 @@ class TimeFormatterSpec {
 
   @override
   int get hashCode {
-    int hashcode = format?.hashCode ?? 0;
+    var hashcode = format?.hashCode ?? 0;
     hashcode = (hashcode * 37) + transitionFormat?.hashCode ?? 0;
     hashcode = (hashcode * 37) + noonFormat?.hashCode ?? 0;
     return hashcode;
@@ -273,7 +273,7 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   int get hashCode {
-    int hash = formatter.hashCode;
+    var hash = formatter.hashCode;
     hash = (hash * 37) * dateFormat.hashCode;
     return hash;
   }
@@ -302,7 +302,7 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   DateTimeTickFormatter createTickFormatter(ChartContext context) {
-    final Map<int, TimeTickFormatter> map = {};
+    final map = <int, TimeTickFormatter>{};
 
     if (minute != null) {
       map[DateTimeTickFormatter.MINUTE] =
@@ -357,7 +357,7 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   int get hashCode {
-    int hashcode = minute?.hashCode ?? 0;
+    var hashcode = minute?.hashCode ?? 0;
     hashcode = (hashcode * 37) + hour?.hashCode ?? 0;
     hashcode = (hashcode * 37) + day?.hashCode ?? 0;
     hashcode = (hashcode * 37) + month?.hashCode ?? 0;

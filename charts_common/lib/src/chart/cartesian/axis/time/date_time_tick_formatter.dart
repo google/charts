@@ -55,7 +55,7 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
   /// [TickFormatter].
   factory DateTimeTickFormatter(DateTimeFactory dateTimeFactory,
       {Map<int, TimeTickFormatter> overrides}) {
-    final Map<int, TimeTickFormatter> map = {
+    final map = <int, TimeTickFormatter>{
       MINUTE: TimeTickFormatterImpl(
           dateTimeFactory: dateTimeFactory,
           simpleFormat: 'mm',
@@ -159,7 +159,7 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
     if (_timeFormatters.keys.first == ANY) {
       formatterFound = true;
     } else {
-      int minTimeBetweenTicks = stepSize.toInt();
+      final minTimeBetweenTicks = stepSize.toInt();
 
       // TODO: Skip the formatter if the formatter's step size is
       // smaller than the minimum step size of the data.

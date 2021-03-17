@@ -302,7 +302,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
     final providedTicks = List.of(_providedTicks ?? <Tick<D>>[]);
 
-    for (AxisTicks<D> animatedTick in _axisTicks) {
+    for (final animatedTick in _axisTicks) {
       final tick = providedTicks?.firstWhere(
           (t) => t.value == animatedTick.value,
           orElse: () => null);
@@ -617,7 +617,7 @@ class OrdinalViewport {
 
   @override
   int get hashCode {
-    int hashcode = startingDomain.hashCode;
+    var hashcode = startingDomain.hashCode;
     hashcode = (hashcode * 37) + dataSize;
     return hashcode;
   }

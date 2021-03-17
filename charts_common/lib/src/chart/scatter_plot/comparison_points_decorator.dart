@@ -190,10 +190,10 @@ class _Line {
     }
 
     // Slope of the line p1p2.
-    double m = ((p2.y - p1.y) / (p2.x - p1.x)).toDouble();
+    final m = ((p2.y - p1.y) / (p2.x - p1.x)).toDouble();
 
     // y-intercept of the line p1p2.
-    double b = (p1.y - (m * p1.x)).toDouble();
+    final b = (p1.y - (m * p1.x)).toDouble();
 
     return _Line(m, b);
   }

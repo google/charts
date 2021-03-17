@@ -323,7 +323,7 @@ class Slider<D> implements ChartBehavior<D> {
       return;
     }
 
-    SliderListenerDragState dragState = _dragStateToFireOnPostRender;
+    var dragState = _dragStateToFireOnPostRender;
 
     // Initial drag state event should only be fired if the slider has moved
     // since the last draw. We always set the initial drag state event when new
@@ -588,7 +588,7 @@ class SliderStyle {
 
   @override
   int get hashCode {
-    int hashcode = fillColor?.hashCode ?? 0;
+    var hashcode = fillColor?.hashCode ?? 0;
     hashcode = (hashcode * 37) + handleOffset?.hashCode ?? 0;
     hashcode = (hashcode * 37) + handleSize?.hashCode ?? 0;
     hashcode = (hashcode * 37) + strokeWidthPx?.hashCode ?? 0;
@@ -694,8 +694,8 @@ class _SliderElement<D> {
 
   void updateAnimationPercent(_SliderElement<D> previous,
       _SliderElement<D> target, double animationPercent) {
-    final _SliderElement<D> localPrevious = previous;
-    final _SliderElement<D> localTarget = target;
+    final localPrevious = previous;
+    final localTarget = target;
 
     final previousPoint = localPrevious.domainCenterPoint;
     final targetPoint = localTarget.domainCenterPoint;

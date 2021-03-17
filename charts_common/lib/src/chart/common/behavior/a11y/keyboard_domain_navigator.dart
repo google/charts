@@ -181,7 +181,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
       final seriesDatumList = <SeriesDatum<D>>[];
       final seriesList = <MutableSeries<D>>[];
 
-      for (SeriesDatum<D> seriesDatum in datumPairs) {
+      for (final seriesDatum in datumPairs) {
         seriesDatumList
             .add(SeriesDatum<D>(seriesDatum.series, seriesDatum.datum));
 
@@ -279,8 +279,8 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
 
     _datumPairs = <int, List<SeriesDatum<D>>>{};
 
-    int i = 0;
-    detailsByDomain.forEach((D key, List<SeriesDatum<D>> value) {
+    var i = 0;
+    detailsByDomain.forEach((key, value) {
       _datumPairs.putIfAbsent(i, () => value);
       i++;
     });

@@ -275,8 +275,8 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     // Calculate how wide each bar target line should be within the group of
     // bar target lines. If we only have one series, or are stacked, then
     // barWidth should equal domainWidth.
-    int spacingLoss = _barGroupInnerPadding * (numBarGroups - 1);
-    int desiredWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
+    var spacingLoss = _barGroupInnerPadding * (numBarGroups - 1);
+    var desiredWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
 
     if (config.maxBarWidthPx != null) {
       desiredWidth = min(desiredWidth, config.maxBarWidthPx);
@@ -286,7 +286,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     // If the series was configured with a weight pattern, treat the "max" bar
     // width as the average max width. The overall total width will still equal
     // max times number of bars, but this results in a nicer final picture.
-    int barWidth = desiredWidth;
+    var barWidth = desiredWidth;
     if (allBarGroupWeights != null) {
       barWidth =
           (desiredWidth * numBarGroups * allBarGroupWeights[barGroupIndex])
@@ -296,11 +296,11 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     var overDrawOuterPx = localConfig.overDrawOuterPx;
     var overDrawPx = localConfig.overDrawPx;
 
-    int overDrawStartPx = (barGroupIndex == 0) && overDrawOuterPx != null
+    var overDrawStartPx = (barGroupIndex == 0) && overDrawOuterPx != null
         ? overDrawOuterPx
         : overDrawPx;
 
-    int overDrawEndPx =
+    var overDrawEndPx =
         (barGroupIndex == numBarGroups - 1) && overDrawOuterPx != null
             ? overDrawOuterPx
             : overDrawPx;
@@ -317,20 +317,20 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
             .round()
         : 0;
 
-    int domainStart = (domainAxis.getLocation(domainValue) -
+    var domainStart = (domainAxis.getLocation(domainValue) -
             (domainWidth / 2) +
             (previousAverageWidth + _barGroupInnerPadding) *
                 adjustedBarGroupIndex -
             overDrawStartPx)
         .round();
 
-    int domainEnd = domainStart + barWidth + overDrawStartPx + overDrawEndPx;
+    var domainEnd = domainStart + barWidth + overDrawStartPx + overDrawEndPx;
 
     measureValue = measureValue ?? 0;
 
     // Calculate measure locations. Stacked bars should have their
     // offset calculated previously.
-    int measureStart =
+    var measureStart =
         measureAxis.getLocation(measureValue + measureOffsetValue).round();
 
     List<Point<int>> points;

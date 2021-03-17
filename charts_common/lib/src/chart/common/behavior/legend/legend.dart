@@ -173,8 +173,8 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
         _postProcessSeriesList != seriesList) {
       if (_customEntryOrder != null) {
         _currentSeriesList.sort((a, b) {
-          final int a_index = _customEntryOrder.indexOf(a.id);
-          final int b_index = _customEntryOrder.indexOf(b.id);
+          final a_index = _customEntryOrder.indexOf(a.id);
+          final b_index = _customEntryOrder.indexOf(b.id);
           if (a_index == -1) {
             if (a_index == b_index) {
               return a.displayName.compareTo(b.displayName);

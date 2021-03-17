@@ -98,7 +98,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   }
 
   void _resetLegendEntryMeasures(List<LegendEntry<D>> legendEntries) {
-    for (LegendEntry<D> entry in legendEntries) {
+    for (final entry in legendEntries) {
       entry.value = null;
       entry.formattedValue = null;
       entry.isSelected = false;
@@ -145,7 +145,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
   @override
   int get hashCode {
-    int hashcode = measureFormatter?.hashCode ?? 0;
+    var hashcode = measureFormatter?.hashCode ?? 0;
     hashcode = (hashcode * 37) + secondaryMeasureFormatter.hashCode;
     hashcode = (hashcode * 37) + legendDefaultMeasure.hashCode;
     hashcode = (hashcode * 37) + entryTextStyle.hashCode;

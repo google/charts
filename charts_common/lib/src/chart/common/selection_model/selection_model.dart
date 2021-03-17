@@ -69,7 +69,7 @@ class SelectionModel<D> {
           selectedDataMap.keys.contains(series.id)));
 
       // Add to list of selected data.
-      for (ImmutableSeries<D> series in seriesList) {
+      for (final series in seriesList) {
         if (selectedDataMap.containsKey(series.id)) {
           final domainFn = series.domainFn;
 

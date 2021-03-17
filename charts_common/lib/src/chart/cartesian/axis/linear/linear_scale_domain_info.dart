@@ -87,7 +87,7 @@ class LinearScaleDomainInfo {
       return false;
     }
 
-    bool domainExtended = false;
+    var domainExtended = false;
     if (domainValue < _dataDomainStart) {
       _dataDomainStart = domainValue;
       domainExtended = true;

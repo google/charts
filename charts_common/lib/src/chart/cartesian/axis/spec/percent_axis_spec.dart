@@ -51,7 +51,7 @@ class PercentAxisSpec extends NumericAxisSpec {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + runtimeType.hashCode;
     return hashcode;
   }

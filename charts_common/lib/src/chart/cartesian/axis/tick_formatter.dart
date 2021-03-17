@@ -34,9 +34,9 @@ abstract class SimpleTickFormatterBase<D> implements TickFormatter<D> {
   @override
   List<String> format(List<D> tickValues, Map<D, String> cache,
           {num stepSize}) =>
-      tickValues.map((D value) {
+      tickValues.map((value) {
         // Try to use the cached formats first.
-        String formattedString = cache[value];
+        var formattedString = cache[value];
         if (formattedString == null) {
           formattedString = formatValue(value);
           cache[value] = formattedString;

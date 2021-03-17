@@ -188,8 +188,8 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     // Count up the number of missing series per category, keeping a max across
     // categories.
     final missingColorCountPerCategory = <String, int>{};
-    int maxMissing = 0;
-    bool hasSpecifiedCategory = false;
+    var maxMissing = 0;
+    var hasSpecifiedCategory = false;
 
     seriesList.forEach((MutableSeries<D> series) {
       // Assign the seriesColor as the color of every datum if no colorFn was
@@ -202,7 +202,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
       // "missing" set.
       if (series.colorFn == null) {
         // If there is no category, give it a default category to match logic.
-        String category = series.seriesCategory;
+        var category = series.seriesCategory;
         if (category == null) {
           category = defaultCategory;
         } else {
@@ -221,7 +221,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
       // to use different palettes.
       if (!emptyCategoryUsesSinglePalette && !hasSpecifiedCategory) {
         final palettes = StyleFactory.style.getOrderedPalettes(maxMissing);
-        int index = 0;
+        var index = 0;
         seriesList.forEach((series) {
           if (series.colorFn == null) {
             final color = palettes[index % palettes.length].shadeDefault;
@@ -252,7 +252,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
       // Create a map of Color palettes for each category. Each Palette uses
       // the max for any category to ensure that the gradients look appropriate.
       final colorsByCategory = <String, List<Color>>{};
-      int index = 0;
+      var index = 0;
       missingColorCountPerCategory.keys.forEach((String category) {
         colorsByCategory[category] =
             colorPalettes[index % colorPalettes.length].makeShades(maxMissing);

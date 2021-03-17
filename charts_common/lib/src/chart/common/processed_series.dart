@@ -149,7 +149,7 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 
     // Pre-compute the sum of the measure values to make it available on demand.
     seriesMeasureTotal = 0;
-    for (int i = 0; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
       final measure = measureFn(i);
       if (measure != null) {
         seriesMeasureTotal += measure;

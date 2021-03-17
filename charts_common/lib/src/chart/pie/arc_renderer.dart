@@ -448,7 +448,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       return chartPosition;
     }
 
-    for (_AnimatedArc<D> arc in arcList.arcs) {
+    for (final arc in arcList.arcs) {
       if (arc.key == key) {
         // Now that we have found the matching arc, calculate the center point
         // halfway between the inner and outer radius, and the start and end
@@ -545,7 +545,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   @override
   void assignMissingColors(Iterable<MutableSeries<D>> seriesList,
       {@required bool emptyCategoryUsesSinglePalette}) {
-    int maxMissing = 0;
+    var maxMissing = 0;
 
     seriesList.forEach((series) {
       if (series.colorFn == null) {
