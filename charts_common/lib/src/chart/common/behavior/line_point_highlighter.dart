@@ -187,7 +187,8 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
     // Create a new map each time to ensure that we have it sorted in the
     // selection model order. This preserves the "nearestDetail" ordering, so
     // that we render follow lines in the proper place.
-    final newSeriesMap = <String, _AnimatedPoint<D>>{};
+    // ignore: prefer_collection_literals
+    final newSeriesMap = LinkedHashMap<String, _AnimatedPoint<D>>();
 
     for (DatumDetails<D> detail in selectedDatumDetails) {
       if (detail == null) {

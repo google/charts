@@ -186,7 +186,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
             .add(SeriesDatum<D>(seriesDatum.series, seriesDatum.datum));
 
         if (!seriesList.contains(seriesDatum.series)) {
-          seriesList.add(seriesDatum.series);
+          seriesList.add(seriesDatum.series as MutableSeries<D>);
         }
       }
 

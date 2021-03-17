@@ -125,7 +125,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
 
   @override
   _BarTargetLineRendererElement getBaseDetails(dynamic datum, int index) {
-    final BarTargetLineRendererConfig<D> localConfig = config;
+    final localConfig = config as BarTargetLineRendererConfig<D>;
     return _BarTargetLineRendererElement()
       ..roundEndCaps = localConfig.roundEndCaps;
   }
@@ -270,7 +270,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       previousBarGroupWeight = barGroupIndex * barGroupWeight;
     }
 
-    final BarTargetLineRendererConfig<D> localConfig = config;
+    final localConfig = config as BarTargetLineRendererConfig<D>;
 
     // Calculate how wide each bar target line should be within the group of
     // bar target lines. If we only have one series, or are stacked, then
@@ -381,8 +381,8 @@ class _BarTargetLineRendererElement extends BaseBarRendererElement {
   @override
   void updateAnimationPercent(BaseBarRendererElement previous,
       BaseBarRendererElement target, double animationPercent) {
-    final _BarTargetLineRendererElement localPrevious = previous;
-    final _BarTargetLineRendererElement localTarget = target;
+    final localPrevious = previous as _BarTargetLineRendererElement;
+    final localTarget = target as _BarTargetLineRendererElement;
 
     final previousPoints = localPrevious.points;
     final targetPoints = localTarget.points;
@@ -442,7 +442,7 @@ class _AnimatedBarTargetLine<D>
 
   @override
   void animateElementToMeasureAxisPosition(BaseBarRendererElement target) {
-    final _BarTargetLineRendererElement localTarget = target;
+    final localTarget = target as _BarTargetLineRendererElement;
 
     final newPoints = <Point<int>>[];
     for (var index = 0; index < localTarget.points.length; index++) {

@@ -30,7 +30,6 @@ import 'base_bar_renderer.dart'
         barGroupWeightKey,
         previousBarGroupWeightKey,
         stackKeyKey;
-import 'base_bar_renderer_element.dart' show BaseBarRendererElement;
 
 /// Key for storing a list of all domain values that exist in the series data.
 ///
@@ -132,7 +131,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
 
       // Create a fake series for [BarLabelDecorator] to use when looking up the
       // index of each datum.
-      final laneSeries = MutableSeries<D>.clone(seriesList[0]);
+      final laneSeries =
+          MutableSeries<D>.clone(seriesList[0] as MutableSeries<D>);
       laneSeries.data = <Object>[];
 
       // Don't render any labels on the swim lanes.
@@ -206,7 +206,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
 
         // Get the barElement we are going to setup.
         // Optimization to prevent allocation in non-animating case.
-        BaseBarRendererElement barElement = makeBarRendererElement(
+        final barElement = makeBarRendererElement(
             barGroupIndex: barGroupIndex,
             previousBarGroupWeight: previousBarGroupWeight,
             barGroupWeight: barGroupWeight,
@@ -252,7 +252,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
       // Create a fake series for [BarLabelDecorator] to use when looking up the
       // index of each datum. We don't care about any other series values for
       // the merged lanes, so just clone the first series.
-      final mergedSeries = MutableSeries<D>.clone(seriesList[0]);
+      final mergedSeries =
+          MutableSeries<D>.clone(seriesList[0] as MutableSeries<D>);
       mergedSeries.data = <Object>[];
 
       // Add a label accessor that returns the empty lane label.
@@ -312,7 +313,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
 
           // Get the barElement we are going to setup.
           // Optimization to prevent allocation in non-animating case.
-          BaseBarRendererElement barElement = makeBarRendererElement(
+          final barElement = makeBarRendererElement(
               barGroupIndex: barGroupIndex,
               previousBarGroupWeight: previousBarGroupWeight,
               barGroupWeight: barGroupWeight,

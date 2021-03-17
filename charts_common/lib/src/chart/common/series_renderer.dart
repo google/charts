@@ -378,10 +378,10 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     // Area color is entirely optional.
     final areaColor = areaColorFn(index);
 
-    var radiusPx = radiusPxFn != null ? radiusPxFn(index) : null;
+    var radiusPx = radiusPxFn?.call(index)?.toDouble();
     radiusPx = radiusPx?.toDouble();
 
-    var strokeWidthPx = strokeWidthPxFn != null ? strokeWidthPxFn(index) : null;
+    var strokeWidthPx = strokeWidthPxFn?.call(index)?.toDouble();
     strokeWidthPx = strokeWidthPx?.toDouble();
 
     final details = DatumDetails<D>(

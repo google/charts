@@ -101,7 +101,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   static final _labelSplitPattern = '\n';
   static final multiLineLabelPadding = 2;
 
-  static num _degToRad(num deg) => deg * (pi / 180.0);
+  static double _degToRad(double deg) => deg * (pi / 180.0);
 
   final ChartContext chartContext;
   final GraphicsFactory graphicsFactory;
@@ -418,7 +418,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
         }
       }
       canvas.drawText(line, x, y + multiLineLabelOffset,
-          rotation: _degToRad(labelRotation));
+          rotation: _degToRad(labelRotation.toDouble()));
       multiLineLabelOffset +=
           multiLineLabelPadding + line.measurement.verticalSliceWidth.round();
     }
@@ -470,7 +470,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   double calculateWidthForRotatedLabel(
       int rotation, double labelHeight, double labelLength) {
     if (rotation == 0) return labelLength;
-    var rotationRadian = _degToRad(rotation);
+    var rotationRadian = _degToRad(rotation.toDouble());
 
     // Imagine a right triangle with a base that is parallel to the axis
     // baseline. The side of this triangle that is perpendicular to the baseline
@@ -496,7 +496,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   double calculateHeightForRotatedLabel(
       int rotation, double labelHeight, double labelLength) {
     if (rotation == 0) return labelHeight;
-    var rotationRadian = _degToRad(rotation);
+    var rotationRadian = _degToRad(rotation.toDouble());
 
     // Imagine a right triangle with a base that is parallel to the axis
     // baseline. The side of this triangle that is perpendicular to the baseline

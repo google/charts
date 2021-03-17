@@ -148,7 +148,7 @@ class LinearScaleFunction {
       double reservedRangePercentOfStep,
       RangeBandConfig rangeBandConfig,
       StepSizeConfig stepSizeConfig) {
-    final domainDiff = domainInfo.domainDiff;
+    final domainDiff = domainInfo.domainDiff.toDouble();
 
     // If we are going to have any rangeBands, then ensure that we account for
     // needed space on the beginning and end of the range.

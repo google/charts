@@ -145,7 +145,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         num boundsLineRadiusPx;
         if (boundsLineRadiusPxFn != null) {
           boundsLineRadiusPx = (boundsLineRadiusPxFn is TypedAccessorFn)
-              ? (boundsLineRadiusPxFn as TypedAccessorFn)(
+              ? (boundsLineRadiusPxFn as TypedAccessorFn<dynamic, int>)(
                   series.data[index], index)
               : boundsLineRadiusPxFn(index);
         }
@@ -320,7 +320,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     // removes series from the list (e.g. click to hide on legends).
     seriesPointMap = LinkedHashMap<String, List<AnimatedPoint<D>>>.fromIterable(
         sortedSeriesIds,
-        key: (dynamic k) => k,
+        key: (dynamic k) => k as String,
         value: (dynamic k) => seriesPointMap[k]);
 
     // Animate out points that don't exist anymore.
@@ -603,7 +603,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       // [chartPoint] and the nearest point of the data bounds element. We will
       // use the smaller of this distance and the distance from the primary
       // point as the relativeDistance from this datum.
-      final num relativeDistanceBounds = distanceBetweenPointAndLineSegment(
+      final relativeDistanceBounds = distanceBetweenPointAndLineSegment(
           Vector2(chartPoint.x, chartPoint.y),
           Vector2(datumPoint.xLower, datumPoint.yLower),
           Vector2(datumPoint.xUpper, datumPoint.yUpper));

@@ -80,7 +80,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
             value: spec.value,
             textElement: graphicsFactory
                 .createTextElement(spec.label ?? formattedValues[i]),
-            locationPx: scale[spec.value]);
+            locationPx: scale[spec.value]?.toDouble());
         if (spec.style != null) {
           tick.textElement.textStyle = graphicsFactory.createTextPaint()
             ..fontFamily = spec.style.fontFamily

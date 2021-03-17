@@ -54,22 +54,22 @@ class PieChart<D> extends BaseChart<D> {
   List<DatumDetails<D>> getDatumDetails(SelectionModelType type) {
     final entries = <DatumDetails<D>>[];
 
-    getSelectionModel(type).selectedDatum.forEach((seriesDatum) {
+    for (final seriesDatum in getSelectionModel(type).selectedDatum) {
       final rendererId = seriesDatum.series.getAttr(rendererIdKey);
       final renderer = getSeriesRenderer(rendererId);
 
       // This should never happen.
-      if (!(renderer is ArcRenderer)) {
-        return;
+      if (renderer is! ArcRenderer<D>) {
+        continue;
       }
 
       final details =
-          (renderer as ArcRenderer).getExpandedDatumDetails(seriesDatum);
+          (renderer as ArcRenderer<D>).getExpandedDatumDetails(seriesDatum);
 
       if (details != null) {
         entries.add(details);
       }
-    });
+    }
 
     return entries;
   }

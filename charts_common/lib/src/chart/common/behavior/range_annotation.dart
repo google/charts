@@ -136,17 +136,17 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
   @override
   void attachTo(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart<D>) {
       throw ArgumentError(
-          'RangeAnnotation can only be attached to a CartesianChart');
+          'RangeAnnotation can only be attached to a CartesianChart<D>');
     }
 
-    _chart = chart;
+    _chart = chart as CartesianChart<D>;
 
     _view = _RangeAnnotationLayoutView<D>(
         defaultColor: defaultColor,
         labelPadding: labelPadding,
-        chart: chart,
+        chart: _chart,
         rangeAnnotation: this,
         layoutPaintOrder: layoutPaintOrder);
 
@@ -233,7 +233,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       final dashPattern =
           annotation is LineAnnotationSegment ? annotation.dashPattern : null;
       final strokeWidthPx = annotation is LineAnnotationSegment
-          ? annotation.strokeWidthPx ?? defaultLabelStyleSpec
+          ? annotation.strokeWidthPx ?? defaultStrokeWidthPx
           : 0.0;
 
       final isRange = annotation is RangeAnnotationSegment;
@@ -241,12 +241,16 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       /*late final*/ T startValue;
       /*late final*/ T endValue;
 
-      if (annotation is RangeAnnotationSegment) {
-        startValue = annotation.startValue;
-        endValue = annotation.endValue;
-      } else if (annotation is LineAnnotationSegment) {
-        startValue = annotation.value;
-        endValue = annotation.value;
+      // We unfortunately can't check for `RangeAnnotationSegment<T>` nor
+      // `LineAnnotationSegment<T>` here because the `AnnotationSegment` object
+      // might not have been parameterized on `T` when it was initially
+      // constructed.
+      if (annotation is RangeAnnotationSegment<Object>) {
+        startValue = annotation.startValue as T;
+        endValue = annotation.endValue as T;
+      } else if (annotation is LineAnnotationSegment<Object>) {
+        startValue = annotation.value as T;
+        endValue = annotation.value as T;
       }
 
       final annotationDatum =

@@ -435,7 +435,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
                 allBarGroupWeights: allBarGroupWeights,
                 color: colorFn(barIndex),
                 dashPattern: dashPatternFn(barIndex),
-                details: details,
+                details: details as R,
                 domainValue: domainFn(barIndex),
                 domainAxis: domainAxis,
                 domainWidth: domainAxis.rangeBand.round(),
@@ -481,7 +481,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             allBarGroupWeights: allBarGroupWeights,
             color: colorFn(barIndex),
             dashPattern: dashPatternFn(barIndex),
-            details: details,
+            details: details as R,
             domainValue: domainFn(barIndex),
             domainAxis: domainAxis,
             domainWidth: domainAxis.rangeBand.round(),
@@ -496,7 +496,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
             measureIsNull: measureIsNull,
             measureIsNegative: measureIsNegative);
 
-        animatingBar.setNewTarget(barElement);
+        animatingBar.setNewTarget(barElement as R);
       }
     });
 

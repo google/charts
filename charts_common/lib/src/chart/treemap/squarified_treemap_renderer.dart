@@ -60,7 +60,7 @@ class SquarifiedTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
       while (remainingNodes.isNotEmpty) {
         final child = remainingNodes.first;
         analyzer.addNode(child);
-        final score = analyzer.worst(width);
+        final score = analyzer.worst(width).toDouble();
 
         // Adding a new child rectangle improves score for the aspect ratio .
         if (score <= bestScore) {
@@ -125,7 +125,7 @@ class _SquarifyRatioAnalyzer {
 
     // Finds rMin (i.e minimum area) and rMax (i.e maximum area) in [nodes].
     for (final node in nodes) {
-      final area = _areaFn(node);
+      final area = _areaFn(node).toDouble();
       if (area <= 0) continue;
       if (area < rMin) rMin = area;
       if (area > rMax) rMax = area;

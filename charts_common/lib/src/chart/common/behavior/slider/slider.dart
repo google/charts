@@ -377,7 +377,7 @@ class Slider<D> implements ChartBehavior<D> {
       final positionX = clamp(point.x, viewBounds.left, viewBounds.right);
 
       final previousYPosition = _handleBounds == null
-          ? 0
+          ? 0.0
           : _handleBounds.top +
               _style.handleSize.height / 2 -
               _style.handleOffset.y;
@@ -392,7 +392,8 @@ class Slider<D> implements ChartBehavior<D> {
       }
 
       // Clamp the position to the edge of the viewport.
-      positionY = clamp(positionY, viewBounds.top, viewBounds.bottom);
+      positionY =
+          clamp(positionY, viewBounds.top, viewBounds.bottom).toDouble();
 
       final positionXChanged = _previousDomainCenterPoint != null &&
           positionX != _previousDomainCenterPoint.x;
@@ -512,11 +513,11 @@ class Slider<D> implements ChartBehavior<D> {
 
   @override
   void attachTo(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart<D>) {
       throw ArgumentError('Slider can only be attached to a cartesian chart.');
     }
 
-    _chart = chart as CartesianChart;
+    _chart = chart as CartesianChart<D>;
 
     // Only vertical rendering is supported by this behavior.
     assert(_chart.vertical);

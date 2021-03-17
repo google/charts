@@ -163,7 +163,9 @@ abstract class CartesianChart<D> extends BaseChart<D> {
         _newDomainAxis = domainAxis,
         _primaryMeasureAxis = primaryMeasureAxis ?? NumericAxis(),
         _secondaryMeasureAxis = secondaryMeasureAxis ?? NumericAxis(),
-        _disjointMeasureAxes = disjointMeasureAxes ?? <String, NumericAxis>{},
+        _disjointMeasureAxes =
+            // ignore: prefer_collection_literals
+            disjointMeasureAxes ?? LinkedHashMap<String, NumericAxis>(),
         super(layoutConfig: layoutConfig ?? _defaultLayoutConfig) {
     // As a convenience for chart configuration, set the paint order on any axis
     // that is missing one.

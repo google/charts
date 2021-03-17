@@ -53,6 +53,7 @@ class SelectionModel<D> {
   }
 
   /// Create selection model from configuration.
+  // TODO: Use `List<SeriesDatumConfig<D>>`.
   SelectionModel.fromConfig(List<SeriesDatumConfig<Object>> selectedDataConfig,
       List<String> selectedSeriesConfig, List<ImmutableSeries<D>> seriesList) {
     final selectedDataMap = <String, List<D>>{};
@@ -60,7 +61,7 @@ class SelectionModel<D> {
     if (selectedDataConfig != null) {
       for (final config in selectedDataConfig) {
         selectedDataMap[config.seriesId] ??= <D>[];
-        selectedDataMap[config.seriesId].add(config.domainValue);
+        selectedDataMap[config.seriesId].add(config.domainValue as D);
       }
 
       // Add to list of selected series.

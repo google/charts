@@ -534,8 +534,8 @@ class BarRendererElement<D> extends BaseBarRendererElement
   @override
   void updateAnimationPercent(BaseBarRendererElement previous,
       BaseBarRendererElement target, double animationPercent) {
-    final BarRendererElement<D> localPrevious = previous;
-    final BarRendererElement<D> localTarget = target;
+    final localPrevious = previous as BarRendererElement<D>;
+    final localTarget = target as BarRendererElement<D>;
 
     final previousBounds = localPrevious.bounds;
     final targetBounds = localTarget.bounds;
@@ -570,7 +570,7 @@ class AnimatedBar<D> extends BaseAnimatedBar<D, BarRendererElement<D>> {
 
   @override
   void animateElementToMeasureAxisPosition(BaseBarRendererElement target) {
-    final BarRendererElement<D> localTarget = target;
+    final localTarget = target as BarRendererElement<D>;
 
     // TODO: Animate out bars in the middle of a stack.
     localTarget.bounds = Rectangle<int>(

@@ -240,7 +240,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   double getLocation(D domain) {
     const epsilon = 2e-10;
     if (domain != null) {
-      var domainLocation = scale[domain];
+      var domainLocation = scale[domain].toDouble();
 
       // If domain location is outside of scale range but only outside by less
       // than epsilon, correct the potential mislocation caused by floating
@@ -314,7 +314,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
             animatedTick.textElement, tick.textElement)) {
           animatedTick.textElement = tick.textElement;
         }
-        var newTarget = scale[tick.value];
+        var newTarget = scale[tick.value]?.toDouble();
         if (scale.isRangeValueWithinViewport(newTarget)) {
           // Update target for all existing ticks
           animatedTick.setNewTarget(newTarget);
@@ -332,7 +332,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     // Add new ticks
     providedTicks?.forEach((tick) {
       AxisTicks<D> animatedTick;
-      if (tick is RangeTick) {
+      if (tick is RangeTick<D>) {
         animatedTick = RangeAxisTicks<D>(tick);
       } else {
         animatedTick = AxisTicks<D>(tick);

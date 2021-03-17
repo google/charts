@@ -78,12 +78,12 @@ class PanBehavior<D> implements ChartBehavior<D> {
   /// Injects the behavior into a chart.
   @override
   void attachTo(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart<D>) {
       throw ArgumentError(
-          'PanBehavior can only be attached to a CartesianChart');
+          'PanBehavior can only be attached to a CartesianChart<D>');
     }
 
-    _chart = chart;
+    _chart = chart as CartesianChart<D>;
     _chart.addGestureListener(_listener);
 
     // Disable the autoViewport feature to enable panning.
@@ -98,12 +98,12 @@ class PanBehavior<D> implements ChartBehavior<D> {
   /// Removes the behavior from a chart.
   @override
   void removeFrom(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart<D>) {
       throw ArgumentError(
-          'PanBehavior can only be attached to a CartesianChart');
+          'PanBehavior can only be attached to a CartesianChart<D>');
     }
 
-    _chart = chart;
+    _chart = chart as CartesianChart<D>;
     _chart.removeGestureListener(_listener);
 
     // Restore the default autoViewport state.

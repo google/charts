@@ -257,7 +257,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   /// information. y0 for this series is just y + y0 for previous series as long
   /// as both y and y0 are not null. If they are null propagate up the
   /// missing/null data.
-  Function _createStackedMeasureOffsetFunction(MutableSeries<D> series,
+  num Function(int) _createStackedMeasureOffsetFunction(MutableSeries<D> series,
       Map<D, num> curOffsets, Map<D, num> nextOffsets) {
     final domainFn = series.domainFn;
     final measureFn = series.measureFn;
@@ -386,7 +386,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           // Create a new line and have it animate in from axis.
           final lineAndArea = _createLineAndAreaElements(
               series,
-              styleSegment,
+              styleSegment as _LineRendererElement<D>,
               stackIndex > 0 ? previousInitialPointList[stackIndex - 1] : null,
               true);
           final lineElementList =
@@ -447,8 +447,11 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         }
 
         // Create a new line using the final point locations.
-        final lineAndArea = _createLineAndAreaElements(series, styleSegment,
-            stackIndex > 0 ? previousPointList[stackIndex - 1] : null, false);
+        final lineAndArea = _createLineAndAreaElements(
+            series,
+            styleSegment as _LineRendererElement<D>,
+            stackIndex > 0 ? previousPointList[stackIndex - 1] : null,
+            false);
         final lineElementList = lineAndArea[0] as List<_LineRendererElement<D>>;
         final areaElementList = lineAndArea[1] as List<_AreaRendererElement<D>>;
         final allPointList = lineAndArea[2] as List<_DatumPoint<D>>;
@@ -1075,7 +1078,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           return;
         }
 
-        segment.allPoints.forEach((Point p) {
+        segment.allPoints.forEach((p) {
           // Don't look at points not in the drawArea.
           if (p.x < componentBounds.left || p.x > componentBounds.right) {
             return;
@@ -1202,7 +1205,7 @@ class _LineRendererElement<D> {
 
   void updateAnimationPercent(_LineRendererElement<D> previous,
       _LineRendererElement<D> target, double animationPercent) {
-    Point lastPoint;
+    _DatumPoint<D> lastPoint;
 
     int pointIndex;
     for (pointIndex = 0; pointIndex < target.points.length; pointIndex++) {
@@ -1350,7 +1353,7 @@ class _AreaRendererElement<D> {
 
   void updateAnimationPercent(_AreaRendererElement<D> previous,
       _AreaRendererElement<D> target, double animationPercent) {
-    Point lastPoint;
+    _DatumPoint<D> lastPoint;
 
     int pointIndex;
     for (pointIndex = 0; pointIndex < target.points.length; pointIndex++) {

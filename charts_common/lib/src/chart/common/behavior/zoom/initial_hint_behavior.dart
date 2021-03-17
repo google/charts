@@ -113,12 +113,12 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
 
   @override
   void attachTo(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart<D>) {
       throw ArgumentError(
-          'InitialHintBehavior can only be attached to a CartesianChart');
+          'InitialHintBehavior can only be attached to a CartesianChart<D>');
     }
 
-    _chart = chart;
+    _chart = chart as CartesianChart<D>;
 
     _chart.addGestureListener(_listener);
     _chart.addLifecycleListener(_lifecycleListener);
@@ -126,14 +126,14 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
 
   @override
   void removeFrom(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart) {
       throw ArgumentError(
-          'InitialHintBehavior can only be removed from a CartesianChart');
+          'InitialHintBehavior can only be removed from a CartesianChart<D>');
     }
 
     stopHintAnimation();
 
-    _chart = chart;
+    _chart = chart as CartesianChart<D>;
     _chart.removeGestureListener(_listener);
     _chart.removeLifecycleListener(_lifecycleListener);
 

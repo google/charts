@@ -70,8 +70,10 @@ class NumericAxisSpec extends AxisSpec<num> {
   }) {
     return NumericAxisSpec(
       renderSpec: renderSpec ?? other.renderSpec,
-      tickProviderSpec: tickProviderSpec ?? other.tickProviderSpec,
-      tickFormatterSpec: tickFormatterSpec ?? other.tickFormatterSpec,
+      tickProviderSpec: (tickProviderSpec ?? other.tickProviderSpec)
+          as NumericTickProviderSpec,
+      tickFormatterSpec: (tickFormatterSpec ?? other.tickFormatterSpec)
+          as NumericTickFormatterSpec,
       showAxisLine: showAxisLine ?? other.showAxisLine,
       viewport: viewport ?? other.viewport,
     );

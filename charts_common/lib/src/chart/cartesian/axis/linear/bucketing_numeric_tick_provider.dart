@@ -87,7 +87,7 @@ class BucketingNumericTickProvider extends NumericTickProvider {
 
     final localFormatter = _BucketingFormatter()
       ..threshold = _threshold
-      ..originalFormatter = formatter;
+      ..originalFormatter = formatter as SimpleTickFormatterBase<num>;
 
     final ticks = super.getTicks(
         context: context,
@@ -106,7 +106,7 @@ class BucketingNumericTickProvider extends NumericTickProvider {
         value: _threshold,
         textElement: graphicsFactory
             .createTextElement(localFormatter.formatValue(_threshold)),
-        locationPx: _showBucket ? scale[_threshold] : scale[0],
+        locationPx: (_showBucket ? scale[_threshold] : scale[0]).toDouble(),
         labelOffsetPx:
             _showBucket ? -0.5 * (scale[_threshold] - scale[0]) : 0.0);
     tickDrawStrategy.decorateTicks(<Tick<num>>[thresholdTick]);

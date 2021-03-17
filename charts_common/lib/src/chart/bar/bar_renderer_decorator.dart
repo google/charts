@@ -27,7 +27,7 @@ abstract class BarRendererDecorator<D> {
 
   void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
       ChartCanvas canvas, GraphicsFactory graphicsFactory,
-      {@required Rectangle drawBounds,
+      {@required Rectangle<int> drawBounds,
       @required double animationPercent,
       @required bool renderingVertically,
       bool rtl = false});

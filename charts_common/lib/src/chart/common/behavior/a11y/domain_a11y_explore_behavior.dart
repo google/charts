@@ -120,8 +120,8 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
   @override
   void attachTo(BaseChart<D> chart) {
     // Domain selection behavior only works for cartesian charts.
-    assert(chart is CartesianChart);
-    _chart = chart as CartesianChart;
+    assert(chart is CartesianChart<D>);
+    _chart = chart as CartesianChart<D>;
 
     chart.addLifecycleListener(_lifecycleListener);
 

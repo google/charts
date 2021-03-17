@@ -52,7 +52,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     // Save a reference to the parent chart so that we can access properties
     // that are not set until a later state (e.g. isRtl), or that might change
     // dynamically (e.g. vertical).
-    this.chart = chart as CartesianChart;
+    this.chart = chart as CartesianChart<D>;
   }
 
   // True when the chart should be rendered in vertical mode, false when in
@@ -114,23 +114,24 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
         return;
       }
 
-      final domainAxis = series.getAttr(domainAxisKey);
+      final domainAxis = series.getAttr(domainAxisKey) as Axis<D>;
       final domainFn = series.domainFn;
 
       if (domainAxis == null) {
         return;
       }
 
-      final measureAxis = series.getAttr(measureAxisKey);
+      final measureAxis = series.getAttr(measureAxisKey) as Axis<num>;
       if (measureAxis == null) {
         return;
       }
 
       // Only add the measure values for datum who's domain is within the
       // domainAxis viewport.
-      int startIndex =
+      final startIndex =
           findNearestViewportStart(domainAxis, domainFn, series.data);
-      int endIndex = findNearestViewportEnd(domainAxis, domainFn, series.data);
+      final endIndex =
+          findNearestViewportEnd(domainAxis, domainFn, series.data);
 
       addMeasureValuesFor(series, measureAxis, startIndex, endIndex);
     });

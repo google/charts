@@ -96,7 +96,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
       // Populates [treeNodeToRendererElement] map entries.
       for (var i = 0; i < count; i++) {
-        final TreeNode<Object> node = series.data[i];
+        final node = series.data[i] as TreeNode<Object>;
         _treeNodeToRendererElement[node] = _createRendererElement(series, i)
           ..isLeaf = !node.hasChildren;
       }
@@ -116,12 +116,13 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
 
     for (final series in seriesList) {
       if (series.data.isNotEmpty) {
-        final Object root = series.data.first;
+        final root = series.data.first as TreeNode<Object>;
         // Configures the renderer element for root node.
         _configureRootRendererElement(root);
 
         // Applies tiling algorithm to each node.
-        for (final TreeNode<Object> node in series.data) {
+        for (final datum in series.data) {
+          final node = datum as TreeNode<Object>;
           tile(node);
           final element = _getRendererElement(node)..refreshPaintProperties();
           final rect = _createAnimatedTreeMapRect(element);
@@ -156,7 +157,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
         patternStrokeWidthPx: config.patternStrokeWidthPx,
         patternColor: element.patternColor,
         stroke: element.strokeColor,
-        strokeWidthPx: element.strokeWidthPx,
+        strokeWidthPx: element.strokeWidthPx.toDouble(),
         radius: 0,
         roundTopLeft: false,
         roundTopRight: false,
@@ -216,14 +217,19 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     }
 
     // Prioritizes nodes with larger depth;
-    nearest.sort((a, b) => b.datum.depth.compareTo(a.datum.depth));
+    nearest.sort((a, b) {
+      final nodeA = a.datum as TreeNode<Object>;
+      final nodeB = b.datum as TreeNode<Object>;
+      return nodeB.depth.compareTo(nodeA.depth);
+    });
     return nearest;
   }
 
   @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
-    final bounds = _getRendererElement(seriesDatum.datum).boundingRect;
+    final bounds =
+        _getRendererElement(seriesDatum.datum as TreeNode<Object>).boundingRect;
     final chartPosition = Point<double>(
         (isRtl ? bounds.left : bounds.right).toDouble(),
         (bounds.top + (bounds.height / 2)).toDouble());
@@ -242,7 +248,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       final count = colorPalettes.length;
 
       series.fillColorFn ??= (int index) {
-        TreeNode<Object> node = series.data[index];
+        var node = series.data[index] as TreeNode<Object>;
         return colorPalettes[node.depth % count].shadeDefault;
       };
 

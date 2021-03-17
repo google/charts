@@ -182,7 +182,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       var arcList =
           _seriesArcMap.putIfAbsent(arcListKey, () => _AnimatedArcList());
 
-      var elementsList = series.getAttr(arcElementsKey);
+      var elementsList =
+          series.getAttr(arcElementsKey) as List<ArcRendererElement<D>>;
 
       if (series.data.isEmpty) {
         // If the series is empty, set up the "no data" arc element. This should
@@ -230,7 +231,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
           final Object datum = series.data[arcIndex];
           final details = elementsList[arcIndex];
-          D domainValue = details.domain;
+          final domainValue = details.domain;
 
           var arcKey = '${series.id}__${domainValue.toString()}';
 

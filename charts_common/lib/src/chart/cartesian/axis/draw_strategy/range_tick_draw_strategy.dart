@@ -204,7 +204,7 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
       @required Rectangle<int> drawAreaBounds,
       @required bool isFirst,
       @required bool isLast}) {
-    if (tick is RangeAxisTicks) {
+    if (tick is RangeAxisTicks<D>) {
       drawRangeShadeAndRangeLabel(tick, canvas, orientation, axisBounds,
           drawAreaBounds, isFirst, isLast);
     } else {
@@ -388,7 +388,7 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
 
       if (orientation == AxisOrientation.bottom ||
           orientation == AxisOrientation.top) {
-        y = rangeStartTickStart.y + rangeShadeOffsetFromAxisPx - 1;
+        y = rangeStartTickStart.y.toInt() + rangeShadeOffsetFromAxisPx - 1;
 
         x = (rangeStartTickStart.x +
                 (rangeEndTickStart.x - rangeStartTickStart.x - labelWidth) / 2)

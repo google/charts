@@ -67,7 +67,7 @@ class RangeTickProvider<D> extends TickProvider<D> {
 
     // Use the formatter's label if the tick spec does not provide one.
     List<String> formattedValues;
-    if (allTicksHaveLabels == false) {
+    if (!allTicksHaveLabels) {
       formattedValues = formatter.format(
           tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
           stepSize: scale.domainStepSize);
@@ -77,26 +77,24 @@ class RangeTickProvider<D> extends TickProvider<D> {
       final spec = tickSpec[i];
       Tick<D> tick;
 
-      if (spec is RangeTickSpec) {
+      if (spec is RangeTickSpec<D>) {
         // If it is a range tick, we still check if the spec's start and end
         // points are within the viewport because we do not extend the axis for
         // OrdinalScale.
-        final rangeSpec = spec as RangeTickSpec;
-        if (scale.compareDomainValueToViewport(rangeSpec.rangeStartValue) ==
-                0 &&
-            scale.compareDomainValueToViewport(rangeSpec.rangeEndValue) == 0) {
+        if (scale.compareDomainValueToViewport(spec.rangeStartValue) == 0 &&
+            scale.compareDomainValueToViewport(spec.rangeEndValue) == 0) {
           tick = RangeTick<D>(
-            value: rangeSpec.value,
+            value: spec.value,
             textElement: graphicsFactory
-                .createTextElement(rangeSpec.label ?? formattedValues[i]),
-            locationPx: scale[rangeSpec.rangeStartValue] +
-                (scale[rangeSpec.rangeEndValue] -
-                        scale[rangeSpec.rangeStartValue]) /
-                    2,
-            rangeStartValue: rangeSpec.rangeStartValue,
-            rangeStartLocationPx: scale[rangeSpec.rangeStartValue],
-            rangeEndValue: rangeSpec.rangeEndValue,
-            rangeEndLocationPx: scale[rangeSpec.rangeEndValue],
+                .createTextElement(spec.label ?? formattedValues[i]),
+            locationPx: (scale[spec.rangeStartValue] +
+                    (scale[spec.rangeEndValue] - scale[spec.rangeStartValue]) /
+                        2)
+                .toDouble(),
+            rangeStartValue: spec.rangeStartValue,
+            rangeStartLocationPx: scale[spec.rangeStartValue]?.toDouble(),
+            rangeEndValue: spec.rangeEndValue,
+            rangeEndLocationPx: scale[spec.rangeEndValue]?.toDouble(),
           );
         }
       } else {
@@ -107,7 +105,7 @@ class RangeTickProvider<D> extends TickProvider<D> {
             value: spec.value,
             textElement: graphicsFactory
                 .createTextElement(spec.label ?? formattedValues[i]),
-            locationPx: scale[spec.value],
+            locationPx: scale[spec.value]?.toDouble(),
           );
         }
       }

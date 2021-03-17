@@ -342,7 +342,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
   double _drawLeaderLine(
       ChartCanvas canvas,
       bool labelLeftOfChart,
-      Point labelPoint,
+      Point<double> labelPoint,
       double radius,
       Point<double> arcCenterPoint,
       double centerAngle) {

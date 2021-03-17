@@ -76,7 +76,7 @@ abstract class BaseTickProvider<D> implements TickProvider<D> {
       final tick = Tick(
           value: value,
           textElement: graphicsFactory.createTextElement(labels[i]),
-          locationPx: scale[value]);
+          locationPx: scale[value]?.toDouble());
 
       ticks.add(tick);
     }

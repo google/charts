@@ -188,8 +188,11 @@ class SelectNearest<D> implements ChartBehavior<D> {
             // re-order the actual return values here.
             final sortedSeriesDatumList =
                 List<SeriesDatum<D>>.from(seriesDatumList);
-            sortedSeriesDatumList.sort((a, b) =>
-                a.datum.domainDistance.compareTo(b.datum.domainDistance));
+            sortedSeriesDatumList.sort((a, b) {
+              final detailsA = a.datum as DatumDetails<D>;
+              final detailsB = b.datum as DatumDetails<D>;
+              return detailsA.domainDistance.compareTo(detailsB.domainDistance);
+            });
             seriesList.add(sortedSeriesDatumList.first.series);
           } else {
             seriesList.add(details.first.series);

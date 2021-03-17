@@ -80,10 +80,11 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
           if (startY != endY) {
             final barWidth = bounds.right - bounds.left;
             final x = (bounds.left + bounds.right) / 2;
-            final rectWidth = min(strokeWidthPx + 2 * outlineWidthPx, barWidth);
+            final rectWidth =
+                min(strokeWidthPx + 2 * outlineWidthPx, barWidth.toDouble());
             final strokeWidth = rectWidth - 2 * outlineWidthPx;
             final rectEndpointLength =
-                min(endpointLengthPx + 2 * outlineWidthPx, barWidth);
+                min(endpointLengthPx + 2 * outlineWidthPx, barWidth.toDouble());
             final endpointLength = rectEndpointLength - 2 * outlineWidthPx;
 
             if (outlineWidthPx > 0) {
@@ -138,10 +139,11 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
           if (startX != endX) {
             final barWidth = bounds.bottom - bounds.top;
             final y = (bounds.top + bounds.bottom) / 2;
-            final rectWidth = min(strokeWidthPx + 2 * outlineWidthPx, barWidth);
+            final rectWidth =
+                min(strokeWidthPx + 2 * outlineWidthPx, barWidth.toDouble());
             final strokeWidth = rectWidth - 2 * outlineWidthPx;
             final rectEndpointLength =
-                min(endpointLengthPx + 2 * outlineWidthPx, barWidth);
+                min(endpointLengthPx + 2 * outlineWidthPx, barWidth.toDouble());
             final endpointLength = rectEndpointLength - 2 * outlineWidthPx;
 
             if (outlineWidthPx > 0) {

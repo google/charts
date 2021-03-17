@@ -57,12 +57,12 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
       ticks.add(Tick(
           value: start,
           textElement: graphicsFactory.createTextElement(labels[0]),
-          locationPx: scale[start]));
+          locationPx: scale[start]?.toDouble()));
 
       ticks.add(Tick(
           value: end,
           textElement: graphicsFactory.createTextElement(labels[1]),
-          locationPx: scale[end]));
+          locationPx: scale[end]?.toDouble()));
 
       // Allow draw strategy to decorate the ticks.
       tickDrawStrategy.decorateTicks(ticks);
@@ -78,16 +78,19 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
     if (tickHint != null) {
       start = tickHint.start;
     } else {
-      if (scale is NumericScale) {
-        start = (scale as NumericScale).viewportDomain.min;
-      } else if (scale is DateTimeScale) {
-        start = (scale as DateTimeScale).viewportDomain.start;
-      } else if (scale is OrdinalScale) {
-        start = (scale as OrdinalScale).domain.first;
+      // Upcast to allow type promotion.
+      // See https://github.com/dart-lang/sdk/issues/34018.
+      Object _scale = scale;
+      if (_scale is NumericScale) {
+        start = _scale.viewportDomain.min;
+      } else if (_scale is DateTimeScale) {
+        start = _scale.viewportDomain.start;
+      } else if (_scale is OrdinalScale) {
+        start = _scale.domain.first;
       }
     }
 
-    return start;
+    return start as D;
   }
 
   /// Get the end value from the scale.
@@ -97,15 +100,18 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
     if (tickHint != null) {
       end = tickHint.end;
     } else {
-      if (scale is NumericScale) {
-        end = (scale as NumericScale).viewportDomain.max;
-      } else if (scale is DateTimeScale) {
-        end = (scale as DateTimeScale).viewportDomain.end;
-      } else if (scale is OrdinalScale) {
-        end = (scale as OrdinalScale).domain.last;
+      // Upcast to allow type promotion.
+      // See https://github.com/dart-lang/sdk/issues/34018.
+      Object _scale = scale;
+      if (_scale is NumericScale) {
+        end = _scale.viewportDomain.max;
+      } else if (_scale is DateTimeScale) {
+        end = _scale.viewportDomain.end;
+      } else if (_scale is OrdinalScale) {
+        end = _scale.domain.last;
       }
     }
 
-    return end;
+    return end as D;
   }
 }

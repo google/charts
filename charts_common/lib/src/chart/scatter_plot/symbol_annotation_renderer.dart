@@ -92,7 +92,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
       for (var index = 0; index < series.data.length; index++) {
         // Default to the configured radius if none was returned by the
         // accessor function.
-        var radiusPx = series.radiusPxFn(index);
+        var radiusPx = series.radiusPxFn(index)?.toDouble();
         radiusPx ??= config.radiusPx;
 
         maxRadius = max(maxRadius, radiusPx);
@@ -182,12 +182,12 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
   @override
   void onAttach(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart<D>) {
       throw ArgumentError(
-          'SymbolAnnotationRenderer can only be attached to a CartesianChart');
+          'SymbolAnnotationRenderer can only be attached to a CartesianChart<D>');
     }
 
-    _chart = chart as CartesianChart;
+    _chart = chart as CartesianChart<D>;
 
     // Only vertical rendering is supported by this behavior.
     assert(_chart.vertical);

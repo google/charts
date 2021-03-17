@@ -194,7 +194,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       assert(1.0 <= step && step < 10.0);
       _allowedSteps[stepIndex] = _removeRoundingErrors(step / 100);
       _allowedSteps[stepSet.length + stepIndex] =
-          _removeRoundingErrors(step / 10).toDouble();
+          _removeRoundingErrors(step / 10);
       _allowedSteps[2 * stepSet.length + stepIndex] =
           _removeRoundingErrors(step);
       stepIndex++;
@@ -276,7 +276,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
       // Only create a copy of the scale if [viewportExtensionEnabled].
       NumericScale mutableScale =
-          viewportExtensionEnabled ? scale.copy() : null;
+          viewportExtensionEnabled ? scale.copy() as NumericScale : null;
 
       // Walk to available tick count from max to min looking for the first one
       // that gives you the least amount of range used. If a non colliding tick
@@ -289,9 +289,11 @@ class NumericTickProvider extends BaseTickProvider<num> {
         if (stepInfo == null) {
           continue;
         }
-        final firstTick = dataToAxisUnitConverter.invert(stepInfo.tickStart);
+        final firstTick =
+            dataToAxisUnitConverter.invert(stepInfo.tickStart).toDouble();
         final lastTick = dataToAxisUnitConverter
-            .invert(stepInfo.tickStart + stepInfo.stepSize * (tickCount - 1));
+            .invert(stepInfo.tickStart + stepInfo.stepSize * (tickCount - 1))
+            .toDouble();
         final range = lastTick - firstTick;
         // Calculate ticks if it is a better range or if preferred ticks have
         // not been found yet.
@@ -484,7 +486,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
         // TODO: Skip steps that format to the same string.
         // But wait until the last step to prevent the cost of the formatter.
-        double tmpStepStart = _getStepLessThan(low, tmpStepSize);
+        double tmpStepStart = _getStepLessThan(low.toDouble(), tmpStepSize);
         if (tmpStepStart + (tmpStepSize * regionCount) >= high) {
           return _TickStepInfo(tmpStepSize, tmpStepStart);
         }
@@ -498,8 +500,10 @@ class NumericTickProvider extends BaseTickProvider<num> {
     // We have our size and start, assign all the tick values to the given array.
     return [
       for (int i = 0; i < tickCount; i++)
-        dataToAxisUnitConverter.invert(
-            _removeRoundingErrors(steps.tickStart + (i * steps.stepSize))),
+        dataToAxisUnitConverter
+            .invert(
+                _removeRoundingErrors(steps.tickStart + (i * steps.stepSize)))
+            .toDouble(),
     ];
   }
 
@@ -544,7 +548,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       return 1.0;
     }
 
-    return pow(10, (log10e * log(number.abs())).ceil()) *
+    return pow(10, (log10e * log(number.abs())).ceil()).toDouble() *
         (number < 0.0 ? -1.0 : 1.0);
   }
 

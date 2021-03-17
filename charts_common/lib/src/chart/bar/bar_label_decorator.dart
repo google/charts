@@ -73,7 +73,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   @override
   void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
       ChartCanvas canvas, GraphicsFactory graphicsFactory,
-      {@required Rectangle drawBounds,
+      {@required Rectangle<int> drawBounds,
       @required double animationPercent,
       @required bool renderingVertically,
       bool rtl = false}) {
@@ -95,7 +95,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       Iterable<ImmutableBarRendererElement<D>> barElements,
       ChartCanvas canvas,
       GraphicsFactory graphicsFactory,
-      Rectangle drawBounds,
+      Rectangle<int> drawBounds,
       bool rtl) {
     // Create [TextStyle] from [TextStyleSpec] to be used by all the elements.
     // The [GraphicsFactory] is needed so it can't be created earlier.
@@ -227,7 +227,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       Iterable<ImmutableBarRendererElement<D>> barElements,
       ChartCanvas canvas,
       GraphicsFactory graphicsFactory,
-      Rectangle drawBounds,
+      Rectangle<int> drawBounds,
       bool rtl) {
     // Create [TextStyle] from [TextStyleSpec] to be used by all the elements.
     // The [GraphicsFactory] is needed so it can't be created earlier.
