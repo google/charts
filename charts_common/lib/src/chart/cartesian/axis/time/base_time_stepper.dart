@@ -29,7 +29,10 @@ abstract class BaseTimeStepper implements TimeStepper {
 
   _TimeStepIteratorFactoryImpl _stepsIterable;
 
-  BaseTimeStepper(this.dateTimeFactory);
+  BaseTimeStepper(this.dateTimeFactory) {
+    // Must have at least one increment option.
+    assert(allowedTickIncrements.isNotEmpty);
+  }
 
   /// Get the step time before or on the given [time] from [tickIncrement].
   DateTime getStepTimeBeforeInclusive(DateTime time, int tickIncrement);

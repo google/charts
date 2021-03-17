@@ -36,6 +36,8 @@ abstract class TimeStepper {
 
   /// An ordered list of step increments that makes sense given the step.
   ///
+  /// Should never be empty.
+  ///
   /// Example: hours may increment by 1, 2, 3, 4, 6, 12.  It doesn't make sense
   /// to increment hours by 7.
   List<int> get allowedTickIncrements;

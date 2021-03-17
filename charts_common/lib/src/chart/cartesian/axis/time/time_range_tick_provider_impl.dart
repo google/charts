@@ -52,6 +52,7 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
     int minDifference;
     int closestIncrement;
 
+    assert(timeStepper.allowedTickIncrements.isNotEmpty);
     for (final increment in timeStepper.allowedTickIncrements) {
       final difference =
           (stepSize - (timeStepper.typicalStepSizeMs * increment)).abs();
@@ -93,6 +94,7 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
     } else {
       allowedTickIncrements = timeStepper.allowedTickIncrements;
     }
+    assert(allowedTickIncrements.isNotEmpty);
 
     for (final tickIncrement in allowedTickIncrements) {
       // Create tick values with a specified increment.
