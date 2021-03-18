@@ -49,11 +49,12 @@ abstract class A11yExploreBehavior<D> implements ChartBehavior<D> {
   bool _exploreModeOn = false;
 
   A11yExploreBehavior({
-    this.exploreModeTrigger = ExploreModeTrigger.pressHold,
     double minimumWidth,
+    ExploreModeTrigger /*?*/ exploreModeTrigger,
     this.exploreModeEnabledAnnouncement,
     this.exploreModeDisabledAnnouncement,
-  }) : minimumWidth = minimumWidth ?? 1.0 {
+  })  : exploreModeTrigger = exploreModeTrigger ?? ExploreModeTrigger.pressHold,
+        minimumWidth = minimumWidth ?? 1.0 {
     assert(this.minimumWidth >= 1.0);
 
     switch (exploreModeTrigger) {
