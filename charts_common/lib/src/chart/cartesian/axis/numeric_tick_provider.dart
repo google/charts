@@ -125,14 +125,6 @@ class NumericTickProvider extends BaseTickProvider<num> {
   int _minTickCount;
   int _maxTickCount;
 
-  // The parameters used in previous tick calculation
-  num _prevLow;
-  num _prevHigh;
-  int _prevRangeWidth;
-  int _prevMinTickCount;
-  int _prevMaxTickCount;
-  bool _prevDataIsInWholeNumbers;
-
   /// Sets the desired tick count.
   ///
   /// While the provider will try to satisfy the requirement, it is not
@@ -246,8 +238,6 @@ class NumericTickProvider extends BaseTickProvider<num> {
     bool viewportExtensionEnabled = false,
     TickHint<num> tickHint,
   }) {
-    List<Tick<num>> ticks;
-
     _rangeWidth = scale.rangeWidth;
     _updateDomainExtents(scale.viewportDomain);
 
@@ -265,109 +255,84 @@ class NumericTickProvider extends BaseTickProvider<num> {
       );
     }
 
-    if (_hasTickParametersChanged() || ticks == null) {
-      var selectedTicksRange = double.maxFinite;
-      var foundPreferredTicks = false;
-      var viewportDomain = scale.viewportDomain;
-      final axisUnitsHigh = dataToAxisUnitConverter.convert(_high);
-      final axisUnitsLow = dataToAxisUnitConverter.convert(_low);
+    // TODO: Recalculate ticks only if something changed.
+    var selectedTicksRange = double.maxFinite;
+    var foundPreferredTicks = false;
+    var viewportDomain = scale.viewportDomain;
+    final axisUnitsHigh = dataToAxisUnitConverter.convert(_high);
+    final axisUnitsLow = dataToAxisUnitConverter.convert(_low);
 
-      _updateTickCounts(axisUnitsHigh, axisUnitsLow);
+    _updateTickCounts(axisUnitsHigh, axisUnitsLow);
 
-      // Only create a copy of the scale if [viewportExtensionEnabled].
-      final mutableScale =
-          viewportExtensionEnabled ? scale.copy() as NumericScale : null;
+    // Only create a copy of the scale if [viewportExtensionEnabled].
+    final mutableScale =
+        viewportExtensionEnabled ? scale.copy() as NumericScale : null;
 
-      // Walk to available tick count from max to min looking for the first one
-      // that gives you the least amount of range used. If a non colliding tick
-      // count is not found use the min tick count to generate ticks.
-      for (var tickCount = _maxTickCount;
-          tickCount >= _minTickCount;
-          tickCount--) {
-        final stepInfo =
-            _getStepsForTickCount(tickCount, axisUnitsHigh, axisUnitsLow);
-        if (stepInfo == null) {
+    // Walk to available tick count from max to min looking for the first one
+    // that gives you the least amount of range used. If a non colliding tick
+    // count is not found use the min tick count to generate ticks.
+    List<Tick<num>> ticks;
+    for (var tickCount = _maxTickCount;
+        tickCount >= _minTickCount;
+        tickCount--) {
+      final stepInfo =
+          _getStepsForTickCount(tickCount, axisUnitsHigh, axisUnitsLow);
+      assert(stepInfo != null);
+      final firstTick =
+          dataToAxisUnitConverter.invert(stepInfo.tickStart).toDouble();
+      final lastTick = dataToAxisUnitConverter
+          .invert(stepInfo.tickStart + stepInfo.stepSize * (tickCount - 1))
+          .toDouble();
+      final range = lastTick - firstTick;
+      // Calculate ticks if it is a better range or if preferred ticks have
+      // not been found yet.
+      if (range < selectedTicksRange || !foundPreferredTicks) {
+        final tickValues = _getTickValues(stepInfo, tickCount);
+
+        if (viewportExtensionEnabled) {
+          mutableScale.viewportDomain = NumericExtents(firstTick, lastTick);
+        }
+
+        // Create ticks from domain values.
+        final preferredTicks = createTicks(tickValues,
+            context: context,
+            graphicsFactory: graphicsFactory,
+            scale: viewportExtensionEnabled ? mutableScale : scale,
+            formatter: formatter,
+            formatterValueCache: formatterValueCache,
+            tickDrawStrategy: tickDrawStrategy,
+            stepSize: stepInfo.stepSize);
+
+        // Request collision check from draw strategy.
+        final collisionReport =
+            tickDrawStrategy.collides(preferredTicks, orientation);
+
+        // Don't choose colliding ticks unless it was our last resort
+        if (collisionReport.ticksCollide && tickCount > _minTickCount) {
           continue;
         }
-        final firstTick =
-            dataToAxisUnitConverter.invert(stepInfo.tickStart).toDouble();
-        final lastTick = dataToAxisUnitConverter
-            .invert(stepInfo.tickStart + stepInfo.stepSize * (tickCount - 1))
-            .toDouble();
-        final range = lastTick - firstTick;
-        // Calculate ticks if it is a better range or if preferred ticks have
-        // not been found yet.
-        if (range < selectedTicksRange || !foundPreferredTicks) {
-          final tickValues = _getTickValues(stepInfo, tickCount);
-
-          if (viewportExtensionEnabled) {
-            mutableScale.viewportDomain = NumericExtents(firstTick, lastTick);
-          }
-
-          // Create ticks from domain values.
-          final preferredTicks = createTicks(tickValues,
-              context: context,
-              graphicsFactory: graphicsFactory,
-              scale: viewportExtensionEnabled ? mutableScale : scale,
-              formatter: formatter,
-              formatterValueCache: formatterValueCache,
-              tickDrawStrategy: tickDrawStrategy,
-              stepSize: stepInfo.stepSize);
-
-          // Request collision check from draw strategy.
-          final collisionReport =
-              tickDrawStrategy.collides(preferredTicks, orientation);
-
-          // Don't choose colliding ticks unless it was our last resort
-          if (collisionReport.ticksCollide && tickCount > _minTickCount) {
-            continue;
-          }
-          // Only choose alternate ticks if preferred ticks is not found.
-          if (foundPreferredTicks && collisionReport.alternateTicksUsed) {
-            continue;
-          }
-
-          ticks = collisionReport.alternateTicksUsed
-              ? collisionReport.ticks
-              : preferredTicks;
-          foundPreferredTicks = !collisionReport.alternateTicksUsed;
-          selectedTicksRange = range;
-          // If viewport extended, save the viewport used.
-          viewportDomain = mutableScale?.viewportDomain ?? scale.viewportDomain;
+        // Only choose alternate ticks if preferred ticks is not found.
+        if (foundPreferredTicks && collisionReport.alternateTicksUsed) {
+          continue;
         }
+
+        ticks = collisionReport.alternateTicksUsed
+            ? collisionReport.ticks
+            : preferredTicks;
+        foundPreferredTicks = !collisionReport.alternateTicksUsed;
+        selectedTicksRange = range;
+        // If viewport extended, save the viewport used.
+        viewportDomain = mutableScale?.viewportDomain ?? scale.viewportDomain;
       }
-      _setPreviousTickCalculationParameters();
-      // If [viewportExtensionEnabled] and has changed, then set the scale's
-      // viewport to what was used to generate ticks. By only setting viewport
-      // when it has changed, we do not trigger the flag to recalculate scale.
-      if (viewportExtensionEnabled && scale.viewportDomain != viewportDomain) {
-        scale.viewportDomain = viewportDomain;
-      }
+    }
+    // If [viewportExtensionEnabled] and has changed, then set the scale's
+    // viewport to what was used to generate ticks. By only setting viewport
+    // when it has changed, we do not trigger the flag to recalculate scale.
+    if (viewportExtensionEnabled && scale.viewportDomain != viewportDomain) {
+      scale.viewportDomain = viewportDomain;
     }
 
     return ticks;
-  }
-
-  /// Checks whether the parameters that are used in determining the right set
-  /// of ticks changed from the last time we calculated ticks. If not we should
-  /// be able to use the cached ticks.
-  bool _hasTickParametersChanged() {
-    return _low != _prevLow ||
-        _high != _prevHigh ||
-        _rangeWidth != _prevRangeWidth ||
-        _minTickCount != _prevMinTickCount ||
-        _maxTickCount != _prevMaxTickCount ||
-        dataIsInWholeNumbers != _prevDataIsInWholeNumbers;
-  }
-
-  /// Save the last set of parameters used while determining ticks.
-  void _setPreviousTickCalculationParameters() {
-    _prevLow = _low;
-    _prevHigh = _high;
-    _prevRangeWidth = _rangeWidth;
-    _prevMinTickCount = _minTickCount;
-    _prevMaxTickCount = _maxTickCount;
-    _prevDataIsInWholeNumbers = dataIsInWholeNumbers;
   }
 
   /// Calculates the domain extents that this provider will cover based on the
