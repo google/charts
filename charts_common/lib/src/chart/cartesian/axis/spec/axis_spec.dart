@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:charts_common/common.dart';
 import 'package:meta/meta.dart' show immutable;
 
 import '../../../../common/color.dart' show Color;
@@ -136,7 +137,7 @@ class TextStyleSpec {
   final int fontSize;
   final double lineHeight;
   final Color color;
-  final String fontWeight;
+  final FontWeight fontWeight;
 
   const TextStyleSpec(
       {this.fontFamily,

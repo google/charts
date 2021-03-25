@@ -19,6 +19,8 @@
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_common/common.dart' as charts_common;
+
 import 'package:flutter/material.dart';
 
 class DonutAutoLabelChart extends StatelessWidget {
@@ -61,6 +63,18 @@ class DonutAutoLabelChart extends StatelessWidget {
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: data,
+        insideLabelStyleAccessorFn: (LinearSales sales, _) {
+          return new charts.TextStyleSpec(
+            color: charts.MaterialPalette.black,
+            fontWeight: charts.MaterialFontWeight.w900,
+          );
+        },
+        outsideLabelStyleAccessorFn: (LinearSales sales, _) {
+          return new charts.TextStyleSpec(
+            color: charts.MaterialPalette.yellow.shadeDefault.darker,
+            fontWeight: charts_common.FontWeight.bold,
+          );
+        },
         // Set a label accessor to control the text of the arc label.
         labelAccessorFn: (LinearSales row, _) => '${row.year}: ${row.sales}',
       )
@@ -107,6 +121,18 @@ class DonutAutoLabelChart extends StatelessWidget {
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: data,
+        insideLabelStyleAccessorFn: (LinearSales sales, _) {
+          return new charts.TextStyleSpec(
+            color: charts.MaterialPalette.black,
+            fontWeight: charts.MaterialFontWeight.w700,
+          );
+        },
+        outsideLabelStyleAccessorFn: (LinearSales sales, _) {
+          return new charts.TextStyleSpec(
+            color: charts.MaterialPalette.yellow.shadeDefault.darker,
+            fontWeight: charts_common.FontWeight.normal,
+          );
+        },
         // Set a label accessor to control the text of the arc label.
         labelAccessorFn: (LinearSales row, _) => '${row.year}: ${row.sales}',
       )

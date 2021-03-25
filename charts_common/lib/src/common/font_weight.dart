@@ -13,26 +13,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:ui' show hashValues;
-import 'package:charts_common/common.dart' as common
-    show Color, TextStyle, FontWeight;
+import 'package:meta/meta.dart' show immutable;
 
-class TextStyle implements common.TextStyle {
-  int fontSize;
-  String fontFamily;
-  common.Color color;
-  common.FontWeight fontWeight;
-  double lineHeight;
+@immutable
+class FontWeight {
+  const FontWeight._(this.index);
 
-  @override
-  bool operator ==(Object other) =>
-      other is TextStyle &&
-      fontSize == other.fontSize &&
-      fontFamily == other.fontFamily &&
-      color == other.color &&
-      fontWeight == other.fontWeight &&
-      lineHeight == other.lineHeight;
+  /// The encoded integer value of this font weight.
+  final int index;
+
+  /// corresponds to position of `Text.FontWeight.normal` in flutter
+  static const normal = FontWeight._(4);
+
+  /// corresponds to position of `Text.FontWeight.bold` in flutter
+  static const bold = FontWeight._(6);
 
   @override
-  int get hashCode => hashValues(fontSize, fontFamily, color, lineHeight);
+  bool operator ==(Object other) => other is FontWeight && index == other.index;
+
+  @override
+  int get hashCode => index;
+
+  int asFlutterFontWeightIndex() => this.index;
 }
