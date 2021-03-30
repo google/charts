@@ -39,36 +39,47 @@ class BaseTickDrawStrategyImpl<D> extends BaseTickDrawStrategy<D> {
       TickLabelAnchor labelAnchor,
       TickLabelJustification labelJustification,
       int labelOffsetFromAxisPx,
+      int labelCollisionOffsetFromAxisPx,
       int labelOffsetFromTickPx,
-      int minimumPaddingBetweenLabelsPx})
+      int labelCollisionOffsetFromTickPx,
+      int minimumPaddingBetweenLabelsPx,
+      int labelRotation,
+      int labelCollisionRotation})
       : super(chartContext, graphicsFactory,
             labelStyleSpec: labelStyleSpec,
             axisLineStyleSpec: axisLineStyleSpec,
             labelAnchor: labelAnchor,
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+            labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
-            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx);
+            labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
+            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+            labelRotation: labelRotation,
+            labelCollisionRotation: labelCollisionRotation);
 
   void draw(ChartCanvas canvas, Tick<D> tick,
       {AxisOrientation orientation,
       Rectangle<int> axisBounds,
       Rectangle<int> drawAreaBounds,
       bool isFirst,
-      bool isLast}) {}
+      bool isLast,
+      bool collision = false}) {}
 
   void drawLabel(ChartCanvas canvas, Tick<D> tick,
       {AxisOrientation orientation,
       Rectangle<int> axisBounds,
       Rectangle<int> drawAreaBounds,
       bool isFirst = false,
-      bool isLast = false}) {
+      bool isLast = false,
+      bool collision = false}) {
     super.drawLabel(canvas, tick,
         orientation: orientation,
         axisBounds: axisBounds,
         drawAreaBounds: drawAreaBounds,
         isFirst: isFirst,
-        isLast: isLast);
+        isLast: isLast,
+        collision: collision);
   }
 }
 
@@ -109,7 +120,8 @@ class MockChartCanvas extends Mock implements ChartCanvas {}
 Tick<String> createTick(String value, double locationPx,
     {double horizontalWidth,
     double verticalWidth,
-    TextDirection textDirection}) {
+    TextDirection textDirection,
+    bool collision = false}) {
   return Tick<String>(
       value: value,
       locationPx: locationPx,
@@ -454,7 +466,7 @@ void main() {
     });
 
     test('measureHorizontallyDrawnTicks', () {
-      final offset = drawStrategy.labelOffsetFromAxisPx;
+      final offset = drawStrategy.labelOffsetFromAxisPx(collision: false);
       final sizes = drawStrategy.measureHorizontallyDrawnTicks(ticks, 250, 500);
 
       // Text-Height * numLines + paddingBetweenLines + offset.
@@ -463,7 +475,7 @@ void main() {
     });
 
     test('measureVerticallyDrawnTicks', () {
-      final offset = drawStrategy.labelOffsetFromAxisPx;
+      final offset = drawStrategy.labelOffsetFromAxisPx(collision: false);
       final sizes = drawStrategy.measureVerticallyDrawnTicks(ticks, 250, 500);
 
       // Width of the longest line + offset.
@@ -471,8 +483,7 @@ void main() {
       expect(sizes.preferredHeight, 500);
     });
 
-    test('memeasureVerticallyDrawnTicks - negativate labelOffsetFromAxisPx',
-        () {
+    test('measureVerticallyDrawnTicks - negativate labelOffsetFromAxisPx', () {
       final offset = -500;
       drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory,
           labelOffsetFromAxisPx: offset);
@@ -513,7 +524,7 @@ void main() {
       expect(labelLine3.text, 'multiple lines!!!');
     });
 
-    test('Draw singleline label', () {
+    test('Draw single line label', () {
       final chartCanvas = MockChartCanvas();
       final axisBounds = Rectangle<int>(0, 0, 1000, 1000);
 
@@ -528,6 +539,132 @@ void main() {
           verify(chartCanvas.drawText(captureAny, 20, 980, rotation: 0))
               .captured
               .single;
+      expect(labelLine.text, 'A');
+    });
+  });
+
+  group('Draw Label with collision', () {
+    const collisionRotationDegrees = 45;
+    const collisionRotationRadians = 0.7853981633974483;
+
+    void setUpLabel(String text, {double width}) =>
+        when(graphicsFactory.createTextElement(text))
+            .thenReturn(FakeTextElement(
+          text,
+          TextDirection.ltr,
+          width,
+          15.0,
+        ));
+
+    BaseTickDrawStrategyImpl drawStrategy;
+    List<Tick> ticks;
+
+    setUp(() {
+      drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory,
+          labelCollisionRotation: collisionRotationDegrees);
+
+      ticks = [
+        createTick('This label \nspans \n multiple lines!!!', 0.0,
+            horizontalWidth: 100.0,
+            verticalWidth: 15.0,
+            collision: true), // 10.0 - 20.0
+        createTick('A', 20.0,
+            horizontalWidth: 10.0,
+            verticalWidth: 15.0,
+            collision: true), // 30.0 - 40.0
+      ];
+
+      setUpLabel('This label', width: 30.0);
+      setUpLabel('spans', width: 10.0);
+      setUpLabel('multiple lines!!!', width: 60.0);
+      setUpLabel('A', width: 10.0);
+    });
+
+    test('measureHorizontallyDrawnTicks', () {
+      final offset = drawStrategy.labelOffsetFromAxisPx(collision: true);
+      final sizes = drawStrategy.measureHorizontallyDrawnTicks(ticks, 250, 500,
+          collision: true);
+
+      // Text-Height * numLines + paddingBetweenLines + offset.
+      var baseHeight = (15 * 3 + 4);
+      var heightAdjustedForAngle = drawStrategy.calculateHeightForRotatedLabel(
+          collisionRotationDegrees,
+          baseHeight.toDouble(),
+          60 /* width of longest label */);
+
+      expect(sizes.preferredHeight, (heightAdjustedForAngle + offset).ceil());
+      expect(sizes.preferredWidth, 250);
+    });
+
+    test('measureVerticallyDrawnTicks', () {
+      final offset = drawStrategy.labelOffsetFromAxisPx(collision: true);
+      final sizes = drawStrategy.measureVerticallyDrawnTicks(ticks, 250, 500,
+          collision: true);
+
+      // Width of the longest line + offset.
+      expect(sizes.preferredWidth, 60.0 + offset);
+      expect(sizes.preferredHeight, 500);
+    });
+
+    test('measureVerticallyDrawnTicks - negativate labelOffsetFromAxisPx', () {
+      final offset = -500;
+      drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory,
+          labelCollisionRotation: 45, labelCollisionOffsetFromAxisPx: offset);
+      final sizes = drawStrategy.measureVerticallyDrawnTicks(ticks, 250, 500,
+          collision: true);
+
+      expect(sizes.preferredWidth, 0);
+      expect(sizes.preferredHeight, 500);
+    });
+
+    test('Draw multiline label', () {
+      final chartCanvas = MockChartCanvas();
+      final axisBounds = Rectangle<int>(0, 0, 1000, 1000);
+
+      drawStrategy.drawLabel(
+        chartCanvas,
+        ticks.first,
+        orientation: AxisOrientation.bottom,
+        axisBounds: axisBounds,
+        collision: true,
+      );
+
+      // The y-coordinate should increase by the line's height + padding.
+      final labelLine1 = verify(chartCanvas.drawText(captureAny, -5, 5,
+              rotation: collisionRotationRadians))
+          .captured
+          .single;
+      expect(labelLine1.text, 'This label');
+
+      final labelLine2 = verify(chartCanvas.drawText(captureAny, -5, 22,
+              rotation: collisionRotationRadians))
+          .captured
+          .single;
+      expect(labelLine2.text, 'spans');
+
+      final labelLine3 = verify(chartCanvas.drawText(captureAny, -5, 39,
+              rotation: collisionRotationRadians))
+          .captured
+          .single;
+      expect(labelLine3.text, 'multiple lines!!!');
+    });
+
+    test('Draw single line label', () {
+      final chartCanvas = MockChartCanvas();
+      final axisBounds = Rectangle<int>(0, 0, 1000, 1000);
+
+      drawStrategy.drawLabel(
+        chartCanvas,
+        ticks[1],
+        orientation: AxisOrientation.top,
+        axisBounds: axisBounds,
+        collision: true,
+      );
+
+      final labelLine = verify(chartCanvas.drawText(captureAny, 15, 980,
+              rotation: collisionRotationRadians))
+          .captured
+          .single;
       expect(labelLine.text, 'A');
     });
   });

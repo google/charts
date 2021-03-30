@@ -40,18 +40,24 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
     TickLabelJustification labelJustification,
     int tickLengthPx,
     int labelOffsetFromAxisPx,
+    int labelCollisionOffsetFromAxisPx,
     int labelOffsetFromTickPx,
+    int labelCollisionOffsetFromTickPx,
     int minimumPaddingBetweenLabelsPx,
     int labelRotation,
+    int labelCollisionRotation,
   }) : super(
             labelStyle: labelStyle,
             lineStyle: lineStyle,
             labelAnchor: labelAnchor,
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+            labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
+            labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
             labelRotation: labelRotation,
+            labelCollisionRotation: labelCollisionRotation,
             tickLengthPx: tickLengthPx,
             axisLineStyle: axisLineStyle);
 
@@ -66,9 +72,12 @@ class GridlineRendererSpec<D> extends SmallTickRendererSpec<D> {
           labelAnchor: labelAnchor,
           labelJustification: labelJustification,
           labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+          labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
           labelOffsetFromTickPx: labelOffsetFromTickPx,
+          labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
           minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-          labelRotation: labelRotation);
+          labelRotation: labelRotation,
+          labelCollisionRotation: labelCollisionRotation);
 
   @override
   // ignore: hash_and_equals
@@ -95,18 +104,24 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
     TickLabelAnchor labelAnchor,
     TickLabelJustification labelJustification,
     int labelOffsetFromAxisPx,
+    int labelCollisionOffsetFromAxisPx,
     int labelOffsetFromTickPx,
+    int labelCollisionOffsetFromTickPx,
     int minimumPaddingBetweenLabelsPx,
     int labelRotation,
+    int labelCollisionRotation,
   }) : super(chartContext, graphicsFactory,
             labelStyleSpec: labelStyleSpec,
             axisLineStyleSpec: axisLineStyleSpec ?? lineStyleSpec,
             labelAnchor: labelAnchor,
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+            labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
+            labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-            labelRotation: labelRotation) {
+            labelRotation: labelRotation,
+            labelCollisionRotation: labelCollisionRotation) {
     lineStyle =
         StyleFactory.style.createGridlineStyle(graphicsFactory, lineStyleSpec);
 
@@ -119,7 +134,8 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
       @required Rectangle<int> axisBounds,
       @required Rectangle<int> drawAreaBounds,
       @required bool isFirst,
-      @required bool isLast}) {
+      @required bool isLast,
+      bool collision = false}) {
     Point<num> lineStart;
     Point<num> lineEnd;
     switch (orientation) {
@@ -135,8 +151,8 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
         break;
       case AxisOrientation.right:
         final y = tick.locationPx;
-        if (tickLabelAnchor == TickLabelAnchor.after ||
-            tickLabelAnchor == TickLabelAnchor.before) {
+        if (tickLabelAnchor(collision: collision) == TickLabelAnchor.after ||
+            tickLabelAnchor(collision: collision) == TickLabelAnchor.before) {
           lineStart = Point(axisBounds.right, y);
         } else {
           lineStart = Point(axisBounds.left + tickLength, y);
@@ -146,8 +162,8 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
       case AxisOrientation.left:
         final y = tick.locationPx;
 
-        if (tickLabelAnchor == TickLabelAnchor.after ||
-            tickLabelAnchor == TickLabelAnchor.before) {
+        if (tickLabelAnchor(collision: collision) == TickLabelAnchor.after ||
+            tickLabelAnchor(collision: collision) == TickLabelAnchor.before) {
           lineStart = Point(axisBounds.left, y);
         } else {
           lineStart = Point(axisBounds.right - tickLength, y);
@@ -169,6 +185,7 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
         axisBounds: axisBounds,
         drawAreaBounds: drawAreaBounds,
         isFirst: isFirst,
-        isLast: isLast);
+        isLast: isLast,
+        collision: collision);
   }
 }

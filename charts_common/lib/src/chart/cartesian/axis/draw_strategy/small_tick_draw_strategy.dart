@@ -34,41 +34,53 @@ class SmallTickRendererSpec<D> extends BaseRenderSpec<D> {
   final LineStyleSpec lineStyle;
   final int tickLengthPx;
 
-  const SmallTickRendererSpec(
-      {TextStyleSpec labelStyle,
-      this.lineStyle,
-      LineStyleSpec axisLineStyle,
-      TickLabelAnchor labelAnchor,
-      TickLabelJustification labelJustification,
-      int labelOffsetFromAxisPx,
-      int labelOffsetFromTickPx,
-      this.tickLengthPx,
-      int minimumPaddingBetweenLabelsPx,
-      int labelRotation})
-      : super(
+  const SmallTickRendererSpec({
+    TextStyleSpec labelStyle,
+    this.lineStyle,
+    LineStyleSpec axisLineStyle,
+    TickLabelAnchor labelAnchor,
+    TickLabelJustification labelJustification,
+    int labelOffsetFromAxisPx,
+    int labelCollisionOffsetFromAxisPx,
+    int labelOffsetFromTickPx,
+    int labelCollisionOffsetFromTickPx,
+    this.tickLengthPx,
+    int minimumPaddingBetweenLabelsPx,
+    int labelRotation,
+    int labelCollisionRotation,
+  }) : super(
             labelStyle: labelStyle,
             labelAnchor: labelAnchor,
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+            labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
+            labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
             labelRotation: labelRotation,
+            labelCollisionRotation: labelCollisionRotation,
             axisLineStyle: axisLineStyle);
 
   @override
   TickDrawStrategy<D> createDrawStrategy(
           ChartContext context, GraphicsFactory graphicsFactory) =>
-      SmallTickDrawStrategy<D>(context, graphicsFactory,
-          tickLengthPx: tickLengthPx,
-          lineStyleSpec: lineStyle,
-          labelStyleSpec: labelStyle,
-          axisLineStyleSpec: axisLineStyle,
-          labelAnchor: labelAnchor,
-          labelJustification: labelJustification,
-          labelOffsetFromAxisPx: labelOffsetFromAxisPx,
-          labelOffsetFromTickPx: labelOffsetFromTickPx,
-          minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-          labelRotation: labelRotation);
+      SmallTickDrawStrategy<D>(
+        context,
+        graphicsFactory,
+        tickLengthPx: tickLengthPx,
+        lineStyleSpec: lineStyle,
+        labelStyleSpec: labelStyle,
+        axisLineStyleSpec: axisLineStyle,
+        labelAnchor: labelAnchor,
+        labelJustification: labelJustification,
+        labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+        labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
+        labelOffsetFromTickPx: labelOffsetFromTickPx,
+        labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
+        minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+        labelRotation: labelRotation,
+        labelCollisionRotation: labelCollisionRotation,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -102,18 +114,24 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
       TickLabelAnchor labelAnchor,
       TickLabelJustification labelJustification,
       int labelOffsetFromAxisPx,
+      int labelCollisionOffsetFromAxisPx,
       int labelOffsetFromTickPx,
+      int labelCollisionOffsetFromTickPx,
       int minimumPaddingBetweenLabelsPx,
-      int labelRotation})
+      int labelRotation,
+      int labelCollisionRotation})
       : super(chartContext, graphicsFactory,
             labelStyleSpec: labelStyleSpec,
             axisLineStyleSpec: axisLineStyleSpec ?? lineStyleSpec,
             labelAnchor: labelAnchor,
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+            labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
+            labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-            labelRotation: labelRotation) {
+            labelRotation: labelRotation,
+            labelCollisionRotation: labelCollisionRotation) {
     tickLength = tickLengthPx ?? StyleFactory.style.tickLength;
     lineStyle =
         StyleFactory.style.createTickLineStyle(graphicsFactory, lineStyleSpec);
@@ -125,7 +143,8 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
       @required Rectangle<int> axisBounds,
       @required Rectangle<int> drawAreaBounds,
       @required bool isFirst,
-      @required bool isLast}) {
+      @required bool isLast,
+      bool collision = false}) {
     var tickPositions = calculateTickPositions(
       tick,
       orientation,
@@ -149,7 +168,8 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
         axisBounds: axisBounds,
         drawAreaBounds: drawAreaBounds,
         isFirst: isFirst,
-        isLast: isLast);
+        isLast: isLast,
+        collision: collision);
   }
 
   List<Point<num>> calculateTickPositions(

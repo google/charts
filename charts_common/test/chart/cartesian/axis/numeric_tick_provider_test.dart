@@ -68,7 +68,8 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
       Rectangle<int> axisBounds,
       Rectangle<int> drawAreaBounds,
       bool isFirst,
-      bool isLast}) {}
+      bool isLast,
+      bool collision = false}) {}
 }
 
 /// A fake [GraphicsFactory] that returns [MockTextStyle] and [MockTextElement].

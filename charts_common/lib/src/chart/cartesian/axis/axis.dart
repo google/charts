@@ -155,6 +155,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// that the domain axis line appears on top of any measure axis grid lines.
   int layoutPaintOrder = LayoutViewPaintOrder.measureAxis;
 
+  /// If true, a collision has occurred between ticks on this axis.
+  bool hasTickCollision = false;
+
   Axis({this.tickProvider, TickFormatter<D> tickFormatter, this.scale})
       : _defaultScale = scale,
         _defaultTickProvider = tickProvider,
@@ -292,6 +295,9 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
         tickDrawStrategy: tickDrawStrategy,
         orientation: axisOrientation,
         viewportExtensionEnabled: autoViewport);
+
+    hasTickCollision =
+        tickDrawStrategy.collides(_providedTicks, axisOrientation).ticksCollide;
   }
 
   /// Updates the ticks that are actually used for drawing.
@@ -472,7 +478,8 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     _updateProvidedTicks();
 
     return tickDrawStrategy.measureVerticallyDrawnTicks(
-        _providedTicks, maxWidth, maxHeight);
+        _providedTicks, maxWidth, maxHeight,
+        collision: hasTickCollision);
   }
 
   ViewMeasuredSizes _measureHorizontalAxis(int maxWidth, int maxHeight) {
@@ -480,7 +487,8 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     _updateProvidedTicks();
 
     return tickDrawStrategy.measureHorizontallyDrawnTicks(
-        _providedTicks, maxWidth, maxHeight);
+        _providedTicks, maxWidth, maxHeight,
+        collision: hasTickCollision);
   }
 
   /// Layout this component.
@@ -539,6 +547,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
           canvas, animatedTick..setCurrentTick(animationPercent),
           orientation: axisOrientation,
           axisBounds: _componentBounds,
+          collision: hasTickCollision,
           drawAreaBounds: _drawAreaBounds,
           isFirst: i == 0,
           isLast: i == _axisTicks.length - 1);

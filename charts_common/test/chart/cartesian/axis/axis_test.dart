@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
+import 'package:charts_common/src/chart/cartesian/axis/collision_report.dart';
 import 'package:charts_common/src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart';
 import 'package:charts_common/src/chart/cartesian/axis/scale.dart';
 import 'package:charts_common/src/chart/cartesian/axis/spec/tick_spec.dart';
@@ -43,8 +44,12 @@ void main() {
       tickProvider: _createProvider([1, 10]),
     );
 
+    var drawStrategy = MockTickDrawStrategy();
+    when(drawStrategy.collides(any, any)).thenReturn(CollisionReport<num>(
+        ticks: [], ticksCollide: false, alternateTicksUsed: false));
+
     var tester = AxisTester(axis);
-    axis.tickDrawStrategy = MockTickDrawStrategy();
+    axis.tickDrawStrategy = drawStrategy;
     axis.graphicsFactory = MockGraphicsFactory();
     tester.scale.range = ScaleOutputExtent(0, 300);
 

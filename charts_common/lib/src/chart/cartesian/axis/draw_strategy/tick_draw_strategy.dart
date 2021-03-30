@@ -36,23 +36,28 @@ abstract class TickDrawStrategy<D> {
 
   /// Returns measurement of ticks drawn vertically.
   ViewMeasuredSizes measureVerticallyDrawnTicks(
-      List<Tick<D>> ticks, int maxWidth, int maxHeight);
+      List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      {bool collision = false});
 
   /// Returns measurement of ticks drawn horizontally.
   ViewMeasuredSizes measureHorizontallyDrawnTicks(
-      List<Tick<D>> ticks, int maxWidth, int maxHeight);
+      List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      {bool collision = false});
 
   /// Draws tick onto [ChartCanvas].
   ///
   /// [orientation] the orientation of the axis that this [tick] belongs to.
   /// [axisBounds] the bounds of the axis.
   /// [drawAreaBounds] the bounds of the chart draw area adjacent to the axis.
+  /// [collision] whether or not this [tick] should be drawn in such a way to
+  /// avoid colliding into other ticks.
   void draw(ChartCanvas canvas, Tick<D> tick,
       {@required AxisOrientation orientation,
       @required Rectangle<int> axisBounds,
       @required Rectangle<int> drawAreaBounds,
       @required bool isFirst,
-      @required bool isLast});
+      @required bool isLast,
+      bool collision = false});
 
   void drawAxisLine(ChartCanvas canvas, AxisOrientation orientation,
       Rectangle<int> axisBounds);

@@ -16,6 +16,8 @@
 import 'dart:math' show Rectangle;
 
 import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
+import 'package:charts_common/src/chart/cartesian/axis/collision_report.dart';
+import 'package:charts_common/src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
 import 'package:charts_common/src/chart/cartesian/axis/linear/linear_scale.dart';
@@ -68,6 +70,8 @@ class ConcreteNumericAxis extends Axis<num> {
 
 class MockTickProvider extends Mock implements NumericTickProvider {}
 
+class MockTickDrawStrategy extends Mock implements TickDrawStrategy<num> {}
+
 void main() {
   Rectangle<int> drawBounds;
   Rectangle<int> domainAxisBounds;
@@ -109,9 +113,15 @@ void main() {
   void _drawSeriesList(
       ConcreteChart chart, List<Series<MyRow, int>> seriesList) {
     _chart.domainAxis.autoViewport = true;
+    var drawStrategy = MockTickDrawStrategy();
+    when(drawStrategy.collides(any, any)).thenReturn(CollisionReport<num>(
+        ticks: [], ticksCollide: false, alternateTicksUsed: false));
+
+    _chart.domainAxis.tickDrawStrategy = drawStrategy;
     _chart.domainAxis.resetDomains();
 
     _chart.getMeasureAxis().autoViewport = true;
+    _chart.getMeasureAxis().tickDrawStrategy = drawStrategy;
     _chart.getMeasureAxis().resetDomains();
 
     _chart.draw(seriesList);

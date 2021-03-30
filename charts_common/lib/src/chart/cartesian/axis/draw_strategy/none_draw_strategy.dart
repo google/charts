@@ -121,17 +121,20 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
       @required Rectangle<int> axisBounds,
       @required Rectangle<int> drawAreaBounds,
       @required bool isFirst,
-      @required bool isLast}) {}
+      @required bool isLast,
+      bool collision = false}) {}
 
   @override
   ViewMeasuredSizes measureHorizontallyDrawnTicks(
-      List<Tick<D>> ticks, int maxWidth, int maxHeight) {
+      List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      {bool collision = false}) {
     return ViewMeasuredSizes(preferredWidth: 0, preferredHeight: 0);
   }
 
   @override
   ViewMeasuredSizes measureVerticallyDrawnTicks(
-      List<Tick<D>> ticks, int maxWidth, int maxHeight) {
+      List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      {bool collision = false}) {
     return ViewMeasuredSizes(preferredWidth: 0, preferredHeight: 0);
   }
 }

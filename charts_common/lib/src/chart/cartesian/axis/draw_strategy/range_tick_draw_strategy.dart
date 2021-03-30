@@ -68,7 +68,9 @@ class RangeTickRendererSpec<D> extends SmallTickRendererSpec<D> {
       TickLabelAnchor labelAnchor,
       TickLabelJustification labelJustification,
       int labelOffsetFromAxisPx,
+      int labelCollisionOffsetFromAxisPx,
       int labelOffsetFromTickPx,
+      int labelCollisionOffsetFromTickPx,
       this.rangeShadeHeightPx,
       this.rangeShadeOffsetFromAxisPx,
       this.rangeShadeStyle,
@@ -77,7 +79,8 @@ class RangeTickRendererSpec<D> extends SmallTickRendererSpec<D> {
       this.rangeLabelStyle,
       int tickLengthPx,
       int minimumPaddingBetweenLabelsPx,
-      int labelRotation})
+      int labelRotation,
+      int labelCollisionRotation})
       : defaultLabelStyleSpec =
             TextStyleSpec(fontSize: 9, color: StyleFactory.style.tickColor),
         super(
@@ -87,11 +90,14 @@ class RangeTickRendererSpec<D> extends SmallTickRendererSpec<D> {
           labelJustification: labelJustification,
           labelOffsetFromAxisPx:
               labelOffsetFromAxisPx ?? defaultLabelOffsetFromAxis,
+          labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
           labelOffsetFromTickPx:
               labelOffsetFromTickPx ?? defaultLabelOffsetFromTick,
+          labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
           tickLengthPx: tickLengthPx,
           minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
           labelRotation: labelRotation,
+          labelCollisionRotation: labelCollisionRotation,
         );
 
   @override
@@ -111,9 +117,12 @@ class RangeTickRendererSpec<D> extends SmallTickRendererSpec<D> {
           labelAnchor: labelAnchor,
           labelJustification: labelJustification,
           labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+          labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
           labelOffsetFromTickPx: labelOffsetFromTickPx,
+          labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
           minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-          labelRotation: labelRotation);
+          labelRotation: labelRotation,
+          labelCollisionRotation: labelCollisionRotation);
 
   @override
   // ignore: hash_and_equals
@@ -146,10 +155,13 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
       LineStyleSpec axisLineStyleSpec,
       TickLabelAnchor labelAnchor,
       int labelOffsetFromAxisPx,
+      int labelCollisionOffsetFromAxisPx,
       int labelOffsetFromTickPx,
+      int labelCollisionOffsetFromTickPx,
       TickLabelJustification labelJustification,
       int minimumPaddingBetweenLabelsPx,
-      int labelRotation})
+      int labelRotation,
+      int labelCollisionRotation})
       : super(chartContext, graphicsFactory,
             tickLengthPx: tickLength,
             axisLineStyleSpec: axisLineStyleSpec,
@@ -158,9 +170,12 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
             labelAnchor: labelAnchor ?? TickLabelAnchor.after,
             labelJustification: labelJustification,
             labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+            labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
             labelOffsetFromTickPx: labelOffsetFromTickPx,
+            labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-            labelRotation: labelRotation) {
+            labelRotation: labelRotation,
+            labelCollisionRotation: labelCollisionRotation) {
     rangeTickOffsetPx = rangeTickOffset ?? rangeTickOffsetPx;
     rangeTickLengthPx = rangeTickLength ?? rangeTickLengthPx;
     rangeShadeHeightPx = rangeShadeHeight ?? rangeShadeHeightPx;
@@ -192,7 +207,8 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
       @required Rectangle<int> axisBounds,
       @required Rectangle<int> drawAreaBounds,
       @required bool isFirst,
-      @required bool isLast}) {
+      @required bool isLast,
+      bool collision = false}) {
     if (tick is RangeAxisTicks<D>) {
       drawRangeShadeAndRangeLabel(tick, canvas, orientation, axisBounds,
           drawAreaBounds, isFirst, isLast);
@@ -202,13 +218,15 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
           axisBounds: axisBounds,
           drawAreaBounds: drawAreaBounds,
           isFirst: isFirst,
-          isLast: isLast);
+          isLast: isLast,
+          collision: collision);
     }
   }
 
   @override
   ViewMeasuredSizes measureVerticallyDrawnTicks(
-      List<Tick<D>> ticks, int maxWidth, int maxHeight) {
+      List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      {bool collision = false}) {
     // TODO: Add spacing to account for the distance between the
     // text and the axis baseline (even if it isn't drawn).
 
@@ -221,21 +239,21 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
             max(
                 prevMax,
                 calculateWidthForRotatedLabel(
-                      labelRotation,
+                      labelRotation(collision: collision),
                       getLabelHeight(labelElements),
                       getLabelWidth(labelElements),
                     ) +
-                    labelOffsetFromAxisPx),
-            labelOffsetFromAxisPx + rangeShadeHeightPx);
+                    labelOffsetFromAxisPx(collision: collision)),
+            labelOffsetFromAxisPx(collision: collision) + rangeShadeHeightPx);
       } else {
         return max(
             prevMax,
             calculateWidthForRotatedLabel(
-                  labelRotation,
+                  labelRotation(collision: collision),
                   getLabelHeight(labelElements),
                   getLabelWidth(labelElements),
                 ) +
-                labelOffsetFromAxisPx);
+                labelOffsetFromAxisPx(collision: collision));
       }
     }).round();
 
@@ -245,7 +263,8 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
 
   @override
   ViewMeasuredSizes measureHorizontallyDrawnTicks(
-      List<Tick<D>> ticks, int maxWidth, int maxHeight) {
+      List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      {bool collision = false}) {
     var maxVerticalSliceWidth = ticks.fold(0.0, (num prevMax, tick) {
       final labelElements = splitLabel(tick.textElement);
 
@@ -256,7 +275,7 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
             max(
               prevMax,
               calculateHeightForRotatedLabel(
-                    labelRotation,
+                    labelRotation(collision: collision),
                     getLabelHeight(labelElements),
                     getLabelWidth(labelElements),
                   ) +
@@ -267,11 +286,11 @@ class RangeTickDrawStrategy<D> extends SmallTickDrawStrategy<D> {
         return max(
                 prevMax,
                 calculateHeightForRotatedLabel(
-                  labelRotation,
+                  labelRotation(collision: collision),
                   getLabelHeight(labelElements),
                   getLabelWidth(labelElements),
                 )) +
-            labelOffsetFromAxisPx;
+            labelOffsetFromAxisPx(collision: collision);
       }
     }).round();
 
