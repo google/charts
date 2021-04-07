@@ -19,8 +19,8 @@ import 'dart:math' show Rectangle, Point;
 import 'package:meta/meta.dart' show required, visibleForTesting;
 
 import '../../common/color.dart' show Color;
-import '../../common/math.dart' show clamp;
 import '../../data/series.dart' show AttributeKey;
+import '../../common/math.dart';
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, OrdinalAxis, domainAxisKey, measureAxisKey;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
@@ -957,7 +957,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(area.positionExtent),
                 fill: area.areaColor ?? area.color,
-                points: area.points);
+                points: area.points.toPoints());
           }
         });
       }
@@ -975,7 +975,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(bound.positionExtent),
                 fill: bound.areaColor ?? bound.color,
-                points: bound.points);
+                points: bound.points.toPoints());
           }
         });
       }
@@ -993,7 +993,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             canvas.drawLine(
                 clipBounds: _getClipBoundsForExtent(line.positionExtent),
                 dashPattern: line.dashPattern,
-                points: line.points,
+                points: line.points.toPoints(),
                 stroke: line.color,
                 strokeWidthPx: line.strokeWidthPx,
                 roundEndCaps: line.roundEndCaps);
@@ -1095,7 +1095,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (p.y != null) {
             measureDistance = (p.y - chartPoint.y).abs();
             domainDistance = (p.x - chartPoint.x).abs();
-            relativeDistance = chartPoint.distanceTo(p);
+            relativeDistance = chartPoint.distanceTo(p.toPoint());
           } else {
             // Null measures have no real position, so make them the farthest
             // away by real distance.
@@ -1127,7 +1127,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       // Found a point, add it to the list.
       if (nearestPoint != null) {
         nearest.add(DatumDetails<D>(
-            chartPosition: Point<double>(nearestPoint.x, nearestPoint.y),
+            chartPosition: NullablePoint(nearestPoint.x, nearestPoint.y),
             datum: nearestPoint.datum,
             domain: nearestPoint.domain,
             series: nearestPoint.series,
@@ -1153,13 +1153,13 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
     final point = _getPoint(seriesDatum.datum, details.domain, series,
         domainAxis, details.measure, details.measureOffset, measureAxis);
-    final chartPosition = Point<double>(point.x, point.y);
+    final chartPosition = NullablePoint(point.x, point.y);
 
     return DatumDetails.from(details, chartPosition: chartPosition);
   }
 }
 
-class _DatumPoint<D> extends Point<double> {
+class _DatumPoint<D> extends NullablePoint {
   final dynamic datum;
   final D domain;
   final ImmutableSeries<D> series;

@@ -25,6 +25,7 @@ import 'package:charts_common/src/chart/common/series_datum.dart';
 import 'package:charts_common/src/chart/common/series_renderer.dart';
 import 'package:charts_common/src/chart/common/selection_model/selection_model.dart';
 import 'package:charts_common/src/common/material_palette.dart';
+import 'package:charts_common/src/common/math.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -90,7 +91,7 @@ class MockSeriesRenderer<D> extends BaseSeriesRenderer<D> {
   @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
-    return DatumDetails.from(details, chartPosition: Point<double>(0.0, 0.0));
+    return DatumDetails.from(details, chartPosition: NullablePoint(0.0, 0.0));
   }
 }
 

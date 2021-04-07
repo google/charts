@@ -19,6 +19,7 @@ import 'dart:math' show atan2, cos, max, sin, pi, Point, Rectangle;
 import 'package:meta/meta.dart' show required;
 
 import '../../common/color.dart' show Color;
+import '../../common/math.dart' show NullablePoint;
 import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../data/series.dart' show AttributeKey;
 import '../common/base_chart.dart' show BaseChart;
@@ -435,7 +436,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         measure: measure,
         series: series,
         color: color,
-        chartPosition: chartPosition);
+        chartPosition: NullablePoint.from(chartPosition));
   }
 
   /// Returns the chart position for a given datum by series ID and domain
@@ -543,7 +544,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     final chartPosition =
         _getChartPosition(details.series.id, details.domain.toString());
 
-    return DatumDetails.from(details, chartPosition: chartPosition);
+    return DatumDetails.from(details,
+        chartPosition: NullablePoint.from(chartPosition));
   }
 
   /// Assigns colors to series that are missing their colorFn.

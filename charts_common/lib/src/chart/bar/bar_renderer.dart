@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show max, min, Point, Rectangle;
+import 'dart:math' show max, min, Rectangle;
 
 import 'package:meta/meta.dart' show protected, required;
 
 import '../../common/color.dart' show Color;
+import '../../common/math.dart' show NullablePoint;
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
 import '../common/canvas_shapes.dart' show CanvasBarStack, CanvasRect;
@@ -68,7 +69,7 @@ class BarRenderer<D>
         super(
             config: config,
             rendererId: rendererId,
-            layoutPaintOrder: config.layoutPaintOrder);
+            layoutPaintOrder: config.layoutPaintOrder ?? 0);
 
   @override
   void configureSeries(List<MutableSeries<D>> seriesList) {
@@ -104,13 +105,13 @@ class BarRenderer<D>
         allBarGroupWeights,
         numBarGroups);
 
-    Point<double> chartPosition;
+    NullablePoint chartPosition;
 
     if (renderingVertically) {
-      chartPosition = Point<double>(
+      chartPosition = NullablePoint(
           (bounds.left + (bounds.width / 2)).toDouble(), bounds.top.toDouble());
     } else {
-      chartPosition = Point<double>(
+      chartPosition = NullablePoint(
           isRtl ? bounds.left.toDouble() : bounds.right.toDouble(),
           (bounds.top + (bounds.height / 2)).toDouble());
     }

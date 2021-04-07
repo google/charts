@@ -22,6 +22,7 @@ import 'package:charts_common/src/chart/common/datum_details.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
 import 'package:charts_common/src/chart/common/series_datum.dart';
 import 'package:charts_common/src/chart/common/series_renderer.dart';
+import 'package:charts_common/src/common/math.dart' show NullablePoint;
 import 'package:charts_common/src/common/style/style_factory.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:charts_common/src/data/tree.dart';
@@ -233,7 +234,8 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
     final chartPosition = Point<double>(
         (isRtl ? bounds.left : bounds.right).toDouble(),
         (bounds.top + (bounds.height / 2)).toDouble());
-    return DatumDetails.from(details, chartPosition: chartPosition);
+    return DatumDetails.from(details,
+        chartPosition: NullablePoint.from(chartPosition));
   }
 
   /// Assigns missing colors in case when color accessor functions are not set.

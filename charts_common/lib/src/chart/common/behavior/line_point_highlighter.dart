@@ -20,6 +20,7 @@ import 'package:meta/meta.dart';
 
 import '../../../common/color.dart' show Color;
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
+import '../../../common/math.dart' show NullablePoint;
 import '../../../common/style/style_factory.dart' show StyleFactory;
 import '../../../common/symbol_renderer.dart'
     show CircleSymbolRenderer, SymbolRenderer;
@@ -366,9 +367,10 @@ class _LinePointLayoutView<D> extends LayoutView {
       if (pointElement.point.x == null || pointElement.point.y == null) {
         continue;
       }
+      final point = pointElement.point.toPoint();
 
-      final roundedX = pointElement.point.x.round();
-      final roundedY = pointElement.point.y.round();
+      final roundedX = point.x.round();
+      final roundedY = point.y.round();
 
       // Get the Y value closest to the top of the chart for this X position.
       if (endPointPerValueVertical[roundedX] == null) {
@@ -421,9 +423,10 @@ class _LinePointLayoutView<D> extends LayoutView {
       if (pointElement.point.x == null || pointElement.point.y == null) {
         continue;
       }
+      final point = pointElement.point.toPoint();
 
-      final roundedX = pointElement.point.x.round();
-      final roundedY = pointElement.point.y.round();
+      final roundedX = point.x.round();
+      final roundedY = point.y.round();
 
       // Draw the horizontal follow line.
       if (shouldShowHorizontalFollowLine &&
@@ -446,8 +449,8 @@ class _LinePointLayoutView<D> extends LayoutView {
 
         canvas.drawLine(
             points: [
-              Point<num>(leftBound, pointElement.point.y),
-              Point<num>(rightBound, pointElement.point.y),
+              Point<num>(leftBound, point.y),
+              Point<num>(rightBound, point.y),
             ],
             stroke: StyleFactory.style.linePointHighlighterColor,
             strokeWidthPx: 1.0,
@@ -470,9 +473,8 @@ class _LinePointLayoutView<D> extends LayoutView {
 
         canvas.drawLine(
             points: [
-              Point<num>(pointElement.point.x, topBound),
-              Point<num>(
-                  pointElement.point.x, drawBounds.top + drawBounds.height),
+              Point<num>(point.x, topBound),
+              Point<num>(point.x, drawBounds.top + drawBounds.height),
             ],
             stroke: StyleFactory.style.linePointHighlighterColor,
             strokeWidthPx: 1.0,
@@ -496,10 +498,11 @@ class _LinePointLayoutView<D> extends LayoutView {
       if (pointElement.point.x == null || pointElement.point.y == null) {
         continue;
       }
+      final point = pointElement.point.toPoint();
 
       final bounds = Rectangle<double>(
-          pointElement.point.x - pointElement.radiusPx,
-          pointElement.point.y - pointElement.radiusPx,
+          point.x - pointElement.radiusPx,
+          point.y - pointElement.radiusPx,
           pointElement.radiusPx * 2,
           pointElement.radiusPx * 2);
 
@@ -519,7 +522,7 @@ class _LinePointLayoutView<D> extends LayoutView {
   bool get isSeriesRenderer => false;
 }
 
-class _DatumPoint<D> extends Point<double> {
+class _DatumPoint<D> extends NullablePoint {
   final dynamic datum;
   final D domain;
   final ImmutableSeries<D> series;

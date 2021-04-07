@@ -13,9 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Point;
-
 import '../../common/color.dart' show Color;
+import '../../common/math.dart' show NullablePoint;
 import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import 'chart_canvas.dart' show FillPatternType;
 import 'processed_series.dart' show ImmutableSeries;
@@ -96,15 +95,15 @@ class DatumDetails<D> {
 
   /// The chart position of the (domain, measure) for the [datum] from a
   /// renderer.
-  final Point<double> chartPosition;
+  final NullablePoint chartPosition;
 
   /// The chart position of the (domainLowerBound, measureLowerBound) for the
   /// [datum] from a renderer.
-  final Point<double> chartPositionLower;
+  final NullablePoint chartPositionLower;
 
   /// The chart position of the (domainUpperBound, measureUpperBound) for the
   /// [datum] from a renderer.
-  final Point<double> chartPositionUpper;
+  final NullablePoint chartPositionUpper;
 
   /// Distance of [domain] from a given (x, y) coordinate.
   final double domainDistance;
@@ -184,9 +183,9 @@ class DatumDetails<D> {
       FillPatternType fillPattern,
       Color areaColor,
       List<int> dashPattern,
-      Point<double> chartPosition,
-      Point<double> chartPositionLower,
-      Point<double> chartPositionUpper,
+      NullablePoint chartPosition,
+      NullablePoint chartPositionLower,
+      NullablePoint chartPositionUpper,
       DomainFormatter<D> domainFormatter,
       double domainDistance,
       double measureDistance,

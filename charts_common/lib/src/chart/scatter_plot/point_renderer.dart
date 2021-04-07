@@ -20,7 +20,8 @@ import 'package:meta/meta.dart' show protected, required;
 import 'package:vector_math/vector_math.dart' show Vector2;
 
 import '../../common/color.dart' show Color;
-import '../../common/math.dart' show distanceBetweenPointAndLineSegment;
+import '../../common/math.dart'
+    show distanceBetweenPointAndLineSegment, NullablePoint;
 import '../../common/symbol_renderer.dart'
     show CircleSymbolRenderer, SymbolRenderer;
 import '../../data/series.dart' show AccessorFn, AttributeKey, TypedAccessorFn;
@@ -378,7 +379,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         // near the edge will be allowed to render partially outside. This
         // prevents harshly clipping off half of the shape.
         if (point.point.y != null &&
-            componentBounds.containsPoint(point.point)) {
+            componentBounds.containsPoint(point.point.toPoint())) {
           final bounds = Rectangle<double>(
               point.point.x - point.radiusPx,
               point.point.y - point.radiusPx,
@@ -589,7 +590,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         : _maxInitialDistance;
 
     var relativeDistance = datumPoint.y != null
-        ? chartPoint.distanceTo(datumPoint)
+        ? chartPoint.distanceTo(datumPoint.toPoint())
         : _maxInitialDistance;
 
     var insidePoint = false;
@@ -674,14 +675,14 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     }
 
     return DatumDetails.from(details,
-        chartPosition: Point<double>(point.x, point.y),
-        chartPositionLower: Point<double>(point.xLower, point.yLower),
-        chartPositionUpper: Point<double>(point.xUpper, point.yUpper),
+        chartPosition: NullablePoint(point.x, point.y),
+        chartPositionLower: NullablePoint(point.xLower, point.yLower),
+        chartPositionUpper: NullablePoint(point.xUpper, point.yUpper),
         symbolRenderer: nearestSymbolRenderer);
   }
 }
 
-class DatumPoint<D> extends Point<double> {
+class DatumPoint<D> extends NullablePoint {
   final Object datum;
   final D domain;
   final ImmutableSeries<D> series;

@@ -18,6 +18,7 @@ import 'dart:math' show Point, Rectangle, max, min;
 import 'package:meta/meta.dart' show required;
 
 import '../../common/color.dart' show Color;
+import '../../common/math.dart' show NullablePoint;
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
 import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
@@ -110,14 +111,14 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
         allBarGroupWeights,
         numBarGroups);
 
-    Point<double> chartPosition;
+    NullablePoint chartPosition;
 
     if (renderingVertically) {
-      chartPosition = Point<double>(
+      chartPosition = NullablePoint(
           (points[0].x + (points[1].x - points[0].x) / 2).toDouble(),
           points[0].y.toDouble());
     } else {
-      chartPosition = Point<double>(points[0].x.toDouble(),
+      chartPosition = NullablePoint(points[0].x.toDouble(),
           (points[0].y + (points[1].y - points[0].y) / 2).toDouble());
     }
 
@@ -375,7 +376,7 @@ class _BarTargetLineRendererElement extends BaseBarRendererElement {
 
   _BarTargetLineRendererElement.clone(_BarTargetLineRendererElement other)
       : super.clone(other) {
-    points = List<Point<int>>.from(other.points);
+    points = other.points == null ? null : List.of(other.points);
     roundEndCaps = other.roundEndCaps;
   }
 
