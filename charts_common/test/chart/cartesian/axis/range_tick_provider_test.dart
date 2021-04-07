@@ -48,7 +48,7 @@ class MockDrawStrategy<D> extends Mock implements BaseTickDrawStrategy<D> {}
 void main() {
   ChartContext context;
   GraphicsFactory graphicsFactory;
-  TickFormatter formatter;
+  TickFormatter<num> formatter;
   BaseTickDrawStrategy<num> drawStrategy;
   LinearScale scale;
 

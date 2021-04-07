@@ -40,6 +40,7 @@ class MockChart extends Mock implements BaseChart {
 }
 
 class MockSelectionModel extends Mock implements MutableSelectionModel {
+  @override
   bool locked = false;
 }
 

@@ -86,6 +86,7 @@ class FakeGraphicsFactory extends GraphicsFactory {
 class MockTextStyle extends Mock implements TextStyle {}
 
 class MockTextElement extends Mock implements TextElement {
+  @override
   String text;
 
   MockTextElement(this.text);
@@ -164,17 +165,16 @@ void main() {
       // Verify that the rest of the ticks are all above the threshold in value
       // and have normal labels.
       var aboveThresholdTicks = ticks.sublist(2);
-      aboveThresholdTicks.retainWhere((Tick tick) => tick.value > 0.1);
+      aboveThresholdTicks.retainWhere((tick) => tick.value > 0.1);
       expect(aboveThresholdTicks, hasLength(18));
 
       aboveThresholdTicks = ticks.sublist(2);
-      aboveThresholdTicks.retainWhere((Tick tick) =>
+      aboveThresholdTicks.retainWhere((tick) =>
           tick.textElement.text != '' && !tick.textElement.text.contains('<'));
       expect(aboveThresholdTicks, hasLength(18));
 
       aboveThresholdTicks = ticks.sublist(2);
-      aboveThresholdTicks
-          .retainWhere((Tick tick) => tick.labelOffsetPx == null);
+      aboveThresholdTicks.retainWhere((tick) => tick.labelOffsetPx == null);
       expect(aboveThresholdTicks, hasLength(18));
     });
   });

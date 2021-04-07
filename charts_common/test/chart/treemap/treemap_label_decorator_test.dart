@@ -131,6 +131,7 @@ class FakeTreeMapRendererElement extends TreeMapRendererElement<String> {
     when(_series.data).thenReturn(data);
   }
 
+  @override
   ImmutableSeries<String> get series => _series;
 }
 

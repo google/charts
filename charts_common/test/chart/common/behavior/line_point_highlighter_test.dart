@@ -68,14 +68,15 @@ class MockNumericAxis extends Mock implements NumericAxis {
   }
 }
 
-class MockSeriesRenderer extends BaseSeriesRenderer {
+class MockSeriesRenderer<D> extends BaseSeriesRenderer<D> {
   @override
   void update(_, __) {}
 
   @override
   void paint(_, __) {}
 
-  List<DatumDetails> getNearestDatumDetailPerSeries(
+  @override
+  List<DatumDetails<D>> getNearestDatumDetailPerSeries(
     Point<double> chartPoint,
     bool byDomain,
     Rectangle<int> boundsOverride, {
@@ -84,8 +85,9 @@ class MockSeriesRenderer extends BaseSeriesRenderer {
   }) =>
       null;
 
-  DatumDetails addPositionToDetailsForSeriesDatum(
-      DatumDetails details, SeriesDatum seriesDatum) {
+  @override
+  DatumDetails<D> addPositionToDetailsForSeriesDatum(
+      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     return DatumDetails.from(details, chartPosition: Point<double>(0.0, 0.0));
   }
 }
@@ -119,7 +121,7 @@ void main() {
     final selected = <MyRow>[];
 
     for (var i = 0; i < selection.length; i++) {
-      selected.add(selection[0].datum);
+      selected.add(selection[0].datum as MyRow);
     }
 
     for (int i = 0; i < _series1.data.length; i++) {

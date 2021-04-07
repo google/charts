@@ -30,6 +30,7 @@ class ParentBehavior implements ChartBehavior<String> {
 
   ParentBehavior(this.child);
 
+  @override
   String get role => null;
 
   @override

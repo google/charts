@@ -28,6 +28,7 @@ import 'package:test/test.dart';
 class MockTickDrawStrategy extends Mock implements TickDrawStrategy<num> {}
 
 class MockGraphicsFactory extends Mock implements GraphicsFactory {
+  @override
   TextElement createTextElement(String _) {
     return MockTextElement();
   }

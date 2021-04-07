@@ -57,7 +57,7 @@ abstract class A11yExploreBehavior<D> implements ChartBehavior<D> {
         minimumWidth = minimumWidth ?? 1.0 {
     assert(this.minimumWidth >= 1.0);
 
-    switch (exploreModeTrigger) {
+    switch (this.exploreModeTrigger) {
       case ExploreModeTrigger.pressHold:
         _listener = GestureListener(onLongPress: _toggleExploreMode);
         break;

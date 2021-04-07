@@ -49,7 +49,7 @@ class BarRenderer<D>
   /// The padding comes out of the bottom of the bar.
   final int _stackedBarPaddingPx;
 
-  final BarRendererDecorator<D> barRendererDecorator;
+  final BarRendererDecorator<Object> barRendererDecorator;
 
   factory BarRenderer({BarRendererConfig<D> config, String rendererId}) {
     rendererId ??= 'bar';

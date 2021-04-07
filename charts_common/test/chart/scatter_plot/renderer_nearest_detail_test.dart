@@ -38,18 +38,17 @@ class MockNumericAxis extends Mock implements Axis<num> {}
 class MockCanvas extends Mock implements ChartCanvas {}
 
 void main() {
-  PointRenderer renderer;
-  Rectangle layout;
+  Rectangle<int> layout;
 
-  MutableSeries _makeSeries({String id, String seriesCategory}) {
+  MutableSeries<num> _makeSeries({String id, String seriesCategory}) {
     final data = <MyRow>[];
 
-    final series = MutableSeries<num>(Series(
+    final series = MutableSeries(Series<MyRow, num>(
       id: id,
       data: data,
-      radiusPxFn: (dynamic row, _) => row.radius,
-      domainFn: (dynamic row, _) => row.campaign,
-      measureFn: (dynamic row, _) => row.clickCount,
+      radiusPxFn: (row, _) => row.radius,
+      domainFn: (row, _) => row.campaign,
+      measureFn: (row, _) => row.clickCount,
       seriesCategory: seriesCategory,
     ));
 
@@ -61,13 +60,13 @@ void main() {
     when(domainAxis.rangeBand).thenReturn(100.0);
 
     when(domainAxis.getLocation(any))
-        .thenAnswer((input) => 1.0 * input.positionalArguments.first);
+        .thenAnswer((input) => 1.0 * (input.positionalArguments.first as num));
     series.setAttr(domainAxisKey, domainAxis);
 
     // Mock the Measure axis results.
     final measureAxis = MockNumericAxis();
     when(measureAxis.getLocation(any))
-        .thenAnswer((input) => 1.0 * input.positionalArguments.first);
+        .thenAnswer((input) => 1.0 * (input.positionalArguments.first as num));
     series.setAttr(measureAxisKey, measureAxis);
 
     return series;

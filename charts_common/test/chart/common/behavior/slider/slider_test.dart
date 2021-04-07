@@ -33,6 +33,7 @@ class MockChart extends Mock implements CartesianChart {
 
   LifecycleListener lastLifecycleListener;
 
+  @override
   bool vertical = true;
 
   @override

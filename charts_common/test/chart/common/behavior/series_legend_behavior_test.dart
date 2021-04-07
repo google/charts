@@ -30,7 +30,7 @@ import 'package:test/test.dart';
 class ConcreteChart extends BaseChart<String> {
   List<MutableSeries<String>> _seriesList;
 
-  SeriesRenderer<String> _seriesRenderer = LineRenderer<String>();
+  final SeriesRenderer<String> _seriesRenderer = LineRenderer<String>();
 
   ConcreteChart(this._seriesList);
 

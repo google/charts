@@ -47,8 +47,10 @@ class FakeCartesianRenderer extends BaseCartesianRenderer {
   @override
   SymbolRenderer get symbolRenderer => null;
 
+  @override
   DatumDetails addPositionToDetailsForSeriesDatum(
       DatumDetails details, SeriesDatum seriesDatum) {
+    assert(details != null);
     return details;
   }
 }

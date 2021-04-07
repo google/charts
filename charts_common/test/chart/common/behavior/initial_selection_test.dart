@@ -27,15 +27,15 @@ import 'package:charts_common/src/data/series.dart';
 
 import 'package:test/test.dart';
 
-class FakeRenderer extends BaseSeriesRenderer {
+class FakeRenderer<D> extends BaseSeriesRenderer<D> {
   @override
-  DatumDetails addPositionToDetailsForSeriesDatum(
-      DatumDetails details, SeriesDatum seriesDatum) {
+  DatumDetails<D> addPositionToDetailsForSeriesDatum(
+      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     return null;
   }
 
   @override
-  List<DatumDetails> getNearestDatumDetailPerSeries(
+  List<DatumDetails<D>> getNearestDatumDetailPerSeries(
     Point<double> chartPoint,
     bool byDomain,
     Rectangle<int> boundsOverride, {
@@ -65,10 +65,10 @@ class FakeChart extends BaseChart {
 
 void main() {
   FakeChart _chart;
-  ImmutableSeries _series1;
-  ImmutableSeries _series2;
-  ImmutableSeries _series3;
-  ImmutableSeries _series4;
+  MutableSeries _series1;
+  MutableSeries _series2;
+  MutableSeries _series3;
+  MutableSeries _series4;
   final infoSelectionType = SelectionModelType.info;
 
   InitialSelection _makeBehavior(SelectionModelType selectionModelType,

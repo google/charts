@@ -58,6 +58,7 @@ class BaseTickDrawStrategyImpl<D> extends BaseTickDrawStrategy<D> {
             labelRotation: labelRotation,
             labelCollisionRotation: labelCollisionRotation);
 
+  @override
   void draw(ChartCanvas canvas, Tick<D> tick,
       {AxisOrientation orientation,
       Rectangle<int> axisBounds,
@@ -66,6 +67,7 @@ class BaseTickDrawStrategyImpl<D> extends BaseTickDrawStrategy<D> {
       bool isLast,
       bool collision = false}) {}
 
+  @override
   void drawLabel(ChartCanvas canvas, Tick<D> tick,
       {AxisOrientation orientation,
       Rectangle<int> axisBounds,
@@ -89,11 +91,22 @@ class BaseTickDrawStrategyImpl<D> extends BaseTickDrawStrategy<D> {
 class FakeTextElement implements TextElement {
   static const _defaultVerticalSliceWidth = 15.0;
 
+  @override
   final String text;
+
+  @override
   final TextMeasurement measurement;
+
+  @override
   var textStyle = MockTextStyle();
+
+  @override
   int maxWidth;
+
+  @override
   MaxWidthStrategy maxWidthStrategy;
+
+  @override
   TextDirection textDirection;
   double opacity;
 
@@ -483,7 +496,7 @@ void main() {
       expect(sizes.preferredHeight, 500);
     });
 
-    test('measureVerticallyDrawnTicks - negativate labelOffsetFromAxisPx', () {
+    test('measureVerticallyDrawnTicks - negative labelOffsetFromAxisPx', () {
       final offset = -500;
       drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory,
           labelOffsetFromAxisPx: offset);
@@ -508,19 +521,19 @@ void main() {
       final labelLine1 =
           verify(chartCanvas.drawText(captureAny, 0, 5, rotation: 0))
               .captured
-              .single;
+              .single as TextElement;
       expect(labelLine1.text, 'This label');
 
       final labelLine2 =
           verify(chartCanvas.drawText(captureAny, 0, 22, rotation: 0))
               .captured
-              .single;
+              .single as TextElement;
       expect(labelLine2.text, 'spans');
 
       final labelLine3 =
           verify(chartCanvas.drawText(captureAny, 0, 39, rotation: 0))
               .captured
-              .single;
+              .single as TextElement;
       expect(labelLine3.text, 'multiple lines!!!');
     });
 
@@ -538,7 +551,7 @@ void main() {
       final labelLine =
           verify(chartCanvas.drawText(captureAny, 20, 980, rotation: 0))
               .captured
-              .single;
+              .single as TextElement;
       expect(labelLine.text, 'A');
     });
   });

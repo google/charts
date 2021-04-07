@@ -42,6 +42,7 @@ class MockAxis<D> extends Mock implements Axis<D> {}
 class MockCanvas extends Mock implements ChartCanvas {
   final drawLinePointsList = <List<Point>>[];
 
+  @override
   void drawLine(
       {List<Point> points,
       Rectangle<num> clipBounds,

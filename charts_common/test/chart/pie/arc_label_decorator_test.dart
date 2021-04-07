@@ -54,9 +54,16 @@ class FakeGraphicsFactory extends GraphicsFactory {
 
 /// Stores [TextStyle] properties for test to verify.
 class FakeTextStyle implements TextStyle {
+  @override
   Color color;
+
+  @override
   int fontSize;
+
+  @override
   String fontFamily;
+
+  @override
   double lineHeight;
 }
 
@@ -64,15 +71,25 @@ class FakeTextStyle implements TextStyle {
 ///
 /// Font size is returned for [verticalSliceWidth] and [baseline].
 class FakeTextElement implements TextElement {
+  @override
   final String text;
+
+  @override
   TextStyle textStyle;
+
+  @override
   int maxWidth;
+
+  @override
   MaxWidthStrategy maxWidthStrategy;
+
+  @override
   TextDirection textDirection;
   double opacity;
 
   FakeTextElement(this.text);
 
+  @override
   TextMeasurement get measurement => TextMeasurement(
       horizontalSliceWidth: text.length.toDouble(),
       verticalSliceWidth: textStyle.fontSize.toDouble(),
@@ -91,6 +108,7 @@ class FakeArcRendererElement extends ArcRendererElement<String> {
     when(_series.data).thenReturn(data);
   }
 
+  @override
   ImmutableSeries<String> get series => _series;
 }
 

@@ -86,9 +86,13 @@ class SelectionModel<D> {
 
     // Add to list of selected series, if it does not already exist.
     if (selectedSeriesConfig != null) {
+      final existingSeriesIds = {
+        for (final series in _selectedSeries) series.id,
+      };
+
       final remainingSeriesToAdd = selectedSeriesConfig
-          .where((String seriesId) => !selectedSeries.contains(seriesId))
-          .toList();
+          .where((String seriesId) => !existingSeriesIds.contains(seriesId))
+          .toSet();
 
       _selectedSeries.addAll(seriesList.where((ImmutableSeries<D> series) =>
           remainingSeriesToAdd.contains(series.id)));
