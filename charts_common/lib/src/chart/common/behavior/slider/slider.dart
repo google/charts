@@ -571,10 +571,9 @@ class SliderStyle {
       this.handleSize = const Rectangle<int>(0, 0, 10, 20),
       Color strokeColor,
       this.handlePosition = SliderHandlePosition.middle,
-      this.strokeWidthPx = 2.0}) {
-    this.fillColor = fillColor ?? StyleFactory.style.sliderFillColor;
-    this.strokeColor = strokeColor ?? StyleFactory.style.sliderStrokeColor;
-  }
+      this.strokeWidthPx = 2.0})
+      : fillColor = fillColor ?? StyleFactory.style.sliderFillColor,
+        strokeColor = strokeColor ?? StyleFactory.style.sliderStrokeColor;
 
   @override
   bool operator ==(Object other) {

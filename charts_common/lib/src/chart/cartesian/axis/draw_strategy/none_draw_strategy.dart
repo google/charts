@@ -57,14 +57,15 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
   LineStyle axisLineStyle;
   TextStyle noneTextStyle;
 
-  NoneDrawStrategy(ChartContext chartContext, GraphicsFactory graphicsFactory,
-      {LineStyleSpec axisLineStyleSpec}) {
-    axisLineStyle = StyleFactory.style
-        .createAxisLineStyle(graphicsFactory, axisLineStyleSpec);
-    noneTextStyle = graphicsFactory.createTextPaint()
-      ..color = Color.transparent
-      ..fontSize = 0;
-  }
+  NoneDrawStrategy(
+    ChartContext chartContext,
+    GraphicsFactory graphicsFactory, {
+    LineStyleSpec axisLineStyleSpec,
+  })  : axisLineStyle = StyleFactory.style
+            .createAxisLineStyle(graphicsFactory, axisLineStyleSpec),
+        noneTextStyle = graphicsFactory.createTextPaint()
+          ..color = Color.transparent
+          ..fontSize = 0;
 
   @override
   CollisionReport<D> collides(

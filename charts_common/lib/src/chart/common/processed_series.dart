@@ -122,31 +122,38 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   Axis<num> measureAxis;
   Axis<D> domainAxis;
 
-  MutableSeries(Series<dynamic, D> series) : id = series.id {
-    displayName = series.displayName ?? series.id;
-    overlaySeries = series.overlaySeries;
-    seriesCategory = series.seriesCategory;
-    seriesColor = series.seriesColor;
+  MutableSeries(Series<dynamic, D> series)
+      : id = series.id,
+        displayName = series.displayName ?? series.id,
+        overlaySeries = series.overlaySeries,
+        seriesCategory = series.seriesCategory,
+        seriesColor = series.seriesColor,
+        data = series.data,
+        keyFn = series.keyFn,
+        domainFn = series.domainFn,
+        domainFormatterFn = series.domainFormatterFn,
+        domainLowerBoundFn = series.domainLowerBoundFn,
+        domainUpperBoundFn = series.domainUpperBoundFn,
+        measureFn = series.measureFn,
+        measureFormatterFn = series.measureFormatterFn,
+        measureLowerBoundFn = series.measureLowerBoundFn,
+        measureUpperBoundFn = series.measureUpperBoundFn,
+        measureOffsetFn = series.measureOffsetFn,
 
-    data = series.data;
-    keyFn = series.keyFn;
-
-    domainFn = series.domainFn;
-    domainFormatterFn = series.domainFormatterFn;
-    domainLowerBoundFn = series.domainLowerBoundFn;
-    domainUpperBoundFn = series.domainUpperBoundFn;
-
-    measureFn = series.measureFn;
-    measureFormatterFn = series.measureFormatterFn;
-    measureLowerBoundFn = series.measureLowerBoundFn;
-    measureUpperBoundFn = series.measureUpperBoundFn;
-    measureOffsetFn = series.measureOffsetFn;
-
-    // Save the original measure functions in case they get replaced later.
-    rawMeasureFn = series.measureFn;
-    rawMeasureLowerBoundFn = series.measureLowerBoundFn;
-    rawMeasureUpperBoundFn = series.measureUpperBoundFn;
-
+        // Save the original measure functions in case they get replaced later.
+        rawMeasureFn = series.measureFn,
+        rawMeasureLowerBoundFn = series.measureLowerBoundFn,
+        rawMeasureUpperBoundFn = series.measureUpperBoundFn,
+        areaColorFn = series.areaColorFn,
+        colorFn = series.colorFn,
+        dashPatternFn = series.dashPatternFn,
+        fillColorFn = series.fillColorFn,
+        fillPatternFn = series.fillPatternFn,
+        patternColorFn = series.patternColorFn,
+        insideLabelStyleAccessorFn = series.insideLabelStyleAccessorFn,
+        outsideLabelStyleAccessorFn = series.outsideLabelStyleAccessorFn,
+        radiusPxFn = series.radiusPxFn,
+        strokeWidthPxFn = series.strokeWidthPxFn {
     // Pre-compute the sum of the measure values to make it available on demand.
     seriesMeasureTotal = 0;
     for (var i = 0; i < data.length; i++) {
@@ -156,64 +163,47 @@ class MutableSeries<D> extends ImmutableSeries<D> {
       }
     }
 
-    areaColorFn = series.areaColorFn;
-    colorFn = series.colorFn;
-    dashPatternFn = series.dashPatternFn;
-    fillColorFn = series.fillColorFn;
-    fillPatternFn = series.fillPatternFn;
-    patternColorFn = series.patternColorFn;
     labelAccessorFn = series.labelAccessorFn ?? (i) => domainFn(i).toString();
-    insideLabelStyleAccessorFn = series.insideLabelStyleAccessorFn;
-    outsideLabelStyleAccessorFn = series.outsideLabelStyleAccessorFn;
-
-    radiusPxFn = series.radiusPxFn;
-    strokeWidthPxFn = series.strokeWidthPxFn;
 
     _attrs.mergeFrom(series.attributes);
   }
 
-  MutableSeries.clone(MutableSeries<D> other) : id = other.id {
-    displayName = other.displayName;
-    overlaySeries = other.overlaySeries;
-    seriesCategory = other.seriesCategory;
-    seriesColor = other.seriesColor;
-    seriesIndex = other.seriesIndex;
-
-    data = other.data;
-    keyFn = other.keyFn;
-
-    domainFn = other.domainFn;
-    domainFormatterFn = other.domainFormatterFn;
-    domainLowerBoundFn = other.domainLowerBoundFn;
-    domainUpperBoundFn = other.domainUpperBoundFn;
-
-    measureFn = other.measureFn;
-    measureFormatterFn = other.measureFormatterFn;
-    measureLowerBoundFn = other.measureLowerBoundFn;
-    measureUpperBoundFn = other.measureUpperBoundFn;
-    measureOffsetFn = other.measureOffsetFn;
-
-    rawMeasureFn = other.rawMeasureFn;
-    rawMeasureLowerBoundFn = other.rawMeasureLowerBoundFn;
-    rawMeasureUpperBoundFn = other.rawMeasureUpperBoundFn;
-
-    seriesMeasureTotal = other.seriesMeasureTotal;
-
-    areaColorFn = other.areaColorFn;
-    colorFn = other.colorFn;
-    dashPatternFn = other.dashPatternFn;
-    fillColorFn = other.fillColorFn;
-    fillPatternFn = other.fillPatternFn;
-    patternColorFn = other.patternColorFn;
-    labelAccessorFn = other.labelAccessorFn;
-    insideLabelStyleAccessorFn = other.insideLabelStyleAccessorFn;
-    outsideLabelStyleAccessorFn = other.outsideLabelStyleAccessorFn;
-    radiusPxFn = other.radiusPxFn;
-    strokeWidthPxFn = other.strokeWidthPxFn;
-
+  MutableSeries.clone(MutableSeries<D> other)
+      : id = other.id,
+        displayName = other.displayName,
+        overlaySeries = other.overlaySeries,
+        seriesCategory = other.seriesCategory,
+        seriesColor = other.seriesColor,
+        seriesIndex = other.seriesIndex,
+        data = other.data,
+        keyFn = other.keyFn,
+        domainFn = other.domainFn,
+        domainFormatterFn = other.domainFormatterFn,
+        domainLowerBoundFn = other.domainLowerBoundFn,
+        domainUpperBoundFn = other.domainUpperBoundFn,
+        measureFn = other.measureFn,
+        measureFormatterFn = other.measureFormatterFn,
+        measureLowerBoundFn = other.measureLowerBoundFn,
+        measureUpperBoundFn = other.measureUpperBoundFn,
+        measureOffsetFn = other.measureOffsetFn,
+        rawMeasureFn = other.rawMeasureFn,
+        rawMeasureLowerBoundFn = other.rawMeasureLowerBoundFn,
+        rawMeasureUpperBoundFn = other.rawMeasureUpperBoundFn,
+        seriesMeasureTotal = other.seriesMeasureTotal,
+        areaColorFn = other.areaColorFn,
+        colorFn = other.colorFn,
+        dashPatternFn = other.dashPatternFn,
+        fillColorFn = other.fillColorFn,
+        fillPatternFn = other.fillPatternFn,
+        patternColorFn = other.patternColorFn,
+        labelAccessorFn = other.labelAccessorFn,
+        insideLabelStyleAccessorFn = other.insideLabelStyleAccessorFn,
+        outsideLabelStyleAccessorFn = other.outsideLabelStyleAccessorFn,
+        radiusPxFn = other.radiusPxFn,
+        strokeWidthPxFn = other.strokeWidthPxFn,
+        measureAxis = other.measureAxis,
+        domainAxis = other.domainAxis {
     _attrs.mergeFrom(other._attrs);
-    measureAxis = other.measureAxis;
-    domainAxis = other.domainAxis;
   }
 
   @override

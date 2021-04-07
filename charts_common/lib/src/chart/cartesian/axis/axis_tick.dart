@@ -38,15 +38,14 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
   double _targetOpacity;
 
   AxisTicks(Tick<D> tick)
-      : super(
+      : // Set the initial target for a new animated tick.
+        _markedForRemoval = false,
+        _targetLocation = tick.locationPx,
+        super(
             value: tick.value,
             textElement: tick.textElement,
             locationPx: tick.locationPx,
-            labelOffsetPx: tick.labelOffsetPx) {
-    /// Set the initial target for a new animated tick.
-    _markedForRemoval = false;
-    _targetLocation = tick.locationPx;
-  }
+            labelOffsetPx: tick.labelOffsetPx);
 
   bool get markedForRemoval => _markedForRemoval;
 

@@ -74,13 +74,12 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
   }
 
   LineRenderer._internal({@required String rendererId, @required this.config})
-      : super(
+      : _pointRenderer = PointRenderer<D>(
+            config: PointRendererConfig<D>(radiusPx: config.radiusPx)),
+        super(
             rendererId: rendererId,
             layoutPaintOrder: config.layoutPaintOrder,
-            symbolRenderer: config.symbolRenderer) {
-    _pointRenderer = PointRenderer<D>(
-        config: PointRendererConfig<D>(radiusPx: config.radiusPx));
-  }
+            symbolRenderer: config.symbolRenderer);
 
   @override
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds) {
@@ -1531,10 +1530,9 @@ class _Range<D> {
   D _start;
   D _end;
 
-  _Range(D start, D end) {
-    _start = start;
-    _end = end;
-  }
+  _Range(D start, D end)
+      : _start = start,
+        _end = end;
 
   /// Gets the start of the range.
   D get start => _start;

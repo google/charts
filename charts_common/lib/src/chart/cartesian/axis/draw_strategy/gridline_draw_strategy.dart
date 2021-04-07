@@ -110,7 +110,10 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
     int minimumPaddingBetweenLabelsPx,
     int labelRotation,
     int labelCollisionRotation,
-  }) : super(chartContext, graphicsFactory,
+  })  : tickLength = tickLengthPx ?? 0,
+        lineStyle = StyleFactory.style
+            .createGridlineStyle(graphicsFactory, lineStyleSpec),
+        super(chartContext, graphicsFactory,
             labelStyleSpec: labelStyleSpec,
             axisLineStyleSpec: axisLineStyleSpec ?? lineStyleSpec,
             labelAnchor: labelAnchor,
@@ -121,12 +124,7 @@ class GridlineTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
             labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
             minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
             labelRotation: labelRotation,
-            labelCollisionRotation: labelCollisionRotation) {
-    lineStyle =
-        StyleFactory.style.createGridlineStyle(graphicsFactory, lineStyleSpec);
-
-    tickLength = tickLengthPx ?? 0;
-  }
+            labelCollisionRotation: labelCollisionRotation);
 
   @override
   void draw(ChartCanvas canvas, Tick<D> tick,

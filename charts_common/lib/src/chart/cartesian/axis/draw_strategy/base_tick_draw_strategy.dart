@@ -133,14 +133,14 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   LineStyle axisLineStyle;
   TextStyle labelStyle;
   TickLabelJustification tickLabelJustification;
-  TickLabelAnchor _defaultTickLabelAnchor;
-  int _labelDefaultOffsetFromAxisPx;
-  int _labelCollisionOffsetFromAxisPx;
-  int _labelDefaultOffsetFromTickPx;
-  int _labelCollisionOffsetFromTickPx;
-  int _labelDefaultRotation;
-  int _labelCollisionRotation;
-  bool _rotateOnCollision;
+  final TickLabelAnchor _defaultTickLabelAnchor;
+  final int _labelDefaultOffsetFromAxisPx;
+  final int _labelCollisionOffsetFromAxisPx;
+  final int _labelDefaultOffsetFromTickPx;
+  final int _labelCollisionOffsetFromTickPx;
+  final int _labelDefaultRotation;
+  final int _labelCollisionRotation;
+  final bool _rotateOnCollision;
 
   int minimumPaddingBetweenLabelsPx;
 
@@ -178,31 +178,29 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     int minimumPaddingBetweenLabelsPx,
     int labelRotation,
     int labelCollisionRotation,
-  }) {
-    labelStyle = (graphicsFactory.createTextPaint()
+  })  : labelStyle = graphicsFactory.createTextPaint(),
+        axisLineStyle = graphicsFactory.createLinePaint(),
+        _defaultTickLabelAnchor = labelAnchor ?? TickLabelAnchor.centered,
+        tickLabelJustification =
+            labelJustification ?? TickLabelJustification.inside,
+        _rotateOnCollision = labelCollisionRotation != null,
+        minimumPaddingBetweenLabelsPx = minimumPaddingBetweenLabelsPx ?? 50,
+        _labelDefaultOffsetFromAxisPx = labelOffsetFromAxisPx ?? 5,
+        _labelDefaultOffsetFromTickPx = labelOffsetFromTickPx ?? 5,
+        _labelDefaultRotation = labelRotation ?? 0,
+        _labelCollisionOffsetFromAxisPx = labelCollisionOffsetFromAxisPx ?? 5,
+        _labelCollisionOffsetFromTickPx = labelCollisionOffsetFromTickPx ?? 5,
+        _labelCollisionRotation = labelCollisionRotation ?? 0 {
+    labelStyle
       ..color = labelStyleSpec?.color ?? StyleFactory.style.tickColor
       ..fontFamily = labelStyleSpec?.fontFamily
       ..fontSize = labelStyleSpec?.fontSize ?? 12
-      ..lineHeight = labelStyleSpec?.lineHeight);
+      ..lineHeight = labelStyleSpec?.lineHeight;
 
-    axisLineStyle = graphicsFactory.createLinePaint()
+    axisLineStyle
       ..color = axisLineStyleSpec?.color ?? labelStyle.color
       ..dashPattern = axisLineStyleSpec?.dashPattern
       ..strokeWidth = axisLineStyleSpec?.thickness ?? 1;
-
-    _defaultTickLabelAnchor = labelAnchor ?? TickLabelAnchor.centered;
-    tickLabelJustification =
-        labelJustification ?? TickLabelJustification.inside;
-    _rotateOnCollision = labelCollisionRotation != null;
-    this.minimumPaddingBetweenLabelsPx = minimumPaddingBetweenLabelsPx ?? 50;
-
-    this._labelDefaultOffsetFromAxisPx = labelOffsetFromAxisPx ?? 5;
-    this._labelDefaultOffsetFromTickPx = labelOffsetFromTickPx ?? 5;
-    this._labelDefaultRotation = labelRotation ?? 0;
-
-    this._labelCollisionOffsetFromAxisPx = labelCollisionOffsetFromAxisPx ?? 5;
-    this._labelCollisionOffsetFromTickPx = labelCollisionOffsetFromTickPx ?? 5;
-    this._labelCollisionRotation = labelCollisionRotation ?? 0;
   }
 
   @override
