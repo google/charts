@@ -97,8 +97,8 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
       // Populates [treeNodeToRendererElement] map entries.
       for (var i = 0; i < count; i++) {
         final node = series.data[i] as TreeNode<Object>;
-        _treeNodeToRendererElement[node] = _createRendererElement(series, i)
-          ..isLeaf = !node.hasChildren;
+        _treeNodeToRendererElement[node] =
+            _createRendererElement(series, i, isLeaf: !node.hasChildren);
       }
       series.setAttr(treeMapElementsKey, _treeNodeToRendererElement.values);
     }
@@ -401,12 +401,17 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   ///
   /// `boundingRect` and `area` are set after tile function is applied.
   TreeMapRendererElement<D> _createRendererElement(
-          MutableSeries<D> series, int index) =>
-      TreeMapRendererElement<D>()
-        ..domain = series.domainFn(index)
-        ..measure = series.measureFn(index)
-        ..index = index
-        ..series = series;
+    MutableSeries<D> series,
+    int index, {
+    @required bool isLeaf,
+  }) =>
+      TreeMapRendererElement<D>(
+        domain: series.domainFn(index),
+        measure: series.measureFn(index),
+        isLeaf: isLeaf,
+        index: index,
+        series: series,
+      );
 
   TreeMapRendererElement<D> _getRendererElement(TreeNode<Object> node) {
     final element = _treeNodeToRendererElement[node];

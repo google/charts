@@ -18,6 +18,7 @@ import 'dart:math' show Rectangle;
 import 'package:charts_common/src/chart/common/chart_canvas.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart';
 import 'package:charts_common/src/common/color.dart';
+import 'package:meta/meta.dart' show required;
 
 /// A renderer element that represents a TreeNode.
 class TreeMapRendererElement<D> {
@@ -57,21 +58,41 @@ class TreeMapRendererElement<D> {
   /// Measure of this element.
   num measure;
 
+  TreeMapRendererElement({
+    this.boundingRect,
+    this.area,
+    this.fillColor,
+    this.fillPattern,
+    this.patternColor,
+    this.strokeColor,
+    @required this.isLeaf,
+    this.strokeWidthPx,
+    @required this.index,
+    @required this.series,
+    @required this.domain,
+    @required this.measure,
+  });
+
   /// Clones a new renderer element with the same properties.
-  TreeMapRendererElement<D> clone() => TreeMapRendererElement()
-    ..boundingRect =
-        Rectangle.fromPoints(boundingRect.topLeft, boundingRect.bottomRight)
-    ..area = area
-    ..fillPattern = fillPattern
-    ..fillColor = Color.fromOther(color: fillColor)
-    ..patternColor = Color.fromOther(color: patternColor)
-    ..strokeColor = Color.fromOther(color: strokeColor)
-    ..strokeWidthPx = strokeWidthPx
-    ..isLeaf = isLeaf
-    ..index = index
-    ..series = series
-    ..domain = domain
-    ..measure = measure;
+  TreeMapRendererElement<D> clone() => TreeMapRendererElement(
+        boundingRect: boundingRect == null
+            ? null
+            : Rectangle.fromPoints(
+                boundingRect.topLeft, boundingRect.bottomRight),
+        area: area,
+        fillPattern: fillPattern,
+        fillColor: fillColor == null ? null : Color.fromOther(color: fillColor),
+        patternColor:
+            patternColor == null ? null : Color.fromOther(color: patternColor),
+        strokeColor:
+            strokeColor == null ? null : Color.fromOther(color: strokeColor),
+        strokeWidthPx: strokeWidthPx,
+        isLeaf: isLeaf,
+        index: index,
+        series: series,
+        domain: domain,
+        measure: measure,
+      );
 
   /// Refreshes paint properties by invoking series accessor functions again.
   ///

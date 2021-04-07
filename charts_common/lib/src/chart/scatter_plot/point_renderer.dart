@@ -181,14 +181,15 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         var fillColor = fillColorFn(index);
         fillColor ??= color;
 
-        final details = PointRendererElement<D>()
-          ..index = index
-          ..color = color
-          ..fillColor = fillColor
-          ..radiusPx = radiusPx.toDouble()
-          ..boundsLineRadiusPx = boundsLineRadiusPx.toDouble()
-          ..strokeWidthPx = strokeWidthPx.toDouble()
-          ..symbolRendererId = symbolRendererId;
+        final details = PointRendererElement<D>(
+          index: index,
+          color: color,
+          fillColor: fillColor,
+          radiusPx: radiusPx.toDouble(),
+          boundsLineRadiusPx: boundsLineRadiusPx.toDouble(),
+          strokeWidthPx: strokeWidthPx.toDouble(),
+          symbolRendererId: symbolRendererId,
+        );
 
         elements.add(details);
       }
@@ -278,16 +279,17 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
           animatingPoint = AnimatedPoint<D>(
               key: pointKey, overlaySeries: series.overlaySeries)
-            ..setNewTarget(PointRendererElement<D>()
-              ..index = details.index
-              ..color = details.color
-              ..fillColor = details.fillColor
-              ..measureAxisPosition = measureAxis.getLocation(0.0)
-              ..point = point
-              ..radiusPx = details.radiusPx
-              ..boundsLineRadiusPx = details.boundsLineRadiusPx
-              ..strokeWidthPx = details.strokeWidthPx
-              ..symbolRendererId = details.symbolRendererId);
+            ..setNewTarget(PointRendererElement<D>(
+              index: details.index,
+              color: details.color,
+              fillColor: details.fillColor,
+              measureAxisPosition: measureAxis.getLocation(0.0),
+              point: point,
+              radiusPx: details.radiusPx,
+              boundsLineRadiusPx: details.boundsLineRadiusPx,
+              strokeWidthPx: details.strokeWidthPx,
+              symbolRendererId: details.symbolRendererId,
+            ));
 
           pointList.add(animatingPoint);
         }
@@ -296,16 +298,17 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
         _currentKeys.add(pointKey);
 
         // Get the pointElement we are going to setup.
-        final pointElement = PointRendererElement<D>()
-          ..index = index
-          ..color = details.color
-          ..fillColor = details.fillColor
-          ..measureAxisPosition = measureAxis.getLocation(0.0)
-          ..point = point
-          ..radiusPx = details.radiusPx
-          ..boundsLineRadiusPx = details.boundsLineRadiusPx
-          ..strokeWidthPx = details.strokeWidthPx
-          ..symbolRendererId = details.symbolRendererId;
+        final pointElement = PointRendererElement<D>(
+          index: index,
+          color: details.color,
+          fillColor: details.fillColor,
+          measureAxisPosition: measureAxis.getLocation(0.0),
+          point: point,
+          radiusPx: details.radiusPx,
+          boundsLineRadiusPx: details.boundsLineRadiusPx,
+          strokeWidthPx: details.strokeWidthPx,
+          symbolRendererId: details.symbolRendererId,
+        );
 
         animatingPoint.setNewTarget(pointElement);
       }
@@ -734,17 +737,30 @@ class PointRendererElement<D> {
   double strokeWidthPx;
   String symbolRendererId;
 
+  PointRendererElement({
+    this.point,
+    this.index,
+    this.color,
+    this.fillColor,
+    this.measureAxisPosition,
+    @required this.radiusPx,
+    @required this.boundsLineRadiusPx,
+    @required this.strokeWidthPx,
+    this.symbolRendererId,
+  });
+
   PointRendererElement<D> clone() {
-    return PointRendererElement<D>()
-      ..point = DatumPoint<D>.from(point)
-      ..index = index
-      ..color = color != null ? Color.fromOther(color: color) : null
-      ..fillColor = fillColor != null ? Color.fromOther(color: fillColor) : null
-      ..measureAxisPosition = measureAxisPosition
-      ..radiusPx = radiusPx
-      ..boundsLineRadiusPx = boundsLineRadiusPx
-      ..strokeWidthPx = strokeWidthPx
-      ..symbolRendererId = symbolRendererId;
+    return PointRendererElement<D>(
+      point: point != null ? DatumPoint<D>.from(point) : null,
+      index: index,
+      color: color != null ? Color.fromOther(color: color) : null,
+      fillColor: fillColor != null ? Color.fromOther(color: fillColor) : null,
+      measureAxisPosition: measureAxisPosition,
+      radiusPx: radiusPx,
+      boundsLineRadiusPx: boundsLineRadiusPx,
+      strokeWidthPx: strokeWidthPx,
+      symbolRendererId: symbolRendererId,
+    );
   }
 
   void updateAnimationPercent(PointRendererElement<D> previous,

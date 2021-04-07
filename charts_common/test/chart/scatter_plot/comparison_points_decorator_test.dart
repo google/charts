@@ -44,14 +44,18 @@ void main() {
 
   group('compute bounded points', () {
     test('with line inside bounds', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: 10.0,
             xLower: 5.0,
             xUpper: 50.0,
             y: 20.0,
             yLower: 20.0,
-            yUpper: 20.0);
+            yUpper: 20.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);
@@ -66,14 +70,18 @@ void main() {
     });
 
     test('with line entirely above bounds', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: 10.0,
             xLower: 5.0,
             xUpper: 50.0,
             y: -20.0,
             yLower: -20.0,
-            yUpper: -20.0);
+            yUpper: -20.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);
@@ -82,14 +90,18 @@ void main() {
     });
 
     test('with line entirely below bounds', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: 10.0,
             xLower: 5.0,
             xUpper: 50.0,
             y: 120.0,
             yLower: 120.0,
-            yUpper: 120.0);
+            yUpper: 120.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);
@@ -98,14 +110,18 @@ void main() {
     });
 
     test('with line entirely left of bounds', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: -10.0,
             xLower: -5.0,
             xUpper: -50.0,
             y: 20.0,
             yLower: 20.0,
-            yUpper: 50.0);
+            yUpper: 50.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);
@@ -114,14 +130,18 @@ void main() {
     });
 
     test('with line entirely right of bounds', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: 110.0,
             xLower: 105.0,
             xUpper: 150.0,
             y: 20.0,
             yLower: 20.0,
-            yUpper: 50.0);
+            yUpper: 50.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);
@@ -130,14 +150,18 @@ void main() {
     });
 
     test('with horizontal line extending beyond bounds', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: 10.0,
             xLower: -10.0,
             xUpper: 110.0,
             y: 20.0,
             yLower: 20.0,
-            yUpper: 20.0);
+            yUpper: 20.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);
@@ -152,14 +176,18 @@ void main() {
     });
 
     test('with vertical line extending beyond bounds', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: 20.0,
             xLower: 20.0,
             xUpper: 20.0,
             y: 10.0,
             yLower: -10.0,
-            yUpper: 110.0);
+            yUpper: 110.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);
@@ -174,14 +202,18 @@ void main() {
     });
 
     test('with diagonal from top left to bottom right', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: 50.0,
             xLower: -50.0,
             xUpper: 150.0,
             y: 50.0,
             yLower: -50.0,
-            yUpper: 150.0);
+            yUpper: 150.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);
@@ -196,14 +228,18 @@ void main() {
     });
 
     test('with diagonal from bottom left to top right', () {
-      final element = PointRendererElement<num>()
-        ..point = DatumPoint<num>(
+      final element = PointRendererElement<num>(
+        point: DatumPoint<num>(
             x: 50.0,
             xLower: -50.0,
             xUpper: 150.0,
             y: 50.0,
             yLower: 150.0,
-            yUpper: -50.0);
+            yUpper: -50.0),
+        radiusPx: 0,
+        boundsLineRadiusPx: 0,
+        strokeWidthPx: 0,
+      );
 
       final points =
           decorator.testComputeBoundedPointsForElement(element, bounds);

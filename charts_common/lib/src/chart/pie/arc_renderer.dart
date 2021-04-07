@@ -65,7 +65,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         config: config ?? ArcRendererConfig());
   }
 
-  ArcRenderer._internal({String rendererId, this.config})
+  ArcRenderer._internal({@required String rendererId, @required this.config})
       : arcRendererDecorators = config?.arcRendererDecorators ?? [],
         super(
             rendererId: rendererId,
@@ -111,12 +111,13 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         var angle = arcLength == 2 * pi ? arcLength * .999999 : arcLength;
         var endAngle = startAngle + angle;
 
-        var details = ArcRendererElement<D>();
-        details.startAngle = startAngle;
-        details.endAngle = endAngle;
-        details.index = 0;
-        details.key = 0;
-        details.series = series;
+        var details = ArcRendererElement<D>(
+          startAngle: startAngle,
+          endAngle: endAngle,
+          index: 0,
+          key: 0,
+          series: series,
+        );
 
         elements.add(details);
       } else {
@@ -133,13 +134,14 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           var angle = arcLength * percentOfSeries;
           var endAngle = startAngle + angle;
 
-          var details = ArcRendererElement<D>();
-          details.startAngle = startAngle;
-          details.endAngle = endAngle;
-          details.index = arcIndex;
-          details.key = arcIndex;
-          details.domain = domain;
-          details.series = series;
+          var details = ArcRendererElement<D>(
+            startAngle: startAngle,
+            endAngle: endAngle,
+            index: arcIndex,
+            key: arcIndex,
+            domain: domain,
+            series: series,
+          );
 
           elements.add(details);
 
@@ -218,11 +220,12 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
         // Get the arcElement we are going to setup.
         // Optimization to prevent allocation in non-animating case.
-        final arcElement = ArcRendererElement<D>()
-          ..color = config.noDataColor
-          ..startAngle = details.startAngle
-          ..endAngle = details.endAngle
-          ..series = series;
+        final arcElement = ArcRendererElement<D>(
+          color: config.noDataColor,
+          startAngle: details.startAngle,
+          endAngle: details.endAngle,
+          series: series,
+        );
 
         animatingArc.setNewTarget(arcElement);
       } else {
@@ -252,12 +255,13 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           // from 0.
           if (animatingArc == null) {
             animatingArc = _AnimatedArc<D>(arcKey, datum, domainValue)
-              ..setNewTarget(ArcRendererElement<D>()
-                ..color = colorFn(arcIndex)
-                ..startAngle = previousEndAngle
-                ..endAngle = previousEndAngle
-                ..index = arcIndex
-                ..series = series);
+              ..setNewTarget(ArcRendererElement<D>(
+                color: colorFn(arcIndex),
+                startAngle: previousEndAngle,
+                endAngle: previousEndAngle,
+                index: arcIndex,
+                series: series,
+              ));
 
             arcList.arcs.add(animatingArc);
           } else {
@@ -273,12 +277,13 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
           // Get the arcElement we are going to setup.
           // Optimization to prevent allocation in non-animating case.
-          final arcElement = ArcRendererElement<D>()
-            ..color = colorFn(arcIndex)
-            ..startAngle = details.startAngle
-            ..endAngle = details.endAngle
-            ..index = arcIndex
-            ..series = series;
+          final arcElement = ArcRendererElement<D>(
+            color: colorFn(arcIndex),
+            startAngle: details.startAngle,
+            endAngle: details.endAngle,
+            index: arcIndex,
+            series: series,
+          );
 
           animatingArc.setNewTarget(arcElement);
         }
@@ -333,14 +338,15 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
     _seriesArcMap.forEach((String key, _AnimatedArcList<D> arcList) {
       final circleSectors = <CanvasPieSlice>[];
-      final arcElementsList = ArcRendererElementList<D>()
-        ..arcs = <ArcRendererElement<D>>[]
-        ..center = arcList.center
-        ..innerRadius = arcList.innerRadius
-        ..radius = arcList.radius
-        ..startAngle = config.startAngle
-        ..stroke = arcList.stroke
-        ..strokeWidthPx = arcList.strokeWidthPx;
+      final arcElementsList = ArcRendererElementList<D>(
+        arcs: <ArcRendererElement<D>>[],
+        center: arcList.center,
+        innerRadius: arcList.innerRadius,
+        radius: arcList.radius,
+        startAngle: config.startAngle,
+        stroke: arcList.stroke,
+        strokeWidthPx: arcList.strokeWidthPx,
+      );
 
       arcList.arcs
           .map<ArcRendererElement<D>>((_AnimatedArc<D> animatingArc) =>
@@ -586,7 +592,17 @@ class ArcRendererElementList<D> {
   Color stroke;
 
   /// Stroke width of separator lines between arcs.
-  double strokeWidthPx;
+  final double strokeWidthPx;
+
+  ArcRendererElementList({
+    @required this.arcs,
+    @required this.center,
+    @required this.innerRadius,
+    @required this.radius,
+    @required this.startAngle,
+    this.stroke,
+    this.strokeWidthPx,
+  });
 }
 
 class ArcRendererElement<D> {
@@ -598,14 +614,25 @@ class ArcRendererElement<D> {
   D domain;
   ImmutableSeries<D> series;
 
+  ArcRendererElement({
+    @required this.startAngle,
+    @required this.endAngle,
+    this.color,
+    this.index,
+    this.key,
+    this.domain,
+    @required this.series,
+  });
+
   ArcRendererElement<D> clone() {
-    return ArcRendererElement<D>()
-      ..startAngle = startAngle
-      ..endAngle = endAngle
-      ..color = Color.fromOther(color: color)
-      ..index = index
-      ..key = key
-      ..series = series;
+    return ArcRendererElement<D>(
+      startAngle: startAngle,
+      endAngle: endAngle,
+      color: color == null ? null : Color.fromOther(color: color),
+      index: index,
+      key: key,
+      series: series,
+    );
   }
 
   void updateAnimationPercent(ArcRendererElement<D> previous,

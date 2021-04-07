@@ -56,7 +56,7 @@ class ChartTitle<D> implements ChartBehavior<D> {
   static const _defaultOuterPadding = 10;
 
   /// Stores all of the configured properties of the behavior.
-  _ChartTitleConfig _config;
+  final _ChartTitleConfig _config;
 
   BaseChart<D> _chart;
 
@@ -79,23 +79,23 @@ class ChartTitle<D> implements ChartBehavior<D> {
       int titlePadding,
       TextStyleSpec titleStyleSpec,
       String subTitle,
-      TextStyleSpec subTitleStyleSpec}) {
-    _config = _ChartTitleConfig()
-      ..behaviorPosition = behaviorPosition ?? _defaultBehaviorPosition
-      ..innerPadding = innerPadding ?? _defaultInnerPadding
-      ..layoutMinSize = layoutMinSize
-      ..layoutPreferredSize = layoutPreferredSize
-      ..outerPadding = outerPadding ?? _defaultOuterPadding
-      ..maxWidthStrategy = maxWidthStrategy ?? _defaultMaxWidthStrategy
-      ..title = title
-      ..titleDirection = titleDirection ?? _defaultTitleDirection
-      ..titleOutsideJustification =
-          titleOutsideJustification ?? _defaultTitleOutsideJustification
-      ..titlePadding = titlePadding ?? _defaultTitlePadding
-      ..titleStyleSpec = titleStyleSpec ?? _defaultTitleStyle
-      ..subTitle = subTitle
-      ..subTitleStyleSpec = subTitleStyleSpec ?? _defaultSubTitleStyle;
-
+      TextStyleSpec subTitleStyleSpec})
+      : _config = _ChartTitleConfig(
+          behaviorPosition: behaviorPosition ?? _defaultBehaviorPosition,
+          innerPadding: innerPadding ?? _defaultInnerPadding,
+          layoutMinSize: layoutMinSize,
+          layoutPreferredSize: layoutPreferredSize,
+          outerPadding: outerPadding ?? _defaultOuterPadding,
+          maxWidthStrategy: maxWidthStrategy ?? _defaultMaxWidthStrategy,
+          title: title,
+          titleDirection: titleDirection ?? _defaultTitleDirection,
+          titleOutsideJustification:
+              titleOutsideJustification ?? _defaultTitleOutsideJustification,
+          titlePadding: titlePadding ?? _defaultTitlePadding,
+          titleStyleSpec: titleStyleSpec ?? _defaultTitleStyle,
+          subTitle: subTitle,
+          subTitleStyleSpec: subTitleStyleSpec ?? _defaultSubTitleStyle,
+        ) {
     _lifecycleListener =
         LifecycleListener<D>(onAxisConfigured: _updateViewData);
   }
@@ -754,6 +754,22 @@ class _ChartTitleLayoutView<D> extends LayoutView {
 
 /// Configuration object for [ChartTitle].
 class _ChartTitleConfig {
+  _ChartTitleConfig({
+    @required this.behaviorPosition,
+    @required this.layoutMinSize,
+    @required this.layoutPreferredSize,
+    @required this.maxWidthStrategy,
+    @required this.title,
+    @required this.titleDirection,
+    @required this.titleOutsideJustification,
+    @required this.titleStyleSpec,
+    @required this.subTitle,
+    @required this.subTitleStyleSpec,
+    @required this.innerPadding,
+    @required this.titlePadding,
+    @required this.outerPadding,
+  });
+
   BehaviorPosition behaviorPosition;
 
   int layoutMinSize;

@@ -302,14 +302,15 @@ class Slider<D> implements ChartBehavior<D> {
     _moveSliderToDomain(_domainValue);
 
     // Move the handle to the current event position.
-    final element = _SliderElement<D>()
-      ..domainCenterPoint =
-          Point<int>(_domainCenterPoint.x, _domainCenterPoint.y)
-      ..buttonBounds = Rectangle<int>(_handleBounds.left, _handleBounds.top,
-          _handleBounds.width, _handleBounds.height)
-      ..fill = _style.fillColor
-      ..stroke = _style.strokeColor
-      ..strokeWidthPx = _style.strokeWidthPx;
+    final _handleBounds = this._handleBounds;
+    final element = _SliderElement<D>(
+      domainCenterPoint: Point<int>(_domainCenterPoint.x, _domainCenterPoint.y),
+      buttonBounds: Rectangle<int>(_handleBounds.left, _handleBounds.top,
+          _handleBounds.width, _handleBounds.height),
+      fill: _style.fillColor,
+      stroke: _style.strokeColor,
+      strokeWidthPx: _style.strokeWidthPx,
+    );
 
     _sliderHandle.setNewTarget(element);
 
@@ -682,13 +683,22 @@ class _SliderElement<D> {
   Color stroke;
   double strokeWidthPx;
 
+  _SliderElement({
+    @required this.domainCenterPoint,
+    @required this.buttonBounds,
+    @required this.fill,
+    @required this.stroke,
+    @required this.strokeWidthPx,
+  });
+
   _SliderElement<D> clone() {
-    return _SliderElement<D>()
-      ..domainCenterPoint = domainCenterPoint
-      ..buttonBounds = buttonBounds
-      ..fill = fill
-      ..stroke = stroke
-      ..strokeWidthPx = strokeWidthPx;
+    return _SliderElement<D>(
+      domainCenterPoint: domainCenterPoint,
+      buttonBounds: buttonBounds,
+      fill: fill,
+      stroke: stroke,
+      strokeWidthPx: strokeWidthPx,
+    );
   }
 
   void updateAnimationPercent(_SliderElement<D> previous,

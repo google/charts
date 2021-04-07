@@ -223,14 +223,15 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
 
         animatingPoint = _AnimatedPoint<D>(
             key: pointKey, overlaySeries: series.overlaySeries)
-          ..setNewTarget(_PointRendererElement<D>()
-            ..point = point
-            ..color = detail.color
-            ..fillColor = detail.fillColor
-            ..radiusPx = radiusPx
-            ..measureAxisPosition = measureAxis.getLocation(0.0)
-            ..strokeWidthPx = detail.strokeWidthPx
-            ..symbolRenderer = detail.symbolRenderer);
+          ..setNewTarget(_PointRendererElement<D>(
+            point: point,
+            color: detail.color,
+            fillColor: detail.fillColor,
+            radiusPx: radiusPx,
+            measureAxisPosition: measureAxis.getLocation(0.0),
+            strokeWidthPx: detail.strokeWidthPx,
+            symbolRenderer: detail.symbolRenderer,
+          ));
       }
 
       newSeriesMap[pointKey] = animatingPoint;
@@ -247,14 +248,15 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
       _currentKeys.add(pointKey);
 
       // Get the point element we are going to setup.
-      final pointElement = _PointRendererElement<D>()
-        ..point = point
-        ..color = detail.color
-        ..fillColor = detail.fillColor
-        ..radiusPx = radiusPx
-        ..measureAxisPosition = measureAxis.getLocation(0.0)
-        ..strokeWidthPx = detail.strokeWidthPx
-        ..symbolRenderer = detail.symbolRenderer;
+      final pointElement = _PointRendererElement<D>(
+        point: point,
+        color: detail.color,
+        fillColor: detail.fillColor,
+        radiusPx: radiusPx,
+        measureAxisPosition: measureAxis.getLocation(0.0),
+        strokeWidthPx: detail.strokeWidthPx,
+        symbolRenderer: detail.symbolRenderer,
+      );
 
       animatingPoint.setNewTarget(pointElement);
     }
@@ -544,15 +546,26 @@ class _PointRendererElement<D> {
   double strokeWidthPx;
   SymbolRenderer symbolRenderer;
 
+  _PointRendererElement({
+    @required this.point,
+    @required this.color,
+    @required this.fillColor,
+    @required this.radiusPx,
+    @required this.measureAxisPosition,
+    @required this.strokeWidthPx,
+    @required this.symbolRenderer,
+  });
+
   _PointRendererElement<D> clone() {
-    return _PointRendererElement<D>()
-      ..point = point
-      ..color = color
-      ..fillColor = fillColor
-      ..measureAxisPosition = measureAxisPosition
-      ..radiusPx = radiusPx
-      ..strokeWidthPx = strokeWidthPx
-      ..symbolRenderer = symbolRenderer;
+    return _PointRendererElement<D>(
+      point: point,
+      color: color,
+      fillColor: fillColor,
+      measureAxisPosition: measureAxisPosition,
+      radiusPx: radiusPx,
+      strokeWidthPx: strokeWidthPx,
+      symbolRenderer: symbolRenderer,
+    );
   }
 
   void updateAnimationPercent(_PointRendererElement<D> previous,

@@ -183,14 +183,15 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           }
 
           // Create a new style segment.
-          currentDetails = _LineRendererElement<D>()
-            ..color = color
-            ..areaColor = areaColor
-            ..dashPattern = dashPattern
-            ..domainExtent = _Range<D>(domain, domain)
-            ..strokeWidthPx = strokeWidthPx
-            ..styleKey = styleKey
-            ..roundEndCaps = config.roundEndCaps;
+          currentDetails = _LineRendererElement<D>(
+            color: color,
+            areaColor: areaColor,
+            dashPattern: dashPattern,
+            domainExtent: _Range<D>(domain, domain),
+            strokeWidthPx: strokeWidthPx,
+            styleKey: styleKey,
+            roundEndCaps: config.roundEndCaps,
+          );
 
           styleSegments.add(currentDetails);
           usedKeys.add(styleKey);
@@ -433,12 +434,13 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             }
           }
 
-          animatingElements = _AnimatedElements<D>()
-            ..styleKey = styleSegment.styleKey
-            ..allPoints = allPointList
-            ..lines = animatingLines
-            ..areas = animatingAreas
-            ..bounds = animatingBounds;
+          animatingElements = _AnimatedElements<D>(
+            styleKey: styleSegment.styleKey,
+            allPoints: allPointList,
+            lines: animatingLines,
+            areas: animatingAreas,
+            bounds: animatingBounds,
+          );
 
           elementsList.add(animatingElements);
 
@@ -608,17 +610,18 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       final lineStyleKey = '${styleKey}__line__${index}';
       _currentKeys.add(lineStyleKey);
 
-      lineElements.add(_LineRendererElement<D>()
-        ..points = linePointList
-        ..color = color
-        ..areaColor = areaColor
-        ..dashPattern = dashPattern
-        ..domainExtent = domainExtent
-        ..measureAxisPosition = measureAxis.getLocation(0.0)
-        ..positionExtent = positionExtent
-        ..strokeWidthPx = strokeWidthPx
-        ..styleKey = lineStyleKey
-        ..roundEndCaps = roundEndCaps);
+      lineElements.add(_LineRendererElement<D>(
+        points: linePointList,
+        color: color,
+        areaColor: areaColor,
+        dashPattern: dashPattern,
+        domainExtent: domainExtent,
+        measureAxisPosition: measureAxis.getLocation(0.0),
+        positionExtent: positionExtent,
+        strokeWidthPx: strokeWidthPx,
+        styleKey: lineStyleKey,
+        roundEndCaps: roundEndCaps,
+      ));
     }
 
     // Get the area elements we are going to set up.
@@ -631,14 +634,15 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         final areaStyleKey = '${styleKey}__area_${index}';
         _currentKeys.add(areaStyleKey);
 
-        areaElements.add(_AreaRendererElement<D>()
-          ..points = areaPointList
-          ..color = color
-          ..areaColor = areaColor
-          ..domainExtent = domainExtent
-          ..measureAxisPosition = measureAxis.getLocation(0.0)
-          ..positionExtent = positionExtent
-          ..styleKey = areaStyleKey);
+        areaElements.add(_AreaRendererElement<D>(
+          points: areaPointList,
+          color: color,
+          areaColor: areaColor,
+          domainExtent: domainExtent,
+          measureAxisPosition: measureAxis.getLocation(0.0),
+          positionExtent: positionExtent,
+          styleKey: areaStyleKey,
+        ));
       }
     }
 
@@ -652,14 +656,15 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         final boundsStyleKey = '${styleKey}__bounds_${index}';
         _currentKeys.add(boundsStyleKey);
 
-        boundsElements.add(_AreaRendererElement<D>()
-          ..points = boundsPointList
-          ..color = color
-          ..areaColor = areaColor
-          ..domainExtent = domainExtent
-          ..measureAxisPosition = measureAxis.getLocation(0.0)
-          ..positionExtent = positionExtent
-          ..styleKey = boundsStyleKey);
+        boundsElements.add(_AreaRendererElement<D>(
+          points: boundsPointList,
+          color: color,
+          areaColor: areaColor,
+          domainExtent: domainExtent,
+          measureAxisPosition: measureAxis.getLocation(0.0),
+          positionExtent: positionExtent,
+          styleKey: boundsStyleKey,
+        ));
       }
     }
 
@@ -1188,18 +1193,32 @@ class _LineRendererElement<D> {
   String styleKey;
   bool roundEndCaps;
 
+  _LineRendererElement({
+    this.points,
+    @required this.color,
+    @required this.areaColor,
+    @required this.dashPattern,
+    @required this.domainExtent,
+    this.measureAxisPosition,
+    this.positionExtent,
+    @required this.strokeWidthPx,
+    @required this.styleKey,
+    @required this.roundEndCaps,
+  });
+
   _LineRendererElement<D> clone() {
-    return _LineRendererElement<D>()
-      ..points = List.of(points)
-      ..color = color != null ? Color.fromOther(color: color) : null
-      ..areaColor = areaColor != null ? Color.fromOther(color: areaColor) : null
-      ..dashPattern = dashPattern != null ? List.of(dashPattern) : null
-      ..domainExtent = domainExtent
-      ..measureAxisPosition = measureAxisPosition
-      ..positionExtent = positionExtent
-      ..strokeWidthPx = strokeWidthPx
-      ..styleKey = styleKey
-      ..roundEndCaps = roundEndCaps;
+    return _LineRendererElement<D>(
+      points: points != null ? List.of(points) : null,
+      color: color != null ? Color.fromOther(color: color) : null,
+      areaColor: areaColor != null ? Color.fromOther(color: areaColor) : null,
+      dashPattern: dashPattern != null ? List.of(dashPattern) : null,
+      domainExtent: domainExtent,
+      measureAxisPosition: measureAxisPosition,
+      positionExtent: positionExtent,
+      strokeWidthPx: strokeWidthPx,
+      styleKey: styleKey,
+      roundEndCaps: roundEndCaps,
+    );
   }
 
   void updateAnimationPercent(_LineRendererElement<D> previous,
@@ -1339,15 +1358,26 @@ class _AreaRendererElement<D> {
   _Range<num> positionExtent;
   String styleKey;
 
+  _AreaRendererElement({
+    @required this.points,
+    @required this.color,
+    @required this.areaColor,
+    @required this.domainExtent,
+    @required this.measureAxisPosition,
+    @required this.positionExtent,
+    @required this.styleKey,
+  });
+
   _AreaRendererElement<D> clone() {
-    return _AreaRendererElement<D>()
-      ..points = List.of(points)
-      ..color = color != null ? Color.fromOther(color: color) : null
-      ..areaColor = areaColor != null ? Color.fromOther(color: areaColor) : null
-      ..domainExtent = domainExtent
-      ..measureAxisPosition = measureAxisPosition
-      ..positionExtent = positionExtent
-      ..styleKey = styleKey;
+    return _AreaRendererElement<D>(
+      points: List.of(points),
+      color: color != null ? Color.fromOther(color: color) : null,
+      areaColor: areaColor != null ? Color.fromOther(color: areaColor) : null,
+      domainExtent: domainExtent,
+      measureAxisPosition: measureAxisPosition,
+      positionExtent: positionExtent,
+      styleKey: styleKey,
+    );
   }
 
   void updateAnimationPercent(_AreaRendererElement<D> previous,
@@ -1471,6 +1501,14 @@ class _AnimatedElements<D> {
   List<_AnimatedLine<D>> lines;
   List<_AnimatedArea<D>> bounds;
   String styleKey;
+
+  _AnimatedElements({
+    @required this.allPoints,
+    @required this.areas,
+    @required this.lines,
+    @required this.bounds,
+    @required this.styleKey,
+  });
 
   bool get animatingOut {
     var areasAnimatingOut = true;

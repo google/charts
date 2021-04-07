@@ -263,20 +263,21 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       } else {
         // Create a new annotation, positioned at the start and end values.
         animatingAnnotation = _AnimatedAnnotation<D>(key: key)
-          ..setNewTarget(_AnnotationElement<D>()
-            ..annotation = annotationDatum
-            ..annotationSegment = annotation
-            ..color = color
-            ..dashPattern = dashPattern
-            ..startLabel = startLabel
-            ..endLabel = endLabel
-            ..middleLabel = middleLabel
-            ..isRange = isRange
-            ..labelAnchor = labelAnchor
-            ..labelDirection = labelDirection
-            ..labelPosition = labelPosition
-            ..labelStyleSpec = labelStyleSpec
-            ..strokeWidthPx = strokeWidthPx);
+          ..setNewTarget(_AnnotationElement<D>(
+            annotation: annotationDatum,
+            annotationSegment: annotation,
+            color: color,
+            dashPattern: dashPattern,
+            startLabel: startLabel,
+            endLabel: endLabel,
+            middleLabel: middleLabel,
+            isRange: isRange,
+            labelAnchor: labelAnchor,
+            labelDirection: labelDirection,
+            labelPosition: labelPosition,
+            labelStyleSpec: labelStyleSpec,
+            strokeWidthPx: strokeWidthPx,
+          ));
 
         _annotationMap[key] = animatingAnnotation;
       }
@@ -285,20 +286,21 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       _currentKeys.add(key);
 
       // Get the annotation element we are going to setup.
-      final annotationElement = _AnnotationElement<D>()
-        ..annotation = annotationDatum
-        ..annotationSegment = annotation
-        ..color = color
-        ..dashPattern = dashPattern
-        ..startLabel = startLabel
-        ..endLabel = endLabel
-        ..middleLabel = middleLabel
-        ..isRange = isRange
-        ..labelAnchor = labelAnchor
-        ..labelDirection = labelDirection
-        ..labelPosition = labelPosition
-        ..labelStyleSpec = labelStyleSpec
-        ..strokeWidthPx = strokeWidthPx;
+      final annotationElement = _AnnotationElement<D>(
+        annotation: annotationDatum,
+        annotationSegment: annotation,
+        color: color,
+        dashPattern: dashPattern,
+        startLabel: startLabel,
+        endLabel: endLabel,
+        middleLabel: middleLabel,
+        isRange: isRange,
+        labelAnchor: labelAnchor,
+        labelDirection: labelDirection,
+        labelPosition: labelPosition,
+        labelStyleSpec: labelStyleSpec,
+        strokeWidthPx: strokeWidthPx,
+      );
 
       animatingAnnotation.setNewTarget(annotationElement);
     }
@@ -1094,7 +1096,11 @@ class _DatumAnnotation {
   final double endPosition;
   final RangeAnnotationAxisType axisType;
 
-  _DatumAnnotation({this.startPosition, this.endPosition, this.axisType});
+  _DatumAnnotation({
+    @required this.startPosition,
+    @required this.endPosition,
+    @required this.axisType,
+  });
 
   factory _DatumAnnotation.from(_DatumAnnotation other,
       [double startPosition, double endPosition]) {
@@ -1107,34 +1113,51 @@ class _DatumAnnotation {
 
 class _AnnotationElement<D> {
   _DatumAnnotation annotation;
-  AnnotationSegment<Object> annotationSegment;
+  final AnnotationSegment<Object> annotationSegment;
   Color color;
-  String startLabel;
-  String endLabel;
-  String middleLabel;
-  bool isRange;
-  AnnotationLabelAnchor labelAnchor;
-  AnnotationLabelDirection labelDirection;
-  AnnotationLabelPosition labelPosition;
-  TextStyleSpec labelStyleSpec;
-  List<int> dashPattern;
+  final String startLabel;
+  final String endLabel;
+  final String middleLabel;
+  final bool isRange;
+  final AnnotationLabelAnchor labelAnchor;
+  final AnnotationLabelDirection labelDirection;
+  final AnnotationLabelPosition labelPosition;
+  final TextStyleSpec labelStyleSpec;
+  final List<int> dashPattern;
   double strokeWidthPx;
 
+  _AnnotationElement({
+    @required this.annotation,
+    @required this.annotationSegment,
+    @required this.color,
+    @required this.startLabel,
+    @required this.endLabel,
+    @required this.middleLabel,
+    @required this.isRange,
+    @required this.labelAnchor,
+    @required this.labelDirection,
+    @required this.labelPosition,
+    @required this.labelStyleSpec,
+    @required this.dashPattern,
+    @required this.strokeWidthPx,
+  });
+
   _AnnotationElement<D> clone() {
-    return _AnnotationElement<D>()
-      ..annotation = _DatumAnnotation.from(annotation)
-      ..annotationSegment = annotationSegment
-      ..color = color != null ? Color.fromOther(color: color) : null
-      ..startLabel = startLabel
-      ..endLabel = endLabel
-      ..middleLabel = middleLabel
-      ..isRange = isRange
-      ..labelAnchor = labelAnchor
-      ..labelDirection = labelDirection
-      ..labelPosition = labelPosition
-      ..labelStyleSpec = labelStyleSpec
-      ..dashPattern = dashPattern
-      ..strokeWidthPx = strokeWidthPx;
+    return _AnnotationElement<D>(
+      annotation: _DatumAnnotation.from(annotation),
+      annotationSegment: annotationSegment,
+      color: color != null ? Color.fromOther(color: color) : null,
+      startLabel: startLabel,
+      endLabel: endLabel,
+      middleLabel: middleLabel,
+      isRange: isRange,
+      labelAnchor: labelAnchor,
+      labelDirection: labelDirection,
+      labelPosition: labelPosition,
+      labelStyleSpec: labelStyleSpec,
+      dashPattern: dashPattern,
+      strokeWidthPx: strokeWidthPx,
+    );
   }
 
   void updateAnimationPercent(

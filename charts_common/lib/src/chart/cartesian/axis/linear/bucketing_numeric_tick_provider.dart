@@ -85,9 +85,9 @@ class BucketingNumericTickProvider extends NumericTickProvider {
           'The showBucket flag must be set before getting ticks.');
     }
 
-    final localFormatter = _BucketingFormatter()
-      ..threshold = _threshold
-      ..originalFormatter = formatter as SimpleTickFormatterBase<num>;
+    final localFormatter = _BucketingFormatter(
+        threshold: _threshold,
+        originalFormatter: formatter as SimpleTickFormatterBase<num>);
 
     final ticks = super.getTicks(
         context: context,
@@ -134,11 +134,14 @@ class BucketingNumericTickProvider extends NumericTickProvider {
 }
 
 class _BucketingFormatter extends SimpleTickFormatterBase<num> {
+  _BucketingFormatter(
+      {@required this.threshold, @required this.originalFormatter});
+
   /// All values smaller than the threshold will be formatted into an empty
   /// string.
-  num threshold;
+  final num threshold;
 
-  SimpleTickFormatterBase<num> originalFormatter;
+  final SimpleTickFormatterBase<num> originalFormatter;
 
   /// Formats a single tick value.
   @override

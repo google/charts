@@ -128,8 +128,8 @@ void main() {
   group('pie chart', () {
     test('Paint labels with default settings', () {
       final data = ['A', 'B'];
-      final arcElements = ArcRendererElementList()
-        ..arcs = [
+      final arcElements = ArcRendererElementList(
+        arcs: [
           // 'A' is small enough to fit inside the arc.
           // 'LongLabelB' should not fit inside the arc because it has length
           // greater than 10.
@@ -139,11 +139,12 @@ void main() {
           FakeArcRendererElement((_) => 'LongLabelB', data)
             ..startAngle = pi / 2
             ..endAngle = 3 * pi / 2,
-        ]
-        ..center = Point(100.0, 100.0)
-        ..innerRadius = 30.0
-        ..radius = 40.0
-        ..startAngle = -pi / 2;
+        ],
+        center: Point(100.0, 100.0),
+        innerRadius: 30.0,
+        radius: 40.0,
+        startAngle: -pi / 2,
+      );
 
       final decorator = ArcLabelDecorator();
 
@@ -174,18 +175,19 @@ void main() {
     });
 
     test('LabelPosition.inside always paints inside the arc', () {
-      final arcElements = ArcRendererElementList()
-        ..arcs = [
+      final arcElements = ArcRendererElementList(
+        arcs: [
           // 'LongLabelABC' would not fit inside the arc because it has length
           // greater than 10. [ArcLabelPosition.inside] should override this.
           FakeArcRendererElement((_) => 'LongLabelABC', ['A'])
             ..startAngle = -pi / 2
             ..endAngle = pi / 2,
-        ]
-        ..center = Point(100.0, 100.0)
-        ..innerRadius = 30.0
-        ..radius = 40.0
-        ..startAngle = -pi / 2;
+        ],
+        center: Point(100.0, 100.0),
+        innerRadius: 30.0,
+        radius: 40.0,
+        startAngle: -pi / 2,
+      );
 
       final decorator = ArcLabelDecorator(
           labelPosition: ArcLabelPosition.inside,
@@ -205,18 +207,19 @@ void main() {
     });
 
     test('LabelPosition.outside always paints outside the arc', () {
-      final arcElements = ArcRendererElementList()
-        ..arcs = [
+      final arcElements = ArcRendererElementList(
+        arcs: [
           // 'A' will fit inside the arc because it has length less than 10.
           // [ArcLabelPosition.outside] should override this.
           FakeArcRendererElement((_) => 'A', ['A'])
             ..startAngle = -pi / 2
             ..endAngle = pi / 2,
-        ]
-        ..center = Point(100.0, 100.0)
-        ..innerRadius = 30.0
-        ..radius = 40.0
-        ..startAngle = -pi / 2;
+        ],
+        center: Point(100.0, 100.0),
+        innerRadius: 30.0,
+        radius: 40.0,
+        startAngle: -pi / 2,
+      );
 
       final decorator = ArcLabelDecorator(
           labelPosition: ArcLabelPosition.outside,
@@ -241,8 +244,8 @@ void main() {
 
     test('Inside and outside label styles are applied', () {
       final data = ['A', 'B'];
-      final arcElements = ArcRendererElementList()
-        ..arcs = [
+      final arcElements = ArcRendererElementList(
+        arcs: [
           // 'A' is small enough to fit inside the arc.
           // 'LongLabelB' should not fit inside the arc because it has length
           // greater than 10.
@@ -252,11 +255,12 @@ void main() {
           FakeArcRendererElement((_) => 'LongLabelB', data)
             ..startAngle = pi / 2
             ..endAngle = 3 * pi / 2,
-        ]
-        ..center = Point(100.0, 100.0)
-        ..innerRadius = 30.0
-        ..radius = 40.0
-        ..startAngle = -pi / 2;
+        ],
+        center: Point(100.0, 100.0),
+        innerRadius: 30.0,
+        radius: 40.0,
+        startAngle: -pi / 2,
+      );
 
       final insideColor = Color(r: 0, g: 0, b: 0);
       final outsideColor = Color(r: 255, g: 255, b: 255);
@@ -300,16 +304,17 @@ void main() {
 
   group('Null and empty label scenarios', () {
     test('Skip label if label accessor does not exist', () {
-      final arcElements = ArcRendererElementList()
-        ..arcs = [
+      final arcElements = ArcRendererElementList(
+        arcs: [
           FakeArcRendererElement(null, ['A'])
             ..startAngle = -pi / 2
             ..endAngle = pi / 2,
-        ]
-        ..center = Point(100.0, 100.0)
-        ..innerRadius = 30.0
-        ..radius = 40.0
-        ..startAngle = -pi / 2;
+        ],
+        center: Point(100.0, 100.0),
+        innerRadius: 30.0,
+        radius: 40.0,
+        startAngle: -pi / 2,
+      );
 
       ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
@@ -319,19 +324,20 @@ void main() {
 
     test('Skip label if label is null or empty', () {
       final data = ['A', 'B'];
-      final arcElements = ArcRendererElementList()
-        ..arcs = [
+      final arcElements = ArcRendererElementList(
+        arcs: [
           FakeArcRendererElement(null, data)
             ..startAngle = -pi / 2
             ..endAngle = pi / 2,
           FakeArcRendererElement((_) => '', data)
             ..startAngle = pi / 2
             ..endAngle = 3 * pi / 2,
-        ]
-        ..center = Point(100.0, 100.0)
-        ..innerRadius = 30.0
-        ..radius = 40.0
-        ..startAngle = -pi / 2;
+        ],
+        center: Point(100.0, 100.0),
+        innerRadius: 30.0,
+        radius: 40.0,
+        startAngle: -pi / 2,
+      );
 
       ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
