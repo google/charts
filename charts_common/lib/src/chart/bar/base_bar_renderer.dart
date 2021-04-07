@@ -401,15 +401,15 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         // domain value, series category (by way of the stack keys that were
         // generated for each series in the preprocess step), and bar group
         // index to account for all combinations of grouping and stacking.
-        var barStackMapKey = domainValue.toString() +
-            '__' +
-            seriesStackKey +
-            '__' +
-            (measureIsNegative ? 'pos' : 'neg') +
-            '__' +
-            barGroupIndex.toString();
+        var barStackMapKey = '$domainValue'
+            '__'
+            '$seriesStackKey'
+            '__'
+            '${measureIsNegative ? 'pos' : 'neg'}'
+            '__'
+            '$barGroupIndex';
 
-        var barKey = barStackMapKey + details.barStackIndex.toString();
+        var barKey = '${barStackMapKey}${details.barStackIndex}';
 
         var barStackList = _barStackMap.putIfAbsent(barStackMapKey, () => []);
 

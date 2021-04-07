@@ -155,11 +155,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
         // domain value, series category (by way of the stack keys that were
         // generated for each series in the preprocess step), and bar group
         // index to account for all combinations of grouping and stacking.
-        final barStackMapKey = domainValue.toString() +
-            '__' +
-            seriesStackKey +
-            '__' +
-            barGroupIndex.toString();
+        final barStackMapKey =
+            '${domainValue}__${seriesStackKey}__${barGroupIndex}';
 
         final barKey = barStackMapKey + '0';
 
@@ -267,7 +264,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
           final datum = {'index': mergedSeriesIndex};
           mergedSeries.data.add(datum);
 
-          final barStackMapKey = domainValue.toString() + '__allNull__';
+          final barStackMapKey = '${domainValue}__allNull__';
 
           final barKey = barStackMapKey + '0';
 

@@ -71,5 +71,5 @@ class SlidingViewport<D> implements ChartBehavior<D> {
   }
 
   @override
-  String get role => 'slidingViewport-${selectionModelType.toString()}';
+  String get role => 'slidingViewport-$selectionModelType';
 }

@@ -243,7 +243,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   BaseChart<D> get chart => _chart;
 
   @override
-  String get role => 'legend-${selectionModelType.toString()}';
+  String get role => 'legend-$selectionModelType';
 
   bool get isRtl => _chart.context.chartContainerIsRtl;
 

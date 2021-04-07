@@ -539,7 +539,7 @@ class Slider<D> implements ChartBehavior<D> {
   }
 
   @override
-  String get role => 'Slider-${eventTrigger.toString()}-${_roleId}';
+  String get role => 'Slider-$eventTrigger-$_roleId';
 }
 
 /// Style configuration for a [Slider] behavior.

@@ -221,7 +221,7 @@ class SimpleOrdinalScale implements OrdinalScale {
     if (startingDomain != null &&
         viewportDataSize != null &&
         viewportDataSize <= 0) {
-      throw ArgumentError('viewportDataSize can' 't be less than 1.');
+      throw ArgumentError('viewportDataSize cannot be less than 1.');
     }
 
     _scaleChanged = true;

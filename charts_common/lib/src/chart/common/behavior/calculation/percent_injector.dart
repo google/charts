@@ -105,9 +105,8 @@ class PercentInjector<D> implements ChartBehavior<D> {
             var measure = rawMeasureFn(index);
             measure ??= 0.0;
 
-            final key = useSeriesCategory
-                ? '${seriesCategory}__${domain.toString()}'
-                : '${domain.toString()}';
+            final key =
+                useSeriesCategory ? '${seriesCategory}__$domain' : '$domain';
 
             if (totalsByDomain[key] != null) {
               totalsByDomain[key] = totalsByDomain[key] + measure;
@@ -131,8 +130,8 @@ class PercentInjector<D> implements ChartBehavior<D> {
             final domain = series.domainFn(index);
 
             final key = useSeriesCategory
-                ? '${series.seriesCategory}__${domain.toString()}'
-                : '${domain.toString()}';
+                ? '${series.seriesCategory}__$domain'
+                : '$domain';
 
             return measure / totalsByDomain[key];
           };
@@ -150,8 +149,8 @@ class PercentInjector<D> implements ChartBehavior<D> {
               final domain = series.domainFn(index);
 
               final key = useSeriesCategory
-                  ? '${series.seriesCategory}__${domain.toString()}'
-                  : '${domain.toString()}';
+                  ? '${series.seriesCategory}__$domain'
+                  : '$domain';
 
               return measureLowerBound / totalsByDomain[key];
             };
@@ -170,8 +169,8 @@ class PercentInjector<D> implements ChartBehavior<D> {
               final domain = series.domainFn(index);
 
               final key = useSeriesCategory
-                  ? '${series.seriesCategory}__${domain.toString()}'
-                  : '${domain.toString()}';
+                  ? '${series.seriesCategory}__$domain'
+                  : '$domain';
 
               return measureUpperBound / totalsByDomain[key];
             };

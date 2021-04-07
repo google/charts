@@ -233,7 +233,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           final details = elementsList[arcIndex];
           final domainValue = details.domain;
 
-          var arcKey = '${series.id}__${domainValue.toString()}';
+          var arcKey = '${series.id}__$domainValue';
 
           // If we already have an AnimatingArc for that index, use it.
           var animatingArc = arcList.arcs
@@ -421,8 +421,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     final measure = series.measureFn(datumIndex);
     final color = series.colorFn(datumIndex);
 
-    final chartPosition =
-        _getChartPosition(series.id, '${series.id}__${domain.toString()}');
+    final chartPosition = _getChartPosition(series.id, '${series.id}__$domain');
 
     return DatumDetails(
         datum: datum,

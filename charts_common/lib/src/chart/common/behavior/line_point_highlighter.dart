@@ -272,7 +272,7 @@ class LinePointHighlighter<D> implements ChartBehavior<D> {
   }
 
   @override
-  String get role => 'LinePointHighlighter-${selectionModelType.toString()}';
+  String get role => 'LinePointHighlighter-$selectionModelType';
 }
 
 class _LinePointLayoutView<D> extends LayoutView {

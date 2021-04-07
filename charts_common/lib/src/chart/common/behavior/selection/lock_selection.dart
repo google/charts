@@ -122,5 +122,5 @@ class LockSelection<D> implements ChartBehavior<D> {
   }
 
   @override
-  String get role => 'LockSelection-${selectionModelType.toString()}}';
+  String get role => 'LockSelection-$selectionModelType';
 }
