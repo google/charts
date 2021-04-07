@@ -19,12 +19,14 @@ import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
 import 'package:charts_common/src/chart/cartesian/axis/collision_report.dart';
 import 'package:charts_common/src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
+import 'package:charts_common/src/chart/cartesian/axis/tick.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
 import 'package:charts_common/src/chart/cartesian/axis/linear/linear_scale.dart';
 import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/behavior/range_annotation.dart';
 import 'package:charts_common/src/chart/line/line_chart.dart';
+import 'package:charts_common/src/common/graphics_factory.dart';
 import 'package:charts_common/src/common/material_palette.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:mockito/mockito.dart';
@@ -70,6 +72,8 @@ class ConcreteNumericAxis extends Axis<num> {
 
 class MockTickProvider extends Mock implements NumericTickProvider {}
 
+class MockGraphicsFactory extends Mock implements GraphicsFactory {}
+
 class MockTickDrawStrategy extends Mock implements TickDrawStrategy<num> {}
 
 void main() {
@@ -112,17 +116,36 @@ void main() {
   /// layout bounds.
   void _drawSeriesList(
       ConcreteChart chart, List<Series<MyRow, int>> seriesList) {
-    _chart.domainAxis.autoViewport = true;
+    var graphicsFactory = MockGraphicsFactory();
     var drawStrategy = MockTickDrawStrategy();
-    when(drawStrategy.collides(any, any)).thenReturn(CollisionReport<num>(
+    var tickProvider = MockTickProvider();
+    var ticks = <Tick<num>>[];
+    when(tickProvider.getTicks(
+      context: anyNamed('context'),
+      graphicsFactory: anyNamed('graphicsFactory'),
+      scale: anyNamed('scale'),
+      formatter: anyNamed('formatter'),
+      formatterValueCache: anyNamed('formatterValueCache'),
+      tickDrawStrategy: anyNamed('tickDrawStrategy'),
+      orientation: anyNamed('orientation'),
+      viewportExtensionEnabled: anyNamed('viewportExtensionEnabled'),
+    )).thenReturn(ticks);
+    when(drawStrategy.collides(ticks, any)).thenReturn(CollisionReport<num>(
         ticks: [], ticksCollide: false, alternateTicksUsed: false));
 
-    _chart.domainAxis.tickDrawStrategy = drawStrategy;
-    _chart.domainAxis.resetDomains();
+    _chart.domainAxis
+      ..autoViewport = true
+      ..graphicsFactory = graphicsFactory
+      ..tickDrawStrategy = drawStrategy
+      ..tickProvider = tickProvider
+      ..resetDomains();
 
-    _chart.getMeasureAxis().autoViewport = true;
-    _chart.getMeasureAxis().tickDrawStrategy = drawStrategy;
-    _chart.getMeasureAxis().resetDomains();
+    _chart.getMeasureAxis()
+      ..autoViewport = true
+      ..graphicsFactory = graphicsFactory
+      ..tickDrawStrategy = drawStrategy
+      ..tickProvider = tickProvider
+      ..resetDomains();
 
     _chart.draw(seriesList);
 

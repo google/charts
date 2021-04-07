@@ -28,6 +28,8 @@ import 'package:test/test.dart';
 
 /// For testing viewport start / end.
 class FakeCartesianRenderer extends BaseCartesianRenderer {
+  FakeCartesianRenderer() : super(rendererId: 'fake', layoutPaintOrder: 0);
+
   @override
   List<DatumDetails> getNearestDatumDetailPerSeries(
     Point<double> chartPoint,

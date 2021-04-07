@@ -28,6 +28,8 @@ import 'package:charts_common/src/data/series.dart';
 import 'package:test/test.dart';
 
 class FakeRenderer<D> extends BaseSeriesRenderer<D> {
+  FakeRenderer() : super(rendererId: 'fake', layoutPaintOrder: 0);
+
   @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {

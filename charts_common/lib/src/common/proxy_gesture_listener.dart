@@ -15,6 +15,8 @@
 
 import 'dart:math' show Point;
 
+import 'package:meta/meta.dart' show required;
+
 import 'gesture_listener.dart' show GestureListener;
 
 /// Listens to all gestures and proxies to child listeners.
@@ -123,8 +125,10 @@ class ProxyGestureListener {
         listener.onBlur != null && listener.onBlur());
   }
 
-  List<GestureListener> _cancel(
-      {List<GestureListener> all, List<GestureListener> keep}) {
+  List<GestureListener> _cancel({
+    @required List<GestureListener> all,
+    @required List<GestureListener> keep,
+  }) {
     all.forEach((GestureListener listener) {
       if (!keep.contains(listener)) {
         listener.onTapCancel();

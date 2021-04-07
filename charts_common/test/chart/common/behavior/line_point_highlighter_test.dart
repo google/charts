@@ -69,6 +69,8 @@ class MockNumericAxis extends Mock implements NumericAxis {
 }
 
 class MockSeriesRenderer<D> extends BaseSeriesRenderer<D> {
+  MockSeriesRenderer() : super(rendererId: 'fake', layoutPaintOrder: 0);
+
   @override
   void update(_, __) {}
 

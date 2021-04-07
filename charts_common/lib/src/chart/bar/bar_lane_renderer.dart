@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
+import 'package:meta/meta.dart' show required;
 
 import '../../data/series.dart' show AttributeKey;
 import '../cartesian/axis/axis.dart'
@@ -74,8 +75,10 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
     return BarLaneRenderer._internal(config: config, rendererId: rendererId);
   }
 
-  BarLaneRenderer._internal({BarLaneRendererConfig config, String rendererId})
-      : super.internal(config: config, rendererId: rendererId);
+  BarLaneRenderer._internal({
+    @required BarLaneRendererConfig config,
+    @required String rendererId,
+  }) : super.internal(config: config, rendererId: rendererId);
 
   @override
   void preprocessSeries(List<MutableSeries<D>> seriesList) {

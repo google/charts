@@ -25,6 +25,7 @@ import 'package:charts_common/src/common/line_style.dart';
 import 'package:charts_common/src/common/text_element.dart';
 import 'package:charts_common/src/common/text_measurement.dart';
 import 'package:charts_common/src/common/text_style.dart';
+import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -59,22 +60,28 @@ class BaseTickDrawStrategyImpl<D> extends BaseTickDrawStrategy<D> {
             labelCollisionRotation: labelCollisionRotation);
 
   @override
-  void draw(ChartCanvas canvas, Tick<D> tick,
-      {AxisOrientation orientation,
-      Rectangle<int> axisBounds,
-      Rectangle<int> drawAreaBounds,
-      bool isFirst,
-      bool isLast,
-      bool collision = false}) {}
+  void draw(
+    ChartCanvas canvas,
+    Tick<D> tick, {
+    @required AxisOrientation orientation,
+    @required Rectangle<int> axisBounds,
+    @required Rectangle<int> drawAreaBounds,
+    @required bool isFirst,
+    @required bool isLast,
+    bool collision = false,
+  }) {}
 
   @override
-  void drawLabel(ChartCanvas canvas, Tick<D> tick,
-      {AxisOrientation orientation,
-      Rectangle<int> axisBounds,
-      Rectangle<int> drawAreaBounds,
-      bool isFirst = false,
-      bool isLast = false,
-      bool collision = false}) {
+  void drawLabel(
+    ChartCanvas canvas,
+    Tick<D> tick, {
+    @required AxisOrientation orientation,
+    @required Rectangle<int> axisBounds,
+    @required Rectangle<int> drawAreaBounds,
+    bool isFirst = false,
+    bool isLast = false,
+    bool collision = false,
+  }) {
     super.drawLabel(canvas, tick,
         orientation: orientation,
         axisBounds: axisBounds,
@@ -515,6 +522,7 @@ void main() {
         ticks.first,
         orientation: AxisOrientation.bottom,
         axisBounds: axisBounds,
+        drawAreaBounds: null,
       );
 
       // The y-coordinate should increase by the line's height + padding.
@@ -546,6 +554,7 @@ void main() {
         ticks[1],
         orientation: AxisOrientation.top,
         axisBounds: axisBounds,
+        drawAreaBounds: null,
       );
 
       final labelLine =
@@ -639,6 +648,7 @@ void main() {
         ticks.first,
         orientation: AxisOrientation.bottom,
         axisBounds: axisBounds,
+        drawAreaBounds: null,
         collision: true,
       );
 
@@ -671,6 +681,7 @@ void main() {
         ticks[1],
         orientation: AxisOrientation.top,
         axisBounds: axisBounds,
+        drawAreaBounds: null,
         collision: true,
       );
 

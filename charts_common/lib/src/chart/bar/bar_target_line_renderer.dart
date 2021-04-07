@@ -56,9 +56,10 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
         config: config, rendererId: rendererId);
   }
 
-  BarTargetLineRenderer._internal(
-      {BarTargetLineRendererConfig<D> config, String rendererId})
-      : super(
+  BarTargetLineRenderer._internal({
+    @required BarTargetLineRendererConfig<D> config,
+    @required String rendererId,
+  }) : super(
             config: config,
             rendererId: rendererId,
             layoutPaintOrder: config.layoutPaintOrder);
@@ -134,26 +135,26 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   /// current state of one bar target line on the chart.
   @override
   _AnimatedBarTargetLine<D> makeAnimatedBar(
-      {String key,
-      ImmutableSeries<D> series,
+      {@required String key,
+      @required ImmutableSeries<D> series,
       dynamic datum,
       Color color,
       List<int> dashPattern,
-      _BarTargetLineRendererElement details,
+      @required _BarTargetLineRendererElement details,
       D domainValue,
-      ImmutableAxis<D> domainAxis,
-      int domainWidth,
+      @required ImmutableAxis<D> domainAxis,
+      @required int domainWidth,
       num measureValue,
-      num measureOffsetValue,
-      ImmutableAxis<num> measureAxis,
+      @required num measureOffsetValue,
+      @required ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       Color fillColor,
       FillPatternType fillPattern,
-      int barGroupIndex,
+      @required int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
       List<double> allBarGroupWeights,
-      int numBarGroups,
+      @required int numBarGroups,
       double strokeWidthPx,
       bool measureIsNull,
       bool measureIsNegative}) {
@@ -188,22 +189,22 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   _BarTargetLineRendererElement makeBarRendererElement(
       {Color color,
       List<int> dashPattern,
-      _BarTargetLineRendererElement details,
+      @required _BarTargetLineRendererElement details,
       D domainValue,
-      ImmutableAxis<D> domainAxis,
-      int domainWidth,
+      @required ImmutableAxis<D> domainAxis,
+      @required int domainWidth,
       num measureValue,
-      num measureOffsetValue,
-      ImmutableAxis<num> measureAxis,
+      @required num measureOffsetValue,
+      @required ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
-      int barGroupIndex,
+      @required int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
       List<double> allBarGroupWeights,
-      int numBarGroups,
+      @required int numBarGroups,
       bool measureIsNull,
       bool measureIsNegative}) {
     return _BarTargetLineRendererElement()

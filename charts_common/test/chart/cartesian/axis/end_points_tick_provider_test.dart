@@ -33,6 +33,7 @@ import 'package:charts_common/src/chart/cartesian/axis/numeric_extents.dart';
 import 'package:charts_common/src/chart/cartesian/axis/time/date_time_extents.dart';
 import 'package:charts_common/src/chart/cartesian/axis/time/date_time_scale.dart';
 import 'package:charts_common/src/chart/cartesian/axis/time/date_time_tick_formatter.dart';
+import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -72,11 +73,11 @@ class FakeDrawStrategy<D> extends BaseTickDrawStrategy<D> {
 
   @override
   void draw(ChartCanvas canvas, Tick<D> tick,
-      {AxisOrientation orientation,
-      Rectangle<int> axisBounds,
-      Rectangle<int> drawAreaBounds,
-      bool isFirst,
-      bool isLast,
+      {@required AxisOrientation orientation,
+      @required Rectangle<int> axisBounds,
+      @required Rectangle<int> drawAreaBounds,
+      @required bool isFirst,
+      @required bool isLast,
       bool collision = false}) {}
 }
 

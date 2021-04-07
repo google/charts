@@ -60,8 +60,10 @@ class BarRenderer<D>
   /// This constructor is protected because it is used by child classes, which
   /// cannot call the factory in their own constructors.
   @protected
-  BarRenderer.internal({BarRendererConfig<Object> config, String rendererId})
-      : barRendererDecorator = config.barRendererDecorator,
+  BarRenderer.internal({
+    @required BarRendererConfig<Object> config,
+    @required String rendererId,
+  })  : barRendererDecorator = config.barRendererDecorator,
         _stackedBarPaddingPx = config.stackedBarPaddingPx,
         super(
             config: config,
@@ -129,27 +131,27 @@ class BarRenderer<D>
   /// of one bar on the chart.
   @override
   AnimatedBar<D> makeAnimatedBar(
-      {String key,
-      ImmutableSeries<D> series,
+      {@required String key,
+      @required ImmutableSeries<D> series,
       List<int> dashPattern,
       dynamic datum,
       Color color,
-      BarRendererElement<D> details,
+      @required BarRendererElement<D> details,
       D domainValue,
-      ImmutableAxis<D> domainAxis,
-      int domainWidth,
+      @required ImmutableAxis<D> domainAxis,
+      @required int domainWidth,
       num measureValue,
-      num measureOffsetValue,
-      ImmutableAxis<num> measureAxis,
+      @required num measureOffsetValue,
+      @required ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
-      int barGroupIndex,
+      @required int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
       List<double> allBarGroupWeights,
-      int numBarGroups,
+      @required int numBarGroups,
       bool measureIsNull,
       bool measureIsNegative}) {
     return AnimatedBar<D>(
@@ -183,22 +185,22 @@ class BarRenderer<D>
   BarRendererElement<D> makeBarRendererElement(
       {Color color,
       List<int> dashPattern,
-      BarRendererElement<D> details,
+      @required BarRendererElement<D> details,
       D domainValue,
-      ImmutableAxis<D> domainAxis,
-      int domainWidth,
+      @required ImmutableAxis<D> domainAxis,
+      @required int domainWidth,
       num measureValue,
-      num measureOffsetValue,
-      ImmutableAxis<num> measureAxis,
+      @required num measureOffsetValue,
+      @required ImmutableAxis<num> measureAxis,
       double measureAxisPosition,
       Color fillColor,
       FillPatternType fillPattern,
       double strokeWidthPx,
-      int barGroupIndex,
+      @required int barGroupIndex,
       double previousBarGroupWeight,
       double barGroupWeight,
       List<double> allBarGroupWeights,
-      int numBarGroups,
+      @required int numBarGroups,
       bool measureIsNull,
       bool measureIsNegative}) {
     return BarRendererElement<D>()

@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:math';
+import 'package:meta/meta.dart' show required;
 
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
@@ -48,12 +49,15 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
       this.outlineColor = _defaultOutlineColor});
 
   @override
-  void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
-      ChartCanvas canvas, GraphicsFactory graphicsFactory,
-      {Rectangle<num> drawBounds,
-      double animationPercent,
-      bool renderingVertically,
-      bool rtl = false}) {
+  void decorate(
+    Iterable<ImmutableBarRendererElement<D>> barElements,
+    ChartCanvas canvas,
+    GraphicsFactory graphicsFactory, {
+    @required Rectangle<num> drawBounds,
+    @required double animationPercent,
+    @required bool renderingVertically,
+    bool rtl = false,
+  }) {
     // Only decorate the bars when animation is at 100%.
     if (animationPercent != 1.0) {
       return;

@@ -691,17 +691,17 @@ class DatumPoint<D> extends Point<double> {
   final double yLower;
   final double yUpper;
 
-  DatumPoint(
-      {this.datum,
-      this.domain,
-      this.series,
-      double x,
-      this.xLower,
-      this.xUpper,
-      double y,
-      this.yLower,
-      this.yUpper})
-      : super(x, y);
+  DatumPoint({
+    this.datum,
+    this.domain,
+    this.series,
+    @required double x,
+    @required this.xLower,
+    @required this.xUpper,
+    @required double y,
+    @required this.yLower,
+    @required this.yUpper,
+  }) : super(x, y);
 
   factory DatumPoint.from(DatumPoint<D> other,
       {double x,
@@ -887,9 +887,10 @@ class _Distances {
   /// Whether or not the point was located inside the datum.
   final bool insidePoint;
 
-  _Distances(
-      {this.domainDistance,
-      this.measureDistance,
-      this.relativeDistance,
-      this.insidePoint});
+  _Distances({
+    @required this.domainDistance,
+    @required this.measureDistance,
+    @required this.relativeDistance,
+    this.insidePoint,
+  });
 }

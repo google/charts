@@ -275,10 +275,10 @@ class LayoutManagerImpl implements LayoutManager {
   _MeasuredSizes _measure(
     int width,
     int height, {
-    Iterable<LayoutView> topViews,
-    Iterable<LayoutView> rightViews,
-    Iterable<LayoutView> bottomViews,
-    Iterable<LayoutView> leftViews,
+    @required Iterable<LayoutView> topViews,
+    @required Iterable<LayoutView> rightViews,
+    @required Iterable<LayoutView> bottomViews,
+    @required Iterable<LayoutView> leftViews,
     _MeasuredSizes previousMeasurements,
     @required bool useMax,
   }) {
@@ -358,13 +358,14 @@ class _MeasuredSizes {
   final int bottomHeight;
   final SizeList bottomSizes;
 
-  _MeasuredSizes(
-      {this.leftWidth,
-      this.leftSizes,
-      this.rightWidth,
-      this.rightSizes,
-      this.topHeight,
-      this.topSizes,
-      this.bottomHeight,
-      this.bottomSizes});
+  _MeasuredSizes({
+    @required this.leftWidth,
+    @required this.leftSizes,
+    @required this.rightWidth,
+    @required this.rightSizes,
+    @required this.topHeight,
+    @required this.topSizes,
+    @required this.bottomHeight,
+    @required this.bottomSizes,
+  });
 }

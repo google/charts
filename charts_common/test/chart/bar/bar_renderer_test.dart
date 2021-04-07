@@ -28,6 +28,7 @@ import 'package:charts_common/src/common/material_palette.dart'
 import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/data/series.dart' show Series;
 
+import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -50,12 +51,19 @@ class FakeBarRenderer<D> extends BarRenderer<D> {
   int paintBarCallCount = 0;
   List<List<BarRendererElement<D>>> elementsPainted = [];
 
-  factory FakeBarRenderer({BarRendererConfig config, String rendererId}) {
+  factory FakeBarRenderer({
+    BarRendererConfig config,
+    String rendererId,
+  }) {
+    config ??= BarRendererConfig();
+    rendererId ??= 'bar';
     return FakeBarRenderer._internal(config: config, rendererId: rendererId);
   }
 
-  FakeBarRenderer._internal({BarRendererConfig config, String rendererId})
-      : super.internal(config: config, rendererId: rendererId);
+  FakeBarRenderer._internal({
+    @required BarRendererConfig config,
+    @required String rendererId,
+  }) : super.internal(config: config, rendererId: rendererId);
 
   @override
   void paintBar(ChartCanvas canvas, double animationPercent,

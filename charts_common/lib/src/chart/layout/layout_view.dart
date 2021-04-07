@@ -134,12 +134,12 @@ class LayoutViewConfig {
   /// [paintOrder] the order that this component will be drawn.
   /// [position] the [ComponentPosition] of this component.
   /// [positionOrder] the order of this component in a chart margin.
-  LayoutViewConfig(
-      {@required this.paintOrder,
-      @required this.position,
-      @required this.positionOrder,
-      ViewMargin viewMargin})
-      : viewMargin = viewMargin ?? ViewMargin.empty;
+  LayoutViewConfig({
+    this.paintOrder,
+    this.position,
+    this.positionOrder,
+    ViewMargin viewMargin,
+  }) : viewMargin = viewMargin ?? ViewMargin.empty;
 
   /// Returns true if it is a full position.
   bool get isFullPosition =>

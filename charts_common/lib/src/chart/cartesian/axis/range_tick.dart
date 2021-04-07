@@ -39,10 +39,10 @@ class RangeTick<D> extends Tick<D> {
       @required TextElement textElement,
       double locationPx,
       double labelOffsetPx,
-      this.rangeStartValue,
-      this.rangeStartLocationPx,
-      this.rangeEndValue,
-      this.rangeEndLocationPx})
+      @required this.rangeStartValue,
+      @required this.rangeStartLocationPx,
+      @required this.rangeEndValue,
+      @required this.rangeEndLocationPx})
       : super(
             value: value,
             locationPx: locationPx,

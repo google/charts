@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show required;
+
 import '../../common/color.dart' show Color;
 import '../common/chart_canvas.dart' show getAnimatedColor, FillPatternType;
 import '../common/processed_series.dart' show ImmutableSeries;
@@ -73,7 +75,12 @@ abstract class BaseAnimatedBar<D, R extends BaseBarRendererElement> {
   // Flag indicating whether this bar is being animated out of the chart.
   bool animatingOut = false;
 
-  BaseAnimatedBar({this.key, this.datum, this.series, this.domainValue});
+  BaseAnimatedBar({
+    @required this.key,
+    @required this.datum,
+    @required this.series,
+    @required this.domainValue,
+  });
 
   /// Animates a bar that was removed from the series out of the view.
   ///

@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle, min, max, Point;
+import 'package:meta/meta.dart' show required;
 
 import '../../common/color.dart' show Color;
 import 'chart_canvas.dart' show FillPatternType;
@@ -46,13 +47,15 @@ class CanvasBarStack {
   final bool roundBottomRight;
   final Rectangle<int> fullStackRect;
 
-  factory CanvasBarStack(List<CanvasRect> segments,
-      {int radius,
-      int stackedBarPadding,
-      bool roundTopLeft,
-      bool roundTopRight,
-      bool roundBottomLeft,
-      bool roundBottomRight}) {
+  factory CanvasBarStack(
+    List<CanvasRect> segments, {
+    int radius,
+    int stackedBarPadding = 1,
+    bool roundTopLeft = false,
+    bool roundTopRight = false,
+    bool roundBottomLeft = false,
+    bool roundBottomRight = false,
+  }) {
     final firstBarBounds = segments.first.bounds;
 
     // Find the rectangle that would represent the full stack of bars.
@@ -88,13 +91,13 @@ class CanvasBarStack {
 
   CanvasBarStack._internal(
     this.segments, {
-    this.radius,
-    this.stackedBarPadding = 1,
-    this.roundTopLeft = false,
-    this.roundTopRight = false,
-    this.roundBottomLeft = false,
-    this.roundBottomRight = false,
-    this.fullStackRect,
+    @required this.radius,
+    @required this.stackedBarPadding,
+    @required this.roundTopLeft,
+    @required this.roundTopRight,
+    @required this.roundBottomLeft,
+    @required this.roundBottomRight,
+    @required this.fullStackRect,
   });
 }
 

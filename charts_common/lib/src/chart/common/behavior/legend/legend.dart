@@ -15,7 +15,7 @@
 
 import 'dart:math' show Rectangle;
 
-import 'package:meta/meta.dart' show protected;
+import 'package:meta/meta.dart' show protected, required;
 import 'package:intl/intl.dart';
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
@@ -106,8 +106,8 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   }
 
   Legend({
-    this.selectionModelType,
-    this.legendEntryGenerator,
+    @required this.selectionModelType,
+    @required this.legendEntryGenerator,
     TextStyleSpec entryTextStyle,
   }) {
     _lifecycleListener = LifecycleListener(

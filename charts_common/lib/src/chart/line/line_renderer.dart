@@ -73,7 +73,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         config: config ?? LineRendererConfig<D>());
   }
 
-  LineRenderer._internal({String rendererId, this.config})
+  LineRenderer._internal({@required String rendererId, @required this.config})
       : super(
             rendererId: rendererId,
             layoutPaintOrder: config.layoutPaintOrder,

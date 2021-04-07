@@ -374,9 +374,12 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   }
 
   /// Helper function to get datum specific style
-  TextStyle _getDatumStyle(AccessorFn<TextStyleSpec> labelFn, int datumIndex,
-      GraphicsFactory graphicsFactory,
-      {TextStyle defaultStyle}) {
+  TextStyle _getDatumStyle(
+    AccessorFn<TextStyleSpec> labelFn,
+    int datumIndex,
+    GraphicsFactory graphicsFactory, {
+    @required TextStyle defaultStyle,
+  }) {
     final styleSpec = (labelFn != null) ? labelFn(datumIndex) : null;
     return (styleSpec != null)
         ? _getTextStyle(graphicsFactory, styleSpec)

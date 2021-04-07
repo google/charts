@@ -97,13 +97,13 @@ class Tree<T, D> {
     @required this.root,
     @required this.domainFn,
     @required this.measureFn,
-    this.colorFn,
-    this.fillColorFn,
-    this.fillPatternFn,
-    this.patternColorFn,
-    this.strokeWidthPxFn,
-    this.labelFn,
-    this.labelStyleFn,
+    @required this.colorFn,
+    @required this.fillColorFn,
+    @required this.fillPatternFn,
+    @required this.patternColorFn,
+    @required this.strokeWidthPxFn,
+    @required this.labelFn,
+    @required this.labelStyleFn,
   });
 
   /// Creates a [Series] that contains all [TreeNode]s traversing from the

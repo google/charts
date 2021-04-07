@@ -15,7 +15,7 @@
 
 import 'dart:math' show Rectangle, Point, min, sqrt;
 
-import 'package:meta/meta.dart' show protected;
+import 'package:meta/meta.dart' show protected, required;
 
 import '../chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import 'color.dart' show Color;
@@ -39,7 +39,7 @@ abstract class SymbolRenderer extends BaseSymbolRenderer {
   /// configured.
   final bool isSolid;
 
-  SymbolRenderer({this.isSolid});
+  SymbolRenderer({@required this.isSolid});
 
   void paint(ChartCanvas canvas, Rectangle<num> bounds,
       {List<int> dashPattern,
@@ -72,7 +72,7 @@ abstract class SymbolRenderer extends BaseSymbolRenderer {
 /// An optional second point can describe an extended symbol.
 abstract class PointSymbolRenderer extends BaseSymbolRenderer {
   void paint(ChartCanvas canvas, Point<double> p1, double radius,
-      {Point<double> p2, Color fillColor, Color strokeColor});
+      {@required Point<double> p2, Color fillColor, Color strokeColor});
 }
 
 /// Rounded rectangular symbol with corners having [radius].
@@ -324,7 +324,7 @@ class CylinderSymbolRenderer extends PointSymbolRenderer {
 
   @override
   void paint(ChartCanvas canvas, Point<double> p1, double radius,
-      {Point<double> p2,
+      {@required Point<double> p2,
       Color fillColor,
       Color strokeColor,
       double strokeWidthPx}) {
@@ -364,7 +364,7 @@ class RectangleRangeSymbolRenderer extends PointSymbolRenderer {
 
   @override
   void paint(ChartCanvas canvas, Point<double> p1, double radius,
-      {Point<double> p2,
+      {@required Point<double> p2,
       Color fillColor,
       Color strokeColor,
       double strokeWidthPx}) {

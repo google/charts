@@ -31,6 +31,7 @@ import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick_provider.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_extents.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
+import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -64,11 +65,11 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
 
   @override
   void draw(ChartCanvas canvas, Tick<num> tick,
-      {AxisOrientation orientation,
-      Rectangle<int> axisBounds,
-      Rectangle<int> drawAreaBounds,
-      bool isFirst,
-      bool isLast,
+      {@required AxisOrientation orientation,
+      @required Rectangle<int> axisBounds,
+      @required Rectangle<int> drawAreaBounds,
+      @required bool isFirst,
+      @required bool isLast,
       bool collision = false}) {}
 }
 

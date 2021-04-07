@@ -229,7 +229,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
   /// Helper function to get datum specific style
   TextStyle _getDatumStyle(AccessorFn<TextStyleSpec> labelFn, int datumIndex,
       GraphicsFactory graphicsFactory,
-      {TextStyle defaultStyle}) {
+      {@required TextStyle defaultStyle}) {
     final styleSpec = (labelFn != null) ? labelFn(datumIndex) : null;
     return (styleSpec != null)
         ? _getTextStyle(graphicsFactory, styleSpec)
@@ -390,7 +390,11 @@ class ArcLabelLeaderLineStyleSpec {
   final double length;
   final double thickness;
 
-  ArcLabelLeaderLineStyleSpec({this.color, this.length, this.thickness});
+  ArcLabelLeaderLineStyleSpec({
+    @required this.color,
+    @required this.length,
+    @required this.thickness,
+  });
 
   @override
   bool operator ==(Object other) {
