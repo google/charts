@@ -27,9 +27,10 @@ class CollisionReport<D> {
 
   CollisionReport(
       {@required this.ticksCollide,
-      @required this.ticks,
+      @required List<Tick<D>> ticks,
       bool alternateTicksUsed})
-      : alternateTicksUsed = alternateTicksUsed ?? false;
+      : ticks = ticks ?? [],
+        alternateTicksUsed = alternateTicksUsed ?? false;
 
   CollisionReport.empty()
       : ticksCollide = false,

@@ -251,6 +251,9 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       } else if (annotation is LineAnnotationSegment<Object>) {
         startValue = annotation.value as T;
         endValue = annotation.value as T;
+      } else {
+        throw UnsupportedError(
+            'Unrecognized annotation type: ${annotation.runtimeType}');
       }
 
       final annotationDatum =

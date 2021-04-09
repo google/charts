@@ -234,6 +234,11 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     final vertical = orientation == AxisOrientation.left ||
         orientation == AxisOrientation.right;
 
+    ticks = [
+      for (var tick in ticks)
+        if (tick.locationPx != null) tick,
+    ];
+
     // First sort ticks by smallest locationPx first (NOT sorted by value).
     // This allows us to only check if a tick collides with the previous tick.
     ticks.sort((a, b) {
@@ -253,8 +258,8 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       final tickSize = tick.textElement.measurement;
 
       if (vertical) {
-        final adjustedHeight =
-            tickSize.verticalSliceWidth + minimumPaddingBetweenLabelsPx;
+        final adjustedHeight = (tickSize?.verticalSliceWidth ?? 0.0) +
+            minimumPaddingBetweenLabelsPx;
 
         if (_defaultTickLabelAnchor == TickLabelAnchor.inside) {
           if (identical(tick, ticks.first)) {
@@ -287,8 +292,8 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
             chartContext.isRtl,
             identical(tick, ticks.first),
             identical(tick, ticks.last));
-        final adjustedWidth =
-            tickSize.horizontalSliceWidth + minimumPaddingBetweenLabelsPx;
+        final adjustedWidth = (tickSize?.horizontalSliceWidth ?? 0.0) +
+            minimumPaddingBetweenLabelsPx;
         switch (textDirection) {
           case TextDirection.ltr:
             collides = previousEnd > tick.locationPx;

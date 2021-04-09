@@ -373,7 +373,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       // Draw the arcs.
       canvas.drawPie(CanvasPie(
           circleSectors, arcList.center, arcList.radius, arcList.innerRadius,
-          stroke: arcList.stroke, strokeWidthPx: arcList.strokeWidthPx));
+          stroke: arcList.stroke, strokeWidthPx: arcList.strokeWidthPx ?? 0));
 
       // Decorate the arcs with decorators that should appear above the main
       // series data. This is the typical place for labels.

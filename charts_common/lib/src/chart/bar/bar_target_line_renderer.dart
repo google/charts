@@ -25,6 +25,7 @@ import '../common/chart_canvas.dart' show ChartCanvas, FillPatternType;
 import '../common/datum_details.dart' show DatumDetails;
 import '../common/processed_series.dart' show ImmutableSeries, MutableSeries;
 import '../common/series_datum.dart' show SeriesDatum;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import 'bar_target_line_renderer_config.dart' show BarTargetLineRendererConfig;
 import 'base_bar_renderer.dart'
     show
@@ -50,9 +51,9 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   final _color = Color(r: 0, g: 0, b: 0, a: 153);
 
   factory BarTargetLineRenderer(
-      {BarTargetLineRendererConfig<D> config,
-      String rendererId = 'barTargetLine'}) {
+      {BarTargetLineRendererConfig<D> config, String rendererId}) {
     config ??= BarTargetLineRendererConfig<D>();
+    rendererId ??= 'barTargetLine';
     return BarTargetLineRenderer._internal(
         config: config, rendererId: rendererId);
   }
@@ -63,7 +64,8 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   }) : super(
             config: config,
             rendererId: rendererId,
-            layoutPaintOrder: config.layoutPaintOrder);
+            layoutPaintOrder:
+                config.layoutPaintOrder ?? LayoutViewPaintOrder.barTargetLine);
 
   @override
   void configureSeries(List<MutableSeries<D>> seriesList) {

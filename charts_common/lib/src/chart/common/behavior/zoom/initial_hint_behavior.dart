@@ -179,6 +179,7 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
       _initialViewportScalingFactor =
           maxHintScaleFactor ?? _targetViewportScalingFactor;
 
+      assert(_initialViewportScalingFactor != null);
       domainAxis.setViewportSettings(
           _initialViewportScalingFactor, _initialViewportTranslatePx);
       chart.redraw(skipAnimation: true, skipLayout: false);

@@ -92,7 +92,7 @@ class NumericTickFormatter extends SimpleTickFormatterBase<num> {
 
   /// Returns a [MeasureFormatter] that calls format on [numberFormat].
   static MeasureFormatter _getFormatter(NumberFormat numberFormat) {
-    return (num value) => numberFormat.format(value);
+    return (num value) => (value == null) ? '' : numberFormat.format(value);
   }
 
   @override

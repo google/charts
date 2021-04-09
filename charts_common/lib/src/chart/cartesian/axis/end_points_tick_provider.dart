@@ -54,15 +54,19 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
       final labels = formatter.format([start, end], formatterValueCache,
           stepSize: scale.domainStepSize);
 
-      ticks.add(Tick(
-          value: start,
-          textElement: graphicsFactory.createTextElement(labels[0]),
-          locationPx: scale[start]?.toDouble()));
+      if (start != null) {
+        ticks.add(Tick(
+            value: start,
+            textElement: graphicsFactory.createTextElement(labels[0]),
+            locationPx: scale[start]?.toDouble()));
+      }
 
-      ticks.add(Tick(
-          value: end,
-          textElement: graphicsFactory.createTextElement(labels[1]),
-          locationPx: scale[end]?.toDouble()));
+      if (end != null) {
+        ticks.add(Tick(
+            value: end,
+            textElement: graphicsFactory.createTextElement(labels[1]),
+            locationPx: scale[end]?.toDouble()));
+      }
 
       // Allow draw strategy to decorate the ticks.
       tickDrawStrategy.decorateTicks(ticks);
@@ -87,6 +91,8 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
         start = _scale.viewportDomain.start;
       } else if (_scale is OrdinalScale) {
         start = _scale.domain.first;
+      } else {
+        throw UnsupportedError('Unrecognized scale: {scale.runtimeType}');
       }
     }
 
@@ -109,6 +115,8 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
         end = _scale.viewportDomain.end;
       } else if (_scale is OrdinalScale) {
         end = _scale.domain.last;
+      } else {
+        throw UnsupportedError('Unrecognized scale: {scale.runtimeType}');
       }
     }
 

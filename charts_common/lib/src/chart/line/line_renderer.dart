@@ -98,7 +98,10 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       // Add a default area color function which applies the configured
       // areaOpacity value to the datum's current color.
       series.areaColorFn ??= (int index) {
-        final color = series.colorFn(index);
+        final color = series.colorFn?.call(index);
+        if (color == null) {
+          return null;
+        }
 
         return Color(
             r: color.r,
@@ -745,6 +748,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         if (startPointIndex == null) {
           continue;
         }
+        assert(endPointIndex != null);
 
         lineSegments
             .add(_createLineSegment(startPointIndex, endPointIndex, pointList));

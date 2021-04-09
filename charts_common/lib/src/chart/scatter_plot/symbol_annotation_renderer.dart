@@ -92,7 +92,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
       for (var index = 0; index < series.data.length; index++) {
         // Default to the configured radius if none was returned by the
         // accessor function.
-        var radiusPx = series.radiusPxFn(index)?.toDouble();
+        var radiusPx = series.radiusPxFn?.call(index)?.toDouble();
         radiusPx ??= config.radiusPx;
 
         maxRadius = max(maxRadius, radiusPx);

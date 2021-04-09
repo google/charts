@@ -150,7 +150,7 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
         closestTickProvider = tickProvider;
       }
     }
-
+    assert(minDifference != null);
     return closestTickProvider;
   }
 

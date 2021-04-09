@@ -49,7 +49,9 @@ abstract class BaseChart<D> {
   int _chartHeight;
 
   Duration transition = const Duration(milliseconds: 300);
-  double animationPercent;
+
+  /// A value in the range \[0.0, 1.0\] that indicates the animation progress.
+  double animationPercent = 0;
 
   bool _animationsTemporarilyDisabled = false;
 
@@ -223,12 +225,11 @@ abstract class BaseChart<D> {
     // Special case, if we are asking for the default and we haven't made it
     // yet, then make it now.
     if (renderer == null) {
-      if (rendererId == SeriesRenderer.defaultRendererId) {
-        renderer = makeDefaultRenderer();
-        defaultRenderer = renderer;
-      }
+      // TODO: Throw an error if
+      // `rendererId != SeriesRenderer.defaultRendererId`?
+      renderer = makeDefaultRenderer();
+      defaultRenderer = renderer;
     }
-    // TODO: throw error if couldn't find renderer by id?
 
     return renderer;
   }

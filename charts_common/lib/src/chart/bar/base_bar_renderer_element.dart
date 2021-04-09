@@ -119,6 +119,8 @@ abstract class BaseAnimatedBar<D, R extends BaseBarRendererElement> {
   /// Gets the new state of the bar element for painting, updated for a
   /// transition between the previous state and the new animationPercent.
   R getCurrentBar(double animationPercent) {
+    assert(_targetBar != null);
+
     if (animationPercent == 1.0 || _previousBar == null) {
       _currentBar = _targetBar;
       _previousBar = _targetBar;

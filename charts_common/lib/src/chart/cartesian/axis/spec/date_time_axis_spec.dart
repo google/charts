@@ -259,6 +259,7 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
   /// [DateTimeFormatterFunction].
   @override
   DateTimeTickFormatter createTickFormatter(ChartContext context) {
+    assert(dateFormat != null || formatter != null);
     return DateTimeTickFormatter.uniform(SimpleTimeTickFormatter(
         formatter: dateFormat != null ? dateFormat.format : formatter));
   }

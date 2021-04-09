@@ -166,9 +166,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @visibleForTesting
   int findNearestViewportStart(
       Axis<D> domainAxis, AccessorFn<D> domainFn, List<Object> data) {
-    if (data.isEmpty) {
-      return null;
-    }
+    assert(data.isNotEmpty);
 
     // Quick optimization for full viewport (likely).
     if (domainAxis.compareDomainValueToViewport(domainFn(0)) == 0) {
@@ -222,9 +220,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
   @visibleForTesting
   int findNearestViewportEnd(
       Axis<D> domainAxis, AccessorFn<D> domainFn, List<Object> data) {
-    if (data.isEmpty) {
-      return null;
-    }
+    assert(data.isNotEmpty);
 
     var start = 1;
     var end = data.length - 1;

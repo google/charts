@@ -63,7 +63,7 @@ abstract class BaseTreeMapRenderer<D> extends BaseSeriesRenderer<D> {
   BaseTreeMapRenderer({@required this.config, String rendererId})
       : labelDecorator = config.labelDecorator,
         super(
-          rendererId: rendererId,
+          rendererId: rendererId ?? defaultRendererId,
           layoutPaintOrder: config.layoutPaintOrder,
           symbolRenderer: config.symbolRenderer,
         );
