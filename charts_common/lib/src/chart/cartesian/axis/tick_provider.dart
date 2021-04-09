@@ -29,8 +29,7 @@ import 'tick_formatter.dart' show TickFormatter;
 abstract class TickProvider<D> {
   /// Returns a list of ticks in value order that should be displayed.
   ///
-  /// This method should not return null. If no ticks are desired an empty list
-  /// should be returned.
+  /// If no ticks are desired an empty list should be returned.
   ///
   /// [graphicsFactory] The graphics factory used for text measurement.
   /// [scale] The scale of the data.

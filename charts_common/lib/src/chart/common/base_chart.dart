@@ -530,7 +530,9 @@ abstract class BaseChart<D> {
         .toList();
 
     // TODO: Handle exiting renderers.
-    _animationsTemporarilyDisabled = skipAnimation;
+    if (skipAnimation != null) {
+      _animationsTemporarilyDisabled = skipAnimation;
+    }
 
     configureSeries(seriesList);
 

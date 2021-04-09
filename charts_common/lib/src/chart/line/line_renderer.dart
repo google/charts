@@ -1074,21 +1074,21 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       return nearest;
     }
 
-    _seriesLineMap.values.forEach((List<_AnimatedElements<D>> seriesSegments) {
+    for (final seriesSegments in _seriesLineMap.values) {
       _DatumPoint<D> nearestPoint;
       var nearestDomainDistance = 10000.0;
       var nearestMeasureDistance = 10000.0;
       var nearestRelativeDistance = 10000.0;
 
-      seriesSegments.forEach((_AnimatedElements<D> segment) {
+      for (final segment in seriesSegments) {
         if (segment.overlaySeries) {
-          return;
+          continue;
         }
 
-        segment.allPoints.forEach((p) {
+        for (final p in segment.allPoints) {
           // Don't look at points not in the drawArea.
           if (p.x < componentBounds.left || p.x > componentBounds.right) {
-            return;
+            continue;
           }
 
           double measureDistance;
@@ -1124,8 +1124,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
               nearestRelativeDistance = relativeDistance;
             }
           }
-        });
-      });
+        }
+      }
 
       // Found a point, add it to the list.
       if (nearestPoint != null) {
@@ -1138,7 +1138,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             measureDistance: nearestMeasureDistance,
             relativeDistance: nearestRelativeDistance));
       }
-    });
+    }
 
     // Note: the details are already sorted by domain & measure distance in
     // base chart.

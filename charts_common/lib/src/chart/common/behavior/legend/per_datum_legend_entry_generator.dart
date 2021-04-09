@@ -57,7 +57,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
     // Update with measures only if showing measure on no selection.
     if (legendDefaultMeasure != LegendDefaultMeasure.none) {
-      _updateFromSeriesList(legendEntries, seriesList);
+      _updateEntries(legendEntries);
     }
 
     return legendEntries;
@@ -71,7 +71,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     } else {
       // Update with measures only if showing measure on no selection.
       if (legendDefaultMeasure != LegendDefaultMeasure.none) {
-        _updateFromSeriesList(legendEntries, seriesList);
+        _updateEntries(legendEntries);
       } else {
         _resetLegendEntryMeasures(legendEntries);
       }
@@ -105,13 +105,12 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     }
   }
 
-  /// Update each legend entry by calculating measure values in [seriesList].
+  /// Update each legend entry by calculating measure values for its series.
   ///
   /// This method calculates the legend's measure value to show when there is no
   /// selection. The type of calculation is based on the [legendDefaultMeasure]
   /// value.
-  void _updateFromSeriesList(
-      List<LegendEntry<D>> legendEntries, List<MutableSeries<D>> seriesList) {
+  void _updateEntries(List<LegendEntry<D>> legendEntries) {
     // Given that each legend entry only has one datum associated with it, any
     // option for [legendDefaultMeasure] essentially boils down to just showing
     // the measure value.

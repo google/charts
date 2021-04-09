@@ -38,7 +38,7 @@ UnaryFunction<T, R> throttle<T, R>(UnaryFunction<T, R> callback,
     // unless it turns out to be the very last event. [delay]s for a period of
     // time before calling the [callback] function again.
     if (stopwatch.elapsedMilliseconds < delay.inMilliseconds) {
-      if (timer?.isActive == true) timer.cancel();
+      timer?.cancel();
       timer = Timer(delay, () {
         callback(argument);
         timer = null;
@@ -51,7 +51,7 @@ UnaryFunction<T, R> throttle<T, R>(UnaryFunction<T, R> callback,
 
     // This is a non-throttled event, go ahead and clear away the last throttled
     // event callback so that we do not move the hover point back in time.
-    if (timer?.isActive == true) timer.cancel();
+    timer?.cancel();
     return callback(argument);
   };
 }

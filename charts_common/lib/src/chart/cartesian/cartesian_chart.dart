@@ -210,7 +210,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     }
   }
 
-  /// Creates the domain axis spec from provided axis spec.
+  /// Creates the domain axis from a provided axis spec.
   @protected
   Axis<D> createDomainAxisFromSpec(AxisSpec<D> axisSpec) {
     return axisSpec.createAxis();
@@ -307,7 +307,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       axis = _secondaryMeasureAxis;
     } else if (axisId == Axis.primaryMeasureAxisId) {
       axis = _primaryMeasureAxis;
-    } else if (_disjointMeasureAxes[axisId] != null) {
+    } else if (axisId != null && _disjointMeasureAxes[axisId] != null) {
       axis = _disjointMeasureAxes[axisId];
     }
 

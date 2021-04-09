@@ -49,7 +49,8 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
 
   AutoAdjustingDateTimeTickProvider._internal(
       List<TimeRangeTickProvider> tickProviders)
-      : _potentialTickProviders = tickProviders;
+      : assert(tickProviders.isNotEmpty),
+        _potentialTickProviders = tickProviders;
 
   /// Creates a default [AutoAdjustingDateTimeTickProvider] for day and time.
   factory AutoAdjustingDateTimeTickProvider.createDefault(
@@ -142,6 +143,7 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
     int minDifference;
     TimeRangeTickProvider closestTickProvider;
 
+    assert(_potentialTickProviders.isNotEmpty);
     for (final tickProvider in _potentialTickProviders) {
       final difference =
           (stepSize - tickProvider.getClosestStepSize(stepSize)).abs();

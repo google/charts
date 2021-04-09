@@ -75,11 +75,10 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
 
   while (labelPartElements.isNotEmpty && currentLineNumber < maxLines) {
     final currentElement = labelPartElements.removeFirst();
-    var width = currentLineElements.isEmpty
-        ? currentElement.measurement.horizontalSliceWidth
-        : currentWidth +
-            delimiterElementWidth +
-            currentElement.measurement.horizontalSliceWidth;
+    var width = currentElement.measurement.horizontalSliceWidth +
+        (currentLineElements.isEmpty
+            ? 0
+            : currentWidth + delimiterElementWidth);
 
     // If the new word can fit in the left space of the line.
     if (width < maxWidth) {

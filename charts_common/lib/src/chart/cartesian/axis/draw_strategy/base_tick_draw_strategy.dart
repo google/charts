@@ -241,15 +241,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
 
     // First sort ticks by smallest locationPx first (NOT sorted by value).
     // This allows us to only check if a tick collides with the previous tick.
-    ticks.sort((a, b) {
-      if (a.locationPx < b.locationPx) {
-        return -1;
-      } else if (a.locationPx > b.locationPx) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+    ticks.sort((a, b) => a.locationPx.compareTo(b.locationPx));
 
     var previousEnd = double.negativeInfinity;
     var collides = false;

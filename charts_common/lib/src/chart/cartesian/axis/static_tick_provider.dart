@@ -29,8 +29,8 @@ import 'time/date_time_scale.dart' show DateTimeScale;
 
 /// A strategy that uses the ticks provided and only assigns positioning.
 ///
-/// The [TextStyle] is not overridden during tick draw strategy decorateTicks.
-/// If it is null, then the default is used.
+/// The [TextStyle] is not overridden during [TickDrawStrategy.decorateTicks].
+/// If the [TickSpec] style is null, then the default [TextStyle] is used.
 class StaticTickProvider<D> extends TickProvider<D> {
   final List<TickSpec<D>> tickSpec;
 

@@ -24,7 +24,7 @@ import '../../../common/style/style_factory.dart' show StyleFactory;
 import '../../../common/text_element.dart'
     show MaxWidthStrategy, TextDirection, TextElement;
 import '../../../common/text_style.dart' show TextStyle;
-import '../../cartesian/axis/axis.dart' show Axis, ImmutableAxis;
+import '../../cartesian/axis/axis.dart' show Axis;
 import '../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../layout/layout_view.dart'
@@ -39,6 +39,8 @@ import '../base_chart.dart' show BaseChart, LifecycleListener;
 import '../chart_canvas.dart' show ChartCanvas, getAnimatedColor;
 import '../processed_series.dart' show MutableSeries;
 import 'chart_behavior.dart' show ChartBehavior;
+
+const _defaultStrokeWidthPx = 2.0;
 
 /// Chart behavior that annotates domain ranges with a solid fill color.
 ///
@@ -55,7 +57,6 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   static const _defaultLabelPadding = 5;
   static final _defaultLabelStyle =
       TextStyleSpec(fontSize: 12, color: Color.black);
-  static const _defaultStrokeWidthPx = 2.0;
 
   /// List of annotations to render on the chart.
   final List<AnnotationSegment<Object>> annotations;
@@ -185,10 +186,10 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
             break;
         }
 
-        if (annotation is RangeAnnotationSegment) {
+        if (annotation is RangeAnnotationSegment<Object>) {
           axis.addDomainValue(annotation.startValue);
           axis.addDomainValue(annotation.endValue);
-        } else if (annotation is LineAnnotationSegment) {
+        } else if (annotation is LineAnnotationSegment<Object>) {
           axis.addDomainValue(annotation.value);
         }
       }
@@ -230,9 +231,10 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       final labelStyleSpec = annotation.labelStyleSpec ?? defaultLabelStyleSpec;
 
       // Add line annotation settings.
-      final dashPattern =
-          annotation is LineAnnotationSegment ? annotation.dashPattern : null;
-      final strokeWidthPx = annotation is LineAnnotationSegment
+      final dashPattern = annotation is LineAnnotationSegment<Object>
+          ? annotation.dashPattern
+          : null;
+      final strokeWidthPx = annotation is LineAnnotationSegment<Object>
           ? annotation.strokeWidthPx ?? defaultStrokeWidthPx
           : 0.0;
 
@@ -337,8 +339,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   /// [startValue] and [endValue] are dynamic because they can be different data
   /// types for domain and measure axes, e.g. DateTime and num for a TimeSeries
   /// chart.
-  _DatumAnnotation _getAnnotationDatum(Object startValue, Object endValue,
-      ImmutableAxis<Object> axis, RangeAnnotationAxisType axisType) {
+  _DatumAnnotation _getAnnotationDatum<T>(T startValue, T endValue,
+      Axis<T> axis, RangeAnnotationAxisType axisType) {
     // Remove floating point rounding errors by rounding to 2 decimal places of
     // precision. The difference in the canvas is negligible.
     final startPosition = (axis.getLocation(startValue) * 100).round() / 100;
@@ -1371,7 +1373,7 @@ class LineAnnotationSegment<D> extends AnnotationSegment<D> {
       AnnotationLabelPosition labelPosition,
       TextStyleSpec labelStyleSpec,
       this.dashPattern,
-      this.strokeWidthPx = 2.0})
+      this.strokeWidthPx = _defaultStrokeWidthPx})
       : super(axisType,
             axisId: axisId,
             color: color,

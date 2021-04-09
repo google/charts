@@ -95,7 +95,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
 
         // Walk the series and compute the domain total. Series total is
         // automatically computed by [MutableSeries].
-        seriesList.forEach((series) {
+        for (final series in seriesList) {
           final seriesCategory = series.seriesCategory;
           final rawMeasureFn = series.rawMeasureFn;
           final domainFn = series.domainFn;
@@ -110,10 +110,9 @@ class PercentInjector<D> implements ChartBehavior<D> {
 
             totalsByDomain[key] = (totalsByDomain[key] ?? 0.0) + measure;
           }
-        });
 
-        // Add percent of domain and series accessor functions.
-        seriesList.forEach((series) {
+          // Add percent of domain and series accessor functions.
+          //
           // Replace the default measure accessor with one that computes the
           // percentage.
           series.measureFn = (int index) {
@@ -173,7 +172,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
           }
 
           series.setAttr(percentInjectedKey, true);
-        });
+        }
 
         break;
 

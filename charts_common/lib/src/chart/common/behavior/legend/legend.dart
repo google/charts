@@ -113,6 +113,9 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     _lifecycleListener = LifecycleListener(
         onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
     legendEntryGenerator.entryTextStyle = entryTextStyle;
+
+    // Calling the setter will automatically use a non-null default value.
+    showOverlaySeries = null;
   }
 
   /// Text style of the legend entry text.
@@ -355,14 +358,7 @@ class LegendCellPadding {
   /// const LegendCellPadding.allPct(8.0)
   /// ```
   const LegendCellPadding.allPct(double value)
-      : leftPct = value,
-        topPct = value,
-        rightPct = value,
-        bottomPct = value,
-        leftPx = null,
-        topPx = null,
-        rightPx = null,
-        bottomPx = null;
+      : this.fromLTRBPct(value, value, value, value);
 
   /// Creates cell padding where all the offsets are `value` in pixels.
   ///
@@ -374,14 +370,7 @@ class LegendCellPadding {
   /// const LegendCellPadding.allPx(8.0)
   /// ```
   const LegendCellPadding.allPx(double value)
-      : leftPx = value,
-        topPx = value,
-        rightPx = value,
-        bottomPx = value,
-        leftPct = null,
-        topPct = null,
-        rightPct = null,
-        bottomPct = null;
+      : this.fromLTRBPx(value, value, value, value);
 
   double bottom(num height) =>
       bottomPct != null ? bottomPct * height : bottomPx;

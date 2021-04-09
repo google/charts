@@ -118,10 +118,14 @@ class NumericTickProvider extends BaseTickProvider<num> {
   UnitConverter<num, num> dataToAxisUnitConverter =
       const IdentityConverter<num>();
 
-  // Tick calculation state
+  // Internal tick calculation state for [getTicks].
+  //
+  // [_low] and [_high] are valid only after calling [_updateDomainExtents].
+  //
+  // [_minTickCount] and [_maxTickCount] are valid only after calling
+  // [_updateTickCounts].
   num _low;
   num _high;
-  int _rangeWidth;
   int _minTickCount;
   int _maxTickCount;
 
@@ -162,6 +166,8 @@ class NumericTickProvider extends BaseTickProvider<num> {
       _desiredMaxTickCount = null;
       _desiredMinTickCount = null;
     }
+
+    assert((_desiredMinTickCount == null) == (_desiredMaxTickCount == null));
   }
 
   /// Sets the allowed step sizes this tick provider can choose from.
@@ -205,7 +211,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     final stepSize = (tickHint.end - tickHint.start) / (tickHint.tickCount - 1);
     // Find the first tick that is greater than or equal to the min
     // viewportDomain.
-    final tickZeroShift = tickHint.start -
+    final tickZeroShift = tickHint.start.toDouble() -
         (stepSize *
             (tickHint.start >= 0
                 ? (tickHint.start / stepSize).floor()
@@ -238,7 +244,6 @@ class NumericTickProvider extends BaseTickProvider<num> {
     bool viewportExtensionEnabled = false,
     TickHint<num> tickHint,
   }) {
-    _rangeWidth = scale.rangeWidth;
     _updateDomainExtents(scale.viewportDomain);
 
     // Bypass searching for a tick range since we are getting ticks using
@@ -262,7 +267,8 @@ class NumericTickProvider extends BaseTickProvider<num> {
     final axisUnitsHigh = dataToAxisUnitConverter.convert(_high);
     final axisUnitsLow = dataToAxisUnitConverter.convert(_low);
 
-    _updateTickCounts(axisUnitsHigh, axisUnitsLow);
+    _updateTickCounts(
+        high: axisUnitsHigh, low: axisUnitsLow, rangeWidth: scale.rangeWidth);
 
     // Only create a copy of the scale if [viewportExtensionEnabled].
     final mutableScale =
@@ -289,7 +295,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       if (range < selectedTicksRange || !foundPreferredTicks) {
         final tickValues = _getTickValues(stepInfo, tickCount);
 
-        if (viewportExtensionEnabled) {
+        if (mutableScale != null) {
           mutableScale.viewportDomain = NumericExtents(firstTick, lastTick);
         }
 
@@ -297,7 +303,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
         final preferredTicks = createTicks(tickValues,
             context: context,
             graphicsFactory: graphicsFactory,
-            scale: viewportExtensionEnabled ? mutableScale : scale,
+            scale: mutableScale ?? scale,
             formatter: formatter,
             formatterValueCache: formatterValueCache,
             tickDrawStrategy: tickDrawStrategy,
@@ -359,12 +365,12 @@ class NumericTickProvider extends BaseTickProvider<num> {
         // The values are all the same, so assume a range of -5% to +5% from the
         // single value.
         if (_high > 0.0) {
-          _high = _high * 1.05;
-          _low = _low * 0.95;
+          _high *= 1.05;
+          _low *= 0.95;
         } else {
-          // (high == low) < 0
-          _high = _high * 0.95;
-          _low = _low * 1.05;
+          // (_high == _low) < 0
+          _high *= 0.95;
+          _low *= 1.05;
         }
       }
     }
@@ -473,7 +479,11 @@ class NumericTickProvider extends BaseTickProvider<num> {
   }
 
   /// Given the axisDimensions update the tick counts given they are not fixed.
-  void _updateTickCounts(num high, num low) {
+  void _updateTickCounts({
+    @required num high,
+    @required num low,
+    @required int rangeWidth,
+  }) {
     int tmpMaxNumMajorTicks;
     int tmpMinNumMajorTicks;
 
@@ -490,7 +500,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       final minPixelsPerTick = MIN_DIPS_BETWEEN_TICKS.toDouble();
       tmpMinNumMajorTicks = absoluteMinTicks;
       tmpMaxNumMajorTicks =
-          max(absoluteMinTicks, (_rangeWidth / minPixelsPerTick).floor());
+          max(absoluteMinTicks, (rangeWidth / minPixelsPerTick).floor());
     }
 
     // Don't blow away the previous array if it hasn't changed.

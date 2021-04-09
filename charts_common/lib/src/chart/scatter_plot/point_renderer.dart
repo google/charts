@@ -854,11 +854,14 @@ class AnimatedPoint<D> {
 
     // Set the target measure value to the axis position.
     var targetPoint = newTarget.point;
-    newTarget.point = DatumPoint<D>.from(targetPoint,
-        x: targetPoint.x,
-        y: newTarget.measureAxisPosition.roundToDouble(),
-        yLower: newTarget.measureAxisPosition.roundToDouble(),
-        yUpper: newTarget.measureAxisPosition.roundToDouble());
+    var y = newTarget.measureAxisPosition.roundToDouble();
+    newTarget.point = DatumPoint<D>.from(
+      targetPoint,
+      x: targetPoint.x,
+      y: y,
+      yLower: y,
+      yUpper: y,
+    );
 
     // Animate the radius and stroke width to 0 so that we don't get a lingering
     // point after animation is done.

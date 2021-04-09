@@ -119,16 +119,7 @@ class BucketingNumericTickProvider extends NumericTickProvider {
     ticks.add(thresholdTick);
 
     // Make sure they are sorted by increasing value.
-    ticks.sort((a, b) {
-      if (a.value < b.value) {
-        return -1;
-      } else if (a.value > b.value) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-
+    ticks.sort((a, b) => a.value.compareTo(b.value));
     return ticks;
   }
 }

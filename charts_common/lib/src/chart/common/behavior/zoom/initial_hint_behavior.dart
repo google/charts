@@ -257,7 +257,6 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
 
   /// Linear interpolation for doubles.
   double _lerpDouble(double a, double b, double t) {
-    if (a == null && b == null) return null;
     a ??= 0.0;
     b ??= 0.0;
     return a + (b - a) * t;

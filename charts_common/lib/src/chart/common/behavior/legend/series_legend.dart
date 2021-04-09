@@ -55,7 +55,7 @@ class SeriesLegend<D> extends Legend<D> {
             legendEntryGenerator:
                 legendEntryGenerator ?? PerSeriesLegendEntryGenerator(),
             entryTextStyle: entryTextStyle) {
-    // Call the setters that include the setting for default.
+    // Calling the setters will automatically use non-null default values.
     this.showMeasures = showMeasures;
     this.legendDefaultMeasure = legendDefaultMeasure;
     this.measureFormatter = measureFormatter;
@@ -99,7 +99,7 @@ class SeriesLegend<D> extends Legend<D> {
   /// Please set [legendDefaultMeasure] to something other than none to enable
   /// showing measures when there is no selection.
   ///
-  /// If [showMeasure] is set to null, it is changed to the default of false.
+  /// If [showMeasures] is set to null, it is changed to the default of false.
   bool get showMeasures => _showMeasures;
 
   set showMeasures(bool showMeasures) {

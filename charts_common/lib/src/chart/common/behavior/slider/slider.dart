@@ -703,11 +703,8 @@ class _SliderElement<D> {
 
   void updateAnimationPercent(_SliderElement<D> previous,
       _SliderElement<D> target, double animationPercent) {
-    final localPrevious = previous;
-    final localTarget = target;
-
-    final previousPoint = localPrevious.domainCenterPoint;
-    final targetPoint = localTarget.domainCenterPoint;
+    final previousPoint = previous.domainCenterPoint;
+    final targetPoint = target.domainCenterPoint;
 
     final x = ((targetPoint.x - previousPoint.x) * animationPercent) +
         previousPoint.x;
@@ -717,8 +714,8 @@ class _SliderElement<D> {
 
     domainCenterPoint = Point<int>(x.round(), y.round());
 
-    final previousBounds = localPrevious.buttonBounds;
-    final targetBounds = localTarget.buttonBounds;
+    final previousBounds = previous.buttonBounds;
+    final targetBounds = target.buttonBounds;
 
     final top = ((targetBounds.top - previousBounds.top) * animationPercent) +
         previousBounds.top;
