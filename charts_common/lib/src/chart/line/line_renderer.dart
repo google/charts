@@ -151,9 +151,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         final color = colorFn(index);
         final areaColor = areaColorFn(index);
         final dashPattern = dashPatternFn(index);
-        final strokeWidthPx = strokeWidthPxFn != null
-            ? strokeWidthPxFn(index).toDouble()
-            : config.strokeWidthPx;
+        final strokeWidthPx =
+            strokeWidthPxFn?.call(index)?.toDouble() ?? config.strokeWidthPx;
 
         // Create a style key for this datum, and then compare it to the
         // previous datum.

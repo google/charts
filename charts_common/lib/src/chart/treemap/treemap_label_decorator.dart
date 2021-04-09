@@ -124,8 +124,8 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
   /// Gets datum specific style.
   TextStyle _datumStyle(AccessorFn<TextStyleSpec> labelStyleFn, int datumIndex,
       GraphicsFactory graphicsFactory,
-      {TextStyle defaultStyle}) {
-    final styleSpec = (labelStyleFn != null) ? labelStyleFn(datumIndex) : null;
+      {@required TextStyle defaultStyle}) {
+    final styleSpec = labelStyleFn?.call(datumIndex);
     return (styleSpec != null)
         ? _asTextStyle(graphicsFactory, styleSpec)
         : defaultStyle;

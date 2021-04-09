@@ -108,7 +108,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       final labelFn = element.series.labelAccessorFn;
       final measureFn = element.series.measureFn;
       final datumIndex = element.index;
-      final label = (labelFn != null) ? labelFn(datumIndex) : null;
+      final label = labelFn?.call(datumIndex);
       final measure = measureFn(datumIndex) ?? 0.0;
 
       // If there are custom styles, use that instead of the default or the
@@ -240,7 +240,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       final labelFn = element.series.labelAccessorFn;
       final measureFn = element.series.measureFn;
       final datumIndex = element.index;
-      final label = (labelFn != null) ? labelFn(datumIndex) : null;
+      final label = labelFn?.call(datumIndex);
       final measure = measureFn(datumIndex) ?? 0.0;
 
       // If there are custom styles, use that instead of the default or the
@@ -380,7 +380,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
     GraphicsFactory graphicsFactory, {
     @required TextStyle defaultStyle,
   }) {
-    final styleSpec = (labelFn != null) ? labelFn(datumIndex) : null;
+    final styleSpec = labelFn?.call(datumIndex);
     return (styleSpec != null)
         ? _getTextStyle(graphicsFactory, styleSpec)
         : defaultStyle;

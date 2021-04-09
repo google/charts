@@ -655,54 +655,42 @@ abstract class BaseChart<D> {
   @protected
   void fireOnDraw(List<MutableSeries<D>> seriesList) {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
-      if (listener.onData != null) {
-        listener.onData(seriesList);
-      }
+      listener.onData?.call(seriesList);
     });
   }
 
   @protected
   void fireOnPreprocess(List<MutableSeries<D>> seriesList) {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
-      if (listener.onPreprocess != null) {
-        listener.onPreprocess(seriesList);
-      }
+      listener.onPreprocess?.call(seriesList);
     });
   }
 
   @protected
   void fireOnPostprocess(List<MutableSeries<D>> seriesList) {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
-      if (listener.onPostprocess != null) {
-        listener.onPostprocess(seriesList);
-      }
+      listener.onPostprocess?.call(seriesList);
     });
   }
 
   @protected
   void fireOnAxisConfigured() {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
-      if (listener.onAxisConfigured != null) {
-        listener.onAxisConfigured();
-      }
+      listener.onAxisConfigured?.call();
     });
   }
 
   @protected
   void fireOnPostrender(ChartCanvas canvas) {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
-      if (listener.onPostrender != null) {
-        listener.onPostrender(canvas);
-      }
+      listener.onPostrender?.call(canvas);
     });
   }
 
   @protected
   void fireOnAnimationComplete() {
     _lifecycleListeners.forEach((LifecycleListener<D> listener) {
-      if (listener.onAnimationComplete != null) {
-        listener.onAnimationComplete();
-      }
+      listener.onAnimationComplete?.call();
     });
   }
 

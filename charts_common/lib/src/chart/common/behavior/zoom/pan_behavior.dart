@@ -213,9 +213,7 @@ class PanBehavior<D> implements ChartBehavior<D> {
         false;
     _chart.redraw();
 
-    if (_panningCompletedCallback != null) {
-      _panningCompletedCallback();
-    }
+    _panningCompletedCallback?.call();
   }
 
   /// Cancels the handling of any current panning event.

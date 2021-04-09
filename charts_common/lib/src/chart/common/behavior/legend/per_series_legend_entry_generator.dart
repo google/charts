@@ -88,9 +88,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
       final seriesId = series.id;
       final measure = series.measureFn(selectedDatum.index) ?? 0;
 
-      seriesAndMeasure[seriesId] = seriesAndMeasure.containsKey(seriesId)
-          ? seriesAndMeasure[seriesId] + measure
-          : measure;
+      seriesAndMeasure[seriesId] = (seriesAndMeasure[seriesId] ?? 0) + measure;
 
       if (series.getAttr(measureAxisIdKey) == Axis.secondaryMeasureAxisId) {
         secondaryAxisSeriesIDs.add(seriesId);

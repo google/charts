@@ -43,7 +43,7 @@ class ProxyGestureListener {
     // Walk through listeners stopping at the first handled listener.
     final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
-            listener.onLongPress != null && listener.onLongPress(localPosition),
+            listener.onLongPress?.call(localPosition) ?? false,
         orElse: () => null);
 
     // If someone claims the long press, then cancel everyone else.
@@ -59,7 +59,7 @@ class ProxyGestureListener {
     // Walk through listeners stopping at the first handled listener.
     final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
-            listener.onTap != null && listener.onTap(localPosition),
+            listener.onTap?.call(localPosition) ?? false,
         orElse: () => null);
 
     // If someone claims the tap, then cancel everyone else.
@@ -78,7 +78,7 @@ class ProxyGestureListener {
 
     // Walk through listeners stopping at the first handled listener.
     return _listeners.any((GestureListener listener) =>
-        listener.onHover != null && listener.onHover(localPosition));
+        listener.onHover?.call(localPosition) ?? false);
   }
 
   bool onDragStart(Point<double> localPosition) {
@@ -91,7 +91,7 @@ class ProxyGestureListener {
     // Walk through listeners stopping at the first handled listener.
     final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
-            listener.onDragStart != null && listener.onDragStart(localPosition),
+            listener.onDragStart?.call(localPosition) ?? false,
         orElse: () => null);
 
     if (claimingListener != null) {
@@ -104,25 +104,24 @@ class ProxyGestureListener {
 
   bool onDragUpdate(Point<double> localPosition, double scale) {
     return _activeListeners.any((GestureListener listener) =>
-        listener.onDragUpdate != null &&
-        listener.onDragUpdate(localPosition, scale));
+        listener.onDragUpdate?.call(localPosition, scale) ?? false);
   }
 
   bool onDragEnd(
       Point<double> localPosition, double scale, double pixelsPerSecond) {
     return _activeListeners.any((GestureListener listener) =>
-        listener.onDragEnd != null &&
-        listener.onDragEnd(localPosition, scale, pixelsPerSecond));
+        listener.onDragEnd?.call(localPosition, scale, pixelsPerSecond) ??
+        false);
   }
 
   bool onFocus() {
-    return _listeners.any((GestureListener listener) =>
-        listener.onFocus != null && listener.onFocus());
+    return _listeners
+        .any((GestureListener listener) => listener.onFocus?.call() ?? false);
   }
 
   bool onBlur() {
-    return _listeners.any((GestureListener listener) =>
-        listener.onBlur != null && listener.onBlur());
+    return _listeners
+        .any((GestureListener listener) => listener.onBlur?.call() ?? false);
   }
 
   List<GestureListener> _cancel({

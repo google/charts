@@ -72,9 +72,7 @@ class SeriesLegend<D> extends Legend<D> {
 
     _hiddenSeriesList.clear();
 
-    if (_defaultHiddenSeries != null) {
-      _defaultHiddenSeries.forEach(hideSeries);
-    }
+    _defaultHiddenSeries?.forEach(hideSeries);
   }
 
   /// Gets a list of series IDs that should be hidden by default on first chart
@@ -88,10 +86,7 @@ class SeriesLegend<D> extends Legend<D> {
   /// it was previously hidden.
   set alwaysVisibleSeries(List<String> alwaysVisibleSeries) {
     _alwaysVisibleSeries = alwaysVisibleSeries;
-
-    if (_alwaysVisibleSeries != null) {
-      _alwaysVisibleSeries.forEach(showSeries);
-    }
+    _alwaysVisibleSeries?.forEach(showSeries);
   }
 
   /// Gets a list of series IDs that should always be visible.

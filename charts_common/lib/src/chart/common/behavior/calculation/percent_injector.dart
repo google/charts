@@ -108,11 +108,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
             final key =
                 useSeriesCategory ? '${seriesCategory}__$domain' : '$domain';
 
-            if (totalsByDomain[key] != null) {
-              totalsByDomain[key] = totalsByDomain[key] + measure;
-            } else {
-              totalsByDomain[key] = measure;
-            }
+            totalsByDomain[key] = (totalsByDomain[key] ?? 0.0) + measure;
           }
         });
 

@@ -142,14 +142,5 @@ class LegendEntry<D> extends LegendEntryBase {
   ///
   /// Use the dash pattern from the datum if available, otherwise fall back to
   /// generic series dash pattern.
-  List<int> get dashPattern {
-    if (series.dashPatternFn != null) {
-      if (datumIndex != null) {
-        return series.dashPatternFn(datumIndex);
-      } else {
-        return series.dashPatternFn(0);
-      }
-    }
-    return null;
-  }
+  List<int> get dashPattern => series.dashPatternFn?.call(datumIndex ?? 0);
 }

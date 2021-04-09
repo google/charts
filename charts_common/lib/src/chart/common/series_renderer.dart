@@ -349,24 +349,17 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     final strokeWidthPxFn = series.strokeWidthPxFn;
 
     final domainValue = domainFn(index);
-    final domainLowerBoundValue =
-        domainLowerBoundFn != null ? domainLowerBoundFn(index) : null;
-    final domainUpperBoundValue =
-        domainUpperBoundFn != null ? domainUpperBoundFn(index) : null;
+    final domainLowerBoundValue = domainLowerBoundFn?.call(index);
+    final domainUpperBoundValue = domainUpperBoundFn?.call(index);
 
     final measureValue = measureFn(index);
-    final measureLowerBoundValue =
-        measureLowerBoundFn != null ? measureLowerBoundFn(index) : null;
-    final measureUpperBoundValue =
-        measureUpperBoundFn != null ? measureUpperBoundFn(index) : null;
-    final measureOffsetValue =
-        measureOffsetFn != null ? measureOffsetFn(index) : null;
+    final measureLowerBoundValue = measureLowerBoundFn?.call(index);
+    final measureUpperBoundValue = measureUpperBoundFn?.call(index);
+    final measureOffsetValue = measureOffsetFn?.call(index);
 
     final rawMeasureValue = rawMeasureFn(index);
-    final rawMeasureLowerBoundValue =
-        rawMeasureLowerBoundFn != null ? rawMeasureLowerBoundFn(index) : null;
-    final rawMeasureUpperBoundValue =
-        rawMeasureUpperBoundFn != null ? rawMeasureUpperBoundFn(index) : null;
+    final rawMeasureLowerBoundValue = rawMeasureLowerBoundFn?.call(index);
+    final rawMeasureUpperBoundValue = rawMeasureUpperBoundFn?.call(index);
 
     final color = colorFn(index);
 
