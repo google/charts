@@ -13,13 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show required;
+
 import '../scale.dart' show Extents;
 
 class DateTimeExtents extends Extents<DateTime> {
   final DateTime start;
   final DateTime end;
 
-  DateTimeExtents({required this.start, required this.end});
+  DateTimeExtents({@required this.start, @required this.end});
 
   @override
   bool operator ==(Object other) {

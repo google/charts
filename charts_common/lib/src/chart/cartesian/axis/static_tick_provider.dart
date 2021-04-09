@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show required;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
@@ -36,15 +38,15 @@ class StaticTickProvider<D> extends TickProvider<D> {
 
   @override
   List<Tick<D>> getTicks({
-    required ChartContext? context,
-    required GraphicsFactory graphicsFactory,
-    required MutableScale<D> scale,
-    required TickFormatter<D> formatter,
-    required Map<D, String> formatterValueCache,
-    required TickDrawStrategy<D> tickDrawStrategy,
-    required AxisOrientation? orientation,
+    @required ChartContext context,
+    @required GraphicsFactory graphicsFactory,
+    @required MutableScale<D> scale,
+    @required TickFormatter<D> formatter,
+    @required Map<D, String> formatterValueCache,
+    @required TickDrawStrategy<D> tickDrawStrategy,
+    @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<D>? tickHint,
+    TickHint<D> tickHint,
   }) {
     final ticks = <Tick<D>>[];
 
@@ -62,8 +64,8 @@ class StaticTickProvider<D> extends TickProvider<D> {
     }
 
     // Use the formatter's label if the tick spec does not provide one.
-    late List<String> formattedValues;
-    if (!allTicksHaveLabels) {
+    List<String> formattedValues;
+    if (allTicksHaveLabels == false) {
       formattedValues = formatter.format(
           tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
           stepSize: scale.domainStepSize);
@@ -79,13 +81,12 @@ class StaticTickProvider<D> extends TickProvider<D> {
             textElement: graphicsFactory
                 .createTextElement(spec.label ?? formattedValues[i]),
             locationPx: scale[spec.value]?.toDouble());
-        final style = spec.style;
-        if (style != null) {
-          tick.textElement!.textStyle = graphicsFactory.createTextPaint()
-            ..fontFamily = style.fontFamily
-            ..fontSize = style.fontSize
-            ..color = style.color
-            ..lineHeight = style.lineHeight;
+        if (spec.style != null) {
+          tick.textElement.textStyle = graphicsFactory.createTextPaint()
+            ..fontFamily = spec.style.fontFamily
+            ..fontSize = spec.style.fontSize
+            ..color = spec.style.color
+            ..lineHeight = spec.style.lineHeight;
         }
         ticks.add(tick);
       }

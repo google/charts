@@ -41,11 +41,12 @@ class EndPointsTimeAxisSpec extends DateTimeAxisSpec {
   /// [showAxisLine] override to force the axis to draw the axis
   ///     line.
   const EndPointsTimeAxisSpec({
-    RenderSpec<DateTime>? renderSpec,
-    DateTimeTickProviderSpec? tickProviderSpec,
-    DateTimeTickFormatterSpec? tickFormatterSpec,
-    bool? showAxisLine,
-    DateTimeExtents? viewport,
+    RenderSpec<DateTime> renderSpec,
+    DateTimeTickProviderSpec tickProviderSpec,
+    DateTimeTickFormatterSpec tickFormatterSpec,
+    bool showAxisLine,
+    DateTimeExtents viewport,
+    bool usingBarRenderer = false,
   }) : super(
             renderSpec: renderSpec ??
                 const SmallTickRendererSpec<DateTime>(

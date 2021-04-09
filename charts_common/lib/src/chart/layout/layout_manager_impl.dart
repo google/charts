@@ -15,6 +15,8 @@
 
 import 'dart:math' show Point, Rectangle, max;
 
+import 'package:meta/meta.dart' show required;
+
 import 'layout_config.dart' show LayoutConfig;
 import 'layout_manager.dart';
 import 'layout_margin_strategy.dart';
@@ -35,22 +37,22 @@ class LayoutManagerImpl implements LayoutManager {
   /// List of views in the order they should be drawn on the canvas.
   ///
   /// First element is painted first.
-  late List<LayoutView> _paintOrderedViews;
+  List<LayoutView> _paintOrderedViews;
 
   /// List of vies in the order they should be positioned in a chart margin.
   ///
   /// First element is closest to the draw area.
-  late List<LayoutView> _positionOrderedViews;
+  List<LayoutView> _positionOrderedViews;
 
-  late _MeasuredSizes _measurements;
+  _MeasuredSizes _measurements;
 
-  late Rectangle<int> _drawAreaBounds;
+  Rectangle<int> _drawAreaBounds;
   bool _drawAreaBoundsOutdated = true;
   bool _viewsNeedPaintSort = true;
   bool _viewsNeedPositionSort = true;
 
   /// Create a new [LayoutManager].
-  LayoutManagerImpl({LayoutConfig? config}) : config = config ?? LayoutConfig();
+  LayoutManagerImpl({LayoutConfig config}) : config = config ?? LayoutConfig();
 
   /// Add one [LayoutView].
   @override
@@ -82,7 +84,7 @@ class LayoutManagerImpl implements LayoutManager {
       _paintOrderedViews = List.of(_views);
 
       _paintOrderedViews.sort((LayoutView v1, LayoutView v2) =>
-          v1.layoutConfig.paintOrder!.compareTo(v2.layoutConfig.paintOrder!));
+          v1.layoutConfig.paintOrder.compareTo(v2.layoutConfig.paintOrder));
 
       _viewsNeedPaintSort = false;
     }
@@ -96,8 +98,8 @@ class LayoutManagerImpl implements LayoutManager {
       _positionOrderedViews = List.of(_views);
 
       _positionOrderedViews.sort((LayoutView v1, LayoutView v2) => v1
-          .layoutConfig.positionOrder!
-          .compareTo(v2.layoutConfig.positionOrder!));
+          .layoutConfig.positionOrder
+          .compareTo(v2.layoutConfig.positionOrder));
 
       _viewsNeedPositionSort = false;
     }
@@ -117,21 +119,19 @@ class LayoutManagerImpl implements LayoutManager {
     final drawableViews =
         _views.where((LayoutView view) => view.isSeriesRenderer);
 
-    var componentBounds = drawableViews.first.componentBounds;
+    var componentBounds = drawableViews?.first?.componentBounds;
 
     if (componentBounds != null) {
       for (final view in drawableViews.skip(1)) {
         if (view.componentBounds != null) {
-          // See https://github.com/dart-lang/language/issues/1308 for why
-          // `componentBounds` isn't promoted to be non-nullable.
-          componentBounds = componentBounds!.boundingBox(view.componentBounds!);
+          componentBounds = componentBounds.boundingBox(view.componentBounds);
         }
       }
     } else {
       componentBounds = Rectangle(0, 0, 0, 0);
     }
 
-    return componentBounds!;
+    return componentBounds;
   }
 
   @override
@@ -263,7 +263,7 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   Iterable<LayoutView> _viewsForPositions(LayoutPosition p1,
-      [LayoutPosition? p2]) {
+      [LayoutPosition p2]) {
     return positionOrderedViews.where((LayoutView view) =>
         view.layoutConfig.position == p1 ||
         (p2 != null && view.layoutConfig.position == p2));
@@ -275,12 +275,12 @@ class LayoutManagerImpl implements LayoutManager {
   _MeasuredSizes _measure(
     int width,
     int height, {
-    required Iterable<LayoutView> topViews,
-    required Iterable<LayoutView> rightViews,
-    required Iterable<LayoutView> bottomViews,
-    required Iterable<LayoutView> leftViews,
-    _MeasuredSizes? previousMeasurements,
-    required bool useMax,
+    @required Iterable<LayoutView> topViews,
+    @required Iterable<LayoutView> rightViews,
+    @required Iterable<LayoutView> bottomViews,
+    @required Iterable<LayoutView> leftViews,
+    _MeasuredSizes previousMeasurements,
+    @required bool useMax,
   }) {
     final maxLeftWidth = config.leftSpec.getMaxPixels(width);
     final maxRightWidth = config.rightSpec.getMaxPixels(width);
@@ -359,13 +359,13 @@ class _MeasuredSizes {
   final SizeList bottomSizes;
 
   _MeasuredSizes({
-    required this.leftWidth,
-    required this.leftSizes,
-    required this.rightWidth,
-    required this.rightSizes,
-    required this.topHeight,
-    required this.topSizes,
-    required this.bottomHeight,
-    required this.bottomSizes,
+    @required this.leftWidth,
+    @required this.leftSizes,
+    @required this.rightWidth,
+    @required this.rightSizes,
+    @required this.topHeight,
+    @required this.topSizes,
+    @required this.bottomHeight,
+    @required this.bottomSizes,
   });
 }

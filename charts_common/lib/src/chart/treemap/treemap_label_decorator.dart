@@ -23,6 +23,7 @@ import 'package:charts_common/src/common/text_element.dart';
 import 'package:charts_common/src/common/text_style.dart';
 import 'package:charts_common/src/common/text_utils.dart';
 import 'package:charts_common/src/data/series.dart';
+import 'package:meta/meta.dart';
 
 import 'treemap_renderer_decorator.dart';
 import 'treemap_renderer_element.dart';
@@ -52,7 +53,7 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
   final bool enableMultiline;
 
   TreeMapLabelDecorator(
-      {TextStyleSpec? labelStyleSpec,
+      {TextStyleSpec labelStyleSpec,
       this.labelPadding = _defaultLabelPadding,
       this.allowLabelOverflow = true,
       this.enableMultiline = false})
@@ -61,8 +62,8 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
   @override
   void decorate(TreeMapRendererElement<D> rendererElement, ChartCanvas canvas,
       GraphicsFactory graphicsFactory,
-      {required Rectangle drawBounds,
-      required double animationPercent,
+      {@required Rectangle drawBounds,
+      @required double animationPercent,
       bool rtl = false,
       bool renderVertically = false,
       bool renderMultiline = false}) {
@@ -115,15 +116,15 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
   TextStyle _asTextStyle(
           GraphicsFactory graphicsFactory, TextStyleSpec labelSpec) =>
       graphicsFactory.createTextPaint()
-        ..color = labelSpec.color ?? Color.black
-        ..fontFamily = labelSpec.fontFamily
-        ..fontSize = labelSpec.fontSize ?? _defaultFontSize
-        ..lineHeight = labelSpec.lineHeight;
+        ..color = labelSpec?.color ?? Color.black
+        ..fontFamily = labelSpec?.fontFamily
+        ..fontSize = labelSpec?.fontSize ?? _defaultFontSize
+        ..lineHeight = labelSpec?.lineHeight;
 
   /// Gets datum specific style.
-  TextStyle _datumStyle(AccessorFn<TextStyleSpec>? labelStyleFn, int datumIndex,
+  TextStyle _datumStyle(AccessorFn<TextStyleSpec> labelStyleFn, int datumIndex,
       GraphicsFactory graphicsFactory,
-      {required TextStyle defaultStyle}) {
+      {@required TextStyle defaultStyle}) {
     final styleSpec = labelStyleFn?.call(datumIndex);
     return (styleSpec != null)
         ? _asTextStyle(graphicsFactory, styleSpec)
@@ -140,7 +141,7 @@ class TreeMapLabelDecorator<D> extends TreeMapRendererDecorator<D> {
     if (rotate) {
       xOffset = elementBoundingRect.right -
           labelPadding -
-          2 * labelElement.textStyle!.fontSize! -
+          2 * labelElement.textStyle.fontSize -
           labelHeight * position;
     } else if (rtl) {
       xOffset = elementBoundingRect.right - labelPadding;

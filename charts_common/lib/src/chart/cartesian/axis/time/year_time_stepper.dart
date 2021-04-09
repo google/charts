@@ -28,7 +28,7 @@ class YearTimeStepper extends BaseTimeStepper {
         super(dateTimeFactory);
 
   factory YearTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int>? allowedTickIncrements}) {
+      {List<int> allowedTickIncrements}) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 

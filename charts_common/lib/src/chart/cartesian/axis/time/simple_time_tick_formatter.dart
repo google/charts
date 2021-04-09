@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show required;
 import 'time_tick_formatter.dart' show TimeTickFormatter;
 
 typedef DateTimeFormatterFunction = String Function(DateTime datetime);
@@ -21,7 +22,7 @@ typedef DateTimeFormatterFunction = String Function(DateTime datetime);
 class SimpleTimeTickFormatter implements TimeTickFormatter {
   DateTimeFormatterFunction formatter;
 
-  SimpleTimeTickFormatter({required this.formatter});
+  SimpleTimeTickFormatter({@required this.formatter});
 
   @override
   String formatFirstTick(DateTime date) => formatter(date);

@@ -54,9 +54,9 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// The default is set natively by the platform. This is because in Flutter,
   /// the [SymbolRenderer] has to be a Flutter wrapped version to support
   /// building widget based symbols.
-  SymbolRenderer? get symbolRenderer;
+  SymbolRenderer get symbolRenderer;
 
-  set symbolRenderer(SymbolRenderer? symbolRenderer);
+  set symbolRenderer(SymbolRenderer symbolRenderer);
 
   /// Unique identifier for this renderer. Any [Series] on a chart with a
   /// matching  [rendererIdKey] will be drawn by this renderer.
@@ -119,7 +119,7 @@ abstract class SeriesRenderer<D> extends LayoutView {
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
     Point<double> chartPoint,
     bool byDomain,
-    Rectangle<int>? boundsOverride, {
+    Rectangle<int> boundsOverride, {
     bool selectOverlappingPoints = false,
     bool selectExactEventLocation = false,
   });
@@ -149,18 +149,18 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   String rendererId;
 
   @override
-  SymbolRenderer? symbolRenderer;
+  SymbolRenderer symbolRenderer;
 
-  Rectangle<int>? _drawAreaBounds;
+  Rectangle<int> _drawAreaBounds;
 
-  Rectangle<int>? get drawBounds => _drawAreaBounds;
+  Rectangle<int> get drawBounds => _drawAreaBounds;
 
   @override
-  GraphicsFactory? graphicsFactory;
+  GraphicsFactory graphicsFactory;
 
   BaseSeriesRenderer({
-    required this.rendererId,
-    required int layoutPaintOrder,
+    @required this.rendererId,
+    @required int layoutPaintOrder,
     this.symbolRenderer,
   }) : layoutConfig = LayoutViewConfig(
             paintOrder: layoutPaintOrder,
@@ -182,7 +182,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   ///     s2 uses Red500),
   @protected
   void assignMissingColors(Iterable<MutableSeries<D>> seriesList,
-      {required bool emptyCategoryUsesSinglePalette}) {
+      {@required bool emptyCategoryUsesSinglePalette}) {
     const defaultCategory = '__default__';
 
     // Count up the number of missing series per category, keeping a max across
@@ -195,7 +195,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
       // Assign the seriesColor as the color of every datum if no colorFn was
       // provided.
       if (series.colorFn == null && series.seriesColor != null) {
-        series.colorFn = (_) => series.seriesColor!;
+        series.colorFn = (_) => series.seriesColor;
       }
 
       // This series was missing both seriesColor and a colorFn. Add it to the
@@ -234,7 +234,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
             // return a color.
             if (series.seriesColor == null) {
               try {
-                series.seriesColor = series.colorFn!(0);
+                series.seriesColor = series.colorFn(0);
               } catch (exception) {
                 series.seriesColor = StyleFactory.style.defaultSeriesColor;
               }
@@ -267,20 +267,20 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
           final category = series.seriesCategory ?? defaultCategory;
 
           // Get the current index into the color list.
-          final colorIndex = missingColorCountPerCategory[category]!;
+          final colorIndex = missingColorCountPerCategory[category];
           missingColorCountPerCategory[category] = colorIndex + 1;
 
-          final color = colorsByCategory[category]![colorIndex];
+          final color = colorsByCategory[category][colorIndex];
           series.colorFn = (_) => color;
         }
 
         // Fill color defaults to the series color if no accessor is provided.
-        series.fillColorFn ??= (int? index) => series.colorFn!(index);
+        series.fillColorFn ??= (int index) => series.colorFn(index);
       });
     } else {
       seriesList.forEach((series) {
         // Fill color defaults to the series color if no accessor is provided.
-        series.fillColorFn ??= (int? index) => series.colorFn!(index);
+        series.fillColorFn ??= (int index) => series.colorFn(index);
       });
     }
 
@@ -289,7 +289,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     seriesList.forEach((series) {
       if (series.seriesColor == null) {
         try {
-          series.seriesColor = series.colorFn!(0);
+          series.seriesColor = series.colorFn(0);
         } catch (exception) {
           series.seriesColor = StyleFactory.style.defaultSeriesColor;
         }
@@ -298,7 +298,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   }
 
   @override
-  ViewMeasuredSizes? measure(int maxWidth, int maxHeight) {
+  ViewMeasuredSizes measure(int maxWidth, int maxHeight) {
     return null;
   }
 
@@ -308,7 +308,7 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   }
 
   @override
-  Rectangle<int>? get componentBounds => _drawAreaBounds;
+  Rectangle<int> get componentBounds => _drawAreaBounds;
 
   @override
   bool get isSeriesRenderer => true;
@@ -361,15 +361,15 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
     final rawMeasureLowerBoundValue = rawMeasureLowerBoundFn?.call(index);
     final rawMeasureUpperBoundValue = rawMeasureUpperBoundFn?.call(index);
 
-    final color = colorFn!(index);
+    final color = colorFn(index);
 
     // Fill color is an optional override for color. Make sure we get a value if
     // the series doesn't define anything specific.
-    var fillColor = fillColorFn!(index);
+    var fillColor = fillColorFn(index);
     fillColor ??= color;
 
     // Area color is entirely optional.
-    final areaColor = areaColorFn!(index);
+    final areaColor = areaColorFn(index);
 
     var radiusPx = radiusPxFn?.call(index)?.toDouble();
     radiusPx = radiusPx?.toDouble();
@@ -410,14 +410,14 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
   /// [bounds] optional override for component bounds. If this is passed, then
   /// we will check whether the point is within these bounds instead of the
   /// component bounds.
-  bool isPointWithinBounds(Point<double> chartPoint, Rectangle<int>? bounds) {
+  bool isPointWithinBounds(Point<double> chartPoint, Rectangle<int> bounds) {
     // Was it even in the drawArea?
     if (bounds != null) {
       if (!bounds.containsPoint(chartPoint)) {
         return false;
       }
     } else if (componentBounds == null ||
-        !componentBounds!.containsPoint(chartPoint)) {
+        !componentBounds.containsPoint(chartPoint)) {
       return false;
     }
 

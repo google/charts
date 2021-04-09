@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show required;
+
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../cartesian/axis/axis.dart' show AxisOrientation;
 import '../../../cartesian/axis/draw_strategy/tick_draw_strategy.dart'
@@ -42,7 +44,7 @@ class PanningTickProvider<D> implements TickProvider<D> {
 
   PanningTickProviderMode _mode = PanningTickProviderMode.passThrough;
 
-  late List<Tick<D>> _ticks;
+  List<Tick<D>> _ticks;
 
   PanningTickProvider(this.tickProvider);
 
@@ -52,15 +54,15 @@ class PanningTickProvider<D> implements TickProvider<D> {
 
   @override
   List<Tick<D>> getTicks({
-    required ChartContext? context,
-    required GraphicsFactory graphicsFactory,
-    required MutableScale<D> scale,
-    required TickFormatter<D> formatter,
-    required Map<D, String> formatterValueCache,
-    required TickDrawStrategy<D> tickDrawStrategy,
-    required AxisOrientation? orientation,
+    @required ChartContext context,
+    @required GraphicsFactory graphicsFactory,
+    @required MutableScale<D> scale,
+    @required TickFormatter<D> formatter,
+    @required Map<D, String> formatterValueCache,
+    @required TickDrawStrategy<D> tickDrawStrategy,
+    @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<D>? tickHint,
+    TickHint<D> tickHint,
   }) {
     if (_mode == PanningTickProviderMode.stepSizeLocked) {
       tickHint = TickHint(

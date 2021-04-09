@@ -29,9 +29,9 @@ import 'chart_behavior.dart' show ChartBehavior;
 class DomainHighlighter<D> implements ChartBehavior<D> {
   final SelectionModelType selectionModelType;
 
-  late BaseChart<D> _chart;
+  BaseChart<D> _chart;
 
-  late LifecycleListener<D> _lifecycleListener;
+  LifecycleListener<D> _lifecycleListener;
 
   DomainHighlighter([this.selectionModelType = SelectionModelType.info]) {
     _lifecycleListener =
@@ -49,10 +49,10 @@ class DomainHighlighter<D> implements ChartBehavior<D> {
       final origColorFn = series.colorFn;
 
       if (origColorFn != null) {
-        series.colorFn = (int? index) {
+        series.colorFn = (int index) {
           final origColor = origColorFn(index);
           if (selectionModel.isDatumSelected(series, index)) {
-            return origColor?.darker;
+            return origColor.darker;
           } else {
             return origColor;
           }
@@ -79,5 +79,5 @@ class DomainHighlighter<D> implements ChartBehavior<D> {
   }
 
   @override
-  String get role => 'domainHighlight-$selectionModelType';
+  String get role => 'domainHighlight-${selectionModelType.toString()}';
 }

@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show required;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
@@ -34,15 +36,15 @@ class RangeTickProvider<D> extends TickProvider<D> {
 
   @override
   List<Tick<D>> getTicks({
-    required ChartContext? context,
-    required GraphicsFactory graphicsFactory,
-    required MutableScale<D> scale,
-    required TickFormatter<D> formatter,
-    required Map<D, String> formatterValueCache,
-    required TickDrawStrategy<D> tickDrawStrategy,
-    required AxisOrientation? orientation,
+    @required ChartContext context,
+    @required GraphicsFactory graphicsFactory,
+    @required MutableScale<D> scale,
+    @required TickFormatter<D> formatter,
+    @required Map<D, String> formatterValueCache,
+    @required TickDrawStrategy<D> tickDrawStrategy,
+    @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<D>? tickHint,
+    TickHint<D> tickHint,
   }) {
     final ticks = <Tick<D>>[];
 
@@ -64,7 +66,7 @@ class RangeTickProvider<D> extends TickProvider<D> {
     }
 
     // Use the formatter's label if the tick spec does not provide one.
-    List<String>? formattedValues;
+    List<String> formattedValues;
     if (!allTicksHaveLabels) {
       formattedValues = formatter.format(
           tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
@@ -73,7 +75,7 @@ class RangeTickProvider<D> extends TickProvider<D> {
 
     for (var i = 0; i < tickSpec.length; i++) {
       final spec = tickSpec[i];
-      Tick<D>? tick;
+      Tick<D> tick;
 
       if (spec is RangeTickSpec<D>) {
         // If it is a range tick, we still check if the spec's start and end
@@ -84,16 +86,15 @@ class RangeTickProvider<D> extends TickProvider<D> {
           tick = RangeTick<D>(
             value: spec.value,
             textElement: graphicsFactory
-                .createTextElement(spec.label ?? formattedValues![i]),
-            locationPx: (scale[spec.rangeStartValue]! +
-                    (scale[spec.rangeEndValue]! -
-                            scale[spec.rangeStartValue]!) /
+                .createTextElement(spec.label ?? formattedValues[i]),
+            locationPx: (scale[spec.rangeStartValue] +
+                    (scale[spec.rangeEndValue] - scale[spec.rangeStartValue]) /
                         2)
                 .toDouble(),
             rangeStartValue: spec.rangeStartValue,
-            rangeStartLocationPx: scale[spec.rangeStartValue]!.toDouble(),
+            rangeStartLocationPx: scale[spec.rangeStartValue]?.toDouble(),
             rangeEndValue: spec.rangeEndValue,
-            rangeEndLocationPx: scale[spec.rangeEndValue]!.toDouble(),
+            rangeEndLocationPx: scale[spec.rangeEndValue]?.toDouble(),
           );
         }
       } else {
@@ -103,23 +104,20 @@ class RangeTickProvider<D> extends TickProvider<D> {
           tick = Tick<D>(
             value: spec.value,
             textElement: graphicsFactory
-                .createTextElement(spec.label ?? formattedValues![i]),
+                .createTextElement(spec.label ?? formattedValues[i]),
             locationPx: scale[spec.value]?.toDouble(),
           );
         }
       }
 
-      if (tick != null) {
-        final style = spec.style;
-        if (style != null) {
-          tick.textElement!.textStyle = graphicsFactory.createTextPaint()
-            ..fontFamily = style.fontFamily
-            ..fontSize = style.fontSize
-            ..color = style.color
-            ..lineHeight = style.lineHeight;
-        }
-        ticks.add(tick);
+      if (spec.style != null) {
+        tick.textElement.textStyle = graphicsFactory.createTextPaint()
+          ..fontFamily = spec.style.fontFamily
+          ..fontSize = spec.style.fontSize
+          ..color = spec.style.color
+          ..lineHeight = spec.style.lineHeight;
       }
+      ticks.add(tick);
     }
 
     // Allow draw strategy to decorate the ticks.

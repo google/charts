@@ -16,8 +16,8 @@
 import 'paint_style.dart' show PaintStyle;
 
 abstract class LineStyle extends PaintStyle {
-  List<int>? get dashPattern;
-  set dashPattern(List<int>? dashPattern);
+  List<int> get dashPattern;
+  set dashPattern(List<int> dashPattern);
 
   int get strokeWidth;
   set strokeWidth(int strokeWidth);

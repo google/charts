@@ -40,7 +40,7 @@ class OrdinalExtents extends Extents<String> {
   /// The number of values inside this extent.
   int get length => _range.length;
 
-  String? operator [](int index) => _range[index];
+  String operator [](int index) => _range[index];
 
   int indexOf(String value) => _range.indexOf(value);
 }

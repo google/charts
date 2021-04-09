@@ -29,7 +29,7 @@ class MinuteTimeStepper extends BaseTimeStepper {
         super(dateTimeFactory);
 
   factory MinuteTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int>? allowedTickIncrements}) {
+      {List<int> allowedTickIncrements}) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 

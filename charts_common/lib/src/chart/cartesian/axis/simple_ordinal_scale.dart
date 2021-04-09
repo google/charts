@@ -42,12 +42,12 @@ class SimpleOrdinalScale implements OrdinalScale {
   RangeBandConfig _rangeBandConfig = RangeBandConfig.styleAssignedPercent();
 
   bool _scaleChanged = true;
-  late double _cachedStepSizePixels;
-  late double _cachedRangeBandShift;
-  late double _cachedRangeBandSize;
+  double _cachedStepSizePixels;
+  double _cachedRangeBandShift;
+  double _cachedRangeBandSize;
 
-  int? _viewportDataSize;
-  String? _viewportStartingDomain;
+  int _viewportDataSize;
+  String _viewportStartingDomain;
 
   // TODO: When there are horizontal bars increasing from where
   // the domain and measure axis intersects but the desired behavior is
@@ -110,7 +110,7 @@ class SimpleOrdinalScale implements OrdinalScale {
   RangeBandConfig get rangeBandConfig => _rangeBandConfig;
 
   @override
-  set stepSizeConfig(StepSizeConfig? config) {
+  set stepSizeConfig(StepSizeConfig config) {
     if (config != null && config.type != StepSizeType.autoDetect) {
       throw ArgumentError(
           'Ordinal scales only support StepSizeConfig of type Auto');
@@ -125,7 +125,7 @@ class SimpleOrdinalScale implements OrdinalScale {
   ///
   /// Returns 0 if not found.
   @override
-  double operator [](String domainValue) {
+  num operator [](String domainValue) {
     if (_scaleChanged) {
       _updateScale();
     }
@@ -173,8 +173,8 @@ class SimpleOrdinalScale implements OrdinalScale {
   }
 
   @override
-  set range(ScaleOutputExtent? extent) {
-    _range = extent!;
+  set range(ScaleOutputExtent extent) {
+    _range = extent;
     _scaleChanged = true;
   }
 
@@ -217,7 +217,7 @@ class SimpleOrdinalScale implements OrdinalScale {
   }
 
   @override
-  void setViewport(int? viewportDataSize, String? startingDomain) {
+  void setViewport(int viewportDataSize, String startingDomain) {
     if (startingDomain != null &&
         viewportDataSize != null &&
         viewportDataSize <= 0) {
@@ -239,16 +239,16 @@ class SimpleOrdinalScale implements OrdinalScale {
     }
 
     // Update the scale with zoom level to help find the correct translate.
-    setViewportSettings(_domain.size / min(_viewportDataSize!, _domain.size),
+    setViewportSettings(_domain.size / min(_viewportDataSize, _domain.size),
         _isVertical ? double.maxFinite : 0.0);
     _recalculateScale();
-    final domainIndex = _domain.indexOf(_viewportStartingDomain!);
+    final domainIndex = _domain.indexOf(_viewportStartingDomain);
     if (domainIndex != null) {
       var viewportTranslatePx = 0.0;
       if (_isVertical) {
         // Account for the domain values being reversed.
         viewportTranslatePx =
-            (_viewportDataSize! - domainIndex - 1) * _cachedStepSizePixels;
+            (_viewportDataSize - domainIndex - 1) * _cachedStepSizePixels;
       } else {
         viewportTranslatePx = -(_cachedStepSizePixels * domainIndex);
       }
@@ -266,7 +266,7 @@ class SimpleOrdinalScale implements OrdinalScale {
   }
 
   @override
-  String? get viewportStartingDomain {
+  String get viewportStartingDomain {
     if (_scaleChanged) {
       _updateScale();
     }
@@ -355,7 +355,9 @@ class SimpleOrdinalScale implements OrdinalScale {
         break;
       case RangeBandType.fixedDomain:
       case RangeBandType.none:
+      default:
         throw StateError('RangeBandType must not be NONE or FIXED_DOMAIN');
+        break;
     }
 
     _updateCachedFields(stepSizePixels, rangeBandPixels, stepSizePixels / 2.0);

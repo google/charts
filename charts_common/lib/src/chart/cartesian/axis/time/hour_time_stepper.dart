@@ -30,7 +30,7 @@ class HourTimeStepper extends BaseTimeStepper {
         super(dateTimeFactory);
 
   factory HourTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int>? allowedTickIncrements}) {
+      {List<int> allowedTickIncrements}) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 

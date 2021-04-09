@@ -41,15 +41,15 @@ import '../chart_behavior.dart' show ChartBehavior;
 /// the natural order of the page, but you have the option to use whatever
 /// fine-tuned order works best.
 abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
-  late BaseChart<D> _chart;
-  late final LifecycleListener<D> _lifecycleListener;
+  BaseChart<D> _chart;
+  LifecycleListener<D> _lifecycleListener;
 
   /// An ordered list of the available domains.
-  List<D>? _domains;
+  List<D> _domains;
 
   /// An ordered list of selectable domains, the domains will be selected based
   /// on the order in this list, going back and fort with right and left keys.
-  Map<int, List<SeriesDatum<D>>>? _datumPairs;
+  Map<int, List<SeriesDatum<D>>> _datumPairs;
 
   /// Currently selected domain index.
   int _currentIndex = NO_SELECTION;
@@ -98,7 +98,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
       _generateSelectionDomains();
     }
 
-    final domainsLength = _datumPairs!.length;
+    final domainsLength = _datumPairs.length;
     if (domainsLength == 0) {
       return false;
     }
@@ -126,7 +126,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
       _generateSelectionDomains();
     }
 
-    final domainsLength = _datumPairs!.length;
+    final domainsLength = _datumPairs.length;
     if (domainsLength == 0) {
       return false;
     }
@@ -200,7 +200,6 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
   int _getActiveHoverDomainIndex() {
     // If enter is pressed before an arrow key, we don't have any selection
     // domains available. Bail out.
-    final _domains = this._domains;
     if (_domains == null || _domains.isEmpty) {
       return NO_SELECTION;
     }
@@ -219,7 +218,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
 
     // If the currentIndex is the same as the firstSelectedDetail we don't have
     // to do a linear seach to find the domain.
-    final firstDomain = details.first.domain!;
+    final firstDomain = details.first.domain;
 
     if (0 <= _currentIndex &&
         _currentIndex <= _domains.length - 1 &&
@@ -241,17 +240,17 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
       final localChart = _chart as CartesianChart;
       if (localChart.vertical) {
         allSeriesDatum.sort((a, b) {
-          if (a.chartPosition!.x == b.chartPosition!.x) {
-            return a.series!.seriesIndex.compareTo(b.series!.seriesIndex);
+          if (a.chartPosition.x == b.chartPosition.x) {
+            return a.series.seriesIndex.compareTo(b.series.seriesIndex);
           }
-          return a.chartPosition!.x!.compareTo(b.chartPosition!.x!);
+          return a.chartPosition.x.compareTo(b.chartPosition.x);
         });
       } else {
         allSeriesDatum.sort((a, b) {
-          if (a.chartPosition!.y == b.chartPosition!.y) {
-            return a.series!.seriesIndex.compareTo(b.series!.seriesIndex);
+          if (a.chartPosition.y == b.chartPosition.y) {
+            return a.series.seriesIndex.compareTo(b.series.seriesIndex);
           }
-          return a.chartPosition!.y!.compareTo(b.chartPosition!.y!);
+          return a.chartPosition.y.compareTo(b.chartPosition.y);
         });
       }
     }
@@ -265,15 +264,15 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
       // all data after a datum with null measure not accessible by keyboard.
       // LINT.IfChange
       if (datumDetails.measure != null) {
-        final domain = datumDetails.domain!;
+        final domain = datumDetails.domain;
 
         if (detailsByDomain[domain] == null) {
-          _domains!.add(domain);
+          _domains.add(domain);
           detailsByDomain[domain] = [];
         }
 
-        detailsByDomain[domain]!
-            .add(SeriesDatum<D>(datumDetails.series!, datumDetails.datum));
+        detailsByDomain[domain]
+            .add(SeriesDatum<D>(datumDetails.series, datumDetails.datum));
       }
       // LINT.ThenChange(//depot/google3/third_party/dart/charts_web/lib/src/common/behaviors/hovercard/hovercard.dart)
     }
@@ -282,7 +281,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
 
     var i = 0;
     detailsByDomain.forEach((key, value) {
-      _datumPairs!.putIfAbsent(i, () => value);
+      _datumPairs.putIfAbsent(i, () => value);
       i++;
     });
 
@@ -291,7 +290,7 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
 
   /// Gets the datum/series pairs for the given domainIndex.
   List<SeriesDatum<D>> _getDatumPairs(int domainIndex) =>
-      _datumPairs![domainIndex] ?? <SeriesDatum<D>>[];
+      _datumPairs[domainIndex] ?? <SeriesDatum<D>>[];
 
   @override
   String get role => 'keyboard-domain-navigator';

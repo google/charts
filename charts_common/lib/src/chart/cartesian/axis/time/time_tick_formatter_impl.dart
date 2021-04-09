@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:meta/meta.dart' show required;
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import 'time_tick_formatter.dart' show TimeTickFormatter;
 
@@ -21,7 +22,7 @@ import 'time_tick_formatter.dart' show TimeTickFormatter;
 class TimeTickFormatterImpl implements TimeTickFormatter {
   final DateFormat _simpleFormat;
   final DateFormat _transitionFormat;
-  final CalendarField? transitionField;
+  final CalendarField transitionField;
 
   /// Create time tick formatter.
   ///
@@ -31,9 +32,9 @@ class TimeTickFormatterImpl implements TimeTickFormatter {
   /// For example showing the month with the date for Jan 1.
   /// [transitionField] the calendar field that indicates transition.
   TimeTickFormatterImpl({
-    required DateTimeFactory dateTimeFactory,
-    required String? simpleFormat,
-    required String? transitionFormat,
+    @required DateTimeFactory dateTimeFactory,
+    @required String simpleFormat,
+    @required String transitionFormat,
     this.transitionField,
   })  : _simpleFormat = dateTimeFactory.createDateFormat(simpleFormat),
         _transitionFormat = dateTimeFactory.createDateFormat(transitionFormat);
@@ -50,7 +51,6 @@ class TimeTickFormatterImpl implements TimeTickFormatter {
   @override
   bool isTransition(DateTime tickValue, DateTime prevTickValue) {
     // Transition is always false if no transition field is specified.
-    final transitionField = this.transitionField;
     if (transitionField == null) {
       return false;
     }
@@ -62,20 +62,30 @@ class TimeTickFormatterImpl implements TimeTickFormatter {
 
   /// Gets the calendar field for [dateTime].
   int getCalendarField(DateTime dateTime, CalendarField field) {
+    int value;
+
     switch (field) {
       case CalendarField.year:
-        return dateTime.year;
+        value = dateTime.year;
+        break;
       case CalendarField.month:
-        return dateTime.month;
+        value = dateTime.month;
+        break;
       case CalendarField.date:
-        return dateTime.day;
+        value = dateTime.day;
+        break;
       case CalendarField.hourOfDay:
-        return dateTime.hour;
+        value = dateTime.hour;
+        break;
       case CalendarField.minute:
-        return dateTime.minute;
+        value = dateTime.minute;
+        break;
       case CalendarField.second:
-        return dateTime.second;
+        value = dateTime.second;
+        break;
     }
+
+    return value;
   }
 }
 

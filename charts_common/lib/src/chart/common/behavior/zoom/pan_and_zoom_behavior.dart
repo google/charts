@@ -61,7 +61,7 @@ class PanAndZoomBehavior<D> extends PanBehavior<D> {
     super.onDragStart(localPosition);
 
     // Save the current scaling factor to make zoom events relative.
-    _scalingFactor = chart!.domainAxis!.viewportScalingFactor;
+    _scalingFactor = chart.domainAxis?.viewportScalingFactor;
     _isZooming = true;
 
     return true;
@@ -78,7 +78,6 @@ class PanAndZoomBehavior<D> extends PanBehavior<D> {
     // No further events in this chain should be handled by [PanBehavior].
     cancelPanning();
 
-    final chart = this.chart;
     if (!_isZooming || lastPosition == null || chart == null) {
       return false;
     }

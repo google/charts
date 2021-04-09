@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:math';
+import 'package:meta/meta.dart' show required;
 
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
@@ -52,9 +53,9 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
     Iterable<ImmutableBarRendererElement<D>> barElements,
     ChartCanvas canvas,
     GraphicsFactory graphicsFactory, {
-    required Rectangle<num> drawBounds,
-    required double animationPercent,
-    required bool renderingVertically,
+    @required Rectangle<num> drawBounds,
+    @required double animationPercent,
+    @required bool renderingVertically,
     bool rtl = false,
   }) {
     // Only decorate the bars when animation is at 100%.
@@ -63,24 +64,22 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
     }
 
     for (var element in barElements) {
-      final bounds = element.bounds!;
+      final bounds = element.bounds;
       final datumIndex = element.index;
 
-      final series = element.series!;
-
-      final measureLowerBoundFn = series.measureLowerBoundFn;
-      final measureUpperBoundFn = series.measureUpperBoundFn;
+      final measureLowerBoundFn = element.series.measureLowerBoundFn;
+      final measureUpperBoundFn = element.series.measureUpperBoundFn;
 
       if (measureLowerBoundFn != null && measureUpperBoundFn != null) {
-        final measureOffsetFn = series.measureOffsetFn!;
+        final measureOffsetFn = element.series.measureOffsetFn;
         final measureAxis =
-            series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+            element.series.getAttr(measureAxisKey) as ImmutableAxis<num>;
 
         if (renderingVertically) {
           final startY = measureAxis.getLocation(
-              measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex)!)!;
+              measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex));
           final endY = measureAxis.getLocation(
-              measureUpperBoundFn(datumIndex) + measureOffsetFn(datumIndex)!)!;
+              measureUpperBoundFn(datumIndex) + measureOffsetFn(datumIndex));
 
           if (startY != endY) {
             final barWidth = bounds.right - bounds.left;
@@ -137,9 +136,9 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
           }
         } else {
           final startX = measureAxis.getLocation(
-              measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex)!)!;
+              measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex));
           final endX = measureAxis.getLocation(
-              measureUpperBoundFn(datumIndex) + measureOffsetFn(datumIndex)!)!;
+              measureUpperBoundFn(datumIndex) + measureOffsetFn(datumIndex));
 
           if (startX != endX) {
             final barWidth = bounds.bottom - bounds.top;

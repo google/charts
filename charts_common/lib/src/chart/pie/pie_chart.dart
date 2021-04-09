@@ -31,12 +31,12 @@ class PieChart<D> extends BaseChart<D> {
     rightSpec: MarginSpec.fromPixel(minPixel: 20),
   );
 
-  PieChart({LayoutConfig? layoutConfig})
+  PieChart({LayoutConfig layoutConfig})
       : super(layoutConfig: layoutConfig ?? _defaultLayoutConfig);
 
   @override
   void drawInternal(List<MutableSeries<D>> seriesList,
-      {bool? skipAnimation, bool? skipLayout}) {
+      {bool skipAnimation, bool skipLayout}) {
     if (seriesList.length > 1) {
       throw ArgumentError('PieChart can only render a single series');
     }
@@ -63,7 +63,8 @@ class PieChart<D> extends BaseChart<D> {
         continue;
       }
 
-      final details = renderer.getExpandedDatumDetails(seriesDatum);
+      final details =
+          (renderer as ArcRenderer<D>).getExpandedDatumDetails(seriesDatum);
 
       if (details != null) {
         entries.add(details);
@@ -73,10 +74,9 @@ class PieChart<D> extends BaseChart<D> {
     return entries;
   }
 
-  Rectangle<int>? get centerContentBounds {
-    final defaultRenderer = this.defaultRenderer;
+  Rectangle<int> get centerContentBounds {
     if (defaultRenderer is ArcRenderer<D>) {
-      return defaultRenderer.centerContentBounds;
+      return (defaultRenderer as ArcRenderer<D>).centerContentBounds;
     } else {
       return null;
     }

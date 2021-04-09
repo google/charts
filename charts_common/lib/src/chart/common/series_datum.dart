@@ -22,12 +22,11 @@ class SeriesDatum<D> {
 
   /// This is set after [index] getter is called. So accessing this directly is
   /// considered unsafe. Always uses [index] getter instead.
-  int? _index;
+  int _index;
 
   SeriesDatum(this.series, this.datum);
 
-  /// Returns null if-and-only if [datum] is null.
-  int? get index {
+  int get index {
     if (datum == null) return null;
     _index ??= series.data.indexOf(datum);
     return _index;

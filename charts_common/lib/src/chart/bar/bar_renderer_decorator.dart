@@ -15,6 +15,8 @@
 
 import 'dart:math' show Rectangle;
 
+import 'package:meta/meta.dart' show required;
+
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../common/chart_canvas.dart' show ChartCanvas;
 import 'bar_renderer.dart' show ImmutableBarRendererElement;
@@ -25,8 +27,8 @@ abstract class BarRendererDecorator<D> {
 
   void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
       ChartCanvas canvas, GraphicsFactory graphicsFactory,
-      {required Rectangle<int> drawBounds,
-      required double animationPercent,
-      required bool renderingVertically,
+      {@required Rectangle<int> drawBounds,
+      @required double animationPercent,
+      @required bool renderingVertically,
       bool rtl = false});
 }

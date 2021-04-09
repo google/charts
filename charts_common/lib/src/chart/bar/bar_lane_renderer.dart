@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'dart:collection' show LinkedHashMap;
-import 'package:collection/collection.dart' show IterableExtension;
+import 'package:meta/meta.dart' show required;
 
 import '../../data/series.dart' show AttributeKey;
 import '../cartesian/axis/axis.dart'
@@ -69,18 +69,15 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
   // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _allMeasuresForDomainNullMap = LinkedHashMap<D, bool>();
 
-  factory BarLaneRenderer({
-    BarLaneRendererConfig? config,
-    String? rendererId,
-  }) {
+  factory BarLaneRenderer({BarLaneRendererConfig config, String rendererId}) {
     rendererId ??= 'bar';
     config ??= BarLaneRendererConfig();
     return BarLaneRenderer._internal(config: config, rendererId: rendererId);
   }
 
   BarLaneRenderer._internal({
-    required BarLaneRendererConfig config,
-    required String rendererId,
+    @required BarLaneRendererConfig config,
+    @required String rendererId,
   }) : super.internal(config: config, rendererId: rendererId);
 
   @override
@@ -127,8 +124,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
       final domainAxis = series.getAttr(domainAxisKey) as ImmutableAxis<D>;
       final measureAxis = series.getAttr(measureAxisKey) as ImmutableAxis<num>;
       final seriesStackKey = series.getAttr(stackKeyKey);
-      final barGroupCount = series.getAttr(barGroupCountKey)!;
-      final barGroupIndex = series.getAttr(barGroupIndexKey)!;
+      final barGroupCount = series.getAttr(barGroupCountKey);
+      final barGroupIndex = series.getAttr(barGroupIndexKey);
       final previousBarGroupWeight = series.getAttr(previousBarGroupWeightKey);
       final barGroupWeight = series.getAttr(barGroupWeightKey);
       final allBarGroupWeights = series.getAttr(allBarGroupWeightsKey);
@@ -142,7 +139,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
       laneSeries.data = <Object>[];
 
       // Don't render any labels on the swim lanes.
-      laneSeries.labelAccessorFn = (int? index) => '';
+      laneSeries.labelAccessorFn = (int index) => '';
 
       var laneSeriesIndex = 0;
       domainValues.forEach((D domainValue) {
@@ -170,8 +167,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
             barStackMapKey, () => <AnimatedBar<D>>[]);
 
         // If we already have an AnimatingBar for that index, use it.
-        var animatingBar =
-            barStackList.firstWhereOrNull((bar) => bar.key == barKey);
+        var animatingBar = barStackList.firstWhere((bar) => bar.key == barKey,
+            orElse: () => null);
 
         // If we don't have any existing bar element, create a new bar and have
         // it animate in from the domain axis.
@@ -261,7 +258,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
 
       // Add a label accessor that returns the empty lane label.
       mergedSeries.labelAccessorFn =
-          (int? index) => (config as BarLaneRendererConfig).emptyLaneLabel;
+          (int index) => (config as BarLaneRendererConfig).emptyLaneLabel;
 
       var mergedSeriesIndex = 0;
       _allMeasuresForDomainNullMap.forEach((D domainValue, bool allNull) {
@@ -278,8 +275,8 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
               barStackMapKey, () => <AnimatedBar<D>>[]);
 
           // If we already have an AnimatingBar for that index, use it.
-          var animatingBar =
-              barStackList.firstWhereOrNull((bar) => bar.key == barKey);
+          var animatingBar = barStackList.firstWhere((bar) => bar.key == barKey,
+              orElse: () => null);
 
           // If we don't have any existing bar element, create a new bar and have
           // it animate in from the domain axis.

@@ -33,17 +33,17 @@ abstract class CartesianRenderer<D> extends SeriesRenderer<D> {
 
 abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     implements CartesianRenderer<D> {
-  BaseCartesianRenderer({
-    required String rendererId,
-    required int layoutPaintOrder,
-    SymbolRenderer? symbolRenderer,
-  }) : super(
+  BaseCartesianRenderer(
+      {@required String rendererId,
+      @required int layoutPaintOrder,
+      SymbolRenderer symbolRenderer})
+      : super(
             rendererId: rendererId,
             layoutPaintOrder: layoutPaintOrder,
             symbolRenderer: symbolRenderer);
 
   @protected
-  late CartesianChart<D> chart;
+  CartesianChart<D> chart;
 
   @override
   void onAttach(BaseChart<D> chart) {
@@ -77,7 +77,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
       if (renderingVertically) {
         for (var i = 0; i < series.data.length; i++) {
-          domainAxis.addDomainValue(domainFn(i)!);
+          domainAxis.addDomainValue(domainFn(i));
 
           if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
             final domainLowerBound = domainLowerBoundFn(i);
@@ -92,7 +92,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
         // When rendering horizontally, domains are displayed from top to bottom
         // in order to match visual display in legend.
         for (var i = series.data.length - 1; i >= 0; i--) {
-          domainAxis.addDomainValue(domainFn(i)!);
+          domainAxis.addDomainValue(domainFn(i));
 
           if (domainLowerBoundFn != null && domainUpperBoundFn != null) {
             final domainLowerBound = domainLowerBoundFn(i);
@@ -114,14 +114,14 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
         return;
       }
 
-      final domainAxis = series.getAttr(domainAxisKey) as Axis<D>?;
+      final domainAxis = series.getAttr(domainAxisKey) as Axis<D>;
       final domainFn = series.domainFn;
 
       if (domainAxis == null) {
         return;
       }
 
-      final measureAxis = series.getAttr(measureAxisKey) as Axis<num>?;
+      final measureAxis = series.getAttr(measureAxisKey) as Axis<num>;
       if (measureAxis == null) {
         return;
       }
@@ -144,7 +144,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     int endIndex,
   ) {
     final measureFn = series.measureFn;
-    final measureOffsetFn = series.measureOffsetFn!;
+    final measureOffsetFn = series.measureOffsetFn;
     final measureLowerBoundFn = series.measureLowerBoundFn;
     final measureUpperBoundFn = series.measureUpperBoundFn;
 
@@ -165,7 +165,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
   @visibleForTesting
   int findNearestViewportStart(
-      Axis<D> domainAxis, AccessorFn<D> domainFn, List<Object?> data) {
+      Axis<D> domainAxis, AccessorFn<D> domainFn, List<Object> data) {
     assert(data.isNotEmpty);
 
     // Quick optimization for full viewport (likely).
@@ -219,7 +219,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
 
   @visibleForTesting
   int findNearestViewportEnd(
-      Axis<D> domainAxis, AccessorFn<D> domainFn, List<Object?> data) {
+      Axis<D> domainAxis, AccessorFn<D> domainFn, List<Object> data) {
     assert(data.isNotEmpty);
 
     var start = 1;

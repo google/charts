@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show immutable;
+import 'package:meta/meta.dart' show immutable, required;
 
 @immutable
 class Color {
@@ -29,20 +29,20 @@ class Color {
   final int b;
   final int a;
 
-  final Color? _darker;
-  final Color? _lighter;
+  final Color _darker;
+  final Color _lighter;
 
   const Color({
-    required this.r,
-    required this.g,
-    required this.b,
+    @required this.r,
+    @required this.g,
+    @required this.b,
     this.a = 255,
-    Color? darker,
-    Color? lighter,
+    Color darker,
+    Color lighter,
   })  : _darker = darker,
         _lighter = lighter;
 
-  Color.fromOther({required Color color, Color? darker, Color? lighter})
+  Color.fromOther({@required Color color, Color darker, Color lighter})
       : r = color.r,
         g = color.g,
         b = color.b,
@@ -51,7 +51,7 @@ class Color {
         _lighter = lighter ?? color._lighter;
 
   /// Construct the color from a hex code string, of the format #RRGGBB.
-  factory Color.fromHex({required String code}) {
+  factory Color.fromHex({@required String code}) {
     var str = code.substring(1, 7);
     var bigint = int.parse(str, radix: 16);
     final r = (bigint >> 16) & 255;

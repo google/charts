@@ -15,6 +15,8 @@
 
 import 'dart:math' show log, log10e, max, min, pow;
 
+import 'package:meta/meta.dart' show required;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import '../../common/unitconverter/identity_converter.dart'
@@ -102,8 +104,8 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
   // Desired min and max tick counts are set by [setFixedTickCount] and
   // [setTickCount]. These are not guaranteed tick counts.
-  int? _desiredMaxTickCount;
-  int? _desiredMinTickCount;
+  int _desiredMaxTickCount;
+  int _desiredMinTickCount;
 
   /// Allowed steps the tick provider can choose from.
   var _allowedSteps = DEFAULT_STEPS;
@@ -122,10 +124,10 @@ class NumericTickProvider extends BaseTickProvider<num> {
   //
   // [_minTickCount] and [_maxTickCount] are valid only after calling
   // [_updateTickCounts].
-  late num _low;
-  late num _high;
-  int? _minTickCount;
-  int? _maxTickCount;
+  num _low;
+  num _high;
+  int _minTickCount;
+  int _maxTickCount;
 
   /// Sets the desired tick count.
   ///
@@ -135,7 +137,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
   /// [tickCount] the fixed number of major (labeled) ticks to draw for the axis
   /// Passing null will result in falling back on the automatic tick count
   /// assignment.
-  void setFixedTickCount(int? tickCount) {
+  void setFixedTickCount(int tickCount) {
     // Don't allow a single tick, it doesn't make sense. so tickCount > 1
     _desiredMinTickCount =
         tickCount != null && tickCount > 1 ? tickCount : null;
@@ -155,7 +157,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       _desiredMaxTickCount = maxTickCount;
       if (minTickCount != null &&
           minTickCount > 1 &&
-          minTickCount <= _desiredMaxTickCount!) {
+          minTickCount <= _desiredMaxTickCount) {
         _desiredMinTickCount = minTickCount;
       } else {
         _desiredMinTickCount = 2;
@@ -198,13 +200,13 @@ class NumericTickProvider extends BaseTickProvider<num> {
   }
 
   List<Tick<num>> _getTicksFromHint({
-    required ChartContext? context,
-    required GraphicsFactory graphicsFactory,
-    required NumericScale scale,
-    required TickFormatter<num> formatter,
-    required Map<num, String> formatterValueCache,
-    required TickDrawStrategy<num> tickDrawStrategy,
-    required TickHint<num> tickHint,
+    @required ChartContext context,
+    @required GraphicsFactory graphicsFactory,
+    @required NumericScale scale,
+    @required TickFormatter<num> formatter,
+    @required Map<num, String> formatterValueCache,
+    @required TickDrawStrategy<num> tickDrawStrategy,
+    @required TickHint<num> tickHint,
   }) {
     final stepSize = (tickHint.end - tickHint.start) / (tickHint.tickCount - 1);
     // Find the first tick that is greater than or equal to the min
@@ -232,15 +234,15 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
   @override
   List<Tick<num>> getTicks({
-    required ChartContext? context,
-    required GraphicsFactory graphicsFactory,
-    required NumericScale scale,
-    required TickFormatter<num> formatter,
-    required Map<num, String> formatterValueCache,
-    required TickDrawStrategy<num> tickDrawStrategy,
-    required AxisOrientation? orientation,
+    @required ChartContext context,
+    @required GraphicsFactory graphicsFactory,
+    @required NumericScale scale,
+    @required TickFormatter<num> formatter,
+    @required Map<num, String> formatterValueCache,
+    @required TickDrawStrategy<num> tickDrawStrategy,
+    @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<num>? tickHint,
+    TickHint<num> tickHint,
   }) {
     _updateDomainExtents(scale.viewportDomain);
 
@@ -275,12 +277,13 @@ class NumericTickProvider extends BaseTickProvider<num> {
     // Walk to available tick count from max to min looking for the first one
     // that gives you the least amount of range used. If a non colliding tick
     // count is not found use the min tick count to generate ticks.
-    var ticks = <Tick<num>>[];
-    for (var tickCount = _maxTickCount!;
-        tickCount >= _minTickCount!;
+    List<Tick<num>> ticks;
+    for (var tickCount = _maxTickCount;
+        tickCount >= _minTickCount;
         tickCount--) {
       final stepInfo =
           _getStepsForTickCount(tickCount, axisUnitsHigh, axisUnitsLow);
+      assert(stepInfo != null);
       final firstTick =
           dataToAxisUnitConverter.invert(stepInfo.tickStart).toDouble();
       final lastTick = dataToAxisUnitConverter
@@ -311,7 +314,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
             tickDrawStrategy.collides(preferredTicks, orientation);
 
         // Don't choose colliding ticks unless it was our last resort
-        if (collisionReport.ticksCollide && tickCount > _minTickCount!) {
+        if (collisionReport.ticksCollide && tickCount > _minTickCount) {
           continue;
         }
         // Only choose alternate ticks if preferred ticks is not found.
@@ -477,9 +480,9 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
   /// Given the axisDimensions update the tick counts given they are not fixed.
   void _updateTickCounts({
-    required num high,
-    required num low,
-    required int rangeWidth,
+    @required num high,
+    @required num low,
+    @required int rangeWidth,
   }) {
     int tmpMaxNumMajorTicks;
     int tmpMinNumMajorTicks;
@@ -491,8 +494,8 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
     // If there is a desired tick range use it, if not calculate one.
     if (_desiredMaxTickCount != null) {
-      tmpMinNumMajorTicks = max(_desiredMinTickCount!, absoluteMinTicks);
-      tmpMaxNumMajorTicks = max(_desiredMaxTickCount!, tmpMinNumMajorTicks);
+      tmpMinNumMajorTicks = max(_desiredMinTickCount, absoluteMinTicks);
+      tmpMaxNumMajorTicks = max(_desiredMaxTickCount, tmpMinNumMajorTicks);
     } else {
       final minPixelsPerTick = MIN_DIPS_BETWEEN_TICKS.toDouble();
       tmpMinNumMajorTicks = absoluteMinTicks;

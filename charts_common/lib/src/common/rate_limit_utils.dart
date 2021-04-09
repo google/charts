@@ -15,6 +15,8 @@
 
 import 'dart:async';
 
+import 'package:meta/meta.dart' show required;
+
 /// Function that accepts only one argument of type [T] with return type [R].
 typedef UnaryFunction<T, R> = R Function(T argument);
 
@@ -25,9 +27,9 @@ typedef UnaryFunction<T, R> = R Function(T argument);
 /// again.
 /// [defaultReturn] is used as the return value when throttle event occurs.
 UnaryFunction<T, R> throttle<T, R>(UnaryFunction<T, R> callback,
-    {Duration delay = Duration.zero, required R defaultReturn}) {
-  Timer? timer;
-  Stopwatch? stopwatch;
+    {Duration delay = Duration.zero, @required R defaultReturn}) {
+  Timer timer;
+  Stopwatch stopwatch;
 
   return (T argument) {
     stopwatch ??= Stopwatch()..start();
@@ -35,7 +37,7 @@ UnaryFunction<T, R> throttle<T, R>(UnaryFunction<T, R> callback,
     // This event happened too soon. Do not call the [callback] function yet,
     // unless it turns out to be the very last event. [delay]s for a period of
     // time before calling the [callback] function again.
-    if (stopwatch!.elapsedMilliseconds < delay.inMilliseconds) {
+    if (stopwatch.elapsedMilliseconds < delay.inMilliseconds) {
       timer?.cancel();
       timer = Timer(delay, () {
         callback(argument);

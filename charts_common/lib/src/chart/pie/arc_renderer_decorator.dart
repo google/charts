@@ -15,6 +15,8 @@
 
 import 'dart:math' show Rectangle;
 
+import 'package:meta/meta.dart' show required;
+
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../common/chart_canvas.dart' show ChartCanvas;
 import 'arc_renderer.dart' show ArcRendererElementList;
@@ -29,7 +31,7 @@ abstract class ArcRendererDecorator<D> {
 
   void decorate(ArcRendererElementList<D> arcElements, ChartCanvas canvas,
       GraphicsFactory graphicsFactory,
-      {required Rectangle drawBounds,
-      required double animationPercent,
+      {@required Rectangle drawBounds,
+      @required double animationPercent,
       bool rtl = false});
 }

@@ -15,7 +15,7 @@
 
 import 'dart:math' show Point;
 
-import 'package:collection/collection.dart' show IterableExtension;
+import 'package:meta/meta.dart' show required;
 
 import 'gesture_listener.dart' show GestureListener;
 
@@ -41,9 +41,10 @@ class ProxyGestureListener {
 
   bool onLongPress(Point<double> localPosition) {
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = _activeListeners.firstWhereOrNull(
+    final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
-            listener.onLongPress?.call(localPosition) ?? false);
+            listener.onLongPress?.call(localPosition) ?? false,
+        orElse: () => null);
 
     // If someone claims the long press, then cancel everyone else.
     if (claimingListener != null) {
@@ -56,9 +57,10 @@ class ProxyGestureListener {
 
   bool onTap(Point<double> localPosition) {
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = _activeListeners.firstWhereOrNull(
+    final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
-            listener.onTap?.call(localPosition) ?? false);
+            listener.onTap?.call(localPosition) ?? false,
+        orElse: () => null);
 
     // If someone claims the tap, then cancel everyone else.
     // This should hopefully be rare, like for drilling.
@@ -87,9 +89,10 @@ class ProxyGestureListener {
     }
 
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = _activeListeners.firstWhereOrNull(
+    final claimingListener = _activeListeners.firstWhere(
         (GestureListener listener) =>
-            listener.onDragStart?.call(localPosition) ?? false);
+            listener.onDragStart?.call(localPosition) ?? false,
+        orElse: () => null);
 
     if (claimingListener != null) {
       _activeListeners =
@@ -122,8 +125,8 @@ class ProxyGestureListener {
   }
 
   List<GestureListener> _cancel({
-    required List<GestureListener> all,
-    required List<GestureListener> keep,
+    @required List<GestureListener> all,
+    @required List<GestureListener> keep,
   }) {
     all.forEach((GestureListener listener) {
       if (!keep.contains(listener)) {

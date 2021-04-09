@@ -20,8 +20,7 @@ import 'treemap_renderer_config.dart';
 
 /// A treemap renderer that renders a treemap with slice-and-dice layout.
 class SliceDiceTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
-  SliceDiceTreeMapRenderer(
-      {String? rendererId, TreeMapRendererConfig<D>? config})
+  SliceDiceTreeMapRenderer({String rendererId, TreeMapRendererConfig<D> config})
       : super(
             config: config ??
                 TreeMapRendererConfig(tileType: TreeMapTileType.sliceDice),

@@ -40,13 +40,13 @@ abstract class Style {
   ///
   /// Fill missing value(s) with default.
   LineStyle createAxisLineStyle(
-      GraphicsFactory graphicsFactory, LineStyleSpec? spec);
+      GraphicsFactory graphicsFactory, LineStyleSpec spec);
 
   /// Creates [LineStyleSpec] for tick lines from spec.
   ///
   /// Fill missing value(s) with default.
   LineStyle createTickLineStyle(
-      GraphicsFactory graphicsFactory, LineStyleSpec? spec);
+      GraphicsFactory graphicsFactory, LineStyleSpec spec);
 
   /// Default tick length.
   int get tickLength;
@@ -59,7 +59,7 @@ abstract class Style {
   ///
   /// Fill missing value(s) with default.
   LineStyle createGridlineStyle(
-      GraphicsFactory graphicsFactory, LineStyleSpec? spec);
+      GraphicsFactory graphicsFactory, LineStyleSpec spec);
 
   /// Default color for outside label leader lines for [ArcLabelDecorator].
   Color get arcLabelOutsideLeaderLine;

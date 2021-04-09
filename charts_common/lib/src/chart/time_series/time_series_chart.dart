@@ -32,11 +32,11 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
   final DateTimeFactory dateTimeFactory;
 
   TimeSeriesChart(
-      {bool? vertical,
-      LayoutConfig? layoutConfig,
-      NumericAxis? primaryMeasureAxis,
-      NumericAxis? secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
+      {bool vertical,
+      LayoutConfig layoutConfig,
+      NumericAxis primaryMeasureAxis,
+      NumericAxis secondaryMeasureAxis,
+      LinkedHashMap<String, NumericAxis> disjointMeasureAxes,
       this.dateTimeFactory = const LocalDateTimeFactory()})
       : super(
             vertical: vertical,
@@ -48,8 +48,8 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
 
   @override
   void initDomainAxis() {
-    domainAxis!.tickDrawStrategy = SmallTickRendererSpec<DateTime>()
-        .createDrawStrategy(context, graphicsFactory!);
+    domainAxis.tickDrawStrategy = SmallTickRendererSpec<DateTime>()
+        .createDrawStrategy(context, graphicsFactory);
   }
 
   @override

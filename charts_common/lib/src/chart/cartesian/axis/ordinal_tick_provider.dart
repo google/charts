@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show required;
+
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
@@ -28,15 +30,16 @@ class OrdinalTickProvider extends BaseTickProvider<String> {
 
   @override
   List<Tick<String>> getTicks({
-    required ChartContext? context,
-    required GraphicsFactory graphicsFactory,
-    required OrdinalScale scale,
-    required TickFormatter<String> formatter,
-    required Map<String, String> formatterValueCache,
-    required TickDrawStrategy<String> tickDrawStrategy,
-    required AxisOrientation? orientation,
+    @required ChartContext context,
+    @required GraphicsFactory graphicsFactory,
+    @required List<String> domainValues,
+    @required OrdinalScale scale,
+    @required TickFormatter<String> formatter,
+    @required Map<String, String> formatterValueCache,
+    @required TickDrawStrategy<String> tickDrawStrategy,
+    @required AxisOrientation orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<String>? tickHint,
+    TickHint<String> tickHint,
   }) {
     return createTicks(scale.domain.domains,
         context: context,

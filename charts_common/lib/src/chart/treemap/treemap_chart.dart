@@ -23,12 +23,12 @@ import 'package:charts_common/src/chart/layout/layout_config.dart';
 import 'squarified_treemap_renderer.dart';
 
 class TreeMapChart<D> extends BaseChart<D> {
-  TreeMapChart({LayoutConfig? layoutConfig})
+  TreeMapChart({LayoutConfig layoutConfig})
       : super(layoutConfig: layoutConfig ?? LayoutConfig());
 
   @override
   void drawInternal(List<MutableSeries<D>> seriesList,
-      {bool? skipAnimation, bool? skipLayout}) {
+      {bool skipAnimation, bool skipLayout}) {
     if (seriesList.length > 1) {
       throw ArgumentError('TreeMapChart can only render a single tree.');
     }
@@ -60,7 +60,7 @@ class TreeMapChart<D> extends BaseChart<D> {
               domain: series.domainFn(datumIndex),
               measure: series.measureFn(datumIndex),
               series: seriesDatum.series,
-              color: series.colorFn!(datumIndex)),
+              color: series.colorFn(datumIndex)),
           seriesDatum);
       details.add(datumDetails);
     }

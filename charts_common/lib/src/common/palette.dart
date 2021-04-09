@@ -44,7 +44,7 @@ abstract class Palette {
   }
 
   Color _getSteppedColor(Color color, int index, int steps,
-      {Color? darker, Color? lighter}) {
+      {Color darker, Color lighter}) {
     final fraction = index / steps;
     return Color(
       r: color.r + ((255 - color.r) * fraction).round(),

@@ -36,21 +36,21 @@ abstract class LegendEntryGenerator<D> {
   void updateLegendEntries(List<LegendEntry<D>> legendEntries,
       SelectionModel<D> selectionModel, List<MutableSeries<D>> seriesList);
 
-  MeasureFormatter? get measureFormatter;
+  MeasureFormatter get measureFormatter;
 
-  set measureFormatter(MeasureFormatter? formatter);
+  set measureFormatter(MeasureFormatter formatter);
 
-  MeasureFormatter? get secondaryMeasureFormatter;
+  MeasureFormatter get secondaryMeasureFormatter;
 
-  set secondaryMeasureFormatter(MeasureFormatter? formatter);
+  set secondaryMeasureFormatter(MeasureFormatter formatter);
 
   LegendDefaultMeasure get legendDefaultMeasure;
 
   set legendDefaultMeasure(LegendDefaultMeasure noSelectionMeasure);
 
-  TextStyleSpec? get entryTextStyle;
+  TextStyleSpec get entryTextStyle;
 
-  set entryTextStyle(TextStyleSpec? entryTextStyle);
+  set entryTextStyle(TextStyleSpec entryTextStyle);
 
   bool get showOverlaySeries;
 

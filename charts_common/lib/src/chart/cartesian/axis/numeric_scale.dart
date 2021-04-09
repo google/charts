@@ -41,8 +41,8 @@ abstract class NumericScale extends MutableScale<num> {
   /// data so that panning has a start and end point to go between beyond the
   /// received data.  This allows lazy loading of data into the gaps in the
   /// expanded lied about areas.
-  NumericExtents? get domainOverride;
-  set domainOverride(NumericExtents? extent);
+  NumericExtents get domainOverride;
+  set domainOverride(NumericExtents extent);
 
   /// Returns the domain extent visible in the viewport of the drawArea.
   NumericExtents get viewportDomain;

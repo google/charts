@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart' show required;
 import 'tick.dart' show Tick;
 
 /// A report that contains a list of ticks and if they collide.
@@ -25,9 +26,9 @@ class CollisionReport<D> {
   final bool alternateTicksUsed;
 
   CollisionReport(
-      {required this.ticksCollide,
-      required List<Tick<D>>? ticks,
-      bool? alternateTicksUsed})
+      {@required this.ticksCollide,
+      @required List<Tick<D>> ticks,
+      bool alternateTicksUsed})
       : ticks = ticks ?? [],
         alternateTicksUsed = alternateTicksUsed ?? false;
 
