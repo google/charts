@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
-import 'package:meta/meta.dart';
 
 import '../common/behavior/chart_behavior.dart'
     show BehaviorPosition, OutsideJustification;
@@ -90,7 +89,7 @@ class ViewMargin {
   final int rightPx;
   final int leftPx;
 
-  const ViewMargin({int topPx, int bottomPx, int rightPx, int leftPx})
+  const ViewMargin({int? topPx, int? bottomPx, int? rightPx, int? leftPx})
       : topPx = topPx ?? 0,
         bottomPx = bottomPx ?? 0,
         rightPx = rightPx ?? 0,
@@ -106,15 +105,15 @@ class ViewMargin {
 /// Configuration of a [LayoutView].
 class LayoutViewConfig {
   /// Unique identifier for the [LayoutView].
-  String id;
+  String? id;
 
   /// The order to paint a [LayoutView] on the canvas.
   ///
   /// The smaller number is drawn first.
-  int paintOrder;
+  int? paintOrder;
 
   /// The position of a [LayoutView] defining where to place the view.
-  LayoutPosition position;
+  LayoutPosition? position;
 
   /// The order to place the [LayoutView] within a chart margin.
   ///
@@ -124,7 +123,7 @@ class LayoutViewConfig {
   ///
   /// Note that all views positioned in the draw area are given the entire draw
   /// area bounds as their component bounds.
-  int positionOrder;
+  int? positionOrder;
 
   /// Defines the space around a layout component.
   ViewMargin viewMargin;
@@ -138,7 +137,7 @@ class LayoutViewConfig {
     this.paintOrder,
     this.position,
     this.positionOrder,
-    ViewMargin viewMargin,
+    ViewMargin? viewMargin,
   }) : viewMargin = viewMargin ?? ViewMargin.empty;
 
   /// Returns true if it is a full position.
@@ -169,19 +168,19 @@ class ViewMeasuredSizes {
   /// [minWidth] the component's minimum width. If not set, default to 0.
   /// [minHeight] the component's minimum height. If not set, default to 0.
   const ViewMeasuredSizes(
-      {@required this.preferredWidth,
-      @required this.preferredHeight,
-      int minWidth,
-      int minHeight})
+      {required this.preferredWidth,
+      required this.preferredHeight,
+      int? minWidth,
+      int? minHeight})
       : minWidth = minWidth ?? 0,
         minHeight = minHeight ?? 0;
 }
 
 /// A component that measures its size and accepts bounds to complete layout.
 abstract class LayoutView {
-  GraphicsFactory get graphicsFactory;
+  GraphicsFactory? get graphicsFactory;
 
-  set graphicsFactory(GraphicsFactory value);
+  set graphicsFactory(GraphicsFactory? value);
 
   /// Layout params for this component.
   LayoutViewConfig get layoutConfig;
@@ -190,7 +189,7 @@ abstract class LayoutView {
   ///
   /// This measurement is without the [ComponentBuffer], which is added by the
   /// layout manager.
-  ViewMeasuredSizes measure(int maxWidth, int maxHeight);
+  ViewMeasuredSizes? measure(int maxWidth, int maxHeight);
 
   /// Layout this component.
   void layout(Rectangle<int> componentBounds, Rectangle<int> drawAreaBounds);
@@ -199,7 +198,7 @@ abstract class LayoutView {
   void paint(ChartCanvas canvas, double animationPercent);
 
   /// Bounding box for drawing this component.
-  Rectangle<int> get componentBounds;
+  Rectangle<int>? get componentBounds;
 
   /// Whether or not this component is a series renderer that draws series
   /// data.

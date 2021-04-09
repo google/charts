@@ -47,7 +47,7 @@ class OrdinalScaleDomainInfo {
     }
   }
 
-  int indexOf(String domain) => _domainsToOrder[domain];
+  int? indexOf(String domain) => _domainsToOrder[domain];
 
   String getDomainAtIndex(int index) {
     assert(index >= 0);
@@ -57,9 +57,9 @@ class OrdinalScaleDomainInfo {
 
   List<String> get domains => _domainList;
 
-  String get first => _domainList.isEmpty ? null : _domainList.first;
+  String? get first => _domainList.isEmpty ? null : _domainList.first;
 
-  String get last => _domainList.isEmpty ? null : _domainList.last;
+  String? get last => _domainList.isEmpty ? null : _domainList.last;
 
   bool get isEmpty => _index == 0;
   bool get isNotEmpty => !isEmpty;

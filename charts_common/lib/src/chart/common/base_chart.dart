@@ -38,15 +38,15 @@ import 'series_renderer.dart' show SeriesRenderer, rendererIdKey, rendererKey;
 typedef BehaviorCreator = ChartBehavior<D> Function<D>();
 
 abstract class BaseChart<D> {
-  ChartContext context;
+  late ChartContext context;
 
   /// Internal use only.
-  GraphicsFactory graphicsFactory;
+  GraphicsFactory? graphicsFactory;
 
-  LayoutManager _layoutManager;
+  final LayoutManager _layoutManager;
 
-  int _chartWidth;
-  int _chartHeight;
+  int? _chartWidth;
+  int? _chartHeight;
 
   Duration transition = const Duration(milliseconds: 300);
 
@@ -59,17 +59,17 @@ abstract class BaseChart<D> {
   ///
   /// This list will be used when redraw is called, to reset the state of all
   /// behaviors to the original list.
-  List<MutableSeries<D>> _originalSeriesList;
+  late List<MutableSeries<D>> _originalSeriesList;
 
   /// List of series that are currently drawn on the chart.
   ///
   /// This list should be used by interactive behaviors between chart draw
   /// cycles. It may be filtered or modified by some behaviors during the
   /// initial draw cycle (e.g. a [Legend] may hide some series).
-  List<MutableSeries<D>> _currentSeriesList;
+  List<MutableSeries<D>>? _currentSeriesList;
 
   Set<String> _usingRenderers = <String>{};
-  Map<String, List<MutableSeries<D>>> _rendererToSeriesList;
+  Map<String, List<MutableSeries<D>>>? _rendererToSeriesList;
 
   final _seriesRenderers = <String, SeriesRenderer<D>>{};
 
@@ -113,9 +113,8 @@ abstract class BaseChart<D> {
 
   final _lifecycleListeners = <LifecycleListener<D>>[];
 
-  BaseChart({LayoutConfig layoutConfig}) {
-    _layoutManager = LayoutManagerImpl(config: layoutConfig);
-  }
+  BaseChart({LayoutConfig? layoutConfig})
+      : _layoutManager = LayoutManagerImpl(config: layoutConfig);
 
   void init(ChartContext context, GraphicsFactory graphicsFactory) {
     this.context = context;
@@ -156,9 +155,9 @@ abstract class BaseChart<D> {
   /// chart first calling init with the context.
   void configurationChanged() {}
 
-  int get chartWidth => _chartWidth;
+  int? get chartWidth => _chartWidth;
 
-  int get chartHeight => _chartHeight;
+  int? get chartHeight => _chartHeight;
 
   //
   // Gesture proxy methods
@@ -219,7 +218,7 @@ abstract class BaseChart<D> {
     _seriesRenderers[rendererId] = renderer;
   }
 
-  SeriesRenderer<D> getSeriesRenderer(String rendererId) {
+  SeriesRenderer<D> getSeriesRenderer(String? rendererId) {
     var renderer = _seriesRenderers[rendererId];
 
     // Special case, if we are asking for the default and we haven't made it
@@ -239,7 +238,7 @@ abstract class BaseChart<D> {
   bool pointWithinRenderer(Point<double> chartPosition) {
     return _usingRenderers.any((String rendererId) =>
         getSeriesRenderer(rendererId)
-            .componentBounds
+            .componentBounds!
             .containsPoint(chartPosition));
   }
 
@@ -275,13 +274,13 @@ abstract class BaseChart<D> {
       // Sort so that the nearest one is first.
       // Special sort, sort by domain distance first, then by measure distance.
       if (selectNearestByDomain) {
-        final domainDiff = a.domainDistance.compareTo(b.domainDistance);
+        final domainDiff = a.domainDistance!.compareTo(b.domainDistance!);
         if (domainDiff == 0) {
-          return a.measureDistance.compareTo(b.measureDistance);
+          return a.measureDistance!.compareTo(b.measureDistance!);
         }
         return domainDiff;
       } else {
-        return a.relativeDistance.compareTo(b.relativeDistance);
+        return a.relativeDistance!.compareTo(b.relativeDistance!);
       }
     });
 
@@ -300,7 +299,7 @@ abstract class BaseChart<D> {
     }
 
     final selectionModel = getSelectionModel(selectionModelType);
-    if (selectionModel == null || !selectionModel.hasDatumSelection) {
+    if (!selectionModel.hasDatumSelection) {
       return details;
     }
 
@@ -324,7 +323,7 @@ abstract class BaseChart<D> {
       return details;
     }
 
-    for (final series in _currentSeriesList) {
+    for (final series in _currentSeriesList!) {
       final rendererId = series.getAttr(rendererIdKey);
 
       if (!includeOverlaySeries && series.overlaySeries) {
@@ -375,12 +374,12 @@ abstract class BaseChart<D> {
   /// Removes a behavior from the chart.
   ///
   /// Returns true if a behavior was removed, otherwise returns false.
-  bool removeBehavior(ChartBehavior<D> behavior) {
+  bool removeBehavior(ChartBehavior<D>? behavior) {
     if (behavior == null) {
       return false;
     }
 
-    final role = behavior?.role;
+    final role = behavior.role;
     if (role != null && _behaviorRoleMap[role] == behavior) {
       _behaviorRoleMap.remove(role);
     }
@@ -410,7 +409,7 @@ abstract class BaseChart<D> {
 
   /// Tells the chart that this behavior no longer responds to tap events.
   void unregisterTappable(ChartBehavior<D> behavior) {
-    final role = behavior?.role;
+    final role = behavior.role;
     if (role != null && _behaviorTappableMap[role] == behavior) {
       _behaviorTappableMap.remove(role);
     }
@@ -432,7 +431,7 @@ abstract class BaseChart<D> {
     if (_rendererToSeriesList != null) {
       layoutInternal(width, height);
 
-      onPostLayout(_rendererToSeriesList);
+      onPostLayout(_rendererToSeriesList!);
     }
   }
 
@@ -443,7 +442,7 @@ abstract class BaseChart<D> {
   }
 
   void addView(LayoutView view) {
-    if (_layoutManager.isAttached(view) == false) {
+    if (!_layoutManager.isAttached(view)) {
       view.graphicsFactory = graphicsFactory;
       _layoutManager.addView(view);
     }
@@ -516,15 +515,15 @@ abstract class BaseChart<D> {
 
     // Trigger layout and actually redraw the chart.
     if (!skipLayout) {
-      measure(_chartWidth, _chartHeight);
-      layout(_chartWidth, _chartHeight);
+      measure(_chartWidth!, _chartHeight!);
+      layout(_chartWidth!, _chartHeight!);
     } else {
       onSkipLayout();
     }
   }
 
   void drawInternal(List<MutableSeries<D>> seriesList,
-      {bool skipAnimation, bool skipLayout}) {
+      {bool? skipAnimation, bool? skipLayout}) {
     seriesList = seriesList
         .map((MutableSeries<D> series) => MutableSeries<D>.clone(series))
         .toList();
@@ -547,7 +546,7 @@ abstract class BaseChart<D> {
     _currentSeriesList = seriesList;
   }
 
-  List<MutableSeries<D>> get currentSeriesList => _currentSeriesList;
+  List<MutableSeries<D>> get currentSeriesList => _currentSeriesList!;
 
   MutableSeries<D> makeSeries(Series<dynamic, D> series) {
     final s = MutableSeries<D>(series);
@@ -563,7 +562,7 @@ abstract class BaseChart<D> {
 
   /// Preprocess series to assign missing color functions.
   void configureSeries(List<MutableSeries<D>> seriesList) {
-    final rendererToSeriesList = <String, List<MutableSeries<D>>>{};
+    final rendererToSeriesList = <String?, List<MutableSeries<D>>>{};
 
     // Build map of rendererIds to SeriesLists. This map can't be re-used later
     // in the preprocessSeries call because some behaviors might alter the
@@ -575,7 +574,7 @@ abstract class BaseChart<D> {
 
     // Have each renderer add missing color functions to their seriesLists.
     rendererToSeriesList
-        .forEach((String rendererId, List<MutableSeries<D>> seriesList) {
+        .forEach((String? rendererId, List<MutableSeries<D>> seriesList) {
       getSeriesRenderer(rendererId).configureSeries(seriesList);
     });
   }
@@ -592,7 +591,7 @@ abstract class BaseChart<D> {
 
     // Build map of rendererIds to SeriesLists.
     seriesList.forEach((MutableSeries<D> series) {
-      final rendererId = series.getAttr(rendererIdKey);
+      final rendererId = series.getAttr(rendererIdKey)!;
       rendererToSeriesList.putIfAbsent(rendererId, () => []).add(series);
 
       _usingRenderers.add(rendererId);
@@ -612,7 +611,7 @@ abstract class BaseChart<D> {
   }
 
   void onSkipLayout() {
-    onPostLayout(_rendererToSeriesList);
+    onPostLayout(_rendererToSeriesList!);
   }
 
   void onPostLayout(Map<String, List<MutableSeries<D>>> rendererToSeriesList) {
@@ -716,26 +715,26 @@ class LifecycleListener<D> {
   /// This step is good for processing the data (running averages, percentage of
   /// first, etc). It can also be used to add Series of data (trend line) or
   /// remove a line as mentioned above, removing Series.
-  final LifecycleSeriesListCallback<D> onData;
+  final LifecycleSeriesListCallback<D>? onData;
 
   /// Called for every redraw given the original SeriesList resulting from the
   /// previous onData.
   ///
   /// This step is good for injecting default attributes on the Series before
   /// the renderers process the data (ex: before stacking measures).
-  final LifecycleSeriesListCallback<D> onPreprocess;
+  final LifecycleSeriesListCallback<D>? onPreprocess;
 
   /// Called after the chart and renderers get a chance to process the data but
   /// before the axes process them.
   ///
   /// This step is good if you need to alter the Series measure values after the
   /// renderers have processed them (ex: after stacking measures).
-  final LifecycleSeriesListCallback<D> onPostprocess;
+  final LifecycleSeriesListCallback<D>? onPostprocess;
 
   /// Called after the Axes have been configured.
   /// This step is good if you need to use the axes to get any cartesian
   /// location information. At this point Axes should be immutable and stable.
-  final LifecycleEmptyCallback onAxisConfigured;
+  final LifecycleEmptyCallback? onAxisConfigured;
 
   /// Called after the chart is done rendering passing along the canvas allowing
   /// a behavior or other listener to render on top of the chart.
@@ -743,11 +742,11 @@ class LifecycleListener<D> {
   /// This is a convenience callback, however if there is any significant canvas
   /// interaction or stacking needs, it is preferred that a AplosView/ChartView
   /// is added to the chart instead to fully participate in the view stacking.
-  final LifecycleCanvasCallback onPostrender;
+  final LifecycleCanvasCallback? onPostrender;
 
   /// Called after animation hits 100%. This allows a behavior or other listener
   /// to chain animations to create a multiple step animation transition.
-  final LifecycleEmptyCallback onAnimationComplete;
+  final LifecycleEmptyCallback? onAnimationComplete;
 
   LifecycleListener(
       {this.onData,

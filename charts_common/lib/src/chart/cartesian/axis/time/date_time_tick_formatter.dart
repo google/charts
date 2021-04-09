@@ -52,7 +52,7 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
   /// where these assumptions are not correct, please create a custom
   /// [TickFormatter].
   factory DateTimeTickFormatter(DateTimeFactory dateTimeFactory,
-      {Map<int, TimeTickFormatter> overrides}) {
+      {Map<int, TimeTickFormatter>? overrides}) {
     final map = <int, TimeTickFormatter>{
       MINUTE: TimeTickFormatterImpl(
           dateTimeFactory: dateTimeFactory,
@@ -143,7 +143,7 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
 
   @override
   List<String> format(List<DateTime> tickValues, Map<DateTime, String> cache,
-      {num stepSize}) {
+      {num? stepSize}) {
     final tickLabels = <String>[];
     if (tickValues.isEmpty) {
       return tickLabels;
@@ -152,7 +152,7 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
     // Find the formatter that is the largest interval that has enough
     // resolution to describe the difference between ticks. If no such formatter
     // exists pick the highest res one.
-    var formatter = _timeFormatters[_timeFormatters.keys.first];
+    var formatter = _timeFormatters[_timeFormatters.keys.first]!;
     var formatterFound = false;
     if (_timeFormatters.keys.first == ANY) {
       formatterFound = true;
@@ -167,7 +167,7 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
         if (keys.current > minTimeBetweenTicks) {
           formatterFound = true;
         } else {
-          formatter = _timeFormatters[keys.current];
+          formatter = _timeFormatters[keys.current]!;
         }
       }
     }

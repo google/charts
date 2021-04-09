@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
@@ -31,15 +29,15 @@ import 'time/date_time_scale.dart' show DateTimeScale;
 class EndPointsTickProvider<D> extends BaseTickProvider<D> {
   @override
   List<Tick<D>> getTicks({
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required MutableScale<D> scale,
-    @required TickFormatter<D> formatter,
-    @required Map<D, String> formatterValueCache,
-    @required TickDrawStrategy<D> tickDrawStrategy,
-    @required AxisOrientation orientation,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required MutableScale<D> scale,
+    required TickFormatter<D> formatter,
+    required Map<D, String> formatterValueCache,
+    required TickDrawStrategy<D> tickDrawStrategy,
+    required AxisOrientation? orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<D> tickHint,
+    TickHint<D>? tickHint,
   }) {
     final ticks = <Tick<D>>[];
 
@@ -76,8 +74,8 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
   }
 
   /// Get the start value from the scale.
-  D _getStartValue(TickHint<D> tickHint, MutableScale<D> scale) {
-    Object start;
+  D _getStartValue(TickHint<D>? tickHint, MutableScale<D> scale) {
+    Object? start;
 
     if (tickHint != null) {
       start = tickHint.start;
@@ -100,8 +98,8 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
   }
 
   /// Get the end value from the scale.
-  D _getEndValue(TickHint<D> tickHint, MutableScale<D> scale) {
-    Object end;
+  D _getEndValue(TickHint<D>? tickHint, MutableScale<D> scale) {
+    Object? end;
 
     if (tickHint != null) {
       end = tickHint.end;

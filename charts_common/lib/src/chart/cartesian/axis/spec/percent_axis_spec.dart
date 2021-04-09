@@ -31,11 +31,11 @@ import 'numeric_axis_spec.dart'
 class PercentAxisSpec extends NumericAxisSpec {
   /// Creates a [NumericAxisSpec] that is specialized for percentage data.
   PercentAxisSpec({
-    RenderSpec<num> renderSpec,
-    NumericTickProviderSpec tickProviderSpec,
-    NumericTickFormatterSpec tickFormatterSpec,
-    bool showAxisLine,
-    NumericExtents viewport,
+    RenderSpec<num>? renderSpec,
+    NumericTickProviderSpec? tickProviderSpec,
+    NumericTickFormatterSpec? tickFormatterSpec,
+    bool? showAxisLine,
+    NumericExtents? viewport,
   }) : super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec ??

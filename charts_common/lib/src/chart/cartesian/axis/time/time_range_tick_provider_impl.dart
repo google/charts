@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show AxisOrientation;
@@ -49,8 +47,8 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
 
   // Find the increment that is closest to the step size.
   int _getClosestIncrementFromStepSize(int stepSize) {
-    int minDifference;
-    int closestIncrement;
+    int? minDifference;
+    late int closestIncrement;
 
     assert(timeStepper.allowedTickIncrements.isNotEmpty);
     for (final increment in timeStepper.allowedTickIncrements) {
@@ -67,17 +65,17 @@ class TimeRangeTickProviderImpl extends TimeRangeTickProvider {
 
   @override
   List<Tick<DateTime>> getTicks({
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required DateTimeScale scale,
-    @required TickFormatter<DateTime> formatter,
-    @required Map<DateTime, String> formatterValueCache,
-    @required TickDrawStrategy<DateTime> tickDrawStrategy,
-    @required AxisOrientation orientation,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required DateTimeScale scale,
+    required TickFormatter<DateTime> formatter,
+    required Map<DateTime, String> formatterValueCache,
+    required TickDrawStrategy<DateTime> tickDrawStrategy,
+    required AxisOrientation? orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<DateTime> tickHint,
+    TickHint<DateTime>? tickHint,
   }) {
-    List<Tick<DateTime>> currentTicks;
+    late List<Tick<DateTime>> currentTicks;
     final tickValues = <DateTime>[];
     final timeStepIt = timeStepper.getSteps(scale.viewportDomain).iterator;
 

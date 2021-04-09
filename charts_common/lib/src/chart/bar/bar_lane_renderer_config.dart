@@ -43,20 +43,20 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   final bool mergeEmptyLanes;
 
   BarLaneRendererConfig({
-    String customRendererId,
-    CornerStrategy cornerStrategy,
+    String? customRendererId,
+    CornerStrategy? cornerStrategy,
     this.emptyLaneLabel = 'No data',
-    FillPatternType fillPattern,
-    BarGroupingType groupingType,
+    FillPatternType? fillPattern,
+    BarGroupingType? groupingType,
     int layoutPaintOrder = LayoutViewPaintOrder.bar,
     this.mergeEmptyLanes = false,
     int minBarLengthPx = 0,
     int stackedBarPaddingPx = 1,
     double strokeWidthPx = 0.0,
-    BarRendererDecorator<String> barRendererDecorator,
-    SymbolRenderer symbolRenderer,
-    Color backgroundBarColor,
-    List<int> weightPattern,
+    BarRendererDecorator<String>? barRendererDecorator,
+    SymbolRenderer? symbolRenderer,
+    Color? backgroundBarColor,
+    List<int>? weightPattern,
   })  : backgroundBarColor =
             backgroundBarColor ?? StyleFactory.style.noDataColor,
         super(

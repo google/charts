@@ -17,7 +17,6 @@ import 'dart:collection';
 
 import 'package:charts_common/src/common/graphics_factory.dart';
 import 'package:charts_common/src/common/text_element.dart';
-import 'package:meta/meta.dart' show required;
 
 /// This function breaks original [labelElement] into multiple
 /// [TextElement] when [multiline] is true and the width of
@@ -30,8 +29,8 @@ const _defaultlabelDelimiter = ' ';
 
 List<TextElement> wrapLabelLines(TextElement labelElement,
     GraphicsFactory graphicsFactory, num maxWidth, num maxHeight,
-    {@required bool allowLabelOverflow,
-    @required bool multiline,
+    {required bool allowLabelOverflow,
+    required bool multiline,
     String labelDelimiter = _defaultlabelDelimiter}) {
   final textStyle = labelElement.textStyle;
   final textDirection = labelElement.textDirection;

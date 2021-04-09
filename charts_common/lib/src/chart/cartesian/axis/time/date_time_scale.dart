@@ -66,7 +66,7 @@ class DateTimeScale extends MutableScale<DateTime> {
   }
 
   @override
-  set range(ScaleOutputExtent extent) {
+  set range(ScaleOutputExtent? extent) {
     _linearScale.range = extent;
   }
 
@@ -128,7 +128,7 @@ class DateTimeScale extends MutableScale<DateTime> {
   int get rangeWidth => _linearScale.rangeWidth;
 
   @override
-  ScaleOutputExtent get range => _linearScale.range;
+  ScaleOutputExtent? get range => _linearScale.range;
 
   @override
   bool canTranslate(DateTime domainValue) =>

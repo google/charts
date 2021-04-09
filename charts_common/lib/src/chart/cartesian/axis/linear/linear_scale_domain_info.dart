@@ -18,7 +18,7 @@ import '../numeric_extents.dart' show NumericExtents;
 /// Encapsulation of all the domain processing logic for the [LinearScale].
 class LinearScaleDomainInfo {
   /// User (or axis) overridden extent in domain units.
-  NumericExtents domainOverride;
+  NumericExtents? domainOverride;
 
   /// The minimum added domain value.
   num _dataDomainStart = double.infinity;
@@ -29,7 +29,7 @@ class LinearScaleDomainInfo {
   num get dataDomainEnd => _dataDomainEnd;
 
   /// Previous domain added so we can calculate minimumDetectedDomainStep.
-  num _previouslyAddedDomain;
+  num? _previouslyAddedDomain;
 
   /// The step size between data points in domain units.
   ///
@@ -61,7 +61,7 @@ class LinearScaleDomainInfo {
   }
 
   /// Updates the domain extent and detected step size given the [domainValue].
-  void addDomainValue(num domainValue) {
+  void addDomainValue(num? domainValue) {
     if (domainValue == null || !domainValue.isFinite) {
       return;
     }
@@ -69,7 +69,7 @@ class LinearScaleDomainInfo {
     extendDomain(domainValue);
 
     if (_previouslyAddedDomain != null) {
-      final domainStep = (domainValue - _previouslyAddedDomain).abs();
+      final domainStep = (domainValue - _previouslyAddedDomain!).abs();
       if (domainStep != 0.0 && domainStep < minimumDetectedDomainStep) {
         _minimumDetectedDomainStep = domainStep;
       }
@@ -82,7 +82,7 @@ class LinearScaleDomainInfo {
   /// Returns whether the the domain interval was extended. If the domain value
   /// was already contained in the domain interval, the domain interval does not
   /// change.
-  bool extendDomain(num domainValue) {
+  bool extendDomain(num? domainValue) {
     if (domainValue == null || !domainValue.isFinite) {
       return false;
     }
@@ -105,8 +105,8 @@ class LinearScaleDomainInfo {
     num tmpDomainEnd;
     if (domainOverride != null) {
       // override was set.
-      tmpDomainStart = domainOverride.min;
-      tmpDomainEnd = domainOverride.max;
+      tmpDomainStart = domainOverride!.min;
+      tmpDomainEnd = domainOverride!.max;
     } else {
       // domainEnd is less than domainStart if no domain values have been set.
       tmpDomainStart = _dataDomainStart.isFinite ? _dataDomainStart : 0.0;

@@ -39,7 +39,7 @@ abstract class DateTimeFactory {
       int microsecond = 0]);
 
   /// Returns a [DateFormat].
-  DateFormat createDateFormat(String pattern);
+  DateFormat createDateFormat(String? pattern);
 }
 
 /// A local time [DateTimeFactory].
@@ -67,7 +67,7 @@ class LocalDateTimeFactory implements DateTimeFactory {
 
   /// Returns a [DateFormat].
   @override
-  DateFormat createDateFormat(String pattern) => DateFormat(pattern);
+  DateFormat createDateFormat(String? pattern) => DateFormat(pattern);
 }
 
 /// An UTC time [DateTimeFactory].
@@ -96,5 +96,5 @@ class UTCDateTimeFactory implements DateTimeFactory {
 
   /// Returns a [DateFormat].
   @override
-  DateFormat createDateFormat(String pattern) => DateFormat(pattern);
+  DateFormat createDateFormat(String? pattern) => DateFormat(pattern);
 }

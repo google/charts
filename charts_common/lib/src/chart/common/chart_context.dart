@@ -55,7 +55,7 @@ abstract class ChartContext {
 
   void requestPaint();
 
-  void enableA11yExploreMode(List<A11yNode> nodes, {String announcement});
+  void enableA11yExploreMode(List<A11yNode> nodes, {String? announcement});
 
-  void disableA11yExploreMode({String announcement});
+  void disableA11yExploreMode({String? announcement});
 }

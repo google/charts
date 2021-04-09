@@ -26,11 +26,11 @@ import '../tick_provider.dart' show TickProvider;
 
 @immutable
 class AxisSpec<D> {
-  final bool showAxisLine;
-  final RenderSpec<D> renderSpec;
-  final TickProviderSpec<D> tickProviderSpec;
-  final TickFormatterSpec<D> tickFormatterSpec;
-  final ScaleSpec<D> scaleSpec;
+  final bool? showAxisLine;
+  final RenderSpec<D>? renderSpec;
+  final TickProviderSpec<D>? tickProviderSpec;
+  final TickFormatterSpec<D>? tickFormatterSpec;
+  final ScaleSpec<D>? scaleSpec;
 
   const AxisSpec({
     this.renderSpec,
@@ -42,11 +42,11 @@ class AxisSpec<D> {
 
   factory AxisSpec.from(
     AxisSpec<D> other, {
-    RenderSpec<D> renderSpec,
-    TickProviderSpec<D> tickProviderSpec,
-    TickFormatterSpec<D> tickFormatterSpec,
-    bool showAxisLine,
-    ScaleSpec<D> scaleSpec,
+    RenderSpec<D>? renderSpec,
+    TickProviderSpec<D>? tickProviderSpec,
+    TickFormatterSpec<D>? tickFormatterSpec,
+    bool? showAxisLine,
+    ScaleSpec<D>? scaleSpec,
   }) {
     return AxisSpec(
       renderSpec: renderSpec ?? other.renderSpec,
@@ -67,24 +67,24 @@ class AxisSpec<D> {
 
     if (renderSpec != null) {
       axis.tickDrawStrategy =
-          renderSpec.createDrawStrategy(context, graphicsFactory);
+          renderSpec!.createDrawStrategy(context, graphicsFactory);
     }
 
     if (tickProviderSpec != null) {
-      axis.tickProvider = tickProviderSpec.createTickProvider(context);
+      axis.tickProvider = tickProviderSpec!.createTickProvider(context);
     }
 
     if (tickFormatterSpec != null) {
-      axis.tickFormatter = tickFormatterSpec.createTickFormatter(context);
+      axis.tickFormatter = tickFormatterSpec!.createTickFormatter(context);
     }
 
     if (scaleSpec != null) {
-      axis.scale = scaleSpec.createScale() as MutableScale<D>;
+      axis.scale = scaleSpec!.createScale() as MutableScale<D>;
     }
   }
 
   /// Creates an appropriately typed [Axis].
-  Axis<D> createAxis() => null;
+  Axis<D>? createAxis() => null;
 
   @override
   bool operator ==(Object other) =>
@@ -132,11 +132,11 @@ abstract class RenderSpec<D> {
 
 @immutable
 class TextStyleSpec {
-  final String fontFamily;
-  final int fontSize;
-  final double lineHeight;
-  final Color color;
-  final String fontWeight;
+  final String? fontFamily;
+  final int? fontSize;
+  final double? lineHeight;
+  final Color? color;
+  final String? fontWeight;
 
   const TextStyleSpec(
       {this.fontFamily,
@@ -169,9 +169,9 @@ class TextStyleSpec {
 
 @immutable
 class LineStyleSpec {
-  final Color color;
-  final List<int> dashPattern;
-  final int thickness;
+  final Color? color;
+  final List<int>? dashPattern;
+  final int? thickness;
 
   const LineStyleSpec({this.color, this.dashPattern, this.thickness});
 

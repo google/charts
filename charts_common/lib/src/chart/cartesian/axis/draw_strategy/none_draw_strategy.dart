@@ -15,7 +15,7 @@
 
 import 'dart:math';
 
-import 'package:meta/meta.dart' show immutable, required;
+import 'package:meta/meta.dart' show immutable;
 
 import '../../../../common/color.dart' show Color;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
@@ -35,7 +35,7 @@ import 'tick_draw_strategy.dart';
 /// However, it does render the axis line if asked to by the axis.
 @immutable
 class NoneRenderSpec<D> extends RenderSpec<D> {
-  final LineStyleSpec axisLineStyle;
+  final LineStyleSpec? axisLineStyle;
 
   const NoneRenderSpec({this.axisLineStyle});
 
@@ -60,7 +60,7 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
   NoneDrawStrategy(
     ChartContext chartContext,
     GraphicsFactory graphicsFactory, {
-    LineStyleSpec axisLineStyleSpec,
+    LineStyleSpec? axisLineStyleSpec,
   })  : axisLineStyle = StyleFactory.style
             .createAxisLineStyle(graphicsFactory, axisLineStyleSpec),
         noneTextStyle = graphicsFactory.createTextPaint()
@@ -69,7 +69,7 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
 
   @override
   CollisionReport<D> collides(
-          List<Tick<D>> ticks, AxisOrientation orientation) =>
+          List<Tick<D>>? ticks, AxisOrientation? orientation) =>
       CollisionReport(ticksCollide: false, ticks: ticks);
 
   @override
@@ -78,7 +78,7 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
     // still be set to handle the case of the draw strategy being switched to
     // a different draw strategy. The new draw strategy will try to animate
     // the old ticks out and the text style property is used.
-    ticks.forEach((tick) => tick.textElement.textStyle = noneTextStyle);
+    ticks.forEach((tick) => tick.textElement!.textStyle = noneTextStyle);
   }
 
   @override
@@ -118,11 +118,11 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
 
   @override
   void draw(ChartCanvas canvas, Tick<D> tick,
-      {@required AxisOrientation orientation,
-      @required Rectangle<int> axisBounds,
-      @required Rectangle<int> drawAreaBounds,
-      @required bool isFirst,
-      @required bool isLast,
+      {required AxisOrientation orientation,
+      required Rectangle<int> axisBounds,
+      required Rectangle<int> drawAreaBounds,
+      required bool isFirst,
+      required bool isLast,
       bool collision = false}) {}
 
   @override

@@ -39,18 +39,18 @@ abstract class A11yExploreBehavior<D> implements ChartBehavior<D> {
   final double minimumWidth;
 
   /// Optionally notify the OS when explore mode is enabled.
-  final String exploreModeEnabledAnnouncement;
+  final String? exploreModeEnabledAnnouncement;
 
   /// Optionally notify the OS when explore mode is disabled.
-  final String exploreModeDisabledAnnouncement;
+  final String? exploreModeDisabledAnnouncement;
 
-  BaseChart<D> _chart;
-  GestureListener _listener;
+  BaseChart<D>? _chart;
+  late GestureListener _listener;
   bool _exploreModeOn = false;
 
   A11yExploreBehavior({
-    double minimumWidth,
-    ExploreModeTrigger /*?*/ exploreModeTrigger,
+    ExploreModeTrigger? exploreModeTrigger,
+    double? minimumWidth,
     this.exploreModeEnabledAnnouncement,
     this.exploreModeDisabledAnnouncement,
   })  : exploreModeTrigger = exploreModeTrigger ?? ExploreModeTrigger.pressHold,
@@ -71,12 +71,12 @@ abstract class A11yExploreBehavior<D> implements ChartBehavior<D> {
     if (_exploreModeOn) {
       _exploreModeOn = false;
       // Ask native platform to turn off explore mode.
-      _chart.context.disableA11yExploreMode(
+      _chart!.context.disableA11yExploreMode(
           announcement: exploreModeDisabledAnnouncement);
     } else {
       _exploreModeOn = true;
       // Ask native platform to turn on explore mode.
-      _chart.context.enableA11yExploreMode(createA11yNodes(),
+      _chart!.context.enableA11yExploreMode(createA11yNodes(),
           announcement: exploreModeEnabledAnnouncement);
     }
 

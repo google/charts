@@ -16,7 +16,7 @@
 import 'dart:collection' show LinkedHashMap;
 import 'dart:math' show atan2, cos, max, sin, pi, Point, Rectangle;
 
-import 'package:meta/meta.dart' show required;
+import 'package:collection/collection.dart' show IterableExtension;
 
 import '../../common/color.dart' show Color;
 import '../../common/math.dart' show NullablePoint;
@@ -44,7 +44,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
   final List<ArcRendererDecorator<D>> arcRendererDecorators;
 
-  BaseChart<D> _chart;
+  BaseChart<D>? _chart;
 
   /// Store a map of series drawn on the chart, mapped by series name.
   ///
@@ -60,13 +60,13 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   // data.
   final _currentKeys = <String>[];
 
-  factory ArcRenderer({String rendererId, ArcRendererConfig<D> config}) {
+  factory ArcRenderer({String? rendererId, ArcRendererConfig<D>? config}) {
     return ArcRenderer._internal(
         rendererId: rendererId ?? 'line',
         config: config ?? ArcRendererConfig());
   }
 
-  ArcRenderer._internal({@required String rendererId, @required this.config})
+  ArcRenderer._internal({required String rendererId, required this.config})
       : arcRendererDecorators = config?.arcRendererDecorators ?? [],
         super(
             rendererId: rendererId,
@@ -101,7 +101,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
       var totalAngle = 0.0;
 
-      var measures = <num>[];
+      var measures = <num?>[];
 
       if (series.data.isEmpty) {
         // If the series has no data, generate an empty arc element that
@@ -161,7 +161,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
-    final bounds = _chart.drawAreaBounds;
+    final bounds = _chart!.drawAreaBounds;
 
     final center = Point<double>((bounds.left + bounds.width / 2).toDouble(),
         (bounds.top + bounds.height / 2).toDouble());
@@ -170,10 +170,9 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         ? (bounds.height / 2).toDouble()
         : (bounds.width / 2).toDouble();
 
-    if (config.arcRatio != null) {
-      if (config.arcRatio < 0 || config.arcRatio > 1) {
-        throw ArgumentError('arcRatio must be between 0 and 1');
-      }
+    if (config.arcRatio != null &&
+        (config.arcRatio! < 0 || config.arcRatio! > 1)) {
+      throw ArgumentError('arcRatio must be between 0 and 1');
     }
 
     final innerRadius = _calculateInnerRadius(radius);
@@ -196,8 +195,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         var arcKey = '__no_data__';
 
         // If we already have an AnimatingArc for that index, use it.
-        var animatingArc = arcList.arcs
-            .firstWhere((arc) => arc.key == arcKey, orElse: () => null);
+        var animatingArc =
+            arcList.arcs.firstWhereOrNull((arc) => arc.key == arcKey);
 
         arcList.center = center;
         arcList.radius = radius;
@@ -233,15 +232,15 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         var previousEndAngle = config.startAngle;
 
         for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
-          final Object datum = series.data[arcIndex];
+          final Object? datum = series.data[arcIndex];
           final details = elementsList[arcIndex];
           final domainValue = details.domain;
 
           var arcKey = '${series.id}__$domainValue';
 
           // If we already have an AnimatingArc for that index, use it.
-          var animatingArc = arcList.arcs
-              .firstWhere((arc) => arc.key == arcKey, orElse: () => null);
+          var animatingArc =
+              arcList.arcs.firstWhereOrNull((arc) => arc.key == arcKey);
 
           arcList.center = center;
           arcList.radius = radius;
@@ -257,7 +256,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           if (animatingArc == null) {
             animatingArc = _AnimatedArc<D>(arcKey, datum, domainValue)
               ..setNewTarget(ArcRendererElement<D>(
-                color: colorFn(arcIndex),
+                color: colorFn!(arcIndex),
                 startAngle: previousEndAngle,
                 endAngle: previousEndAngle,
                 index: arcIndex,
@@ -279,7 +278,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
           // Get the arcElement we are going to setup.
           // Optimization to prevent allocation in non-animating case.
           final arcElement = ArcRendererElement<D>(
-            color: colorFn(arcIndex),
+            color: colorFn!(arcIndex),
             startAngle: details.startAngle,
             endAngle: details.endAngle,
             index: arcIndex,
@@ -308,7 +307,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
               in arcList.arcs.where((arc) => _currentKeys.contains(arc.key))) {
             final nextArcStartAngle = nextArc.newTargetArcStartAngle;
 
-            if (arcStartAngle < nextArcStartAngle &&
+            if (arcStartAngle! < nextArcStartAngle! &&
                 nextArcStartAngle < targetArcAngle) {
               targetArcAngle = nextArcStartAngle;
             }
@@ -341,9 +340,9 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       final circleSectors = <CanvasPieSlice>[];
       final arcElementsList = ArcRendererElementList<D>(
         arcs: <ArcRendererElement<D>>[],
-        center: arcList.center,
-        innerRadius: arcList.innerRadius,
-        radius: arcList.radius,
+        center: arcList.center!,
+        innerRadius: arcList.innerRadius!,
+        radius: arcList.radius!,
         startAngle: config.startAngle,
         stroke: arcList.stroke,
         strokeWidthPx: arcList.strokeWidthPx,
@@ -364,15 +363,15 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       arcRendererDecorators
           .where((decorator) => !decorator.renderAbove)
           .forEach((decorator) {
-        decorator.decorate(arcElementsList, canvas, graphicsFactory,
-            drawBounds: drawBounds,
+        decorator.decorate(arcElementsList, canvas, graphicsFactory!,
+            drawBounds: drawBounds!,
             animationPercent: animationPercent,
             rtl: isRtl);
       });
 
       // Draw the arcs.
       canvas.drawPie(CanvasPie(
-          circleSectors, arcList.center, arcList.radius, arcList.innerRadius,
+          circleSectors, arcList.center!, arcList.radius!, arcList.innerRadius!,
           stroke: arcList.stroke, strokeWidthPx: arcList.strokeWidthPx ?? 0));
 
       // Decorate the arcs with decorators that should appear above the main
@@ -380,15 +379,15 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       arcRendererDecorators
           .where((decorator) => decorator.renderAbove)
           .forEach((decorator) {
-        decorator.decorate(arcElementsList, canvas, graphicsFactory,
-            drawBounds: drawBounds,
+        decorator.decorate(arcElementsList, canvas, graphicsFactory!,
+            drawBounds: drawBounds!,
             animationPercent: animationPercent,
             rtl: isRtl);
       });
     });
   }
 
-  bool get isRtl => _chart?.context?.isRtl ?? false;
+  bool get isRtl => _chart?.context.isRtl ?? false;
 
   /// Gets a bounding box for the largest center content card that can fit
   /// inside the hole of the chart.
@@ -403,30 +402,30 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 
     // No card should be visible if the hole in the chart is too small.
     if (arcList == null ||
-        arcList.innerRadius < config.minHoleWidthForCenterContent) {
+        arcList.innerRadius! < config.minHoleWidthForCenterContent) {
       // Return default bounds of 0 size.
-      final bounds = _chart.drawAreaBounds;
+      final bounds = _chart!.drawAreaBounds;
       return Rectangle<int>((bounds.left + bounds.width / 2).round(),
           (bounds.top + bounds.height / 2).round(), 0, 0);
     }
 
     // Fix the height and width of the center content div to the maximum box
     // size that will fit within the pie's inner radius.
-    final width = (_cosPIOver4 * arcList.innerRadius).floor();
+    final width = (_cosPIOver4 * arcList.innerRadius!).floor();
 
-    return Rectangle<int>((arcList.center.x - width).round(),
-        (arcList.center.y - width).round(), width * 2, width * 2);
+    return Rectangle<int>((arcList.center!.x - width).round(),
+        (arcList.center!.y - width).round(), width * 2, width * 2);
   }
 
   /// Returns an expanded [DatumDetails] object that contains location data.
   DatumDetails<D> getExpandedDatumDetails(SeriesDatum<D> seriesDatum) {
     final series = seriesDatum.series;
-    final Object datum = seriesDatum.datum;
+    final Object? datum = seriesDatum.datum;
     final datumIndex = seriesDatum.index;
 
     final domain = series.domainFn(datumIndex);
     final measure = series.measureFn(datumIndex);
-    final color = series.colorFn(datumIndex);
+    final color = series.colorFn!(datumIndex);
 
     final chartPosition = _getChartPosition(series.id, '${series.id}__$domain');
 
@@ -445,8 +444,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   /// [seriesId] the series ID.
   ///
   /// [key] the key in the current animated arc list.
-  Point<double> _getChartPosition(String seriesId, String key) {
-    Point<double> chartPosition;
+  Point<double>? _getChartPosition(String seriesId, String key) {
+    Point<double>? chartPosition;
 
     final arcList = _seriesArcMap[seriesId];
 
@@ -459,15 +458,15 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
         // Now that we have found the matching arc, calculate the center point
         // halfway between the inner and outer radius, and the start and end
         // angles.
-        final centerAngle = arc.currentArcStartAngle +
-            (arc.currentArcEndAngle - arc.currentArcStartAngle) / 2;
+        final centerAngle = arc.currentArcStartAngle! +
+            (arc.currentArcEndAngle! - arc.currentArcStartAngle!) / 2;
 
         final centerPointRadius =
-            arcList.innerRadius + (arcList.radius - arcList.innerRadius) / 2;
+            arcList.innerRadius! + (arcList.radius! - arcList.innerRadius!) / 2;
 
         chartPosition = Point<double>(
-            centerPointRadius * cos(centerAngle) + arcList.center.x,
-            centerPointRadius * sin(centerAngle) + arcList.center.y);
+            centerPointRadius * cos(centerAngle) + arcList.center!.x,
+            centerPointRadius * sin(centerAngle) + arcList.center!.y);
 
         break;
       }
@@ -480,7 +479,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
     Point<double> chartPoint,
     bool byDomain,
-    Rectangle<int> boundsOverride, {
+    Rectangle<int>? boundsOverride, {
     bool selectOverlappingPoints = false,
     bool selectExactEventLocation = false,
   }) {
@@ -492,13 +491,13 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
     }
 
     _seriesArcMap.forEach((String key, _AnimatedArcList<D> arcList) {
-      if (arcList.series.overlaySeries) {
+      if (arcList.series!.overlaySeries) {
         return;
       }
 
-      final center = arcList.center;
-      final innerRadius = arcList.innerRadius;
-      final radius = arcList.radius;
+      final center = arcList.center!;
+      final innerRadius = arcList.innerRadius!;
+      final radius = arcList.radius!;
 
       final distance = center.distanceTo(chartPoint);
 
@@ -522,8 +521,8 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       arcList.arcs.forEach((_AnimatedArc<D> arc) {
         if (innerRadius <= distance &&
             distance <= radius &&
-            arc.currentArcStartAngle <= chartPointAngle &&
-            chartPointAngle <= arc.currentArcEndAngle) {
+            arc.currentArcStartAngle! <= chartPointAngle &&
+            chartPointAngle <= arc.currentArcEndAngle!) {
           nearest.add(DatumDetails<D>(
             series: arcList.series,
             datum: arc.datum,
@@ -542,7 +541,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     final chartPosition =
-        _getChartPosition(details.series.id, details.domain.toString());
+        _getChartPosition(details.series!.id, details.domain.toString());
 
     return DatumDetails.from(details,
         chartPosition: NullablePoint.from(chartPosition));
@@ -551,7 +550,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   /// Assigns colors to series that are missing their colorFn.
   @override
   void assignMissingColors(Iterable<MutableSeries<D>> seriesList,
-      {@required bool emptyCategoryUsesSinglePalette}) {
+      {required bool emptyCategoryUsesSinglePalette}) {
     var maxMissing = 0;
 
     seriesList.forEach((series) {
@@ -565,7 +564,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
       final colorPalette = colorPalettes[0].makeShades(maxMissing);
 
       seriesList.forEach((series) {
-        series.colorFn ??= (index) => colorPalette[index];
+        series.colorFn ??= (index) => colorPalette[index!];
       });
     }
   }
@@ -574,9 +573,9 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   double _calculateInnerRadius(double radius) {
     // arcRatio trumps arcWidth. If neither is defined, then inner radius is 0.
     if (config.arcRatio != null) {
-      return max(radius - radius * config.arcRatio, 0.0).toDouble();
+      return max(radius - radius * config.arcRatio!, 0.0).toDouble();
     } else if (config.arcWidth != null) {
-      return max(radius - config.arcWidth, 0.0).toDouble();
+      return max(radius - config.arcWidth!, 0.0).toDouble();
     } else {
       return 0.0;
     }
@@ -584,24 +583,24 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
 }
 
 class ArcRendererElementList<D> {
-  List<ArcRendererElement<D>> arcs;
-  Point<double> center;
-  double innerRadius;
-  double radius;
-  double startAngle;
+  final List<ArcRendererElement<D>> arcs;
+  final Point<double> center;
+  final double innerRadius;
+  final double radius;
+  final double startAngle;
 
   /// Color of separator lines between arcs.
-  Color stroke;
+  final Color? stroke;
 
   /// Stroke width of separator lines between arcs.
-  final double strokeWidthPx;
+  final double? strokeWidthPx;
 
   ArcRendererElementList({
-    @required this.arcs,
-    @required this.center,
-    @required this.innerRadius,
-    @required this.radius,
-    @required this.startAngle,
+    required this.arcs,
+    required this.center,
+    required this.innerRadius,
+    required this.radius,
+    required this.startAngle,
     this.stroke,
     this.strokeWidthPx,
   });
@@ -610,27 +609,27 @@ class ArcRendererElementList<D> {
 class ArcRendererElement<D> {
   double startAngle;
   double endAngle;
-  Color color;
-  int index;
-  num key;
-  D domain;
+  Color? color;
+  int? index;
+  num? key;
+  D? domain;
   ImmutableSeries<D> series;
 
   ArcRendererElement({
-    @required this.startAngle,
-    @required this.endAngle,
+    required this.startAngle,
+    required this.endAngle,
     this.color,
     this.index,
     this.key,
     this.domain,
-    @required this.series,
+    required this.series,
   });
 
   ArcRendererElement<D> clone() {
     return ArcRendererElement<D>(
       startAngle: startAngle,
       endAngle: endAngle,
-      color: color == null ? null : Color.fromOther(color: color),
+      color: color == null ? null : Color.fromOther(color: color!),
       index: index,
       key: key,
       series: series,
@@ -646,32 +645,32 @@ class ArcRendererElement<D> {
     endAngle = ((target.endAngle - previous.endAngle) * animationPercent) +
         previous.endAngle;
 
-    color = getAnimatedColor(previous.color, target.color, animationPercent);
+    color = getAnimatedColor(previous.color!, target.color!, animationPercent);
   }
 }
 
 class _AnimatedArcList<D> {
   final arcs = <_AnimatedArc<D>>[];
-  Point<double> center;
-  double innerRadius;
-  double radius;
-  ImmutableSeries<D> series;
+  Point<double>? center;
+  double? innerRadius;
+  double? radius;
+  ImmutableSeries<D>? series;
 
   /// Color of separator lines between arcs.
-  Color stroke;
+  Color? stroke;
 
   /// Stroke width of separator lines between arcs.
-  double strokeWidthPx;
+  double? strokeWidthPx;
 }
 
 class _AnimatedArc<D> {
   final String key;
-  dynamic datum;
-  D domain;
+  Object? datum;
+  D? domain;
 
-  ArcRendererElement<D> _previousArc;
-  ArcRendererElement<D> _targetArc;
-  ArcRendererElement<D> _currentArc;
+  ArcRendererElement<D>? _previousArc;
+  late ArcRendererElement<D> _targetArc;
+  ArcRendererElement<D>? _currentArc;
 
   // Flag indicating whether this arc is being animated out of the chart.
   bool animatingOut = false;
@@ -685,7 +684,7 @@ class _AnimatedArc<D> {
   ///
   /// Animates the angle of the arc to [endAngle], in radians.
   void animateOut(double endAngle) {
-    var newTarget = _currentArc.clone();
+    var newTarget = _currentArc!.clone();
 
     // Animate the arc out by setting the angles to 0.
     newTarget.startAngle = endAngle;
@@ -698,7 +697,7 @@ class _AnimatedArc<D> {
   void setNewTarget(ArcRendererElement<D> newTarget) {
     animatingOut = false;
     _currentArc ??= newTarget.clone();
-    _previousArc = _currentArc.clone();
+    _previousArc = _currentArc!.clone();
     _targetArc = newTarget;
   }
 
@@ -706,32 +705,32 @@ class _AnimatedArc<D> {
     if (animationPercent == 1.0 || _previousArc == null) {
       _currentArc = _targetArc;
       _previousArc = _targetArc;
-      return _currentArc;
+      return _currentArc!;
     }
 
-    _currentArc.updateAnimationPercent(
-        _previousArc, _targetArc, animationPercent);
+    _currentArc!
+        .updateAnimationPercent(_previousArc!, _targetArc, animationPercent);
 
-    return _currentArc;
+    return _currentArc!;
   }
 
   /// Returns the [startAngle] of the new target element, without updating
   /// animation state.
-  double get newTargetArcStartAngle => _targetArc?.startAngle;
+  double? get newTargetArcStartAngle => _targetArc.startAngle;
 
   /// Returns the [endAngle] of the new target element, without updating
   /// animation state.
-  double get currentArcEndAngle => _currentArc?.endAngle;
+  double? get currentArcEndAngle => _currentArc?.endAngle;
 
   /// Returns the [startAngle] of the currently rendered element, without
   /// updating animation state.
-  double get currentArcStartAngle => _currentArc?.startAngle;
+  double? get currentArcStartAngle => _currentArc?.startAngle;
 
   /// Returns the [endAngle] of the new target element, without updating
   /// animation state.
-  double get previousArcEndAngle => _previousArc?.endAngle;
+  double? get previousArcEndAngle => _previousArc?.endAngle;
 
   /// Returns the [startAngle] of the previously rendered element, without
   /// updating animation state.
-  double get previousArcStartAngle => _previousArc?.startAngle;
+  double? get previousArcStartAngle => _previousArc?.startAngle;
 }

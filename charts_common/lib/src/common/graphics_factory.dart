@@ -25,5 +25,5 @@ abstract class GraphicsFactory {
   TextStyle createTextPaint();
 
   /// Returns a text element from [text] and [style].
-  TextElement createTextElement(String text);
+  TextElement createTextElement(String? text);
 }

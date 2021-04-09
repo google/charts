@@ -16,8 +16,6 @@
 import 'dart:collection' show LinkedHashMap;
 import 'dart:math' show max, Rectangle;
 
-import 'package:meta/meta.dart' show required;
-
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../cartesian/axis/axis.dart' show ImmutableAxis;
 import '../cartesian/cartesian_chart.dart' show CartesianChart;
@@ -50,12 +48,12 @@ import 'symbol_annotation_renderer_config.dart'
 /// Does not handle horizontal bars.
 class SymbolAnnotationRenderer<D> extends PointRenderer<D>
     implements LayoutView {
-  Rectangle<int> _componentBounds;
+  late Rectangle<int> _componentBounds;
 
   @override
-  GraphicsFactory graphicsFactory;
+  GraphicsFactory? graphicsFactory;
 
-  CartesianChart<D> _chart;
+  late CartesianChart<D> _chart;
 
   var _currentHeight = 0;
 
@@ -63,7 +61,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
   final _seriesInfo = LinkedHashMap<String, _SeriesInfo<D>>();
 
   SymbolAnnotationRenderer(
-      {String rendererId, SymbolAnnotationRendererConfig<D> config})
+      {String? rendererId, SymbolAnnotationRendererConfig<D>? config})
       : super(rendererId: rendererId ?? 'symbolAnnotation', config: config);
 
   //
@@ -108,16 +106,16 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
           localConfig.verticalSymbolTopPaddingPx +
           (rowInnerHeight / 2);
 
-      series.measureFn = (int index) => 0;
-      series.measureOffsetFn = (int index) => 0;
+      series.measureFn = (index) => 0;
+      series.measureOffsetFn = (index) => 0;
 
       // Override the key function to allow for range annotations that start at
       // the same point. This is a necessary hack because every annotation has a
       // measure value of 0, so the key generated in [PointRenderer] is not
       // unique enough.
       series.keyFn ??= (index) => '${series.id}__${series.domainFn(index)}__'
-          '${series.domainLowerBoundFn(index)}__'
-          '${series.domainUpperBoundFn(index)}';
+          '${series.domainLowerBoundFn!(index)}__'
+          '${series.domainUpperBoundFn!(index)}';
 
       _seriesInfo[seriesKey] = _SeriesInfo<D>(
         rowHeight: rowHeight,
@@ -135,16 +133,16 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
 
   @override
   DatumPoint<D> getPoint(
-      final datum,
-      D domainValue,
-      D domainLowerBoundValue,
-      D domainUpperBoundValue,
+      Object? datum,
+      D? domainValue,
+      D? domainLowerBoundValue,
+      D? domainUpperBoundValue,
       ImmutableSeries<D> series,
       ImmutableAxis<D> domainAxis,
-      num measureValue,
-      num measureLowerBoundValue,
-      num measureUpperBoundValue,
-      num measureOffsetValue,
+      num? measureValue,
+      num? measureLowerBoundValue,
+      num? measureUpperBoundValue,
+      num? measureOffsetValue,
       ImmutableAxis<num> measureAxis) {
     final domainPosition = domainAxis.getLocation(domainValue);
 
@@ -157,7 +155,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
         : null;
 
     final seriesKey = series.id;
-    final seriesInfo = _seriesInfo[seriesKey];
+    final seriesInfo = _seriesInfo[seriesKey]!;
 
     final measurePosition = _componentBounds.top + seriesInfo.symbolCenter;
 
@@ -186,7 +184,7 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
           'SymbolAnnotationRenderer can only be attached to a CartesianChart<D>');
     }
 
-    _chart = chart as CartesianChart<D>;
+    _chart = chart;
 
     // Only vertical rendering is supported by this behavior.
     assert(_chart.vertical);
@@ -208,15 +206,15 @@ class SymbolAnnotationRenderer<D> extends PointRenderer<D>
     // to keep the same overall style.
     if ((config as SymbolAnnotationRendererConfig).showSeparatorLines) {
       seriesPointMap.forEach((String key, List<AnimatedPoint<D>> points) {
-        final seriesInfo = _seriesInfo[key];
+        final seriesInfo = _seriesInfo[key]!;
 
         final y = componentBounds.top + seriesInfo.rowStart;
 
-        final domainAxis = _chart.domainAxis;
+        final domainAxis = _chart.domainAxis!;
         final bounds = Rectangle<int>(
             componentBounds.left, y.round(), componentBounds.width, 0);
-        domainAxis.tickDrawStrategy
-            .drawAxisLine(canvas, domainAxis.axisOrientation, bounds);
+        domainAxis.tickDrawStrategy!
+            .drawAxisLine(canvas, domainAxis.axisOrientation!, bounds);
       });
     }
   }
@@ -259,7 +257,7 @@ class _SeriesInfo<D> {
   double symbolCenter;
 
   _SeriesInfo(
-      {@required this.rowHeight,
-      @required this.rowStart,
-      @required this.symbolCenter});
+      {required this.rowHeight,
+      required this.rowStart,
+      required this.symbolCenter});
 }

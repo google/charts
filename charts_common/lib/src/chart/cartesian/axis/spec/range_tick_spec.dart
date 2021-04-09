@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 import 'axis_spec.dart' show TextStyleSpec;
 import 'tick_spec.dart' show TickSpec;
 
@@ -34,9 +32,9 @@ class RangeTickSpec<D> extends TickSpec<D> {
   /// A [rangeEndValue] represents the value of this range tick's ending point.
   const RangeTickSpec(
     D value, {
-    String label,
-    TextStyleSpec style,
-    @required this.rangeStartValue,
-    @required this.rangeEndValue,
+    String? label,
+    TextStyleSpec? style,
+    required this.rangeStartValue,
+    required this.rangeEndValue,
   }) : super(value, label: label, style: style);
 }

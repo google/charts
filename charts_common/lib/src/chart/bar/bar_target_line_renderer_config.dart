@@ -29,7 +29,7 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   /// target line in the group, and the ending side of the last bar target line.
   /// overDrawPx will be used for overdrawing the target lines for interior
   /// sides of the bars.
-  final int overDrawOuterPx;
+  final int? overDrawOuterPx;
 
   /// The number of pixels that the line will extend beyond the bandwidth for
   /// every bar in a group.
@@ -39,8 +39,8 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   final bool roundEndCaps;
 
   BarTargetLineRendererConfig(
-      {String customRendererId,
-      List<int> dashPattern,
+      {String? customRendererId,
+      List<int>? dashPattern,
       BarGroupingType groupingType = BarGroupingType.grouped,
       int layoutPaintOrder = LayoutViewPaintOrder.barTargetLine,
       int minBarLengthPx = 0,
@@ -48,8 +48,8 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
       this.overDrawPx = 0,
       this.roundEndCaps = true,
       double strokeWidthPx = 3.0,
-      SymbolRenderer symbolRenderer,
-      List<int> weightPattern})
+      SymbolRenderer? symbolRenderer,
+      List<int>? weightPattern})
       : super(
           customRendererId: customRendererId,
           dashPattern: dashPattern,

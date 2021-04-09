@@ -46,7 +46,7 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// Sets viewport for this Axis.
   ///
   /// If pan / zoom behaviors are set, this is the initial viewport.
-  final DateTimeExtents viewport;
+  final DateTimeExtents? viewport;
 
   /// Creates a [AxisSpec] that specialized for timeseries charts.
   ///
@@ -60,10 +60,10 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// [showAxisLine] override to force the axis to draw the axis
   ///     line.
   const DateTimeAxisSpec({
-    RenderSpec<DateTime> renderSpec,
-    DateTimeTickProviderSpec tickProviderSpec,
-    DateTimeTickFormatterSpec tickFormatterSpec,
-    bool showAxisLine,
+    RenderSpec<DateTime>? renderSpec,
+    DateTimeTickProviderSpec? tickProviderSpec,
+    DateTimeTickFormatterSpec? tickFormatterSpec,
+    bool? showAxisLine,
     this.viewport,
   }) : super(
             renderSpec: renderSpec,
@@ -77,12 +77,12 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is DateTimeAxis && viewport != null) {
-      axis.setScaleViewport(viewport);
+      axis.setScaleViewport(viewport!);
     }
   }
 
   @override
-  Axis<DateTime> createAxis() {
+  Axis<DateTime>? createAxis() {
     assert(false, 'Call createDateTimeAxis() to create a DateTimeAxis.');
     return null;
   }
@@ -142,7 +142,7 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
 /// [TickProviderSpec] that sets up time ticks with days increments only.
 @immutable
 class DayTickProviderSpec implements DateTimeTickProviderSpec {
-  final List<int> increments;
+  final List<int>? increments;
 
   const DayTickProviderSpec({this.increments});
 
@@ -207,9 +207,9 @@ class StaticDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
 /// Formatters for a single level of the [DateTimeTickFormatterSpec].
 @immutable
 class TimeFormatterSpec {
-  final String format;
-  final String transitionFormat;
-  final String noonFormat;
+  final String? format;
+  final String? transitionFormat;
+  final String? noonFormat;
 
   /// Creates a formatter for a particular granularity of data.
   ///
@@ -246,13 +246,16 @@ class TimeFormatterSpec {
 /// [DateTimeFormatterFunction].
 @immutable
 class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
-  final DateTimeFormatterFunction formatter;
-  final DateFormat dateFormat;
+  final DateTimeFormatterFunction? formatter;
+  final DateFormat? dateFormat;
 
-  const BasicDateTimeTickFormatterSpec(this.formatter) : dateFormat = null;
+  const BasicDateTimeTickFormatterSpec(DateTimeFormatterFunction formatter)
+      : formatter = formatter,
+        dateFormat = null;
 
-  const BasicDateTimeTickFormatterSpec.fromDateFormat(this.dateFormat)
-      : formatter = null;
+  const BasicDateTimeTickFormatterSpec.fromDateFormat(DateFormat dateFormat)
+      : formatter = null,
+        dateFormat = dateFormat;
 
   /// A formatter will be created with the [DateFormat] if it is not null.
   /// Otherwise, it will create one with the provided
@@ -261,7 +264,7 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
   DateTimeTickFormatter createTickFormatter(ChartContext context) {
     assert(dateFormat != null || formatter != null);
     return DateTimeTickFormatter.uniform(SimpleTimeTickFormatter(
-        formatter: dateFormat != null ? dateFormat.format : formatter));
+        formatter: dateFormat != null ? dateFormat!.format : formatter!));
   }
 
   @override
@@ -286,11 +289,11 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 /// level.
 @immutable
 class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
-  final TimeFormatterSpec minute;
-  final TimeFormatterSpec hour;
-  final TimeFormatterSpec day;
-  final TimeFormatterSpec month;
-  final TimeFormatterSpec year;
+  final TimeFormatterSpec? minute;
+  final TimeFormatterSpec? hour;
+  final TimeFormatterSpec? day;
+  final TimeFormatterSpec? month;
+  final TimeFormatterSpec? year;
 
   /// Creates a [TickFormatterSpec] that automatically chooses the formatting
   /// given the individual [TimeFormatterSpec] formatters that are set.
@@ -307,23 +310,23 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
     if (minute != null) {
       map[DateTimeTickFormatter.MINUTE] =
-          _makeFormatter(minute, CalendarField.hourOfDay, context);
+          _makeFormatter(minute!, CalendarField.hourOfDay, context);
     }
     if (hour != null) {
       map[DateTimeTickFormatter.HOUR] =
-          _makeFormatter(hour, CalendarField.date, context);
+          _makeFormatter(hour!, CalendarField.date, context);
     }
     if (day != null) {
       map[23 * DateTimeTickFormatter.HOUR] =
-          _makeFormatter(day, CalendarField.month, context);
+          _makeFormatter(day!, CalendarField.month, context);
     }
     if (month != null) {
       map[28 * DateTimeTickFormatter.DAY] =
-          _makeFormatter(month, CalendarField.year, context);
+          _makeFormatter(month!, CalendarField.year, context);
     }
     if (year != null) {
       map[364 * DateTimeTickFormatter.DAY] =
-          _makeFormatter(year, CalendarField.year, context);
+          _makeFormatter(year!, CalendarField.year, context);
     }
 
     return DateTimeTickFormatter(context.dateTimeFactory, overrides: map);

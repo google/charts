@@ -26,7 +26,7 @@ class A11yNode {
   final String label;
 
   /// Callback when the A11yNode is focused by the native platform
-  OnFocus onFocus;
+  OnFocus? onFocus;
 
   A11yNode(this.label, this.boundingBox, {this.onFocus});
 }

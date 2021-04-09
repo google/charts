@@ -77,14 +77,14 @@ double distanceBetweenPointAndLineSegmentSquared(
 /// A two-dimensional cartesian coordinate pair with potentially null coordinate
 /// values.
 class NullablePoint {
-  final double x;
-  final double y;
+  final double? x;
+  final double? y;
 
   /// Creates a point with the provided [x] and [y] coordinates.
   const NullablePoint(this.x, this.y);
 
   /// Creates a [NullablePoint] from a [Point].
-  NullablePoint.from(Point<double> point) : this(point?.x, point?.y);
+  NullablePoint.from(Point<double>? point) : this(point?.x, point?.y);
 
   @override
   String toString() => 'NullablePoint($x, $y)';
@@ -107,7 +107,7 @@ class NullablePoint {
   Point<double> toPoint() {
     assert(x != null);
     assert(y != null);
-    return Point<double>(x, y);
+    return Point<double>(x!, y!);
   }
 }
 

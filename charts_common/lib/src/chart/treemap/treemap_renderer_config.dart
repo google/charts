@@ -34,7 +34,7 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
       ViewMargin(topPx: 26, leftPx: 4, rightPx: 4, bottomPx: 4);
 
   @override
-  final String customRendererId;
+  final String? customRendererId;
 
   @override
   final SymbolRenderer symbolRenderer;
@@ -62,7 +62,7 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
   final double patternStrokeWidthPx;
 
   /// Decorator for optionally decorating treemap rectangle label.
-  final TreeMapLabelDecorator<D> labelDecorator;
+  final TreeMapLabelDecorator<D>? labelDecorator;
 
   TreeMapRendererConfig(
       {this.customRendererId,
@@ -72,8 +72,8 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
       this.rectPaddingPx = _defaultRectPadding,
       this.tileType = TreeMapTileType.squarified,
       this.labelDecorator,
-      Color strokeColor,
-      SymbolRenderer symbolRenderer})
+      Color? strokeColor,
+      SymbolRenderer? symbolRenderer})
       : strokeColor = strokeColor ?? StyleFactory.style.black,
         symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
 
