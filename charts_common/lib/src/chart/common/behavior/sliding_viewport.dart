@@ -28,7 +28,7 @@ import 'chart_behavior.dart' show ChartBehavior;
 class SlidingViewport<D> implements ChartBehavior<D> {
   final SelectionModelType selectionModelType;
 
-  CartesianChart<D> _chart;
+  late CartesianChart<D> _chart;
 
   SlidingViewport([this.selectionModelType = SelectionModelType.info]);
 
@@ -40,12 +40,12 @@ class SlidingViewport<D> implements ChartBehavior<D> {
     // Calculate current viewport center and determine the translate pixels
     // needed based on the selected domain value's location and existing amount
     // of translate pixels.
-    final domainAxis = _chart.domainAxis;
+    final domainAxis = _chart.domainAxis!;
     final selectedDatum = selectionModel.selectedDatum.first;
     final domainLocation = domainAxis
-        .getLocation(selectedDatum.series.domainFn(selectedDatum.index));
+        .getLocation(selectedDatum.series.domainFn(selectedDatum.index))!;
     final viewportCenter =
-        domainAxis.range.start + (domainAxis.range.width / 2);
+        domainAxis.range!.start + (domainAxis.range!.width / 2);
     final translatePx =
         domainAxis.viewportTranslatePx + (viewportCenter - domainLocation);
     domainAxis.setViewportSettings(

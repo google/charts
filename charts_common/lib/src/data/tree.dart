@@ -35,53 +35,53 @@ class Tree<T, D> {
   final TypedAccessorFn<TreeNode<T>, D> domainFn;
 
   /// Accessor function that returns the measure for a tree node.
-  final TypedAccessorFn<TreeNode<T>, num> measureFn;
+  final TypedAccessorFn<TreeNode<T>, num?> measureFn;
 
   /// Accessor function that returns the rendered stroke color for a tree node.
-  final TypedAccessorFn<TreeNode<T>, Color> colorFn;
+  final TypedAccessorFn<TreeNode<T>, Color>? colorFn;
 
   /// Accessor function that returns the rendered fill color for a tree node.
   /// If not provided, then [colorFn] will be used as a fallback.
-  final TypedAccessorFn<TreeNode<T>, Color> fillColorFn;
+  final TypedAccessorFn<TreeNode<T>, Color>? fillColorFn;
 
   /// Accessor function that returns the pattern color for a tree node
   /// If not provided, then background color is used as default.
-  final TypedAccessorFn<TreeNode<T>, Color> patternColorFn;
+  final TypedAccessorFn<TreeNode<T>, Color>? patternColorFn;
 
   /// Accessor function that returns the fill pattern for a tree node.
-  final TypedAccessorFn<TreeNode<T>, FillPatternType> fillPatternFn;
+  final TypedAccessorFn<TreeNode<T>, FillPatternType>? fillPatternFn;
 
   /// Accessor function that returns the stroke width in pixel for a tree node.
-  final TypedAccessorFn<TreeNode<T>, num> strokeWidthPxFn;
+  final TypedAccessorFn<TreeNode<T>, num>? strokeWidthPxFn;
 
   /// Accessor function that returns the label for a tree node.
-  final TypedAccessorFn<TreeNode<T>, String> labelFn;
+  final TypedAccessorFn<TreeNode<T>, String>? labelFn;
 
   /// Accessor function that returns the style spec for a tree node label.
-  final TypedAccessorFn<TreeNode<T>, TextStyleSpec> labelStyleFn;
+  final TypedAccessorFn<TreeNode<T>, TextStyleSpec>? labelStyleFn;
 
   /// [attributes] stores additional key-value pairs of attributes this tree is
   /// associated with (e.g. rendererIdKey to renderer).
   final TreeAttributes attributes = TreeAttributes();
 
   factory Tree({
-    @required String id,
-    @required TreeNode<T> root,
-    @required TypedAccessorFn<T, D> domainFn,
-    @required TypedAccessorFn<T, num> measureFn,
-    TypedAccessorFn<T, Color> colorFn,
-    TypedAccessorFn<T, Color> fillColorFn,
-    TypedAccessorFn<T, Color> patternColorFn,
-    TypedAccessorFn<T, FillPatternType> fillPatternFn,
-    TypedAccessorFn<T, num> strokeWidthPxFn,
-    TypedAccessorFn<T, String> labelFn,
-    TypedAccessorFn<T, TextStyleSpec> labelStyleFn,
+    required String id,
+    required TreeNode<T> root,
+    required TypedAccessorFn<T, D> domainFn,
+    required TypedAccessorFn<T, num?> measureFn,
+    TypedAccessorFn<T, Color>? colorFn,
+    TypedAccessorFn<T, Color>? fillColorFn,
+    TypedAccessorFn<T, Color>? patternColorFn,
+    TypedAccessorFn<T, FillPatternType>? fillPatternFn,
+    TypedAccessorFn<T, num>? strokeWidthPxFn,
+    TypedAccessorFn<T, String>? labelFn,
+    TypedAccessorFn<T, TextStyleSpec>? labelStyleFn,
   }) {
     return Tree._(
       id: id,
       root: root,
-      domainFn: _castFrom<T, D>(domainFn),
-      measureFn: _castFrom<T, num>(measureFn),
+      domainFn: _castFrom<T, D>(domainFn)!,
+      measureFn: _castFrom<T, num?>(measureFn)!,
       colorFn: _castFrom<T, Color>(colorFn),
       fillColorFn: _castFrom<T, Color>(fillColorFn),
       fillPatternFn: _castFrom<T, FillPatternType>(fillPatternFn),
@@ -93,17 +93,17 @@ class Tree<T, D> {
   }
 
   Tree._({
-    @required this.id,
-    @required this.root,
-    @required this.domainFn,
-    @required this.measureFn,
-    @required this.colorFn,
-    @required this.fillColorFn,
-    @required this.fillPatternFn,
-    @required this.patternColorFn,
-    @required this.strokeWidthPxFn,
-    @required this.labelFn,
-    @required this.labelStyleFn,
+    required this.id,
+    required this.root,
+    required this.domainFn,
+    required this.measureFn,
+    required this.colorFn,
+    required this.fillColorFn,
+    required this.fillPatternFn,
+    required this.patternColorFn,
+    required this.strokeWidthPxFn,
+    required this.labelFn,
+    required this.labelStyleFn,
   });
 
   /// Creates a [Series] that contains all [TreeNode]s traversing from the
@@ -144,7 +144,7 @@ class Tree<T, D> {
     attributes.setAttr(key, value);
   }
 
-  R getAttribute<R>(AttributeKey<R> key) {
+  R? getAttribute<R>(AttributeKey<R> key) {
     return attributes.getAttr<R>(key);
   }
 }
@@ -201,9 +201,9 @@ class TreeNode<T> {
 /// A registry that stores key-value pairs of attributes.
 class TreeAttributes extends TypedRegistry {}
 
-/// Casts TypedAccessorFn<T, R> type to TypedAccessorFn<TreeNode<T>, R>.
-TypedAccessorFn<TreeNode<T>, R> _castFrom<T, R>(TypedAccessorFn<T, R> f) {
+/// Adapts a TypedAccessorFn<T, R> type to a TypedAccessorFn<TreeNode<T>, R>.
+TypedAccessorFn<TreeNode<T>, R>? _castFrom<T, R>(TypedAccessorFn<T, R>? f) {
   return f == null
       ? null
-      : (TreeNode<T> node, int index) => f(node.data, index);
+      : (TreeNode<T> node, int? index) => f(node.data, index);
 }

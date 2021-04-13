@@ -28,7 +28,7 @@ import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 class ArcRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
   @override
-  final String customRendererId;
+  final String? customRendererId;
 
   /// List of decorators applied to rendered arcs.
   final List<ArcRendererDecorator<D>> arcRendererDecorators;
@@ -45,12 +45,12 @@ class ArcRendererConfig<D> extends LayoutViewConfig
   final double arcLength;
 
   /// If set, configures the arcWidth to be a percentage of the radius.
-  final double arcRatio;
+  final double? arcRatio;
 
   /// Fixed width of the arc within the radius.
   ///
   /// If arcRatio is set, this value will be ignored.
-  final int arcWidth;
+  final int? arcWidth;
 
   /// The order to paint this renderer on the canvas.
   final int layoutPaintOrder;
@@ -85,7 +85,7 @@ class ArcRendererConfig<D> extends LayoutViewConfig
       this.minHoleWidthForCenterContent = 30,
       this.startAngle = -pi / 2,
       this.strokeWidthPx = 2.0,
-      SymbolRenderer symbolRenderer})
+      SymbolRenderer? symbolRenderer})
       : noDataColor = StyleFactory.style.noDataColor,
         stroke = StyleFactory.style.arcStrokeColor,
         symbolRenderer = symbolRenderer ?? CircleSymbolRenderer();

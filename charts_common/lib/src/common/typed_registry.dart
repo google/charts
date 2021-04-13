@@ -14,10 +14,10 @@
 // limitations under the License.
 
 class TypedRegistry {
-  final _registry = <TypedKey<Object>, Object>{};
+  final _registry = <TypedKey<Object?>, Object?>{};
 
-  R getAttr<R>(TypedKey<R> key) {
-    return _registry[key] as R;
+  R? getAttr<R>(TypedKey<R> key) {
+    return _registry[key] as R?;
   }
 
   void setAttr<R>(TypedKey<R> key, R value) {

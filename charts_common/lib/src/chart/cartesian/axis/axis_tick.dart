@@ -20,22 +20,22 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
   bool _markedForRemoval;
 
   /// This tick's current location.
-  double _currentLocation;
+  double? _currentLocation;
 
   /// This tick's previous target location.
-  double _previousLocation;
+  double? _previousLocation;
 
   /// This tick's current target location.
-  double _targetLocation;
+  double? _targetLocation;
 
   /// This tick's current opacity.
-  double _currentOpacity;
+  double? _currentOpacity;
 
   /// This tick's previous opacity.
-  double _previousOpacity;
+  double? _previousOpacity;
 
   /// This tick's target opacity.
-  double _targetOpacity;
+  double? _targetOpacity;
 
   AxisTicks(Tick<D> tick)
       : // Set the initial target for a new animated tick.
@@ -58,7 +58,7 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
   }
 
   /// Animate out this tick to [newLocation].
-  void animateOut(double newLocation) {
+  void animateOut(double? newLocation) {
     _markedForRemoval = true;
     _previousLocation = _currentLocation;
     _targetLocation = newLocation;
@@ -67,7 +67,7 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
   }
 
   /// Set new target for this tick to be [newLocation].
-  void setNewTarget(double newLocation) {
+  void setNewTarget(double? newLocation) {
     _markedForRemoval = false;
     _previousLocation = _currentLocation;
     _targetLocation = newLocation;
@@ -92,13 +92,13 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
     }
 
     locationPx = _currentLocation;
-    textElement.opacity = _currentOpacity;
+    textElement!.opacity = _currentOpacity;
   }
 
   /// Linearly interpolate between two numbers.
   ///
   /// From lerpDouble in dart:ui which is Flutter only.
-  double _lerpDouble(double a, double b, double t) {
+  double? _lerpDouble(double? a, double? b, double t) {
     if (a == null && b == null) return null;
     a ??= 0.0;
     b ??= 0.0;
@@ -107,5 +107,5 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
 
   @override
   int compareTo(AxisTicks<D> other) =>
-      _targetLocation.compareTo(other._targetLocation);
+      _targetLocation!.compareTo(other._targetLocation!);
 }

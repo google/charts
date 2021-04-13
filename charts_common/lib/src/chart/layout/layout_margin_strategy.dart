@@ -14,7 +14,6 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
-import 'package:meta/meta.dart';
 import 'layout_view.dart';
 
 class SizeList {
@@ -71,9 +70,7 @@ class _DesiredViewSizes {
 /// A strategy for calculating size of vertical margins (RIGHT & LEFT).
 abstract class VerticalMarginStrategy {
   SizeList measure(Iterable<LayoutView> views,
-      {@required int maxWidth,
-      @required int height,
-      @required int fullHeight}) {
+      {required int maxWidth, required int height, required int fullHeight}) {
     final measuredWidths = _DesiredViewSizes();
     var remainingWidth = maxWidth;
 
@@ -95,7 +92,7 @@ abstract class VerticalMarginStrategy {
       // zero because if the component is an axis, the axis needs to still
       // recalculate ticks even if it is not to be shown.
       if (remainingWidth > 0 || availableHeight > 0) {
-        size = view.measure(remainingWidth, availableHeight);
+        size = view.measure(remainingWidth, availableHeight)!;
         remainingWidth -= size.preferredWidth;
       }
 
@@ -173,7 +170,7 @@ class RightMarginLayoutStrategy extends VerticalMarginStrategy {
 /// A strategy for calculating size of horizontal margins (TOP & BOTTOM).
 abstract class HorizontalMarginStrategy {
   SizeList measure(Iterable<LayoutView> views,
-      {@required int maxHeight, @required int width, @required int fullWidth}) {
+      {required int maxHeight, required int width, required int fullWidth}) {
     final measuredHeights = _DesiredViewSizes();
     var remainingHeight = maxHeight;
 
@@ -195,7 +192,7 @@ abstract class HorizontalMarginStrategy {
       // zero because if the component is an axis, the axis needs to still
       // recalculate ticks even if it is not to be shown.
       if (remainingHeight > 0 || availableWidth > 0) {
-        size = view.measure(availableWidth, remainingHeight);
+        size = view.measure(availableWidth, remainingHeight)!;
         remainingHeight -= size.preferredHeight;
       }
 

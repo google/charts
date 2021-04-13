@@ -36,7 +36,7 @@ class NumericAxisSpec extends AxisSpec<num> {
   /// Sets viewport for this Axis.
   ///
   /// If pan / zoom behaviors are set, this is the initial viewport.
-  final NumericExtents viewport;
+  final NumericExtents? viewport;
 
   /// Creates a [AxisSpec] that specialized for numeric data.
   ///
@@ -49,10 +49,10 @@ class NumericAxisSpec extends AxisSpec<num> {
   ///     formatted.
   /// [showAxisLine] override to force the axis to draw the axis line.
   const NumericAxisSpec({
-    RenderSpec<num> renderSpec,
-    NumericTickProviderSpec tickProviderSpec,
-    NumericTickFormatterSpec tickFormatterSpec,
-    bool showAxisLine,
+    RenderSpec<num>? renderSpec,
+    NumericTickProviderSpec? tickProviderSpec,
+    NumericTickFormatterSpec? tickFormatterSpec,
+    bool? showAxisLine,
     this.viewport,
   }) : super(
             renderSpec: renderSpec,
@@ -62,18 +62,18 @@ class NumericAxisSpec extends AxisSpec<num> {
 
   factory NumericAxisSpec.from(
     NumericAxisSpec other, {
-    RenderSpec<num> renderSpec,
-    TickProviderSpec<num> tickProviderSpec,
-    TickFormatterSpec<num> tickFormatterSpec,
-    bool showAxisLine,
-    NumericExtents viewport,
+    RenderSpec<num>? renderSpec,
+    TickProviderSpec<num>? tickProviderSpec,
+    TickFormatterSpec<num>? tickFormatterSpec,
+    bool? showAxisLine,
+    NumericExtents? viewport,
   }) {
     return NumericAxisSpec(
       renderSpec: renderSpec ?? other.renderSpec,
       tickProviderSpec: (tickProviderSpec ?? other.tickProviderSpec)
-          as NumericTickProviderSpec,
+          as NumericTickProviderSpec?,
       tickFormatterSpec: (tickFormatterSpec ?? other.tickFormatterSpec)
-          as NumericTickFormatterSpec,
+          as NumericTickFormatterSpec?,
       showAxisLine: showAxisLine ?? other.showAxisLine,
       viewport: viewport ?? other.viewport,
     );
@@ -85,7 +85,7 @@ class NumericAxisSpec extends AxisSpec<num> {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is NumericAxis && viewport != null) {
-      axis.setScaleViewport(viewport);
+      axis.setScaleViewport(viewport!);
     }
   }
 
@@ -111,11 +111,11 @@ abstract class NumericTickFormatterSpec extends TickFormatterSpec<num> {}
 
 @immutable
 class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
-  final bool zeroBound;
-  final bool dataIsInWholeNumbers;
-  final int desiredTickCount;
-  final int desiredMinTickCount;
-  final int desiredMaxTickCount;
+  final bool? zeroBound;
+  final bool? dataIsInWholeNumbers;
+  final int? desiredTickCount;
+  final int? desiredMinTickCount;
+  final int? desiredMaxTickCount;
 
   /// Creates a [TickProviderSpec] that dynamically chooses the number of
   /// ticks based on the extents of the data.
@@ -143,10 +143,10 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
   NumericTickProvider createTickProvider(ChartContext context) {
     final provider = NumericTickProvider();
     if (zeroBound != null) {
-      provider.zeroBound = zeroBound;
+      provider.zeroBound = zeroBound!;
     }
     if (dataIsInWholeNumbers != null) {
-      provider.dataIsInWholeNumbers = dataIsInWholeNumbers;
+      provider.dataIsInWholeNumbers = dataIsInWholeNumbers!;
     }
 
     if (desiredMinTickCount != null ||
@@ -218,8 +218,8 @@ class StaticNumericTickProviderSpec implements NumericTickProviderSpec {
 
 @immutable
 class BasicNumericTickFormatterSpec implements NumericTickFormatterSpec {
-  final MeasureFormatter formatter;
-  final NumberFormat numberFormat;
+  final MeasureFormatter? formatter;
+  final NumberFormat? numberFormat;
 
   /// Simple [TickFormatterSpec] that delegates formatting to the given
   /// [NumberFormat].
@@ -233,7 +233,7 @@ class BasicNumericTickFormatterSpec implements NumericTickFormatterSpec {
   @override
   NumericTickFormatter createTickFormatter(ChartContext context) {
     return numberFormat != null
-        ? NumericTickFormatter.fromNumberFormat(numberFormat)
+        ? NumericTickFormatter.fromNumberFormat(numberFormat!)
         : NumericTickFormatter(formatter: formatter);
   }
 

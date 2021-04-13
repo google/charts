@@ -15,8 +15,6 @@
 
 import 'dart:math';
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../common/chart_canvas.dart' show ChartCanvas;
 import '../../../layout/layout_view.dart' show ViewMeasuredSizes;
 import '../axis.dart' show AxisOrientation;
@@ -32,7 +30,8 @@ abstract class TickDrawStrategy<D> {
   void decorateTicks(List<Tick<D>> ticks);
 
   /// Returns a [CollisionReport] indicating if there are any collisions.
-  CollisionReport<D> collides(List<Tick<D>> ticks, AxisOrientation orientation);
+  CollisionReport<D> collides(
+      List<Tick<D>>? ticks, AxisOrientation? orientation);
 
   /// Returns measurement of ticks drawn vertically.
   ViewMeasuredSizes measureVerticallyDrawnTicks(
@@ -52,11 +51,11 @@ abstract class TickDrawStrategy<D> {
   /// [collision] whether or not this [tick] should be drawn in such a way to
   /// avoid colliding into other ticks.
   void draw(ChartCanvas canvas, Tick<D> tick,
-      {@required AxisOrientation orientation,
-      @required Rectangle<int> axisBounds,
-      @required Rectangle<int> drawAreaBounds,
-      @required bool isFirst,
-      @required bool isLast,
+      {required AxisOrientation orientation,
+      required Rectangle<int> axisBounds,
+      required Rectangle<int> drawAreaBounds,
+      required bool isFirst,
+      required bool isLast,
       bool collision = false});
 
   void drawAxisLine(ChartCanvas canvas, AxisOrientation orientation,

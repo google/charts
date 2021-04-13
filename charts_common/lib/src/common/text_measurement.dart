@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 /// A measurement result for rendering text.
 class TextMeasurement {
   /// Rendered width of the text.
@@ -27,11 +25,11 @@ class TextMeasurement {
   final double verticalSliceWidth;
 
   /// Baseline of the text for text vertical alignment.
-  final double baseline;
+  final double? baseline;
 
   TextMeasurement({
-    @required this.horizontalSliceWidth,
-    @required this.verticalSliceWidth,
+    required this.horizontalSliceWidth,
+    required this.verticalSliceWidth,
     this.baseline,
   });
 }

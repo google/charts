@@ -36,8 +36,8 @@ class SelectionModel<D> {
 
   /// Create selection model with the desired selection.
   SelectionModel(
-      {List<SeriesDatum<D>> selectedData,
-      List<ImmutableSeries<D>> selectedSeries}) {
+      {List<SeriesDatum<D>>? selectedData,
+      List<ImmutableSeries<D>>? selectedSeries}) {
     if (selectedData != null) {
       _selectedDatum = selectedData;
     }
@@ -54,14 +54,14 @@ class SelectionModel<D> {
 
   /// Create selection model from configuration.
   // TODO: Use `List<SeriesDatumConfig<D>>`.
-  SelectionModel.fromConfig(List<SeriesDatumConfig<Object>> selectedDataConfig,
-      List<String> selectedSeriesConfig, List<ImmutableSeries<D>> seriesList) {
+  SelectionModel.fromConfig(List<SeriesDatumConfig<Object>>? selectedDataConfig,
+      List<String>? selectedSeriesConfig, List<ImmutableSeries<D>> seriesList) {
     final selectedDataMap = <String, List<D>>{};
 
     if (selectedDataConfig != null) {
       for (final config in selectedDataConfig) {
         selectedDataMap[config.seriesId] ??= <D>[];
-        selectedDataMap[config.seriesId].add(config.domainValue as D);
+        selectedDataMap[config.seriesId]!.add(config.domainValue as D);
       }
 
       // Add to list of selected series.
@@ -74,9 +74,9 @@ class SelectionModel<D> {
           final domainFn = series.domainFn;
 
           for (var i = 0; i < series.data.length; i++) {
-            final Object datum = series.data[i];
+            final Object? datum = series.data[i];
 
-            if (selectedDataMap[series.id].contains(domainFn(i))) {
+            if (selectedDataMap[series.id]!.contains(domainFn(i))) {
               _selectedDatum.add(SeriesDatum(series, datum));
             }
           }
@@ -102,8 +102,8 @@ class SelectionModel<D> {
   /// Returns true if this [SelectionModel] has a selected datum.
   bool get hasDatumSelection => _selectedDatum.isNotEmpty;
 
-  bool isDatumSelected(ImmutableSeries<D> series, int index) {
-    final Object datum = index == null ? null : series.data[index];
+  bool isDatumSelected(ImmutableSeries<D> series, int? index) {
+    final Object? datum = index == null ? null : series.data[index];
     return _selectedDatum.contains(SeriesDatum(series, datum));
   }
 

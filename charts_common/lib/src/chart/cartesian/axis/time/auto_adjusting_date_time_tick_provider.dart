@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
@@ -91,15 +89,15 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
   /// unless the range is not large enough.
   @override
   List<Tick<DateTime>> getTicks({
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required DateTimeScale scale,
-    @required TickFormatter<DateTime> formatter,
-    @required Map<DateTime, String> formatterValueCache,
-    @required TickDrawStrategy<DateTime> tickDrawStrategy,
-    @required AxisOrientation orientation,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required DateTimeScale scale,
+    required TickFormatter<DateTime> formatter,
+    required Map<DateTime, String> formatterValueCache,
+    required TickDrawStrategy<DateTime> tickDrawStrategy,
+    required AxisOrientation? orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<DateTime> tickHint,
+    TickHint<DateTime>? tickHint,
   }) {
     List<TimeRangeTickProvider> tickProviders;
 
@@ -140,8 +138,8 @@ class AutoAdjustingDateTimeTickProvider implements TickProvider<DateTime> {
             (tickHint.tickCount - 1))
         .round();
 
-    int minDifference;
-    TimeRangeTickProvider closestTickProvider;
+    int? minDifference;
+    late TimeRangeTickProvider closestTickProvider;
 
     assert(_potentialTickProviders.isNotEmpty);
     for (final tickProvider in _potentialTickProviders) {

@@ -57,7 +57,7 @@ class LinearScaleFunction {
       LinearScaleDomainInfo domainInfo,
       RangeBandConfig rangeBandConfig,
       StepSizeConfig stepSizeConfig) {
-    final rangeDiff = viewportSettings.range.diff.toDouble();
+    final rangeDiff = viewportSettings.range!.diff.toDouble();
     // Note: if you provided a nicing function that extends the domain, we won't
     // muck with the extended side.
     final hasHalfStepAtStart =
@@ -95,7 +95,7 @@ class LinearScaleFunction {
     if (domainInfo.domainDiff == 0) {
       // Translate it to the center of the range.
       rangeTranslate =
-          viewportSettings.range.start + (viewportSettings.range.diff / 2);
+          viewportSettings.range!.start + (viewportSettings.range!.diff / 2);
     } else {
       final hasHalfStepAtStart =
           domainInfo.extent.min == domainInfo.dataDomainStart;
@@ -104,7 +104,7 @@ class LinearScaleFunction {
       final reservedRangePixelShift =
           hasHalfStepAtStart ? (stepSizePixels / 2.0) : 0.0;
 
-      rangeTranslate = viewportSettings.range.start +
+      rangeTranslate = viewportSettings.range!.start +
           viewportSettings.translatePx +
           reservedRangePixelShift;
     }
@@ -133,7 +133,6 @@ class LinearScaleFunction {
       case RangeBandType.none:
         return 0.0;
     }
-    return 0.0;
   }
 
   /// Calculates and Stores the current step size and scale factor together,
