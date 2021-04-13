@@ -251,8 +251,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         startValue = annotation.startValue as T;
         endValue = annotation.endValue as T;
       } else if (annotation is LineAnnotationSegment<Object>) {
-        startValue = annotation.value as T;
-        endValue = annotation.value as T;
+        startValue = endValue = annotation.value as T;
       } else {
         throw UnsupportedError(
             'Unrecognized annotation type: ${annotation.runtimeType}');
@@ -262,10 +261,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
           _getAnnotationDatum(startValue, endValue, axis, annotation.axisType);
 
       // If we already have a animatingAnnotation for that index, use it.
-      final _AnimatedAnnotation<D> animatingAnnotation;
-      if (_annotationMap.containsKey(key)) {
-        animatingAnnotation = _annotationMap[key]!;
-      } else {
+      var animatingAnnotation = _annotationMap[key];
+      if (animatingAnnotation == null) {
         // Create a new annotation, positioned at the start and end values.
         animatingAnnotation = _AnimatedAnnotation<D>(key: key)
           ..setNewTarget(_AnnotationElement<D>(
@@ -1266,9 +1263,7 @@ class RangeAnnotationTester<D> {
       AnnotationLabelAnchor? labelAnchor,
       AnnotationLabelDirection? labelDirection,
       AnnotationLabelPosition? labelPosition}) {
-    var exists = false;
-
-    behavior._annotationMap.forEach((String key, _AnimatedAnnotation<D> a) {
+    for (final a in behavior._annotationMap.values) {
       final currentAnnotation = a._currentAnnotation!;
       final annotation = currentAnnotation.annotation;
 
@@ -1281,14 +1276,13 @@ class RangeAnnotationTester<D> {
           currentAnnotation.labelAnchor == labelAnchor &&
           currentAnnotation.labelDirection == labelDirection &&
           currentAnnotation.labelPosition == labelPosition &&
-          (!(currentAnnotation is LineAnnotationSegment) ||
+          (currentAnnotation is! LineAnnotationSegment ||
               currentAnnotation.dashPattern == dashPattern)) {
-        exists = true;
-        return;
+        return true;
       }
-    });
+    }
 
-    return exists;
+    return false;
   }
 }
 

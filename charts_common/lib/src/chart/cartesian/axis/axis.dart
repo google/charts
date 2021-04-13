@@ -596,7 +596,9 @@ class OrdinalAxis extends Axis<String> {
           tickProvider: tickProvider ?? const OrdinalTickProvider(),
           tickFormatter: tickFormatter ?? const OrdinalTickFormatter(),
           scale: SimpleOrdinalScale(),
-        );
+        ) {
+    this.tickDrawStrategy = tickDrawStrategy;
+  }
 
   void setScaleViewport(OrdinalViewport viewport) {
     autoViewport = false;

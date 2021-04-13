@@ -1594,7 +1594,7 @@ class _Range<D> {
   void includePoint(D? value) {
     if (value == null) {
       return;
-    } else if (value is num || value is double || value is int) {
+    } else if (value is num) {
       _includePointAsNum(value);
     } else if (value is DateTime) {
       _includePointAsDateTime(value);
@@ -1609,18 +1609,20 @@ class _Range<D> {
 
   /// Extends the range to include value by casting as numbers.
   void _includePointAsNum(D value) {
-    if ((value as num) < (_start as num)) {
+    value as num;
+    if (value < (_start as num)) {
       _start = value;
-    } else if ((value as num) > (_end as num)) {
+    } else if (value > (_end as num)) {
       _end = value;
     }
   }
 
   /// Extends the range to include value by casting as DateTime objects.
   void _includePointAsDateTime(D value) {
-    if ((value as DateTime).isBefore(_start as DateTime)) {
+    value as DateTime;
+    if (value.isBefore(_start as DateTime)) {
       _start = value;
-    } else if ((value as DateTime).isAfter(_end as DateTime)) {
+    } else if (value.isAfter(_end as DateTime)) {
       _end = value;
     }
   }
