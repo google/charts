@@ -1,0 +1,6 @@
+send_cls_to('dart-charts-team+reviews');
+send_cls_to('dart-charts-team');
+
+define Main {
+  reassign_to_list(from_owners_file('third_party/dart/charts_common/OWNERS'));
+}
