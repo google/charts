@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Rectangle, Point, min;
+import 'dart:math' show Rectangle, Point, min, sqrt;
 
 import 'package:meta/meta.dart' show protected;
 
@@ -110,7 +110,7 @@ class RoundedRectSymbolRenderer extends SymbolRenderer {
   bool operator ==(Object other) {
     return other is RoundedRectSymbolRenderer &&
         other.radius == radius &&
-        super == (other);
+        super == other;
   }
 
   @override
@@ -193,7 +193,7 @@ class LineSymbolRenderer extends SymbolRenderer {
   bool operator ==(Object other) {
     return other is LineSymbolRenderer &&
         other.strokeWidth == strokeWidth &&
-        super == (other);
+        super == other;
   }
 
   @override
@@ -235,7 +235,7 @@ class CircleSymbolRenderer extends SymbolRenderer {
 
   @override
   bool operator ==(Object other) =>
-      other is CircleSymbolRenderer && super == (other);
+      other is CircleSymbolRenderer && super == other;
 
   @override
   int get hashCode {
@@ -269,7 +269,7 @@ class RectSymbolRenderer extends SymbolRenderer {
 
   @override
   bool operator ==(Object other) =>
-      other is RectSymbolRenderer && super == (other);
+      other is RectSymbolRenderer && super == other;
 
   @override
   int get hashCode {
@@ -277,6 +277,45 @@ class RectSymbolRenderer extends SymbolRenderer {
     hashcode = (hashcode * 37) + runtimeType.hashCode;
     return hashcode;
   }
+}
+
+/// This [SymbolRenderer] renders an upward pointing equilateral triangle.
+class TriangleSymbolRenderer extends SymbolRenderer {
+  TriangleSymbolRenderer({bool isSolid = true}) : super(isSolid: isSolid);
+
+  @override
+  void paint(ChartCanvas canvas, Rectangle<num> bounds,
+      {List<int> dashPattern,
+      Color fillColor,
+      FillPatternType fillPattern,
+      Color strokeColor,
+      double strokeWidthPx}) {
+    // To maximize the size of the triangle in the available space, we can use
+    // the width as the length of each size. Set the bottom edge to be the full
+    // width, and then calculate the height based on the 30/60/90 degree right
+    // triangle whose tall side is the height of our equilateral triangle.
+    final dy = sqrt(3) / 2 * bounds.width;
+    final centerX = (bounds.left + bounds.right) / 2;
+    canvas.drawPolygon(
+        points: [
+          Point(bounds.left, bounds.top + dy),
+          Point(bounds.right, bounds.top + dy),
+          Point(centerX, bounds.top),
+        ],
+        fill: getSolidFillColor(fillColor),
+        stroke: strokeColor,
+        strokeWidthPx: getSolidStrokeWidthPx(strokeWidthPx));
+  }
+
+  @override
+  bool shouldRepaint(TriangleSymbolRenderer oldRenderer) {
+    return this != oldRenderer;
+  }
+
+  @override
+  // ignore: hash_and_equals
+  bool operator ==(Object other) =>
+      other is TriangleSymbolRenderer && super == other;
 }
 
 /// Draws a cylindrical shape connecting two points.

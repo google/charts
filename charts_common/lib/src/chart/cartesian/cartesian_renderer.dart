@@ -24,15 +24,15 @@ import 'axis/axis.dart' show Axis, domainAxisKey, measureAxisKey;
 import 'cartesian_chart.dart' show CartesianChart;
 
 abstract class CartesianRenderer<D> extends SeriesRenderer<D> {
+  @override
   void configureDomainAxes(List<MutableSeries<D>> seriesList);
 
+  @override
   void configureMeasureAxes(List<MutableSeries<D>> seriesList);
 }
 
 abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
     implements CartesianRenderer<D> {
-  bool _renderingVertically = true;
-
   BaseCartesianRenderer(
       {@required String rendererId,
       @required int layoutPaintOrder,
@@ -42,13 +42,22 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
             layoutPaintOrder: layoutPaintOrder,
             symbolRenderer: symbolRenderer);
 
+  @protected
+  CartesianChart<D> chart;
+
   @override
   void onAttach(BaseChart<D> chart) {
     super.onAttach(chart);
-    _renderingVertically = (chart as CartesianChart).vertical;
+
+    // Save a reference to the parent chart so that we can access properties
+    // that are not set until a later state (e.g. isRtl), or that might change
+    // dynamically (e.g. vertical).
+    this.chart = chart as CartesianChart;
   }
 
-  bool get renderingVertically => _renderingVertically;
+  // True when the chart should be rendered in vertical mode, false when in
+  // horizontal mode.
+  bool get renderingVertically => chart.vertical;
 
   @override
   void configureDomainAxes(List<MutableSeries<D>> seriesList) {
@@ -182,7 +191,7 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
       // Straddling viewport?
       // Return previous index as the nearest start of the viewport.
       if (comparisonValue == 1 && prevComparisonValue == -1) {
-        return (searchIndex - 1);
+        return searchIndex - 1;
       }
 
       // Before start? Update startIndex

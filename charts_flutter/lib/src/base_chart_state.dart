@@ -84,6 +84,13 @@ class BaseChartState<D> extends State<BaseChart<D>>
   @override
   bool get chartIsDirty => _configurationChanged;
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   /// Builds the common chart canvas widget.
   Widget _buildChartContainer() {
     final chartContainer = new ChartContainer<D>(

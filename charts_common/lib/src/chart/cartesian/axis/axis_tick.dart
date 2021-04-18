@@ -106,7 +106,7 @@ class AxisTicks<D> extends Tick<D> implements Comparable<AxisTicks<D>> {
     return a + (b - a) * t;
   }
 
-  int compareTo(AxisTicks<D> other) {
-    return _targetLocation.compareTo(other._targetLocation);
-  }
+  @override
+  int compareTo(AxisTicks<D> other) =>
+      _targetLocation.compareTo(other._targetLocation);
 }

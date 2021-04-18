@@ -85,6 +85,11 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   /// Space before and after label text.
   final int labelPadding;
 
+  /// Configures the order in which the behavior should be painted.
+  /// This value should be relative to LayoutPaintViewOrder.rangeAnnotation.
+  /// (e.g. LayoutViewPaintOrder.rangeAnnotation + 1)
+  final int layoutPaintOrder;
+
   CartesianChart<D> _chart;
 
   _RangeAnnotationLayoutView _view;
@@ -95,6 +100,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
   ///
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   final _annotationMap = LinkedHashMap<String, _AnimatedAnnotation<D>>();
 
   // Store a list of annotations that exist in the current annotation list.
@@ -112,7 +118,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
       TextStyleSpec defaultLabelStyleSpec,
       bool extendAxis,
       int labelPadding,
-      double defaultStrokeWidthPx})
+      double defaultStrokeWidthPx,
+      int layoutPaintOrder})
       : defaultColor = StyleFactory.style.rangeAnnotationColor,
         defaultLabelAnchor = defaultLabelAnchor ?? _defaultLabelAnchor,
         defaultLabelDirection = defaultLabelDirection ?? _defaultLabelDirection,
@@ -120,7 +127,9 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         defaultLabelStyleSpec = defaultLabelStyleSpec ?? _defaultLabelStyle,
         extendAxis = extendAxis ?? true,
         labelPadding = labelPadding ?? _defaultLabelPadding,
-        defaultStrokeWidthPx = defaultStrokeWidthPx ?? _defaultStrokeWidthPx {
+        defaultStrokeWidthPx = defaultStrokeWidthPx ?? _defaultStrokeWidthPx,
+        layoutPaintOrder =
+            layoutPaintOrder ?? LayoutViewPaintOrder.rangeAnnotation {
     _lifecycleListener = LifecycleListener<D>(
         onPostprocess: _updateAxisRange, onAxisConfigured: _updateViewData);
   }
@@ -138,7 +147,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
         defaultColor: defaultColor,
         labelPadding: labelPadding,
         chart: chart,
-        rangeAnnotation: this);
+        rangeAnnotation: this,
+        layoutPaintOrder: layoutPaintOrder);
 
     chart.addView(_view);
 
@@ -333,6 +343,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 }
 
 class _RangeAnnotationLayoutView<D> extends LayoutView {
+  @override
   final LayoutViewConfig layoutConfig;
 
   final Color defaultColor;
@@ -340,6 +351,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
   final int labelPadding;
 
   final RangeAnnotation rangeAnnotation;
+
+  final int layoutPaintOrder;
 
   CartesianChart<D> chart;
 
@@ -349,7 +362,8 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
-  GraphicsFactory _graphicsFactory;
+  @override
+  GraphicsFactory graphicsFactory;
 
   /// Store a map of series drawn on the chart, mapped by series name.
   ///
@@ -361,22 +375,15 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
       {@required this.defaultColor,
       @required this.labelPadding,
       @required this.chart,
-      @required this.rangeAnnotation})
+      @required this.rangeAnnotation,
+      @required this.layoutPaintOrder})
       : layoutConfig = LayoutViewConfig(
-            paintOrder: LayoutViewPaintOrder.rangeAnnotation,
+            paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
 
   set annotationMap(LinkedHashMap<String, _AnimatedAnnotation<D>> value) {
     _annotationMap = value;
-  }
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
   }
 
   @override
@@ -572,7 +579,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
       }
     }
 
-    return (maxWidth).round();
+    return maxWidth.round();
   }
 
   /// Gets the resolved location for a label element.
@@ -1144,8 +1151,8 @@ class _AnnotationElement<D> {
     color = getAnimatedColor(previous.color, target.color, animationPercent);
 
     strokeWidthPx =
-        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx);
+        ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx;
   }
 }
 
@@ -1208,7 +1215,7 @@ class RangeAnnotationTester<D> {
   RangeAnnotationTester(this.behavior);
 
   set graphicsFactory(GraphicsFactory value) {
-    behavior._view._graphicsFactory = value;
+    behavior._view.graphicsFactory = value;
   }
 
   void mockLayout(Rectangle<int> bounds) {

@@ -17,6 +17,7 @@ import 'dart:ui' as ui show Gradient, Shader;
 import 'dart:math' show Point, Rectangle, max;
 import 'package:charts_common/common.dart' as common
     show
+        BlendMode,
         ChartCanvas,
         CanvasBarStack,
         CanvasPie,
@@ -102,7 +103,8 @@ class ChartCanvas implements common.ChartCanvas {
       double radius,
       common.Color fill,
       common.Color stroke,
-      double strokeWidthPx}) {
+      double strokeWidthPx,
+      common.BlendMode blendMode}) {
     _pointPainter ??= new PointPainter();
     _pointPainter.draw(
         canvas: canvas,

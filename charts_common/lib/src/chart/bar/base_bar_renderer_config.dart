@@ -42,8 +42,10 @@ import '../layout/layout_view.dart' show LayoutViewConfig;
 ///   series.
 abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
+  @override
   final String customRendererId;
 
+  @override
   final SymbolRenderer symbolRenderer;
 
   /// Dash pattern for the stroke line around the edges of the bar.
@@ -57,9 +59,14 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
 
   final int minBarLengthPx;
 
+  // The maximum bar group width in pixels, or null if bars can be arbitrarily
+  // wide.
+  final int maxBarWidthPx;
+
   final FillPatternType fillPattern;
 
-  final double stackHorizontalSeparator;
+  /// The padding between bar stacks.
+  final int stackedBarPaddingPx;
 
   /// Stroke width of the target line.
   final double strokeWidthPx;
@@ -82,6 +89,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   /// Not used for stacked bars.
   final List<int> weightPattern;
 
+  @override
   final rendererAttributes = RendererAttributes();
 
   BaseBarRendererConfig(
@@ -90,12 +98,13 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       this.groupingType = BarGroupingType.grouped,
       this.layoutPaintOrder,
       this.minBarLengthPx = 0,
+      this.maxBarWidthPx,
       this.fillPattern,
-      this.stackHorizontalSeparator,
+      this.stackedBarPaddingPx = 1,
       this.strokeWidthPx = 0.0,
       SymbolRenderer symbolRenderer,
       this.weightPattern})
-      : this.symbolRenderer = symbolRenderer ?? RoundedRectSymbolRenderer();
+      : symbolRenderer = symbolRenderer ?? RoundedRectSymbolRenderer();
 
   /// Whether or not the bars should be organized into groups.
   bool get grouped =>
@@ -120,20 +129,23 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
         other.fillPattern == fillPattern &&
         other.groupingType == groupingType &&
         other.minBarLengthPx == minBarLengthPx &&
-        other.stackHorizontalSeparator == stackHorizontalSeparator &&
+        other.maxBarWidthPx == maxBarWidthPx &&
+        other.stackedBarPaddingPx == stackedBarPaddingPx &&
         other.strokeWidthPx == strokeWidthPx &&
         other.symbolRenderer == symbolRenderer &&
         ListEquality().equals(other.weightPattern, weightPattern);
   }
 
-  int get hashcode {
+  @override
+  int get hashCode {
     var hash = 1;
     hash = hash * 31 + (customRendererId?.hashCode ?? 0);
     hash = hash * 31 + (dashPattern?.hashCode ?? 0);
     hash = hash * 31 + (fillPattern?.hashCode ?? 0);
     hash = hash * 31 + (groupingType?.hashCode ?? 0);
     hash = hash * 31 + (minBarLengthPx?.hashCode ?? 0);
-    hash = hash * 31 + (stackHorizontalSeparator?.hashCode ?? 0);
+    hash = hash * 31 + (maxBarWidthPx?.hashCode ?? 0);
+    hash = hash * 31 + (stackedBarPaddingPx?.hashCode ?? 0);
     hash = hash * 31 + (strokeWidthPx?.hashCode ?? 0);
     hash = hash * 31 + (symbolRenderer?.hashCode ?? 0);
     hash = hash * 31 + (weightPattern?.hashCode ?? 0);

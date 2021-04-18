@@ -209,5 +209,5 @@ class MaterialGray extends Palette {
   Color get shade600 => Color(r: 0x75, g: 0x75, b: 0x75); //#757575
   Color get shade700 => _shade700;
   Color get shade800 => Color(r: 0x42, g: 0x42, b: 0x42); //#424242
-  Color get shade900 => Color(r: 0x21, g: 0x21, b: 0xA1); //#212121
+  Color get shade900 => Color(r: 0x21, g: 0x21, b: 0x21); //#212121
 }

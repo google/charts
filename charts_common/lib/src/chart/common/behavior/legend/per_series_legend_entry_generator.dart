@@ -28,12 +28,20 @@ import 'legend_entry_generator.dart';
 ///
 /// [D] the domain class type for the datum.
 class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
+  @override
   TextStyleSpec entryTextStyle;
+
+  @override
   MeasureFormatter measureFormatter;
+
+  @override
   MeasureFormatter secondaryMeasureFormatter;
-  bool showOverlaySeries = false; // Defaults to false.
+
+  @override
+  bool showOverlaySeries = false;
 
   /// Option for showing measures when there is no selection.
+  @override
   LegendDefaultMeasure legendDefaultMeasure;
 
   @override
@@ -101,6 +109,10 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
       entry.formattedValue = formattedValue;
       entry.isSelected = selectionModel.selectedSeries
           .any((selectedSeries) => entry.series.id == selectedSeries.id);
+
+      // Set the current selected model index for legend entry.
+      entry.selectedDataIndexes =
+          selectionModel.selectedDatum.map((datum) => datum.index).toList();
     }
   }
 

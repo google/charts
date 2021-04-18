@@ -75,6 +75,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   /// [LinkedHashMap] is used to render the series on the canvas in the same
   /// order as the data was given to the chart.
   @protected
+  // ignore: prefer_collection_literals, https://github.com/dart-lang/linter/issues/1649
   var seriesPointMap = LinkedHashMap<String, List<AnimatedPoint<D>>>();
 
   // Store a list of lines that exist in the series data.
@@ -85,7 +86,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
   final _currentKeys = <String>[];
 
   PointRenderer({String rendererId, PointRendererConfig config})
-      : this.config = config ?? PointRendererConfig(),
+      : config = config ?? PointRendererConfig(),
         pointRendererDecorators = config?.pointRendererDecorators ?? [],
         super(
             rendererId: rendererId ?? 'point',
@@ -196,6 +197,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     });
   }
 
+  @override
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
@@ -339,6 +341,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     _chart = chart;
   }
 
+  @override
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the points that no longer exist.
     if (animationPercent == 1.0) {
@@ -466,8 +469,14 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  }) {
     final nearest = <DatumDetails<D>>[];
+    final inside = <DatumDetails<D>>[];
 
     // Was it even in the component bounds?
     if (!isPointWithinBounds(chartPoint, boundsOverride)) {
@@ -476,9 +485,11 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
     seriesPointMap.values.forEach((List<AnimatedPoint<D>> points) {
       PointRendererElement<D> nearestPoint;
-      double nearestDomainDistance = _maxInitialDistance;
-      double nearestMeasureDistance = _maxInitialDistance;
-      double nearestRelativeDistance = _maxInitialDistance;
+
+      _Distances nearestDistances = _Distances(
+          domainDistance: _maxInitialDistance,
+          measureDistance: _maxInitialDistance,
+          relativeDistance: _maxInitialDistance);
 
       points.forEach((AnimatedPoint<D> point) {
         if (point.overlaySeries) {
@@ -494,54 +505,72 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
 
         final distances = _getDatumDistance(point, chartPoint);
 
-        if (byDomain) {
-          if ((distances.domainDistance < nearestDomainDistance) ||
-              ((distances.domainDistance == nearestDomainDistance &&
-                  distances.measureDistance < nearestMeasureDistance))) {
-            nearestPoint = point._currentPoint;
-            nearestDomainDistance = distances.domainDistance;
-            nearestMeasureDistance = distances.measureDistance;
-            nearestRelativeDistance = distances.relativeDistance;
+        if (selectOverlappingPoints) {
+          if (distances.insidePoint) {
+            inside.add(_createDatumDetails(point._currentPoint, distances));
           }
-        } else {
-          if (distances.relativeDistance < nearestRelativeDistance) {
-            nearestPoint = point._currentPoint;
-            nearestDomainDistance = distances.domainDistance;
-            nearestMeasureDistance = distances.measureDistance;
-            nearestRelativeDistance = distances.relativeDistance;
+        }
+
+        // If any point was added to the inside list on previous iterations,
+        // we don't need to go through calculating nearest points because we
+        // only return inside list as a result in that case.
+        if (inside.isEmpty) {
+          // Do not consider the points outside event location when
+          // selectExactEventLocation flag is set.
+          if (!selectExactEventLocation || distances.insidePoint) {
+            if (byDomain) {
+              if ((distances.domainDistance <
+                      nearestDistances.domainDistance) ||
+                  (distances.domainDistance ==
+                          nearestDistances.domainDistance &&
+                      distances.measureDistance <
+                          nearestDistances.measureDistance)) {
+                nearestPoint = point._currentPoint;
+                nearestDistances = distances;
+              }
+            } else {
+              if (distances.relativeDistance <
+                  nearestDistances.relativeDistance) {
+                nearestPoint = point._currentPoint;
+                nearestDistances = distances;
+              }
+            }
           }
         }
       });
 
       // Found a point, add it to the list.
       if (nearestPoint != null) {
-        SymbolRenderer nearestSymbolRenderer;
-        if (nearestPoint.symbolRendererId == defaultSymbolRendererId) {
-          nearestSymbolRenderer = symbolRenderer;
-        } else {
-          final id = nearestPoint.symbolRendererId;
-          if (!config.customSymbolRenderers.containsKey(id)) {
-            throw ArgumentError('Invalid custom symbol renderer id "${id}"');
-          }
-
-          nearestSymbolRenderer = config.customSymbolRenderers[id];
-        }
-
-        nearest.add(DatumDetails<D>(
-            datum: nearestPoint.point.datum,
-            domain: nearestPoint.point.domain,
-            series: nearestPoint.point.series,
-            domainDistance: nearestDomainDistance,
-            measureDistance: nearestMeasureDistance,
-            relativeDistance: nearestRelativeDistance,
-            symbolRenderer: nearestSymbolRenderer));
+        nearest.add(_createDatumDetails(nearestPoint, nearestDistances));
       }
     });
 
     // Note: the details are already sorted by domain & measure distance in
-    // base chart.
+    // base chart. If asking for all overlapping points, return the list of
+    // inside points - only if there was overlap.
+    return (selectOverlappingPoints && inside.isNotEmpty) ? inside : nearest;
+  }
 
-    return nearest;
+  DatumDetails<D> _createDatumDetails(
+      PointRendererElement<D> point, _Distances distances) {
+    SymbolRenderer pointSymbolRenderer;
+    if (point.symbolRendererId == defaultSymbolRendererId) {
+      pointSymbolRenderer = symbolRenderer;
+    } else {
+      final id = point.symbolRendererId;
+      if (!config.customSymbolRenderers.containsKey(id)) {
+        throw ArgumentError('Invalid custom symbol renderer id "${id}"');
+      }
+      pointSymbolRenderer = config.customSymbolRenderers[id];
+    }
+    return DatumDetails<D>(
+        datum: point.point.datum,
+        domain: point.point.domain,
+        series: point.point.series,
+        domainDistance: distances.domainDistance,
+        measureDistance: distances.measureDistance,
+        relativeDistance: distances.relativeDistance,
+        symbolRenderer: pointSymbolRenderer);
   }
 
   /// Returns a struct containing domain, measure, and relative distance between
@@ -587,7 +616,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
       // [chartPoint] is located inside the datum.
       relativeDistance = min(relativeDistance, relativeDistanceBounds);
     } else {
-      insidePoint = (relativeDistance < radiusPx);
+      insidePoint = relativeDistance < radiusPx;
     }
 
     return _Distances(
@@ -598,6 +627,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     );
   }
 
+  @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     final series = details.series;
@@ -771,17 +801,17 @@ class PointRendererElement<D> {
     fillColor = getAnimatedColor(
         previous.fillColor, target.fillColor, animationPercent);
 
-    radiusPx = (((target.radiusPx - previous.radiusPx) * animationPercent) +
-        previous.radiusPx);
+    radiusPx = (target.radiusPx - previous.radiusPx) * animationPercent +
+        previous.radiusPx;
 
     boundsLineRadiusPx =
-        (((target.boundsLineRadiusPx - previous.boundsLineRadiusPx) *
+        ((target.boundsLineRadiusPx - previous.boundsLineRadiusPx) *
                 animationPercent) +
-            previous.boundsLineRadiusPx);
+            previous.boundsLineRadiusPx;
 
     strokeWidthPx =
-        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx);
+        ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx;
   }
 }
 

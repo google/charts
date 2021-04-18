@@ -184,7 +184,6 @@ abstract class BaseChart<D> extends StatefulWidget {
     behaviors.add(new SelectNearest(
         eventTrigger: common.SelectionTrigger.tap,
         selectionModelType: common.SelectionModelType.info,
-        expandToDomain: true,
         selectClosestSeries: true));
   }
 

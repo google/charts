@@ -36,9 +36,13 @@ class FakeRenderer extends BaseSeriesRenderer {
 
   @override
   List<DatumDetails> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
-    return null;
-  }
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    selectOverlappingPoints = false,
+    selectExactEventLocation = false,
+  }) =>
+      null;
 
   @override
   void paint(ChartCanvas canvas, double animationPercent) {}
@@ -86,25 +90,25 @@ void main() {
         id: 'mySeries1',
         data: ['A', 'B', 'C', 'D'],
         domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) {}));
+        measureFn: (_, __) => null));
 
     _series2 = MutableSeries(Series(
         id: 'mySeries2',
         data: ['W', 'X', 'Y', 'Z'],
         domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) {}));
+        measureFn: (_, __) => null));
 
     _series3 = MutableSeries(Series(
         id: 'mySeries3',
         data: ['W', 'X', 'Y', 'Z'],
         domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) {}));
+        measureFn: (_, __) => null));
 
     _series4 = MutableSeries(Series(
         id: 'mySeries4',
         data: ['W', 'X', 'Y', 'Z'],
         domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) {}));
+        measureFn: (_, __) => null));
   });
 
   test('selects initial datum', () {
@@ -202,7 +206,7 @@ void main() {
             id: 'mySeries2',
             data: ['W', 'X', 'Y', 'Z'],
             domainFn: (dynamic datum, __) => datum,
-            measureFn: (_, __) {})
+            measureFn: (_, __) => null)
       ],
     );
 

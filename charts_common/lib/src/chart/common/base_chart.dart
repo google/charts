@@ -66,7 +66,7 @@ abstract class BaseChart<D> {
   /// initial draw cycle (e.g. a [Legend] may hide some series).
   List<MutableSeries<D>> _currentSeriesList;
 
-  Set<String> _usingRenderers = Set<String>();
+  Set<String> _usingRenderers = <String>{};
   Map<String, List<MutableSeries<D>>> _rendererToSeriesList;
 
   final _seriesRenderers = <String, SeriesRenderer<D>>{};
@@ -87,6 +87,13 @@ abstract class BaseChart<D> {
 
   final _selectionModels = <SelectionModelType, MutableSelectionModel<D>>{};
 
+  /// Whether selected data should be restricted to only have points that
+  /// cover this event location.
+  ///
+  /// When this is true, selection logic would ignore points that are close to
+  /// event location but does not cover event location.
+  bool get selectExactEventLocation => false;
+
   /// Whether data should be selected by nearest domain distance, or by relative
   /// distance.
   ///
@@ -95,6 +102,12 @@ abstract class BaseChart<D> {
   /// Scatter plots, for example, may have many overlapping data with the same
   /// domain value.
   bool get selectNearestByDomain => true;
+
+  /// Whether data should be expanded by to include all points overlapping the
+  /// selection point
+  ///
+  /// Should be true for Scatter plots.
+  bool get selectOverlappingPoints => false;
 
   final _lifecycleListeners = <LifecycleListener<D>>[];
 
@@ -114,6 +127,24 @@ abstract class BaseChart<D> {
     }
 
     configurationChanged();
+  }
+
+  bool _chartIsDirty = false;
+
+  /// If the chart configuration has changed and requires a redraw.
+  bool get chartIsDirty => _chartIsDirty;
+
+  /// Resets the chart dirty flag to `false`.
+  void resetChartDirtyFlag() {
+    _chartIsDirty = false;
+  }
+
+  /// Marks the chart as dirty.
+  ///
+  /// When a chart axis or configurable is changed and will require a redraw
+  /// next frame the chart must be marked dirty.
+  void markChartDirty() {
+    _chartIsDirty = true;
   }
 
   /// Finish configuring components that require context and graphics factory.
@@ -229,9 +260,14 @@ abstract class BaseChart<D> {
 
     final details = <DatumDetails<D>>[];
     _usingRenderers.forEach((String rendererId) {
-      details.addAll(getSeriesRenderer(rendererId)
-          .getNearestDatumDetailPerSeries(
-              drawAreaPoint, selectNearestByDomain, boundsOverride));
+      details
+          .addAll(getSeriesRenderer(rendererId).getNearestDatumDetailPerSeries(
+        drawAreaPoint,
+        selectNearestByDomain,
+        boundsOverride,
+        selectOverlappingPoints: selectOverlappingPoints,
+        selectExactEventLocation: selectExactEventLocation,
+      ));
     });
 
     details.sort((DatumDetails<D> a, DatumDetails<D> b) {
@@ -549,7 +585,7 @@ abstract class BaseChart<D> {
     Map<String, List<MutableSeries<D>>> rendererToSeriesList = {};
 
     var unusedRenderers = _usingRenderers;
-    _usingRenderers = Set<String>();
+    _usingRenderers = <String>{};
 
     // Build map of rendererIds to SeriesLists.
     seriesList.forEach((MutableSeries<D> series) {
@@ -612,9 +648,10 @@ abstract class BaseChart<D> {
     }
   }
 
-  bool get animatingThisDraw => (transition != null &&
+  bool get animatingThisDraw =>
+      transition != null &&
       transition.inMilliseconds > 0 &&
-      !_animationsTemporarilyDisabled);
+      !_animationsTemporarilyDisabled;
 
   @protected
   void fireOnDraw(List<MutableSeries<D>> seriesList) {

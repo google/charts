@@ -47,8 +47,12 @@ class PercentAxisSpec extends NumericAxisSpec {
             viewport: viewport ?? const NumericExtents(0.0, 1.0));
 
   @override
-  bool operator ==(Object other) =>
-      other is PercentAxisSpec &&
-      viewport == other.viewport &&
-      super == (other);
+  bool operator ==(Object other) => other is PercentAxisSpec && super == other;
+
+  @override
+  int get hashCode {
+    int hashcode = super.hashCode;
+    hashcode = (hashcode * 37) + runtimeType.hashCode;
+    return hashcode;
+  }
 }

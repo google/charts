@@ -96,12 +96,18 @@ abstract class SeriesRenderer<D> extends LayoutView {
 
   /// Renders the series data on the canvas, using the data generated during the
   /// [update] call.
+  @override
   void paint(ChartCanvas canvas, double animationPercent);
 
-  /// Gets a list the data from each series that is closest to a given point.
+  /// Gets a list of the data from each series that is closest to a given point.
   ///
   /// [chartPoint] represents a point in the chart, such as a point that was
   /// clicked/tapped on by a user.
+  ///
+  /// [selectOverlappingPoints] specifies whether to include all points that
+  /// overlap the tapped position in the result. If specified, the method will
+  /// return either the closest point or all the overlapping points with the
+  /// tapped position.
   ///
   /// [byDomain] specifies whether the nearest data should be defined by domain
   /// distance, or relative Cartesian distance.
@@ -112,7 +118,12 @@ abstract class SeriesRenderer<D> extends LayoutView {
   /// will use its own component bounds for filtering out selection events
   /// (usually the chart draw area).
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride);
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  });
 
   /// Get an expanded set of processed [DatumDetails] for a given [SeriesDatum].
   ///
@@ -132,17 +143,21 @@ abstract class SeriesRenderer<D> extends LayoutView {
 /// Concrete base class for [SeriesRenderer]s that implements common
 /// functionality.
 abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
+  @override
   final LayoutViewConfig layoutConfig;
 
+  @override
   String rendererId;
 
+  @override
   SymbolRenderer symbolRenderer;
 
   Rectangle<int> _drawAreaBounds;
 
   Rectangle<int> get drawBounds => _drawAreaBounds;
 
-  GraphicsFactory _graphicsFactory;
+  @override
+  GraphicsFactory graphicsFactory;
 
   BaseSeriesRenderer({
     @required this.rendererId,
@@ -152,14 +167,6 @@ abstract class BaseSeriesRenderer<D> implements SeriesRenderer<D> {
             paintOrder: layoutPaintOrder,
             position: LayoutPosition.DrawArea,
             positionOrder: LayoutViewPositionOrder.drawArea);
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
-  }
 
   @override
   void onAttach(BaseChart<D> chart) {}

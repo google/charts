@@ -109,9 +109,8 @@ class LinearScaleViewportSettings {
     // If we are loading from the viewport, then update the translate now that
     // the scaleFactor has been setup.
     if (_manualDomainExtent) {
-      translatePx = (-1.0 *
-          scaleScalingFactor *
-          (_domainExtent.min - domainInfo.extent.min));
+      translatePx =
+          -scaleScalingFactor * (_domainExtent.min - domainInfo.extent.min);
     }
 
     // Make sure that the viewportSettings.translatePx is sane if desired.
@@ -133,7 +132,7 @@ class LinearScaleViewportSettings {
     if (!_manualDomainExtent) {
       double viewportDomainDiff = domainInfo.domainDiff / scalingFactor;
       double viewportStart =
-          (-1.0 * translatePx / scaleScalingFactor) + domainInfo.extent.min;
+          (-translatePx / scaleScalingFactor) + domainInfo.extent.min;
       _domainExtent =
           NumericExtents(viewportStart, viewportStart + viewportDomainDiff);
     }

@@ -35,6 +35,9 @@ abstract class OrdinalScale extends MutableScale<String> {
 
   /// The first fully visible ordinal step within the viewport.
   ///
+  /// Start is defined by the leftmost domain for horizontal axes, and
+  /// topmost domain for vertical axes.
+  ///
   /// Null if no domains exist.
   String get viewportStartingDomain;
 }

@@ -99,7 +99,7 @@ abstract class BaseRenderSpec<D> implements RenderSpec<D> {
 /// Base strategy that draws tick labels and checks for label collisions.
 abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   static final _labelSplitPattern = '\n';
-  static final _multiLineLabelPadding = 2;
+  static final multiLineLabelPadding = 2;
 
   static num _degToRad(num deg) => deg * (pi / 180.0);
 
@@ -266,14 +266,14 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     // text and the axis baseline (even if it isn't drawn).
 
     final maxHorizontalSliceWidth = ticks.fold(0.0, (double prevMax, tick) {
-      final labelElements = _splitLabel(tick.textElement);
+      final labelElements = splitLabel(tick.textElement);
 
       return max(
           prevMax,
-          _calculateWidthForRotatedLabel(
+          calculateWidthForRotatedLabel(
                 labelRotation,
-                _getLabelHeight(labelElements),
-                _getLabelWidth(labelElements),
+                getLabelHeight(labelElements),
+                getLabelWidth(labelElements),
               ) +
               labelOffsetFromAxisPx);
     }).round();
@@ -286,14 +286,14 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   ViewMeasuredSizes measureHorizontallyDrawnTicks(
       List<Tick<D>> ticks, int maxWidth, int maxHeight) {
     final maxVerticalSliceWidth = ticks.fold(0.0, (double prevMax, tick) {
-      final labelElements = _splitLabel(tick.textElement);
+      final labelElements = splitLabel(tick.textElement);
 
       return max(
           prevMax,
-          _calculateHeightForRotatedLabel(
+          calculateHeightForRotatedLabel(
             labelRotation,
-            _getLabelHeight(labelElements),
-            _getLabelWidth(labelElements),
+            getLabelHeight(labelElements),
+            getLabelWidth(labelElements),
           ));
     }).round();
 
@@ -346,13 +346,13 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     final locationPx = tick.locationPx;
     final labelOffsetPx = tick.labelOffsetPx ?? 0;
     final isRtl = chartContext.isRtl;
-    final labelElements = _splitLabel(tick.textElement);
-    final labelHeight = _getLabelHeight(labelElements);
-    int multiLineLabelOffset = 0;
+    final labelElements = splitLabel(tick.textElement);
+    final labelHeight = getLabelHeight(labelElements);
+    var multiLineLabelOffset = 0;
 
     for (final line in labelElements) {
-      int x = 0;
-      int y = 0;
+      var x = 0;
+      var y = 0;
 
       if (orientation == AxisOrientation.bottom ||
           orientation == AxisOrientation.top) {
@@ -385,7 +385,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
             x = axisBounds.right - labelOffsetFromAxisPx;
             line.textDirection = TextDirection.rtl;
           } else {
-            x = axisBounds.left + labelOffsetFromAxisPx;
+            x = axisBounds.left;
             line.textDirection = TextDirection.ltr;
           }
         } else {
@@ -394,7 +394,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
             x = axisBounds.left + labelOffsetFromAxisPx;
             line.textDirection = TextDirection.ltr;
           } else {
-            x = axisBounds.right - labelOffsetFromAxisPx;
+            x = axisBounds.right;
             line.textDirection = TextDirection.rtl;
           }
         }
@@ -419,7 +419,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
       canvas.drawText(line, x, y + multiLineLabelOffset,
           rotation: _degToRad(labelRotation));
       multiLineLabelOffset +=
-          _multiLineLabelPadding + line.measurement.verticalSliceWidth.round();
+          multiLineLabelPadding + line.measurement.verticalSliceWidth.round();
     }
   }
 
@@ -466,7 +466,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   /// Returns the width of a rotated labels on a domain axis.
-  double _calculateWidthForRotatedLabel(
+  double calculateWidthForRotatedLabel(
       int rotation, double labelHeight, double labelLength) {
     if (rotation == 0) return labelLength;
     var rotationRadian = _degToRad(rotation);
@@ -492,7 +492,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   /// Returns the height of a rotated labels on a domain axis.
-  double _calculateHeightForRotatedLabel(
+  double calculateHeightForRotatedLabel(
       int rotation, double labelHeight, double labelLength) {
     if (rotation == 0) return labelHeight;
     var rotationRadian = _degToRad(rotation);
@@ -519,7 +519,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   /// The [wholeLabel] is split into constituent chunks if it is multiline.
-  List<TextElement> _splitLabel(TextElement wholeLabel) => wholeLabel.text
+  List<TextElement> splitLabel(TextElement wholeLabel) => wholeLabel.text
       .split(_labelSplitPattern)
       .map((line) => (graphicsFactory.createTextElement(line.trim())
         ..textStyle = wholeLabel.textStyle))
@@ -529,16 +529,16 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   ///
   /// If the label spans multiple lines then it returns the width of the
   /// longest line.
-  double _getLabelWidth(Iterable<TextElement> labelElements) => labelElements
+  double getLabelWidth(Iterable<TextElement> labelElements) => labelElements
       .map((line) => line.measurement.horizontalSliceWidth)
       .reduce(max);
 
   /// The height of the label (handles labels spanning multiple lines).
-  double _getLabelHeight(Iterable<TextElement> labelElements) {
+  double getLabelHeight(Iterable<TextElement> labelElements) {
     if (labelElements.isEmpty) return 0;
     final textHeight = labelElements.first.measurement.verticalSliceWidth;
     final numLines = labelElements.length;
-    return (textHeight * numLines) + (_multiLineLabelPadding * (numLines - 1));
+    return (textHeight * numLines) + (multiLineLabelPadding * (numLines - 1));
   }
 }
 

@@ -35,7 +35,12 @@ void main() {
 
     final testChart = new TestChart(selectionChangedListener, onTapSelection);
 
-    await tester.pumpWidget(testChart);
+    await tester.pumpWidget(
+      new Directionality(
+        textDirection: TextDirection.ltr,
+        child: testChart,
+      ),
+    );
 
     expect(currentSelectionModel, isNull);
 
@@ -89,7 +94,10 @@ class TestChartState extends State<TestChart> {
       defaultInteractions: false,
     );
 
-    return new GestureDetector(child: chart, onTap: handleOnTap);
+    return new Directionality(
+      textDirection: TextDirection.ltr,
+      child: new GestureDetector(child: chart, onTap: handleOnTap),
+    );
   }
 
   void handleOnTap() {

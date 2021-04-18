@@ -135,7 +135,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       final styleSegments = <_LineRendererElement<D>>[];
       var styleSegmentsIndex = 0;
 
-      final usedKeys = Set<String>();
+      final usedKeys = <String>{};
 
       // Configure style segments for each series.
       String previousSegmentKey;
@@ -319,6 +319,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     _seriesLineMap.addEntries(newLineMap);
   }
 
+  @override
   void update(List<ImmutableSeries<D>> seriesList, bool isAnimatingThisDraw) {
     _currentKeys.clear();
 
@@ -913,6 +914,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     _chart = chart;
   }
 
+  @override
   void paint(ChartCanvas canvas, double animationPercent) {
     // Clean up the lines that no longer exist.
     if (animationPercent == 1.0) {
@@ -943,7 +945,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (area != null) {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(area.positionExtent),
-                fill: area.areaColor != null ? area.areaColor : area.color,
+                fill: area.areaColor ?? area.color,
                 points: area.points);
           }
         });
@@ -961,7 +963,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           if (bound != null) {
             canvas.drawPolygon(
                 clipBounds: _getClipBoundsForExtent(bound.positionExtent),
-                fill: bound.areaColor != null ? bound.areaColor : bound.color,
+                fill: bound.areaColor ?? bound.color,
                 points: bound.points);
           }
         });
@@ -1005,8 +1007,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         : clamp(extent.start, drawBounds.left, drawBounds.right);
 
     final right = isRtl
-        ? clamp((extent.start), drawBounds.left, drawBounds.right)
-        : clamp((extent.end), drawBounds.left, drawBounds.right);
+        ? clamp(extent.start, drawBounds.left, drawBounds.right)
+        : clamp(extent.end, drawBounds.left, drawBounds.right);
 
     return Rectangle<num>(
         left,
@@ -1045,7 +1047,12 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
   @override
   List<DatumDetails<D>> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    bool selectOverlappingPoints = false,
+    bool selectExactEventLocation = false,
+  }) {
     final nearest = <DatumDetails<D>>[];
 
     // Was it even in the component bounds?
@@ -1088,8 +1095,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
 
           if (byDomain) {
             if ((domainDistance < nearestDomainDistance) ||
-                ((domainDistance == nearestDomainDistance &&
-                    measureDistance < nearestMeasureDistance))) {
+                ((domainDistance == nearestDomainDistance) &&
+                    (measureDistance < nearestMeasureDistance))) {
               nearestPoint = p;
               nearestDomainDistance = domainDistance;
               nearestMeasureDistance = measureDistance;
@@ -1125,6 +1132,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     return nearest;
   }
 
+  @override
   DatumDetails<D> addPositionToDetailsForSeriesDatum(
       DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     final series = details.series;
@@ -1241,8 +1249,8 @@ class _LineRendererElement<D> {
     }
 
     strokeWidthPx =
-        (((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
-            previous.strokeWidthPx);
+        ((target.strokeWidthPx - previous.strokeWidthPx) * animationPercent) +
+            previous.strokeWidthPx;
   }
 }
 
@@ -1538,7 +1546,8 @@ class _Range<D> {
     } else if (value is String) {
       _includePointAsString(value);
     } else {
-      throw ('Unsupported object type for LineRenderer domain value: '
+      throw ArgumentError(
+          'Unsupported object type for LineRenderer domain value: '
           '${value.runtimeType}');
     }
   }

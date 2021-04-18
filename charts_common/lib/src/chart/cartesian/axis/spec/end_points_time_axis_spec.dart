@@ -61,5 +61,12 @@ class EndPointsTimeAxisSpec extends DateTimeAxisSpec {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is EndPointsTimeAxisSpec && super == (other));
+      (other is EndPointsTimeAxisSpec && super == other);
+
+  @override
+  int get hashCode {
+    var hashcode = super.hashCode;
+    hashcode = (hashcode * 37) + runtimeType.hashCode;
+    return hashcode;
+  }
 }

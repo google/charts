@@ -41,11 +41,9 @@ import 'selection_trigger.dart' show SelectionTrigger;
 ///   action - To select an item as an input, drill, or other selection.
 ///
 /// Other options available
-///   [expandToDomain] - All data points that match the domain value of the
-///       closest data point from each Series will be included in the selection.
-///       The selection is limited to the hovered component area unless
-///       [selectAcrossAllSeriesRendererComponents] is set to true. (Default:
-///       true)
+///   [selectionMode] - Optional mode for expanding the selection beyond the
+///       nearest datum. Defaults to selecting just the nearest datum.
+///
 ///   [selectAcrossAllSeriesRendererComponents] - Events in any component that
 ///       draw Series data will propagate to other components that draw Series
 ///       data to get a union of points that match across all series renderer
@@ -68,12 +66,9 @@ class SelectNearest<D> implements ChartBehavior<D> {
   /// Type of input event that should trigger selection.
   final SelectionTrigger eventTrigger;
 
-  /// Whether or not all data points that match the domain value of the closest
-  /// data point from each Series will be included in the selection.
-  ///
-  /// The selection is limited to the hovered component area unless
-  /// [selectAcrossAllSeriesRendererComponents] is set to true.
-  final bool expandToDomain;
+  /// Optional mode for expanding the selection beyond the nearest datum.
+  /// Defaults to selecting just the nearest datum.
+  final SelectionMode selectionMode;
 
   /// Whether or not events in any component that draw Series data will
   /// propagate to other components that draw Series data to get a union of
@@ -103,7 +98,7 @@ class SelectNearest<D> implements ChartBehavior<D> {
 
   SelectNearest(
       {this.selectionModelType = SelectionModelType.info,
-      this.expandToDomain = true,
+      this.selectionMode = SelectionMode.expandToDomain,
       this.selectAcrossAllSeriesRendererComponents = true,
       this.selectClosestSeries = true,
       this.eventTrigger = SelectionTrigger.hover,
@@ -162,10 +157,11 @@ class SelectNearest<D> implements ChartBehavior<D> {
   }
 
   bool _onSelect(Point<double> chartPoint, [double ignored]) {
+    // If _chart has not yet been attached, then quit.
+    if (_chart == null) return false;
+
     // If the selection is delayed (waiting for long press), then quit early.
-    if (_delaySelect) {
-      return false;
-    }
+    if (_delaySelect) return false;
 
     var details = _chart.getNearestDatumDetailPerSeries(
         chartPoint, selectAcrossAllSeriesRendererComponents);
@@ -178,9 +174,7 @@ class SelectNearest<D> implements ChartBehavior<D> {
 
       if (maximumDomainDistancePx == null ||
           details[0].domainDistance <= maximumDomainDistancePx) {
-        seriesDatumList = expandToDomain
-            ? _expandToDomain(details.first)
-            : [SeriesDatum<D>(details.first.series, details.first.datum)];
+        seriesDatumList = _extractSeriesFromNearestSelection(details);
 
         // Filter out points from overlay series.
         seriesDatumList
@@ -207,6 +201,23 @@ class SelectNearest<D> implements ChartBehavior<D> {
     return _chart
         .getSelectionModel(selectionModelType)
         .updateSelection(seriesDatumList, seriesList);
+  }
+
+  List<SeriesDatum<D>> _extractSeriesFromNearestSelection(
+      List<DatumDetails<D>> details) {
+    switch (selectionMode) {
+      case SelectionMode.expandToDomain:
+        return _expandToDomain(details.first);
+      case SelectionMode.selectOverlapping:
+        return details
+            .map((datumDetails) =>
+                SeriesDatum<D>(datumDetails.series, datumDetails.datum))
+            .toList();
+      case SelectionMode.single:
+        return [SeriesDatum<D>(details.first.series, details.first.datum)];
+      default:
+        return null;
+    }
   }
 
   bool _onDeselectAll(_, __, ___) {
@@ -308,4 +319,18 @@ class SelectNearest<D> implements ChartBehavior<D> {
 
   @override
   String get role => 'SelectNearest-${selectionModelType.toString()}}';
+}
+
+/// Mode for expanding the selection beyond just the nearest datum.
+enum SelectionMode {
+  /// All data sharing the same domain value as the nearest datum will be
+  /// selected (in charts that have a concept of domain).
+  expandToDomain,
+
+  /// All data for overlapping points in a series will be selected.
+  selectOverlapping,
+
+  /// Select only the nearest datum selected by the chart. This is the default
+  /// mode.
+  single,
 }

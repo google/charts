@@ -74,7 +74,7 @@ class BucketingAxisSpec extends NumericAxisSpec {
     bool showBucket,
     this.threshold,
     NumericExtents viewport,
-  })  : this.showBucket = showBucket ?? true,
+  })  : showBucket = showBucket ?? true,
         super(
             renderSpec: renderSpec,
             tickProviderSpec:
@@ -112,7 +112,7 @@ class BucketingAxisSpec extends NumericAxisSpec {
       (other is BucketingAxisSpec &&
           showBucket == other.showBucket &&
           threshold == other.threshold &&
-          super == (other));
+          super == other);
 
   @override
   int get hashCode {

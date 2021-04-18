@@ -46,7 +46,7 @@ UnaryFunction<T, R> throttle<T, R>(UnaryFunction<T, R> callback,
       return defaultReturn;
     }
 
-    stopwatch.reset();
+    stopwatch = null;
 
     // This is a non-throttled event, go ahead and clear away the last throttled
     // event callback so that we do not move the hover point back in time.

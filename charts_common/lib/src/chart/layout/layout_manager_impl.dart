@@ -52,10 +52,10 @@ class LayoutManagerImpl implements LayoutManager {
   bool _viewsNeedPositionSort = true;
 
   /// Create a new [LayoutManager].
-  LayoutManagerImpl({LayoutConfig config})
-      : this.config = config ?? LayoutConfig();
+  LayoutManagerImpl({LayoutConfig config}) : config = config ?? LayoutConfig();
 
   /// Add one [LayoutView].
+  @override
   void addView(LayoutView view) {
     _views.add(view);
     _drawAreaBoundsOutdated = true;
@@ -64,6 +64,7 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   /// Remove one [LayoutView].
+  @override
   void removeView(LayoutView view) {
     if (_views.remove(view)) {
       _drawAreaBoundsOutdated = true;
@@ -73,6 +74,7 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   /// Returns true if [view] is already attached.
+  @override
   bool isAttached(LayoutView view) => _views.contains(view);
 
   /// Get all layout components in the order to be drawn.
@@ -218,11 +220,11 @@ class LayoutManagerImpl implements LayoutManager {
     // Prevents the app from crashing by rendering overlapping content instead.
     final drawAreaWidth = max(
       _minDrawWidth,
-      (width - measurements.leftWidth - measurements.rightWidth),
+      width - measurements.leftWidth - measurements.rightWidth,
     );
     final drawAreaHeight = max(
       _minDrawHeight,
-      (height - measurements.bottomHeight - measurements.topHeight),
+      height - measurements.bottomHeight - measurements.topHeight,
     );
 
     // Bounds for the draw area.
@@ -263,8 +265,8 @@ class LayoutManagerImpl implements LayoutManager {
   Iterable<LayoutView> _viewsForPositions(LayoutPosition p1,
       [LayoutPosition p2]) {
     return positionOrderedViews.where((LayoutView view) =>
-        (view.layoutConfig.position == p1 ||
-            (p2 != null && view.layoutConfig.position == p2)));
+        view.layoutConfig.position == p1 ||
+        (p2 != null && view.layoutConfig.position == p2));
   }
 
   /// Measure and return size measurements.

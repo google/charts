@@ -64,6 +64,11 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
   /// Space before and after label text.
   final int labelPadding;
 
+  /// Configures the order in which the behavior should be painted.
+  /// This value should be relative to LayoutPaintViewOrder.rangeAnnotation.
+  /// (e.g. LayoutViewPaintOrder.rangeAnnotation + 1)
+  final int layoutPaintOrder;
+
   RangeAnnotation(this.annotations,
       {common.Color defaultColor,
       this.defaultLabelAnchor,
@@ -71,7 +76,8 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
       this.defaultLabelPosition,
       this.defaultLabelStyleSpec,
       this.extendAxis,
-      this.labelPadding})
+      this.labelPadding,
+      this.layoutPaintOrder})
       : defaultColor = common.MaterialPalette.gray.shade100;
 
   @override
@@ -83,7 +89,8 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
           defaultLabelPosition: defaultLabelPosition,
           defaultLabelStyleSpec: defaultLabelStyleSpec,
           extendAxis: extendAxis,
-          labelPadding: labelPadding);
+          labelPadding: labelPadding,
+          layoutPaintOrder: layoutPaintOrder);
 
   @override
   void updateCommonBehavior(common.RangeAnnotation commonBehavior) {}
@@ -101,7 +108,8 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
         defaultLabelDirection == o.defaultLabelDirection &&
         defaultLabelPosition == o.defaultLabelPosition &&
         defaultLabelStyleSpec == o.defaultLabelStyleSpec &&
-        labelPadding == o.labelPadding;
+        labelPadding == o.labelPadding &&
+        layoutPaintOrder == o.layoutPaintOrder;
   }
 
   @override
@@ -113,5 +121,6 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
       defaultLabelDirection,
       defaultLabelPosition,
       defaultLabelStyleSpec,
-      labelPadding);
+      labelPadding,
+      layoutPaintOrder);
 }
