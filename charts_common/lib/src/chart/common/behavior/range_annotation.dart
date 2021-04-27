@@ -235,7 +235,7 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
           ? annotation.dashPattern
           : null;
       final strokeWidthPx = annotation is LineAnnotationSegment<Object>
-          ? annotation.strokeWidthPx
+          ? annotation.strokeWidthPx ?? defaultStrokeWidthPx
           : 0.0;
 
       final isRange = annotation is RangeAnnotationSegment;
