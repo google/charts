@@ -166,16 +166,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
         _disjointMeasureAxes =
             // ignore: prefer_collection_literals
             disjointMeasureAxes ?? LinkedHashMap<String, NumericAxis>(),
-        super(layoutConfig: layoutConfig ?? _defaultLayoutConfig) {
-    // As a convenience for chart configuration, set the paint order on any axis
-    // that is missing one.
-    _primaryMeasureAxis.layoutPaintOrder ??= LayoutViewPaintOrder.measureAxis;
-    _secondaryMeasureAxis.layoutPaintOrder ??= LayoutViewPaintOrder.measureAxis;
-
-    _disjointMeasureAxes.forEach((String axisId, NumericAxis axis) {
-      axis.layoutPaintOrder ??= LayoutViewPaintOrder.measureAxis;
-    });
-  }
+        super(layoutConfig: layoutConfig ?? _defaultLayoutConfig);
 
   @override
   void init(ChartContext context, GraphicsFactory graphicsFactory) {

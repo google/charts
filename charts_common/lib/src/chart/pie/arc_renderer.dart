@@ -67,7 +67,7 @@ class ArcRenderer<D> extends BaseSeriesRenderer<D> {
   }
 
   ArcRenderer._internal({required String rendererId, required this.config})
-      : arcRendererDecorators = config?.arcRendererDecorators ?? [],
+      : arcRendererDecorators = config.arcRendererDecorators,
         super(
             rendererId: rendererId,
             layoutPaintOrder: config.layoutPaintOrder,
