@@ -1,0 +1,13 @@
+# Format: google3/devtools/metadata/metadata.proto (go/google3metadata)
+# https://cs.corp.google.com/#google3/devtools/metadata/presubmit.proto
+
+# External Tap queues to run for CLs to Charts Flutter.
+presubmit {
+  path_expression: "//depot/google3/third_party/dart/charts_flutter/..."
+  path_expression: "//depot/google3/third_party/dart/charts_common/..."
+
+  check_tests: {
+    failure_status: ERROR
+    project: "greentea.flutter"
+  }
+}
