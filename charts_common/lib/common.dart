@@ -30,6 +30,8 @@ export 'src/chart/bar/bar_renderer_decorator.dart' show BarRendererDecorator;
 export 'src/chart/bar/bar_target_line_renderer.dart' show BarTargetLineRenderer;
 export 'src/chart/bar/bar_target_line_renderer_config.dart'
     show BarTargetLineRendererConfig;
+export 'src/chart/bar/base_bar_renderer.dart'
+    show barGroupIndexKey, barGroupCountKey, barGroupWeightKey;
 export 'src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType, BaseBarRendererConfig;
 export 'src/chart/cartesian/axis/axis.dart'
@@ -38,6 +40,7 @@ export 'src/chart/cartesian/axis/axis.dart'
         measureAxisIdKey,
         measureAxisKey,
         Axis,
+        ImmutableAxis,
         AxisOrientation,
         NumericAxis,
         OrdinalAxis,
