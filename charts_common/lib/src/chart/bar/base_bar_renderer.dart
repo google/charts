@@ -344,6 +344,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   ///
   /// This is intended to be overridden by child classes that need to add
   /// customized rendering properties.
+  @protected
   R getBaseDetails(dynamic datum, int index);
 
   @override
@@ -517,6 +518,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
   /// Generates a [BaseAnimatedBar] to represent the previous and current state
   /// of one bar on the chart.
+  @protected
   B makeAnimatedBar(
       {required String key,
       required ImmutableSeries<D> series,
@@ -544,6 +546,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
 
   /// Generates a [BaseBarRendererElement] to represent the rendering data for
   /// one bar on the chart.
+  @protected
   R makeBarRendererElement(
       {required int barGroupIndex,
       double? previousBarGroupWeight,
@@ -608,6 +611,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
   }
 
   /// Paints a stack of bar elements on the canvas.
+  @protected
   void paintBar(
       ChartCanvas canvas, double animationPercent, Iterable<R> barElements);
 
@@ -679,6 +683,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
     return nearest;
   }
 
+  @protected
   Rectangle<int>? getBoundsForBar(R bar);
 
   @protected
