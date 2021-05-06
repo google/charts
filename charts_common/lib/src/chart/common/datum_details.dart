@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math';
+
 import '../../common/color.dart' show Color;
 import '../../common/math.dart' show NullablePoint;
 import '../../common/symbol_renderer.dart' show SymbolRenderer;
@@ -105,6 +107,13 @@ class DatumDetails<D> {
   /// [datum] from a renderer.
   final NullablePoint? chartPositionUpper;
 
+  /// The bounding box for the chart space occupied by this datum.
+  ///
+  /// This is currently only populated by the bar series renderer.
+  ///
+  /// TODO: Fill this in for other series renderers.
+  final Rectangle<int>? bounds;
+
   /// Distance of [domain] from a given (x, y) coordinate.
   final double? domainDistance;
 
@@ -156,6 +165,7 @@ class DatumDetails<D> {
       this.chartPosition,
       this.chartPositionLower,
       this.chartPositionUpper,
+      this.bounds,
       this.domainDistance,
       this.measureDistance,
       this.relativeDistance,
@@ -186,6 +196,7 @@ class DatumDetails<D> {
       NullablePoint? chartPosition,
       NullablePoint? chartPositionLower,
       NullablePoint? chartPositionUpper,
+      Rectangle<int>? bounds,
       DomainFormatter<D>? domainFormatter,
       double? domainDistance,
       double? measureDistance,
@@ -218,6 +229,7 @@ class DatumDetails<D> {
         chartPosition: chartPosition ?? other.chartPosition,
         chartPositionLower: chartPositionLower ?? other.chartPositionLower,
         chartPositionUpper: chartPositionUpper ?? other.chartPositionUpper,
+        bounds: bounds ?? other.bounds,
         domainDistance: domainDistance ?? other.domainDistance,
         measureDistance: measureDistance ?? other.measureDistance,
         radiusPx: radiusPx ?? other.radiusPx,

@@ -116,7 +116,8 @@ class BarRenderer<D>
           (bounds.top + (bounds.height / 2)).toDouble());
     }
 
-    return DatumDetails.from(details, chartPosition: chartPosition);
+    return DatumDetails.from(details,
+        chartPosition: chartPosition, bounds: bounds);
   }
 
   @override
