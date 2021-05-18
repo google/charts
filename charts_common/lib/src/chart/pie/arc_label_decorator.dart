@@ -15,7 +15,7 @@
 
 import 'dart:math' show cos, min, sin, pi, Point, Rectangle;
 
-import 'package:meta/meta.dart' show immutable;
+import 'package:meta/meta.dart' show immutable, protected;
 
 import '../../common/color.dart' show Color;
 import '../../common/graphics_factory.dart' show GraphicsFactory;
@@ -26,7 +26,8 @@ import '../../common/text_style.dart' show TextStyle;
 import '../../data/series.dart' show AccessorFn;
 import '../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../common/chart_canvas.dart' show ChartCanvas;
-import 'arc_renderer.dart' show ArcRendererElementList;
+import 'arc_renderer_element.dart'
+    show ArcRendererElement, ArcRendererElementList;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
 
 /// Renders labels for arc renderers.
@@ -166,20 +167,13 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       final labelElement = graphicsFactory.createTextElement(label)
         ..maxWidthStrategy = MaxWidthStrategy.ellipsize;
 
-      var calculatedLabelPosition = labelPosition;
-      if (calculatedLabelPosition == ArcLabelPosition.auto) {
-        // For auto, first try to fit the text inside the arc.
-        labelElement.textStyle = datumInsideLabelStyle;
-
-        // A label fits if the space inside the arc is >= outside arc or if the
-        // length of the text fits and the space. This is because if the arc has
-        // more space than the outside, it makes more sense to place the label
-        // inside the arc, even if the entire label does not fit.
-        calculatedLabelPosition = (insideArcWidth >= outsideArcWidth ||
-                labelElement.measurement.horizontalSliceWidth < insideArcWidth)
-            ? ArcLabelPosition.inside
-            : ArcLabelPosition.outside;
-      }
+      var calculatedLabelPosition = calculateLabelPosition(
+          labelElement,
+          datumInsideLabelStyle,
+          insideArcWidth,
+          outsideArcWidth,
+          element,
+          labelPosition);
 
       // Set the max width and text style.
       if (calculatedLabelPosition == ArcLabelPosition.inside) {
@@ -213,6 +207,31 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
           }
         }
       }
+    }
+  }
+
+  @protected
+  ArcLabelPosition calculateLabelPosition(
+      TextElement labelElement,
+      TextStyle labelStyle,
+      int insideArcWidth,
+      int outsideArcWidth,
+      ArcRendererElement arcRendererelement,
+      ArcLabelPosition labelPosition) {
+    if (labelPosition == ArcLabelPosition.auto) {
+      // For auto, first try to fit the text inside the arc.
+      labelElement.textStyle = labelStyle;
+
+      // A label fits if the space inside the arc is >= outside arc or if the
+      // length of the text fits and the space. This is because if the arc has
+      // more space than the outside, it makes more sense to place the label
+      // inside the arc, even if the entire label does not fit.
+      return (insideArcWidth >= outsideArcWidth ||
+              labelElement.measurement.horizontalSliceWidth < insideArcWidth)
+          ? ArcLabelPosition.inside
+          : ArcLabelPosition.outside;
+    } else {
+      return labelPosition;
     }
   }
 
@@ -380,7 +399,7 @@ enum ArcLabelPosition {
   outside,
 
   /// Always place label on the inside.
-  inside,
+  inside
 }
 
 /// Style configuration for leader lines.

@@ -157,6 +157,8 @@ class TreeNode<T> {
 
   int _depth = 0;
 
+  TreeNode<T>? parent;
+
   TreeNode(this.data);
 
   /// Distance between this node and the root node.
@@ -175,6 +177,7 @@ class TreeNode<T> {
 
   /// Adds a single child to this node.
   void addChild(TreeNode<T> child) {
+    child.parent = this;
     final delta = depth - child.depth + 1;
     if (delta != 0) child.visit((node) => node.depth += delta);
     _children.add(child);

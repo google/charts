@@ -17,7 +17,7 @@ import 'dart:math' show Rectangle;
 
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../common/chart_canvas.dart' show ChartCanvas;
-import 'arc_renderer.dart' show ArcRendererElementList;
+import 'arc_renderer_element.dart' show ArcRendererElementList;
 
 /// Decorates arcs after the arcs have already been painted.
 abstract class ArcRendererDecorator<D> {

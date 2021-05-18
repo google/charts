@@ -32,9 +32,13 @@ import 'package:charts_common/src/chart/cartesian/axis/spec/axis_spec.dart'
 import 'package:charts_common/src/chart/common/chart_canvas.dart'
     show ChartCanvas;
 import 'package:charts_common/src/chart/pie/arc_label_decorator.dart'
-    show ArcLabelDecorator, ArcLabelPosition;
+    show ArcLabelPosition;
+import 'package:charts_common/src/chart/sunburst/sunburst_arc_label_decorator.dart'
+    show SunburstArcLabelDecorator;
 import 'package:charts_common/src/chart/pie/arc_renderer_element.dart'
-    show ArcRendererElement, ArcRendererElementList;
+    show ArcRendererElementList;
+import 'package:charts_common/src/chart/sunburst/sunburst_arc_renderer.dart'
+    show SunburstArcRendererElement;
 import 'package:charts_common/src/data/series.dart' show AccessorFn;
 
 import 'package:mockito/mockito.dart';
@@ -100,7 +104,7 @@ class FakeTextElement implements TextElement {
 
 class MockLinePaint extends Mock implements LineStyle {}
 
-class FakeArcRendererElement extends ArcRendererElement<String> {
+class FakeArcRendererElement extends SunburstArcRendererElement<String> {
   final _series = MockImmutableSeries<String>();
   final AccessorFn<String> labelAccessor;
   final List<String> data;
@@ -116,6 +120,13 @@ class FakeArcRendererElement extends ArcRendererElement<String> {
 
 class MockImmutableSeries<D> extends Mock implements ImmutableSeries<D> {}
 
+/// Test for SunburstArcLabelDecorator. It should behave the mostly the same as
+/// the ArcLabelDecorator except:
+/// If ArcLabelPosition is set tooutside, only label the outer most ring will be
+/// drawn.
+/// If ArcLabelPosition is set to auto, the label on the outer most ring will
+/// follow the computation of the ArcLabelDecorator and the label of the inner
+/// rings will be forced to render inside.
 void main() {
   ChartCanvas canvas;
   GraphicsFactory graphicsFactory;
@@ -127,9 +138,9 @@ void main() {
     drawBounds = Rectangle(0, 0, 200, 200);
   });
 
-  group('pie chart', () {
+  group('sunburst chart', () {
     test('Paint labels with default settings', () {
-      final data = ['A', 'B'];
+      final data = ['A', 'B', 'C'];
       final arcElements = ArcRendererElementList(
         arcs: [
           // 'A' is small enough to fit inside the arc.
@@ -140,7 +151,11 @@ void main() {
             ..endAngle = pi / 2,
           FakeArcRendererElement((_) => 'LongLabelB', data)
             ..startAngle = pi / 2
-            ..endAngle = 3 * pi / 2,
+            ..endAngle = 3 * pi / 2
+            ..isOuterMostRing = true,
+          FakeArcRendererElement((_) => 'LongLabelC', data)
+            ..startAngle = -pi / 2
+            ..endAngle = pi / 2,
         ],
         center: Point(100.0, 100.0),
         innerRadius: 30.0,
@@ -148,16 +163,16 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      final decorator = ArcLabelDecorator();
+      final decorator = SunburstArcLabelDecorator();
 
       decorator.decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
           verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
-      // Draw text is called twice (once for each arc) and all 3 parameters were
-      // captured. Total parameters captured expected to be 6.
-      expect(captured, hasLength(6));
+      // Draw text is called three times (once for each arc) and all 3
+      // parameters were captured. Total parameters captured expected to be 9.
+      expect(captured, hasLength(9));
       // For arc 'A'.
       expect(captured[0].maxWidth, equals(10 - decorator.labelPadding));
       expect(captured[0].textDirection, equals(TextDirection.center));
@@ -174,9 +189,17 @@ void main() {
               decorator.labelPadding * 3));
       expect(captured[5],
           equals(100 - decorator.outsideLabelStyleSpec.fontSize ~/ 2));
+
+      // For arc 'C', forced inside and ellipsed since it is not the on the
+      // outer most ring.
+      expect(captured[6].maxWidth, equals(10 - decorator.labelPadding));
+      expect(captured[6].textDirection, equals(TextDirection.center));
+      expect(captured[7], equals(135));
+      expect(captured[8],
+          equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
     });
 
-    test('LabelPosition.inside always paints inside the arc', () {
+    test('setting outerRingArcLabelPosition inside paints inside the arc', () {
       final arcElements = ArcRendererElementList(
         arcs: [
           // 'LongLabelABC' would not fit inside the arc because it has length
@@ -191,8 +214,8 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      final decorator = ArcLabelDecorator(
-          labelPosition: ArcLabelPosition.inside,
+      final decorator = SunburstArcLabelDecorator(
+          outerRingArcLabelPosition: ArcLabelPosition.inside,
           insideLabelStyleSpec: TextStyleSpec(fontSize: 10));
 
       decorator.decorate(arcElements, canvas, graphicsFactory,
@@ -208,14 +231,21 @@ void main() {
           equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
     });
 
-    test('LabelPosition.outside always paints outside the arc', () {
+    test(
+        'LabelPosition.outside paints outside the arc for the outer most '
+        'rings', () {
       final arcElements = ArcRendererElementList(
         arcs: [
           // 'A' will fit inside the arc because it has length less than 10.
           // [ArcLabelPosition.outside] should override this.
           FakeArcRendererElement((_) => 'A', ['A'])
             ..startAngle = -pi / 2
-            ..endAngle = pi / 2,
+            ..endAngle = pi / 2
+            ..isLeaf = true,
+          // Non leaf arcs will not be rendered for [ArcLabelPosition.outside].
+          FakeArcRendererElement((_) => 'B', ['B'])
+            ..startAngle = pi / 2
+            ..endAngle = 3 * pi / 2
         ],
         center: Point(100.0, 100.0),
         innerRadius: 30.0,
@@ -223,8 +253,10 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      final decorator = ArcLabelDecorator(
-          labelPosition: ArcLabelPosition.outside,
+      final decorator = SunburstArcLabelDecorator(
+          innerRingArcLabelPosition: ArcLabelPosition.outside,
+          innerRingLeafArcLabelPosition: ArcLabelPosition.outside,
+          outerRingArcLabelPosition: ArcLabelPosition.outside,
           outsideLabelStyleSpec: TextStyleSpec(fontSize: 10));
 
       decorator.decorate(arcElements, canvas, graphicsFactory,
@@ -232,6 +264,7 @@ void main() {
 
       final captured =
           verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      // Since 'B' is not drawn, captured length is 3 instead of 6.
       expect(captured, hasLength(3));
       expect(captured[0].maxWidth, equals(40));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
@@ -256,7 +289,8 @@ void main() {
             ..endAngle = pi / 2,
           FakeArcRendererElement((_) => 'LongLabelB', data)
             ..startAngle = pi / 2
-            ..endAngle = 3 * pi / 2,
+            ..endAngle = 3 * pi / 2
+            ..isLeaf = true
         ],
         center: Point(100.0, 100.0),
         innerRadius: 30.0,
@@ -266,8 +300,9 @@ void main() {
 
       final insideColor = Color(r: 0, g: 0, b: 0);
       final outsideColor = Color(r: 255, g: 255, b: 255);
-      final decorator = ArcLabelDecorator(
+      final decorator = SunburstArcLabelDecorator(
           labelPadding: 0,
+          innerRingLeafArcLabelPosition: ArcLabelPosition.auto,
           insideLabelStyleSpec: TextStyleSpec(
               fontSize: 10, fontFamily: 'insideFont', color: insideColor),
           outsideLabelStyleSpec: TextStyleSpec(
@@ -318,7 +353,7 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
+      SunburstArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       verifyNever(canvas.drawText(any, any, any));
@@ -341,7 +376,7 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
+      SunburstArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       verifyNever(canvas.drawText(any, any, any));
