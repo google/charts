@@ -68,6 +68,11 @@ class NoneDrawStrategy<D> implements TickDrawStrategy<D> {
           ..fontSize = 0;
 
   @override
+  void updateTickWidth(List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      AxisOrientation? orientation,
+      {bool collision = false}) {}
+
+  @override
   CollisionReport<D> collides(
           List<Tick<D>>? ticks, AxisOrientation? orientation) =>
       CollisionReport(ticksCollide: false, ticks: ticks);

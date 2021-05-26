@@ -43,6 +43,11 @@ abstract class TickDrawStrategy<D> {
       List<Tick<D>> ticks, int maxWidth, int maxHeight,
       {bool collision = false});
 
+  /// Updates max tick width to match fit max size.
+  void updateTickWidth(List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      AxisOrientation? orientation,
+      {bool collision = false});
+
   /// Draws tick onto [ChartCanvas].
   ///
   /// [orientation] the orientation of the axis that this [tick] belongs to.

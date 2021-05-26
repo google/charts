@@ -18,6 +18,7 @@ import 'dart:math' show Rectangle, min, max;
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:meta/meta.dart' show protected, visibleForTesting;
 
+import '../../../../common.dart';
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/text_element.dart' show TextElement;
 import '../../../data/series.dart' show AttributeKey;
@@ -279,6 +280,10 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
   /// Request update ticks from tick provider and update the painted ticks.
   void updateTicks() {
     _updateProvidedTicks();
+    if (_componentBounds != null) {
+      _updateProvidedTickWidth(
+          _componentBounds!.width, _componentBounds!.height);
+    }
     _updateAxisTicks();
   }
 
@@ -308,6 +313,17 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     hasTickCollision = tickDrawStrategy!
         .collides(_providedTicks, axisOrientation)
         .ticksCollide;
+  }
+
+  /// Updates the current provided tick labels with a max width.
+  void _updateProvidedTickWidth(int maxWidth, int maxHeight) {
+    tickDrawStrategy!.updateTickWidth(
+      _providedTicks!,
+      maxWidth,
+      maxHeight,
+      axisOrientation,
+      collision: hasTickCollision,
+    );
   }
 
   /// Updates the ticks that are actually used for drawing.
@@ -529,6 +545,7 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
     }
 
     _updateProvidedTicks();
+    _updateProvidedTickWidth(_componentBounds!.width, _componentBounds!.height);
     // Update animated ticks in layout, because updateTicks are called during
     // measure and we don't want to update the animation at that time.
     _updateAxisTicks();

@@ -20,7 +20,8 @@ import 'package:meta/meta.dart' show immutable, protected;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../../common/line_style.dart' show LineStyle;
 import '../../../../common/style/style_factory.dart' show StyleFactory;
-import '../../../../common/text_element.dart' show TextDirection, TextElement;
+import '../../../../common/text_element.dart'
+    show TextDirection, TextElement, MaxWidthStrategy;
 import '../../../../common/text_style.dart' show TextStyle;
 import '../../../common/chart_canvas.dart' show ChartCanvas;
 import '../../../common/chart_context.dart' show ChartContext;
@@ -226,6 +227,38 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
   }
 
   @override
+  void updateTickWidth(List<Tick<D>> ticks, int maxWidth, int maxHeight,
+      AxisOrientation? orientation,
+      {bool collision = false}) {
+    var offsetFromAxis = labelOffsetFromAxisPx(collision: collision);
+    var isVertical =
+        orientation != null && orientation == AxisOrientation.right ||
+            orientation == AxisOrientation.left;
+    var maxSize = isVertical ? maxWidth : maxHeight;
+    var adjustedSize = maxSize - offsetFromAxis;
+    var rotationRelativeToAxis =
+        labelRotation(collision: collision).toDouble() - (isVertical ? 90 : 0);
+    var rotationRads = _degToRad(rotationRelativeToAxis).abs();
+
+    /// Width should be unconstrained if completely parallel to the axis.
+    var rotationMaxLabelWidth = isVertical ? maxHeight : maxWidth;
+    var angle = sin(rotationRads);
+    if (angle != 0) {
+      rotationMaxLabelWidth = (adjustedSize.toDouble() ~/ angle).abs();
+    }
+
+    for (final tick in ticks) {
+      var textElement = tick.textElement;
+      if (textElement == null) {
+        continue;
+      }
+      textElement
+        ..maxWidth = max(adjustedSize, rotationMaxLabelWidth)
+        ..maxWidthStrategy = MaxWidthStrategy.ellipsize;
+    }
+  }
+
+  @override
   CollisionReport<D> collides(
       List<Tick<D>>? ticks, AxisOrientation? orientation) {
     // TODO: Collision analysis for rotated labels are not
@@ -363,8 +396,10 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
 
     return ViewMeasuredSizes(
         preferredWidth: maxWidth,
-        preferredHeight: maxVerticalSliceWidth +
-            labelOffsetFromAxisPx(collision: collision));
+        preferredHeight: min(
+            maxHeight,
+            maxVerticalSliceWidth +
+                labelOffsetFromAxisPx(collision: collision)));
   }
 
   @override
@@ -596,7 +631,7 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
     // To compute the label height, we need the angle between the label and a
     // line perpendicular to the axis baseline, in radians.
     var angle = pi / 2.0 - rotationRadian.abs();
-    return labelLength * cos(angle);
+    return max(labelHeight, labelLength * cos(angle));
   }
 
   /// The [wholeLabel] is split into constituent chunks if it is multiline.

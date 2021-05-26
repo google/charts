@@ -694,4 +694,128 @@ void main() {
       expect(labelLine.text, 'A');
     });
   });
+
+  group('Adjust width of labels based on size', () {
+    void setUpLabel(String text, {double width}) =>
+        when(graphicsFactory.createTextElement(text))
+            .thenReturn(FakeTextElement(
+          text,
+          TextDirection.ltr,
+          width,
+          15.0,
+        ));
+
+    BaseTickDrawStrategyImpl drawStrategy;
+    List<Tick> ticks;
+
+    setUp(() {
+      ticks = [
+        createTick('This label is long', 0.0,
+            horizontalWidth: 50.0, verticalWidth: 15.0),
+        createTick('Test', 0.0, horizontalWidth: 10.0, verticalWidth: 15.0),
+      ];
+
+      setUpLabel('This label is long', width: 50.0);
+      setUpLabel('Test', width: 10.0);
+    });
+
+    test('Sets max width for vertical labels', () {
+      drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory,
+          labelOffsetFromTickPx: 0, labelOffsetFromAxisPx: 0);
+
+      drawStrategy.updateTickWidth(ticks, 25, 500, AxisOrientation.left);
+      expect(ticks.first.textElement.maxWidth, 25);
+      expect(
+          ticks.first.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+      expect(ticks.last.textElement.maxWidth, 25);
+      expect(
+          ticks.last.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+    });
+
+    test('Sets max width for vertical labels that are parallel to the axis ',
+        () {
+      drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory,
+          labelOffsetFromTickPx: 0,
+          labelOffsetFromAxisPx: 0,
+          labelRotation: 90);
+
+      drawStrategy.updateTickWidth(ticks, 25, 500, AxisOrientation.left);
+      expect(ticks.first.textElement.maxWidth, 500);
+      expect(
+          ticks.first.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+      expect(ticks.last.textElement.maxWidth, 500);
+      expect(
+          ticks.last.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+    });
+
+    test('Sets max width for vertical labels that are angled', () {
+      drawStrategy = BaseTickDrawStrategyImpl(chartContext, graphicsFactory,
+          labelOffsetFromTickPx: 0,
+          labelOffsetFromAxisPx: 0,
+          labelRotation: 45);
+
+      drawStrategy.updateTickWidth(ticks, 25, 500, AxisOrientation.left);
+      expect(ticks.first.textElement.maxWidth, 35);
+      expect(
+          ticks.first.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+      expect(ticks.last.textElement.maxWidth, 35);
+      expect(
+          ticks.last.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+    });
+
+    test('Sets max width for horizontal labels', () {
+      drawStrategy = BaseTickDrawStrategyImpl(
+        chartContext,
+        graphicsFactory,
+        labelOffsetFromTickPx: 0,
+        labelOffsetFromAxisPx: 0,
+        // 90 degrees makes the labels directly perpendicular to the axis.
+        labelRotation: 90,
+      );
+
+      drawStrategy.updateTickWidth(ticks, 500, 25, AxisOrientation.bottom);
+      expect(ticks.first.textElement.maxWidth, 25);
+      expect(
+          ticks.first.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+      expect(ticks.last.textElement.maxWidth, 25);
+      expect(
+          ticks.last.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+    });
+
+    test('Sets max width for horizontal labels that are parallel to the axis',
+        () {
+      drawStrategy = BaseTickDrawStrategyImpl(
+        chartContext,
+        graphicsFactory,
+        labelOffsetFromTickPx: 0,
+        labelOffsetFromAxisPx: 0,
+      );
+
+      drawStrategy.updateTickWidth(ticks, 500, 25, AxisOrientation.bottom);
+      expect(ticks.first.textElement.maxWidth, 500);
+      expect(
+          ticks.first.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+      expect(ticks.last.textElement.maxWidth, 500);
+      expect(
+          ticks.last.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+    });
+
+    test('Sets max width for horizontal labels that are angled', () {
+      drawStrategy = BaseTickDrawStrategyImpl(
+        chartContext,
+        graphicsFactory,
+        labelOffsetFromTickPx: 0,
+        labelOffsetFromAxisPx: 0,
+        labelRotation: 45,
+      );
+
+      drawStrategy.updateTickWidth(ticks, 500, 25, AxisOrientation.bottom);
+      expect(ticks.first.textElement.maxWidth, 35);
+      expect(
+          ticks.first.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+      expect(ticks.last.textElement.maxWidth, 35);
+      expect(
+          ticks.last.textElement.maxWidthStrategy, MaxWidthStrategy.ellipsize);
+    });
+  });
 }
