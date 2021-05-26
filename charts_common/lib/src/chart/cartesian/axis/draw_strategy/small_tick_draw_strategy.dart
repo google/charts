@@ -123,21 +123,18 @@ class SmallTickDrawStrategy<D> extends BaseTickDrawStrategy<D> {
       : tickLength = tickLengthPx ?? StyleFactory.style.tickLength,
         lineStyle = StyleFactory.style
             .createTickLineStyle(graphicsFactory, lineStyleSpec),
-        super(
-          chartContext,
-          graphicsFactory,
-          labelStyleSpec: labelStyleSpec,
-          axisLineStyleSpec: axisLineStyleSpec ?? lineStyleSpec,
-          labelAnchor: labelAnchor,
-          labelJustification: labelJustification,
-          labelOffsetFromAxisPx: labelOffsetFromAxisPx,
-          labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
-          labelOffsetFromTickPx: labelOffsetFromTickPx,
-          labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
-          minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
-          labelRotation: labelRotation,
-          labelCollisionRotation: labelCollisionRotation,
-        );
+        super(chartContext, graphicsFactory,
+            labelStyleSpec: labelStyleSpec,
+            axisLineStyleSpec: axisLineStyleSpec ?? lineStyleSpec,
+            labelAnchor: labelAnchor,
+            labelJustification: labelJustification,
+            labelOffsetFromAxisPx: labelOffsetFromAxisPx,
+            labelCollisionOffsetFromAxisPx: labelCollisionOffsetFromAxisPx,
+            labelOffsetFromTickPx: labelOffsetFromTickPx,
+            labelCollisionOffsetFromTickPx: labelCollisionOffsetFromTickPx,
+            minimumPaddingBetweenLabelsPx: minimumPaddingBetweenLabelsPx,
+            labelRotation: labelRotation,
+            labelCollisionRotation: labelCollisionRotation);
 
   @override
   void draw(ChartCanvas canvas, Tick<D> tick,

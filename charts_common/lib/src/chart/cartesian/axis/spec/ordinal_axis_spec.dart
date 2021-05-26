@@ -56,12 +56,11 @@ class OrdinalAxisSpec extends AxisSpec<String> {
     OrdinalScaleSpec? scaleSpec,
     this.viewport,
   }) : super(
-          renderSpec: renderSpec,
-          tickProviderSpec: tickProviderSpec,
-          tickFormatterSpec: tickFormatterSpec,
-          showAxisLine: showAxisLine,
-          scaleSpec: scaleSpec,
-        );
+            renderSpec: renderSpec,
+            tickProviderSpec: tickProviderSpec,
+            tickFormatterSpec: tickFormatterSpec,
+            showAxisLine: showAxisLine,
+            scaleSpec: scaleSpec);
 
   @override
   void configure(Axis<String> axis, ChartContext context,
