@@ -15,7 +15,6 @@
 
 import 'dart:math' show Point, Rectangle;
 
-import '../layout/layout_config.dart' show LayoutConfig;
 import 'layout_view.dart' show LayoutView;
 
 abstract class LayoutManager {
@@ -36,9 +35,6 @@ abstract class LayoutManager {
   /// Walk through the child views and set their bounds from the perspective
   /// of the canvas origin.
   void layout(int width, int height);
-
-  /// Updates the layout configuration.
-  void updateConfig(LayoutConfig layoutConfig);
 
   /// Returns the bounds of the drawArea. Must be called after layout().
   Rectangle<int> get drawAreaBounds;

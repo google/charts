@@ -75,11 +75,6 @@ class LayoutManagerImpl implements LayoutManager {
   @override
   bool isAttached(LayoutView view) => _views.contains(view);
 
-  @override
-  void updateConfig(LayoutConfig layoutConfig) {
-    config = layoutConfig;
-  }
-
   /// Get all layout components in the order to be drawn.
   @override
   List<LayoutView> get paintOrderedViews {
