@@ -592,7 +592,7 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
       arcWidths = List<int>.generate(maxDisplayLevel,
           (i) => (configParam.length > i) ? configParam[i] : configParam.last);
     } else {
-      arcWidths = List<int>.from(config.arcWidths!);
+      arcWidths = List<int>.from(configParam);
     }
     return arcWidths;
   }
