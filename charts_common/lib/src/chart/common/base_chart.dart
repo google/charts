@@ -130,6 +130,11 @@ abstract class BaseChart<D> {
     configurationChanged();
   }
 
+  /// Updates the layout configuration used inside the layout manager.
+  void updateConfig(LayoutConfig layoutConfig) {
+    _layoutManager.updateConfig(layoutConfig);
+  }
+
   bool _chartIsDirty = false;
 
   /// If the chart configuration has changed and requires a redraw.

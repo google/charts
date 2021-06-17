@@ -186,6 +186,11 @@ abstract class CartesianChart<D> extends BaseChart<D> {
     });
   }
 
+  @override
+  void updateConfig(LayoutConfig layoutConfig) {
+    super.updateConfig(layoutConfig ?? _defaultLayoutConfig);
+  }
+
   Axis<D>? get domainAxis => _domainAxis;
 
   /// Allows the chart to configure the domain axis when it is created.
