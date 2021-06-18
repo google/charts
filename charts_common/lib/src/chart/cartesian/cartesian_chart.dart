@@ -187,7 +187,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   }
 
   @override
-  void updateConfig(LayoutConfig layoutConfig) {
+  void updateConfig(LayoutConfig? layoutConfig) {
     super.updateConfig(layoutConfig ?? _defaultLayoutConfig);
   }
 
