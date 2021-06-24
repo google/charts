@@ -73,7 +73,7 @@ class DatumLegendWithMeasures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.PieChart(
+    return new charts.PieChart<int>(
       seriesList,
       animate: animate,
       // Add the legend behavior to the chart to turn on legends.

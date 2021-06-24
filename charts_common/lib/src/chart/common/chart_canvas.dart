@@ -53,7 +53,7 @@ abstract class ChartCanvas {
   /// pattern will be repeated to derive an even number of values. "1,2,3" is
   /// equivalent to "1,2,3,1,2,3."
   void drawLine(
-      {List<Point>? points,
+      {required List<Point> points,
       Rectangle<num>? clipBounds,
       Color? fill,
       Color? stroke,
@@ -78,8 +78,8 @@ abstract class ChartCanvas {
   ///
   /// [blendMode] Blend mode to be used when drawing this point on canvas.
   void drawPoint(
-      {Point? point,
-      double? radius,
+      {required Point point,
+      required double radius,
       Color? fill,
       Color? stroke,
       double? strokeWidthPx,
@@ -96,7 +96,7 @@ abstract class ChartCanvas {
   /// [stroke] and [strokeWidthPx] configure the color and thickness of the
   /// edges of the polygon. Both must be provided together for a line to appear.
   void drawPolygon(
-      {List<Point>? points,
+      {required List<Point> points,
       Rectangle<num>? clipBounds,
       Color? fill,
       Color? stroke,
@@ -123,10 +123,10 @@ abstract class ChartCanvas {
       double? patternStrokeWidthPx,
       double? strokeWidthPx,
       num? radius,
-      bool? roundTopLeft,
-      bool? roundTopRight,
-      bool? roundBottomLeft,
-      bool? roundBottomRight});
+      bool roundTopLeft = false,
+      bool roundTopRight = false,
+      bool roundBottomLeft = false,
+      bool roundBottomRight = false});
 
   /// Renders a stack of bars, rounding the last bar in the stack.
   ///

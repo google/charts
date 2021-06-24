@@ -186,7 +186,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
           // computes the  percentage.
           if (series.measureLowerBoundFn != null) {
             series.measureLowerBoundFn = (int? index) =>
-                series.rawMeasureLowerBoundFn!(index) /
+                (series.rawMeasureLowerBoundFn!(index) ?? 0) /
                 series.seriesMeasureTotal;
           }
 
@@ -194,7 +194,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
           // computes the  percentage.
           if (series.measureUpperBoundFn != null) {
             series.measureUpperBoundFn = (int? index) =>
-                series.rawMeasureUpperBoundFn!(index) /
+                (series.rawMeasureUpperBoundFn!(index) ?? 0) /
                 series.seriesMeasureTotal;
           }
 

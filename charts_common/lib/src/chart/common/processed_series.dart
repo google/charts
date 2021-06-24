@@ -57,10 +57,10 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<DomainFormatter<D>>? domainFormatterFn;
 
   @override
-  AccessorFn<D>? domainLowerBoundFn;
+  AccessorFn<D?>? domainLowerBoundFn;
 
   @override
-  AccessorFn<D>? domainUpperBoundFn;
+  AccessorFn<D?>? domainUpperBoundFn;
 
   @override
   AccessorFn<num?> measureFn;
@@ -69,10 +69,10 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<MeasureFormatter>? measureFormatterFn;
 
   @override
-  AccessorFn<num>? measureLowerBoundFn;
+  AccessorFn<num?>? measureLowerBoundFn;
 
   @override
-  AccessorFn<num>? measureUpperBoundFn;
+  AccessorFn<num?>? measureUpperBoundFn;
 
   @override
   AccessorFn<num?>? measureOffsetFn;
@@ -81,16 +81,16 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   AccessorFn<num?> rawMeasureFn;
 
   @override
-  AccessorFn<num>? rawMeasureLowerBoundFn;
+  AccessorFn<num?>? rawMeasureLowerBoundFn;
 
   @override
-  AccessorFn<num>? rawMeasureUpperBoundFn;
+  AccessorFn<num?>? rawMeasureUpperBoundFn;
 
   @override
   AccessorFn<Color?>? areaColorFn;
 
   @override
-  AccessorFn<Color?>? colorFn;
+  AccessorFn<Color>? colorFn;
 
   @override
   AccessorFn<List<int>?>? dashPatternFn;
@@ -265,25 +265,25 @@ abstract class ImmutableSeries<D> {
 
   AccessorFn<DomainFormatter<D>>? get domainFormatterFn;
 
-  AccessorFn<D>? get domainLowerBoundFn;
+  AccessorFn<D?>? get domainLowerBoundFn;
 
-  AccessorFn<D>? get domainUpperBoundFn;
+  AccessorFn<D?>? get domainUpperBoundFn;
 
   AccessorFn<num?> get measureFn;
 
   AccessorFn<MeasureFormatter>? get measureFormatterFn;
 
-  AccessorFn<num>? get measureLowerBoundFn;
+  AccessorFn<num?>? get measureLowerBoundFn;
 
-  AccessorFn<num>? get measureUpperBoundFn;
+  AccessorFn<num?>? get measureUpperBoundFn;
 
   AccessorFn<num?>? get measureOffsetFn;
 
   AccessorFn<num?> get rawMeasureFn;
 
-  AccessorFn<num>? get rawMeasureLowerBoundFn;
+  AccessorFn<num?>? get rawMeasureLowerBoundFn;
 
-  AccessorFn<num>? get rawMeasureUpperBoundFn;
+  AccessorFn<num?>? get rawMeasureUpperBoundFn;
 
   AccessorFn<Color?>? get areaColorFn;
 

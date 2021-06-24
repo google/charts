@@ -95,7 +95,7 @@ class LegendCategory<D> extends LegendEntryBase {
 /// [T] the datum class type for the series passed in.
 /// [D] the domain class type for the datum.
 class LegendEntry<D> extends LegendEntryBase {
-  final ImmutableSeries<D>? series;
+  final ImmutableSeries<D> series;
   final dynamic datum;
   final int? datumIndex;
   final D? domain;
@@ -140,11 +140,11 @@ class LegendEntry<D> extends LegendEntryBase {
 
   /// Get the native symbol renderer stored in the series.
   SymbolRenderer? get symbolRenderer =>
-      series!.getAttr(rendererKey)!.symbolRenderer;
+      series.getAttr(rendererKey)!.symbolRenderer;
 
   /// Gets the dash pattern for the symbol from the given datum and series.
   ///
   /// Use the dash pattern from the datum if available, otherwise fall back to
   /// generic series dash pattern.
-  List<int>? get dashPattern => series!.dashPatternFn?.call(datumIndex ?? 0);
+  List<int>? get dashPattern => series.dashPatternFn?.call(datumIndex ?? 0);
 }

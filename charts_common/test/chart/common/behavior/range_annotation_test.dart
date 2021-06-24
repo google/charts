@@ -22,8 +22,6 @@ import 'package:charts_common/src/chart/cartesian/axis/collision_report.dart';
 import 'package:charts_common/src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick.dart';
-import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
-import 'package:charts_common/src/chart/cartesian/axis/linear/linear_scale.dart';
 import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/behavior/range_annotation.dart';
@@ -60,15 +58,13 @@ class ConcreteChart extends LineChart {
   Axis<num> get domainAxis => _domainAxis;
 
   @override
-  Axis<num> getMeasureAxis({String axisId}) => _primaryMeasureAxis;
+  NumericAxis getMeasureAxis({String axisId}) => _primaryMeasureAxis;
 }
 
-class ConcreteNumericAxis extends Axis<num> {
+class ConcreteNumericAxis extends NumericAxis {
   ConcreteNumericAxis()
       : super(
           tickProvider: MockTickProvider(),
-          tickFormatter: NumericTickFormatter(),
-          scale: LinearScale(),
         );
 }
 

@@ -56,12 +56,12 @@ class Series<T, D> {
 
   final AccessorFn<D> domainFn;
   final AccessorFn<DomainFormatter<D>>? domainFormatterFn;
-  final AccessorFn<D>? domainLowerBoundFn;
-  final AccessorFn<D>? domainUpperBoundFn;
+  final AccessorFn<D?>? domainLowerBoundFn;
+  final AccessorFn<D?>? domainUpperBoundFn;
   final AccessorFn<num?> measureFn;
   final AccessorFn<MeasureFormatter>? measureFormatterFn;
-  final AccessorFn<num>? measureLowerBoundFn;
-  final AccessorFn<num>? measureUpperBoundFn;
+  final AccessorFn<num?>? measureLowerBoundFn;
+  final AccessorFn<num?>? measureUpperBoundFn;
   final AccessorFn<num>? measureOffsetFn;
 
   /// [areaColorFn] returns the area color for a given data value. If not
@@ -81,11 +81,11 @@ class Series<T, D> {
   final AccessorFn<Color>? colorFn;
 
   /// [dashPatternFn] returns the dash pattern for a given data value.
-  final AccessorFn<List<int>>? dashPatternFn;
+  final AccessorFn<List<int>?>? dashPatternFn;
 
   /// [fillColorFn] returns the rendered fill color for a given data value. If
   /// not provided, then [colorFn] will be used as a fallback.
-  final AccessorFn<Color>? fillColorFn;
+  final AccessorFn<Color?>? fillColorFn;
 
   /// [patternColorFn] returns the background color of tile when a
   /// [FillPatternType] beside `solid` is used. If not provided, then
@@ -94,7 +94,7 @@ class Series<T, D> {
 
   final AccessorFn<FillPatternType>? fillPatternFn;
   final AccessorFn<num>? radiusPxFn;
-  final AccessorFn<num>? strokeWidthPxFn;
+  final AccessorFn<num?>? strokeWidthPxFn;
   final AccessorFn<String>? labelAccessorFn;
   final AccessorFn<TextStyleSpec>? insideLabelStyleAccessorFn;
   final AccessorFn<TextStyleSpec>? outsideLabelStyleAccessorFn;
@@ -112,11 +112,11 @@ class Series<T, D> {
       Color? seriesColor,
       TypedAccessorFn<T, Color>? areaColorFn,
       TypedAccessorFn<T, Color>? colorFn,
-      TypedAccessorFn<T, List<int>>? dashPatternFn,
+      TypedAccessorFn<T, List<int>?>? dashPatternFn,
       TypedAccessorFn<T, DomainFormatter<D>>? domainFormatterFn,
-      TypedAccessorFn<T, D>? domainLowerBoundFn,
-      TypedAccessorFn<T, D>? domainUpperBoundFn,
-      TypedAccessorFn<T, Color>? fillColorFn,
+      TypedAccessorFn<T, D?>? domainLowerBoundFn,
+      TypedAccessorFn<T, D?>? domainUpperBoundFn,
+      TypedAccessorFn<T, Color?>? fillColorFn,
       TypedAccessorFn<T, Color>? patternColorFn,
       TypedAccessorFn<T, FillPatternType>? fillPatternFn,
       TypedAccessorFn<T, String>? keyFn,
@@ -124,13 +124,13 @@ class Series<T, D> {
       TypedAccessorFn<T, TextStyleSpec>? insideLabelStyleAccessorFn,
       TypedAccessorFn<T, TextStyleSpec>? outsideLabelStyleAccessorFn,
       TypedAccessorFn<T, MeasureFormatter>? measureFormatterFn,
-      TypedAccessorFn<T, num>? measureLowerBoundFn,
-      TypedAccessorFn<T, num>? measureUpperBoundFn,
+      TypedAccessorFn<T, num?>? measureLowerBoundFn,
+      TypedAccessorFn<T, num?>? measureUpperBoundFn,
       TypedAccessorFn<T, num>? measureOffsetFn,
       bool overlaySeries = false,
       TypedAccessorFn<T, num>? radiusPxFn,
       String? seriesCategory,
-      TypedAccessorFn<T, num>? strokeWidthPxFn}) {
+      TypedAccessorFn<T, num?>? strokeWidthPxFn}) {
     // Wrap typed accessors.
     final _domainFn = (int? index) => domainFn(data[index!], index);
     final _measureFn = (int? index) => measureFn(data[index!], index);

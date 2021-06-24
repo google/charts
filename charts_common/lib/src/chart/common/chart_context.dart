@@ -29,7 +29,7 @@ abstract class ChartContext {
   bool get chartContainerIsRtl;
 
   /// Configures the behavior of the chart when [chartContainerIsRtl] is true.
-  RTLSpec get rtlSpec;
+  RTLSpec? get rtlSpec;
 
   /// Gets whether or not the chart axes should be rendered in right to left
   /// mode.

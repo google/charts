@@ -136,9 +136,9 @@ class ChartTitle<D> implements ChartBehavior<D> {
   }
 
   /// Primary text for the title.
-  String? get title => _config.title;
+  String get title => _config.title;
 
-  set title(String? title) {
+  set title(String title) {
     _config.title = title;
   }
 
@@ -332,10 +332,11 @@ class _ChartTitleLayoutView<D> extends LayoutView {
     final subTitleTextStyle =
         _getTextStyle(graphicsFactory, _config.subTitleStyleSpec);
 
-    final subTitleTextElement =
-        graphicsFactory.createTextElement(_config.subTitle)
+    final subTitleTextElement = _config.subTitle == null
+        ? null
+        : (graphicsFactory.createTextElement(_config.subTitle!)
           ..maxWidthStrategy = _config.maxWidthStrategy
-          ..textStyle = subTitleTextStyle;
+          ..textStyle = subTitleTextStyle);
 
     final resolvedTitleDirection = _resolvedTitleDirection;
 
@@ -348,7 +349,7 @@ class _ChartTitleLayoutView<D> extends LayoutView {
                     : textElement.measurement.verticalSliceWidth)
                 .round();
 
-        final subTitleTextHeight = _config.subTitle != null
+        final subTitleTextHeight = subTitleTextElement != null
             ? (resolvedTitleDirection == ChartTitleDirection.vertical
                     ? subTitleTextElement.measurement.horizontalSliceWidth
                     : subTitleTextElement.measurement.verticalSliceWidth)
@@ -376,7 +377,7 @@ class _ChartTitleLayoutView<D> extends LayoutView {
                     : textElement.measurement.horizontalSliceWidth)
                 .round();
 
-        final subTitleTextWidth = _config.subTitle != null
+        final subTitleTextWidth = subTitleTextElement != null
             ? (resolvedTitleDirection == ChartTitleDirection.vertical
                     ? subTitleTextElement.measurement.verticalSliceWidth
                     : subTitleTextElement.measurement.horizontalSliceWidth)
@@ -471,7 +472,7 @@ class _ChartTitleLayoutView<D> extends LayoutView {
             _getTextStyle(graphicsFactory!, _config.subTitleStyleSpec);
 
         _subTitleTextElement =
-            graphicsFactory!.createTextElement(_config.subTitle)
+            graphicsFactory!.createTextElement(_config.subTitle!)
               ..maxWidthStrategy = _config.maxWidthStrategy
               ..textStyle = textStyle;
 
@@ -774,7 +775,7 @@ class _ChartTitleConfig {
 
   MaxWidthStrategy maxWidthStrategy;
 
-  String? title;
+  String title;
   ChartTitleDirection titleDirection;
   OutsideJustification titleOutsideJustification;
   TextStyleSpec titleStyleSpec;

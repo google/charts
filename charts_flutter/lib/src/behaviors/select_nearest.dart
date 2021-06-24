@@ -49,7 +49,7 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// Any previous SelectNearest behavior for that selection model will be
 /// removed.
 @immutable
-class SelectNearest extends ChartBehavior<common.SelectNearest> {
+class SelectNearest<D> extends ChartBehavior<D> {
   final Set<GestureType> desiredGestures;
 
   final common.SelectionModelType selectionModelType;
@@ -57,15 +57,15 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   final common.SelectionMode selectionMode;
   final bool selectAcrossAllDrawAreaComponents;
   final bool selectClosestSeries;
-  final int maximumDomainDistancePx;
+  final int? maximumDomainDistancePx;
 
   SelectNearest._internal(
-      {this.selectionModelType,
+      {required this.selectionModelType,
       this.selectionMode = common.SelectionMode.expandToDomain,
       this.selectAcrossAllDrawAreaComponents = false,
       this.selectClosestSeries = true,
-      this.eventTrigger,
-      this.desiredGestures,
+      required this.eventTrigger,
+      required this.desiredGestures,
       this.maximumDomainDistancePx});
 
   factory SelectNearest(
@@ -75,7 +75,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
       bool selectAcrossAllDrawAreaComponents = false,
       bool selectClosestSeries = true,
       common.SelectionTrigger eventTrigger = common.SelectionTrigger.tap,
-      int maximumDomainDistancePx}) {
+      int? maximumDomainDistancePx}) {
     return new SelectNearest._internal(
         selectionModelType: selectionModelType,
         selectionMode: selectionMode,
@@ -112,7 +112,7 @@ class SelectNearest extends ChartBehavior<common.SelectNearest> {
   }
 
   @override
-  common.SelectNearest<D> createCommonBehavior<D>() {
+  common.SelectNearest<D> createCommonBehavior() {
     return new common.SelectNearest<D>(
         selectionModelType: selectionModelType,
         eventTrigger: eventTrigger,

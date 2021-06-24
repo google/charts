@@ -47,8 +47,13 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList) {
     final legendEntries = seriesList
         .where((series) => showOverlaySeries || !series.overlaySeries)
-        .map((series) => LegendEntry<D>(series, series.displayName!,
-            color: series.seriesColor, textStyle: entryTextStyle))
+        .map((series) => LegendEntry<D>(
+              series,
+              series.displayName!,
+              // TODO: Should this use series.colorFn if seriesColor is null?
+              color: series.seriesColor!,
+              textStyle: entryTextStyle,
+            ))
         .toList();
 
     // Update with measures only if showing measure on no selection.
@@ -96,7 +101,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     }
 
     for (var entry in legendEntries) {
-      final seriesId = entry.series!.id;
+      final seriesId = entry.series.id;
       final measureValue = seriesAndMeasure[seriesId]?.toDouble();
       final formattedValue = secondaryAxisSeriesIDs.contains(seriesId)
           ? secondaryMeasureFormatter!(measureValue)
@@ -105,7 +110,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
       entry.value = measureValue;
       entry.formattedValue = formattedValue;
       entry.isSelected = selectionModel.selectedSeries
-          .any((selectedSeries) => entry.series!.id == selectedSeries.id);
+          .any((selectedSeries) => entry.series.id == selectedSeries.id);
 
       // Set the current selected model index for legend entry.
       entry.selectedDataIndexes =
@@ -173,7 +178,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     }
 
     for (var entry in legendEntries) {
-      final seriesId = entry.series!.id;
+      final seriesId = entry.series.id;
 
       entry.value = seriesAndMeasure[seriesId];
       entry.formattedValue = seriesAndFormattedMeasure[seriesId];

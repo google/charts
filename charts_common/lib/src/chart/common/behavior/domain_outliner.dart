@@ -68,7 +68,7 @@ class DomainOutliner<D> implements ChartBehavior<D> {
         series.colorFn = (int? index) {
           final color = colorFn(index);
           return selectionModel.isDatumSelected(series, index)
-              ? color?.darker
+              ? color.darker
               : color;
         };
       }

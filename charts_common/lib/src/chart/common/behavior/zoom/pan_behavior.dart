@@ -63,7 +63,7 @@ class PanBehavior<D> implements ChartBehavior<D> {
   /// Optional callback that is invoked at the end of panning ([onPanEnd]).
   PanningCompletedCallback? _panningCompletedCallback;
 
-  set panningCompletedCallback(PanningCompletedCallback callback) {
+  set panningCompletedCallback(PanningCompletedCallback? callback) {
     _panningCompletedCallback = callback;
   }
 

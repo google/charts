@@ -879,7 +879,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
         initializeFromZero
             ? datumPoint.y
             : measureAxis.getLocation(
-                series.measureUpperBoundFn!(datumPoint.index) +
+                (series.measureUpperBoundFn!(datumPoint.index) ?? 0) +
                     series.measureOffsetFn!(datumPoint.index)!))));
 
     // Add all points for lower bounds, in reverse order.
@@ -890,7 +890,7 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             initializeFromZero
                 ? datumPoint.y
                 : measureAxis.getLocation(
-                    series.measureLowerBoundFn!(datumPoint.index) +
+                    (series.measureLowerBoundFn!(datumPoint.index) ?? 0) +
                         series.measureOffsetFn!(datumPoint.index)!))));
 
     return areaPointList;

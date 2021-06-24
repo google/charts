@@ -21,7 +21,7 @@ import '../chart_behavior.dart' show ChartBehavior, GestureType;
 import 'pan_behavior.dart' show FlutterPanBehaviorMixin;
 
 @immutable
-class PanAndZoomBehavior extends ChartBehavior<common.PanAndZoomBehavior> {
+class PanAndZoomBehavior<D> extends ChartBehavior<D> {
   final _desiredGestures = new Set<GestureType>.from([
     GestureType.onDrag,
   ]);
@@ -32,12 +32,12 @@ class PanAndZoomBehavior extends ChartBehavior<common.PanAndZoomBehavior> {
   ///
   /// When flinging this callback is called after the fling is completed.
   /// This is because panning is only completed when the flinging stops.
-  final common.PanningCompletedCallback panningCompletedCallback;
+  final common.PanningCompletedCallback? panningCompletedCallback;
 
   PanAndZoomBehavior({this.panningCompletedCallback});
 
   @override
-  common.PanAndZoomBehavior<D> createCommonBehavior<D>() {
+  common.PanAndZoomBehavior<D> createCommonBehavior() {
     return new FlutterPanAndZoomBehavior<D>()
       ..panningCompletedCallback = panningCompletedCallback;
   }

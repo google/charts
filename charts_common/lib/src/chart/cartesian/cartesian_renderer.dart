@@ -156,8 +156,10 @@ abstract class BaseCartesianRenderer<D> extends BaseSeriesRenderer<D>
         measureAxis.addDomainValue(measure + measureOffset);
 
         if (measureLowerBoundFn != null && measureUpperBoundFn != null) {
-          measureAxis.addDomainValue(measureLowerBoundFn(i) + measureOffset);
-          measureAxis.addDomainValue(measureUpperBoundFn(i) + measureOffset);
+          measureAxis
+              .addDomainValue((measureLowerBoundFn(i) ?? 0) + measureOffset);
+          measureAxis
+              .addDomainValue((measureUpperBoundFn(i) ?? 0) + measureOffset);
         }
       }
     }

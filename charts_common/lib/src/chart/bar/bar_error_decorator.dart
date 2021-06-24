@@ -78,9 +78,11 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
 
         if (renderingVertically) {
           final startY = measureAxis.getLocation(
-              measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex)!)!;
+              (measureLowerBoundFn(datumIndex) ?? 0) +
+                  measureOffsetFn(datumIndex)!)!;
           final endY = measureAxis.getLocation(
-              measureUpperBoundFn(datumIndex) + measureOffsetFn(datumIndex)!)!;
+              (measureUpperBoundFn(datumIndex) ?? 0) +
+                  measureOffsetFn(datumIndex)!)!;
 
           if (startY != endY) {
             final barWidth = bounds.right - bounds.left;
@@ -137,9 +139,11 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
           }
         } else {
           final startX = measureAxis.getLocation(
-              measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex)!)!;
+              (measureLowerBoundFn(datumIndex) ?? 0) +
+                  measureOffsetFn(datumIndex)!)!;
           final endX = measureAxis.getLocation(
-              measureUpperBoundFn(datumIndex) + measureOffsetFn(datumIndex)!)!;
+              (measureUpperBoundFn(datumIndex) ?? 0) +
+                  measureOffsetFn(datumIndex)!)!;
 
           if (startX != endX) {
             final barWidth = bounds.bottom - bounds.top;

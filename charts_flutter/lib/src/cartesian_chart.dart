@@ -34,28 +34,28 @@ import 'user_managed_state.dart' show UserManagedState;
 
 @immutable
 abstract class CartesianChart<D> extends BaseChart<D> {
-  final common.AxisSpec domainAxis;
-  final common.AxisSpec primaryMeasureAxis;
-  final common.AxisSpec secondaryMeasureAxis;
-  final LinkedHashMap<String, common.NumericAxisSpec> disjointMeasureAxes;
-  final bool flipVerticalAxis;
+  final common.AxisSpec? domainAxis;
+  final common.NumericAxisSpec? primaryMeasureAxis;
+  final common.NumericAxisSpec? secondaryMeasureAxis;
+  final LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes;
+  final bool? flipVerticalAxis;
 
   CartesianChart(
     List<common.Series<dynamic, D>> seriesList, {
-    bool animate,
-    Duration animationDuration,
+    bool? animate,
+    Duration? animationDuration,
     this.domainAxis,
     this.primaryMeasureAxis,
     this.secondaryMeasureAxis,
     this.disjointMeasureAxes,
-    common.SeriesRendererConfig<D> defaultRenderer,
-    List<common.SeriesRendererConfig<D>> customSeriesRenderers,
-    List<ChartBehavior> behaviors,
-    List<SelectionModelConfig<D>> selectionModels,
-    common.RTLSpec rtlSpec,
+    common.SeriesRendererConfig<D>? defaultRenderer,
+    List<common.SeriesRendererConfig<D>>? customSeriesRenderers,
+    List<ChartBehavior<D>>? behaviors,
+    List<SelectionModelConfig<D>>? selectionModels,
+    common.RTLSpec? rtlSpec,
     bool defaultInteractions = true,
-    LayoutConfig layoutConfig,
-    UserManagedState userManagedState,
+    LayoutConfig? layoutConfig,
+    UserManagedState<D>? userManagedState,
     this.flipVerticalAxis,
   }) : super(
           seriesList,
@@ -72,19 +72,19 @@ abstract class CartesianChart<D> extends BaseChart<D> {
         );
 
   @override
-  void updateCommonChart(common.BaseChart baseChart, BaseChart oldWidget,
-      BaseChartState chartState) {
+  void updateCommonChart(common.BaseChart<D> baseChart, BaseChart<D>? oldWidget,
+      BaseChartState<D> chartState) {
     super.updateCommonChart(baseChart, oldWidget, chartState);
 
-    final prev = oldWidget as CartesianChart;
+    final prev = oldWidget as CartesianChart?;
     final chart = baseChart as common.CartesianChart;
 
     if (flipVerticalAxis != null) {
-      chart.flipVerticalAxisOutput = flipVerticalAxis;
+      chart.flipVerticalAxisOutput = flipVerticalAxis!;
     }
 
     if (domainAxis != null && domainAxis != prev?.domainAxis) {
-      chart.domainAxisSpec = domainAxis;
+      chart.domainAxisSpec = domainAxis!;
       chartState.markChartDirty();
     }
 
@@ -105,11 +105,11 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   }
 
   @protected
-  LinkedHashMap<String, common.NumericAxis> createDisjointMeasureAxes() {
+  LinkedHashMap<String, common.NumericAxis>? createDisjointMeasureAxes() {
     if (disjointMeasureAxes != null) {
       final disjointAxes = new LinkedHashMap<String, common.NumericAxis>();
 
-      disjointMeasureAxes
+      disjointMeasureAxes!
           .forEach((String axisId, common.NumericAxisSpec axisSpec) {
         disjointAxes[axisId] = axisSpec.createAxis();
       });

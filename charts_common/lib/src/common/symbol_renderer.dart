@@ -220,6 +220,7 @@ class CircleSymbolRenderer extends SymbolRenderer {
       bounds.top + (bounds.height / 2),
     );
     final radius = min(bounds.width, bounds.height) / 2;
+    print('from here');
     canvas.drawPoint(
         point: center,
         radius: radius,

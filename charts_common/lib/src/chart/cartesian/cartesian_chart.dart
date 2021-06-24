@@ -126,17 +126,17 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   /// called.
   AxisSpec<D>? _newDomainAxisSpec;
 
-  AxisSpec<num>? _primaryMeasureAxisSpec;
+  NumericAxisSpec? _primaryMeasureAxisSpec;
 
-  AxisSpec<num>? _newPrimaryMeasureAxisSpec;
+  NumericAxisSpec? _newPrimaryMeasureAxisSpec;
 
-  Axis<num> _primaryMeasureAxis;
+  NumericAxis _primaryMeasureAxis;
 
-  AxisSpec<num>? _secondaryMeasureAxisSpec;
+  NumericAxisSpec? _secondaryMeasureAxisSpec;
 
-  AxisSpec<num>? _newSecondaryMeasureAxisSpec;
+  NumericAxisSpec? _newSecondaryMeasureAxisSpec;
 
-  Axis<num> _secondaryMeasureAxis;
+  NumericAxis _secondaryMeasureAxis;
 
   LinkedHashMap<String, NumericAxisSpec>? _disjointMeasureAxesSpec;
 
@@ -294,8 +294,8 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   /// Gets the measure axis matching the provided id.
   ///
   /// If none is provided, this returns the primary measure axis.
-  Axis<num> getMeasureAxis({String? axisId}) {
-    Axis<num>? axis;
+  NumericAxis getMeasureAxis({String? axisId}) {
+    NumericAxis? axis;
     if (axisId == Axis.secondaryMeasureAxisId) {
       axis = _secondaryMeasureAxis;
     } else if (axisId == Axis.primaryMeasureAxisId) {
@@ -312,7 +312,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
   /// Sets the primary measure axis for the chart, rendered on the start side of
   /// the domain axis.
-  set primaryMeasureAxisSpec(AxisSpec<num>? axisSpec) {
+  set primaryMeasureAxisSpec(NumericAxisSpec? axisSpec) {
     _newPrimaryMeasureAxisSpec = axisSpec;
 
     // Must set the spec to the current axis instance in the case of
@@ -322,7 +322,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
 
   /// Sets the secondary measure axis for the chart, rendered on the end side of
   /// the domain axis.
-  set secondaryMeasureAxisSpec(AxisSpec<num>? axisSpec) {
+  set secondaryMeasureAxisSpec(NumericAxisSpec? axisSpec) {
     _newSecondaryMeasureAxisSpec = axisSpec;
 
     // Must set the spec to the current axis instance in the case of

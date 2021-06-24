@@ -476,7 +476,7 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
 
         // Draw labels that have been defined.
         labels.forEach((labelType, label) {
-          final labelElement = graphicsFactory!.createTextElement(label)
+          final labelElement = graphicsFactory!.createTextElement(label!)
             ..maxWidthStrategy = MaxWidthStrategy.ellipsize
             ..textStyle = labelStyle;
 

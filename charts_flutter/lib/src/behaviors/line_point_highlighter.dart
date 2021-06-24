@@ -16,6 +16,7 @@
 import 'package:collection/collection.dart' show ListEquality;
 import 'package:charts_common/common.dart' as common
     show
+        ChartBehavior,
         LinePointHighlighter,
         LinePointHighlighterFollowLineType,
         SelectionModelType,
@@ -33,32 +34,32 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// It is used in combination with SelectNearest to update the selection model
 /// and expand selection out to the domain value.
 @immutable
-class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
+class LinePointHighlighter<D> extends ChartBehavior<D> {
   final desiredGestures = new Set<GestureType>();
 
-  final common.SelectionModelType selectionModelType;
+  final common.SelectionModelType? selectionModelType;
 
   /// Default radius of the dots if the series has no radius mapping function.
   ///
   /// When no radius mapping function is provided, this value will be used as
   /// is. [radiusPaddingPx] will not be added to [defaultRadiusPx].
-  final double defaultRadiusPx;
+  final double? defaultRadiusPx;
 
   /// Additional radius value added to the radius of the selected data.
   ///
   /// This value is only used when the series has a radius mapping function
   /// defined.
-  final double radiusPaddingPx;
+  final double? radiusPaddingPx;
 
-  final common.LinePointHighlighterFollowLineType showHorizontalFollowLine;
+  final common.LinePointHighlighterFollowLineType? showHorizontalFollowLine;
 
-  final common.LinePointHighlighterFollowLineType showVerticalFollowLine;
+  final common.LinePointHighlighterFollowLineType? showVerticalFollowLine;
 
   /// The dash pattern to be used for drawing the line.
   ///
   /// To disable dash pattern (to draw a solid line), pass in an empty list.
   /// This is because if dashPattern is null or not set, it defaults to [1,3].
-  final List<int> dashPattern;
+  final List<int>? dashPattern;
 
   /// Whether or not follow lines should be drawn across the entire chart draw
   /// area, or just from the axis to the point.
@@ -66,10 +67,10 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
   /// When disabled, measure follow lines will be drawn from the primary measure
   /// axis to the point. In RTL mode, this means from the right-hand axis. In
   /// LTR mode, from the left-hand axis.
-  final bool drawFollowLinesAcrossChart;
+  final bool? drawFollowLinesAcrossChart;
 
   /// Renderer used to draw the highlighted points.
-  final common.SymbolRenderer symbolRenderer;
+  final common.SymbolRenderer? symbolRenderer;
 
   LinePointHighlighter(
       {this.selectionModelType,
@@ -82,7 +83,7 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
       this.symbolRenderer});
 
   @override
-  common.LinePointHighlighter<D> createCommonBehavior<D>() =>
+  common.LinePointHighlighter<D> createCommonBehavior() =>
       new common.LinePointHighlighter<D>(
         selectionModelType: selectionModelType,
         defaultRadiusPx: defaultRadiusPx,
@@ -95,7 +96,7 @@ class LinePointHighlighter extends ChartBehavior<common.LinePointHighlighter> {
       );
 
   @override
-  void updateCommonBehavior(common.LinePointHighlighter commonBehavior) {}
+  void updateCommonBehavior(common.ChartBehavior<D> commonBehavior) {}
 
   @override
   String get role => 'LinePointHighlighter-${selectionModelType.toString()}';

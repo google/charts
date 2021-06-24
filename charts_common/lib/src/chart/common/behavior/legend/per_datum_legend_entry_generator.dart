@@ -86,7 +86,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     // the measure value.
     if (legendDefaultMeasure != LegendDefaultMeasure.none) {
       for (var entry in legendEntries) {
-        final series = entry.series!;
+        final series = entry.series;
         final measure = series.measureFn(entry.datumIndex);
         entry.value = measure!.toDouble();
         entry.formattedValue = _getFormattedMeasureValue(series, measure);
@@ -116,7 +116,7 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     // the measure value.
     if (legendDefaultMeasure != LegendDefaultMeasure.none) {
       for (var entry in legendEntries) {
-        final series = entry.series!;
+        final series = entry.series;
         final measure = series.measureFn(entry.datumIndex);
         entry.value = measure!.toDouble();
         entry.formattedValue = _getFormattedMeasureValue(series, measure);

@@ -130,8 +130,8 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   @override
   _BarTargetLineRendererElement getBaseDetails(dynamic datum, int index) {
     final localConfig = config as BarTargetLineRendererConfig<D>;
-    return _BarTargetLineRendererElement()
-      ..roundEndCaps = localConfig.roundEndCaps;
+    return _BarTargetLineRendererElement(
+        roundEndCaps: localConfig.roundEndCaps);
   }
 
   /// Generates an [_AnimatedBarTargetLine] to represent the previous and
@@ -210,13 +210,12 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
       required int numBarGroups,
       bool? measureIsNull,
       bool? measureIsNegative}) {
-    return _BarTargetLineRendererElement()
+    return _BarTargetLineRendererElement(roundEndCaps: details.roundEndCaps)
       ..color = color
       ..dashPattern = dashPattern
       ..fillColor = fillColor
       ..fillPattern = fillPattern
       ..measureAxisPosition = measureAxisPosition
-      ..roundEndCaps = details.roundEndCaps
       ..strokeWidthPx = strokeWidthPx
       ..measureIsNull = measureIsNull
       ..measureIsNegative = measureIsNegative
@@ -354,7 +353,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
 
   @override
   Rectangle<int> getBoundsForBar(_BarTargetLineRendererElement bar) {
-    final points = bar.points!;
+    final points = bar.points;
     assert(points.isNotEmpty);
     var top = points.first.y;
     var bottom = points.first.y;
@@ -371,16 +370,16 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
 }
 
 class _BarTargetLineRendererElement extends BaseBarRendererElement {
-  List<Point<int>>? points;
-  bool? roundEndCaps;
+  late List<Point<int>> points;
 
-  _BarTargetLineRendererElement();
+  bool roundEndCaps;
+
+  _BarTargetLineRendererElement({required this.roundEndCaps});
 
   _BarTargetLineRendererElement.clone(_BarTargetLineRendererElement other)
-      : super.clone(other) {
-    points = other.points == null ? null : List.of(other.points!);
-    roundEndCaps = other.roundEndCaps;
-  }
+      : points = List.of(other.points),
+        roundEndCaps = other.roundEndCaps,
+        super.clone(other);
 
   @override
   void updateAnimationPercent(BaseBarRendererElement previous,
@@ -388,9 +387,8 @@ class _BarTargetLineRendererElement extends BaseBarRendererElement {
     final localPrevious = previous as _BarTargetLineRendererElement;
     final localTarget = target as _BarTargetLineRendererElement;
 
-    final points = this.points!;
-    final previousPoints = localPrevious.points!;
-    final targetPoints = localTarget.points!;
+    final previousPoints = localPrevious.points;
+    final targetPoints = localTarget.points;
 
     late Point<int> lastPoint;
 
@@ -451,8 +449,8 @@ class _AnimatedBarTargetLine<D>
     final localTarget = target as _BarTargetLineRendererElement;
 
     final newPoints = <Point<int>>[];
-    for (var index = 0; index < localTarget.points!.length; index++) {
-      final targetPoint = localTarget.points![index];
+    for (var index = 0; index < localTarget.points.length; index++) {
+      final targetPoint = localTarget.points[index];
 
       newPoints.add(
           Point<int>(targetPoint.x, localTarget.measureAxisPosition!.round()));

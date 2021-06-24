@@ -38,9 +38,12 @@ void main() {
     /// Creates widget for testing.
     Widget createWidget(
         Size chartSize, Size behaviorSize, common.BehaviorPosition position,
-        {common.OutsideJustification outsideJustification,
-        common.InsideJustification insideJustification,
-        Rectangle<int> drawAreaBounds,
+        // Using these defaults, copied from DatumLegend.
+        {common.OutsideJustification outsideJustification =
+            common.OutsideJustification.startDrawArea,
+        common.InsideJustification insideJustification =
+            common.InsideJustification.topStart,
+        required Rectangle<int> drawAreaBounds,
         bool isRTL = false}) {
       // Create a mock buildable behavior that returns information about the
       // position and justification desired.

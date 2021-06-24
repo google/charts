@@ -52,7 +52,7 @@ class DomainHighlighter<D> implements ChartBehavior<D> {
         series.colorFn = (int? index) {
           final origColor = origColorFn(index);
           if (selectionModel.isDatumSelected(series, index)) {
-            return origColor?.darker;
+            return origColor.darker;
           } else {
             return origColor;
           }

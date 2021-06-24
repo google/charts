@@ -16,7 +16,7 @@
 import 'package:collection/collection.dart' show ListEquality;
 
 import 'package:charts_common/common.dart' as common
-    show InitialSelection, SeriesDatumConfig, SelectionModelType;
+    show ChartBehavior, InitialSelection, SeriesDatumConfig, SelectionModelType;
 
 import 'package:meta/meta.dart' show immutable;
 
@@ -24,12 +24,12 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 
 /// Chart behavior that sets the initial selection for a [selectionModelType].
 @immutable
-class InitialSelection extends ChartBehavior<common.InitialSelection> {
+class InitialSelection<D> extends ChartBehavior<D> {
   final desiredGestures = new Set<GestureType>();
 
   final common.SelectionModelType selectionModelType;
-  final List<String> selectedSeriesConfig;
-  final List<common.SeriesDatumConfig> selectedDataConfig;
+  final List<String>? selectedSeriesConfig;
+  final List<common.SeriesDatumConfig<D>>? selectedDataConfig;
 
   InitialSelection(
       {this.selectionModelType = common.SelectionModelType.info,
@@ -37,14 +37,14 @@ class InitialSelection extends ChartBehavior<common.InitialSelection> {
       this.selectedDataConfig});
 
   @override
-  common.InitialSelection<D> createCommonBehavior<D>() =>
+  common.InitialSelection<D> createCommonBehavior() =>
       new common.InitialSelection<D>(
           selectionModelType: selectionModelType,
           selectedDataConfig: selectedDataConfig,
           selectedSeriesConfig: selectedSeriesConfig);
 
   @override
-  void updateCommonBehavior(common.InitialSelection commonBehavior) {}
+  void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
 
   @override
   String get role => 'InitialSelection-${selectionModelType.toString()}';

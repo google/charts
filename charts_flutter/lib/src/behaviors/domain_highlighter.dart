@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show DomainHighlighter, SelectionModelType;
+    show ChartBehavior, DomainHighlighter, SelectionModelType;
 
 import 'package:meta/meta.dart' show immutable;
 
@@ -28,7 +28,7 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// It is used in combination with SelectNearest to update the selection model
 /// and expand selection out to the domain value.
 @immutable
-class DomainHighlighter extends ChartBehavior<common.DomainHighlighter> {
+class DomainHighlighter<D> extends ChartBehavior<D> {
   final desiredGestures = new Set<GestureType>();
 
   final common.SelectionModelType selectionModelType;
@@ -36,11 +36,11 @@ class DomainHighlighter extends ChartBehavior<common.DomainHighlighter> {
   DomainHighlighter([this.selectionModelType = common.SelectionModelType.info]);
 
   @override
-  common.DomainHighlighter<D> createCommonBehavior<D>() =>
+  common.DomainHighlighter<D> createCommonBehavior() =>
       new common.DomainHighlighter<D>(selectionModelType);
 
   @override
-  void updateCommonBehavior(common.DomainHighlighter commonBehavior) {}
+  void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
 
   @override
   String get role => 'domainHighlight-${selectionModelType.toString()}';

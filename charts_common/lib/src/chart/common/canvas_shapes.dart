@@ -44,7 +44,7 @@ class CanvasBarStack {
   final bool roundTopRight;
   final bool roundBottomLeft;
   final bool roundBottomRight;
-  final Rectangle<int>? fullStackRect;
+  final Rectangle<int> fullStackRect;
 
   factory CanvasBarStack(
     List<CanvasRect> segments, {
