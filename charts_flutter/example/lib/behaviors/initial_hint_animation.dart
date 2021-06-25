@@ -48,10 +48,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class InitialHintAnimation extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  InitialHintAnimation(this.seriesList, {this.animate});
+  InitialHintAnimation(this.seriesList, {this.animate = false});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory InitialHintAnimation.withSampleData() {

@@ -36,10 +36,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 /// RTL.flipAxisLocations is set.
 class BarChartWithSecondaryAxis extends StatelessWidget {
   static const secondaryMeasureAxisId = 'secondaryMeasureAxisId';
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  BarChartWithSecondaryAxis(this.seriesList, {this.animate});
+  BarChartWithSecondaryAxis(this.seriesList, {this.animate = false});
 
   factory BarChartWithSecondaryAxis.withSampleData() {
     return new BarChartWithSecondaryAxis(

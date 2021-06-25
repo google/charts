@@ -22,10 +22,10 @@ import 'package:flutter/material.dart';
 
 /// Example of a line chart rendered with dash patterns.
 class DashPatternLineChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  DashPatternLineChart(this.seriesList, {this.animate});
+  DashPatternLineChart(this.seriesList, {this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory DashPatternLineChart.withSampleData() {

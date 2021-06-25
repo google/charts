@@ -21,10 +21,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class VerticalBarLabelChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  VerticalBarLabelChart(this.seriesList, {this.animate});
+  VerticalBarLabelChart(this.seriesList, {this.animate = false});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory VerticalBarLabelChart.withSampleData() {

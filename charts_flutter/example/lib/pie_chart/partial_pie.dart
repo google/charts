@@ -22,10 +22,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class PartialPieChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  PartialPieChart(this.seriesList, {this.animate});
+  PartialPieChart(this.seriesList, {this.animate = false});
 
   /// Creates a [PieChart] with sample data and no transition.
   factory PartialPieChart.withSampleData() {

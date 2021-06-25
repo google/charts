@@ -28,10 +28,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 ///
 /// Also shows the option to provide a custom measure formatter.
 class DatumLegendWithMeasures extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, int>> seriesList;
   final bool animate;
 
-  DatumLegendWithMeasures(this.seriesList, {this.animate});
+  DatumLegendWithMeasures(this.seriesList, {this.animate = false});
 
   factory DatumLegendWithMeasures.withSampleData() {
     return new DatumLegendWithMeasures(
@@ -109,7 +109,7 @@ class DatumLegendWithMeasures extends StatelessWidget {
           legendDefaultMeasure: charts.LegendDefaultMeasure.firstValue,
           // Optionally provide a measure formatter to format the measure value.
           // If none is specified the value is formatted as a decimal.
-          measureFormatter: (num value) {
+          measureFormatter: (num? value) {
             return value == null ? '-' : '${value}k';
           },
         ),
