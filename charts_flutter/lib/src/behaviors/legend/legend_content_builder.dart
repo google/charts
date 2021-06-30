@@ -46,7 +46,7 @@ abstract class BaseLegendContentBuilder implements LegendContentBuilder {
   @override
   Widget build(BuildContext context, common.LegendState legendState,
       common.Legend legend,
-      {bool showMeasures}) {
+      {bool showMeasures = false}) {
     final entryWidgets = legendState.legendEntries.map((entry) {
       var isHidden = false;
       if (legend is common.SeriesLegend) {
@@ -74,7 +74,7 @@ class TabularLegendContentBuilder extends BaseLegendContentBuilder {
   final LegendLayout legendLayout;
 
   TabularLegendContentBuilder(
-      {LegendEntryLayout legendEntryLayout, LegendLayout legendLayout})
+      {LegendEntryLayout? legendEntryLayout, LegendLayout? legendLayout})
       : this.legendEntryLayout =
             legendEntryLayout ?? const SimpleLegendEntryLayout(),
         this.legendLayout =

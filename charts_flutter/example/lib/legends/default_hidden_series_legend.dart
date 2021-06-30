@@ -21,10 +21,10 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class DefaultHiddenSeriesLegend extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  DefaultHiddenSeriesLegend(this.seriesList, {this.animate});
+  DefaultHiddenSeriesLegend(this.seriesList, {this.animate = false});
 
   factory DefaultHiddenSeriesLegend.withSampleData() {
     return new DefaultHiddenSeriesLegend(

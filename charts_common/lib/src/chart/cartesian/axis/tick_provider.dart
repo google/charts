@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
@@ -29,8 +27,7 @@ import 'tick_formatter.dart' show TickFormatter;
 abstract class TickProvider<D> {
   /// Returns a list of ticks in value order that should be displayed.
   ///
-  /// This method should not return null. If no ticks are desired an empty list
-  /// should be returned.
+  /// If no ticks are desired an empty list should be returned.
   ///
   /// [graphicsFactory] The graphics factory used for text measurement.
   /// [scale] The scale of the data.
@@ -40,15 +37,15 @@ abstract class TickProvider<D> {
   /// [viewportExtensionEnabled] allow extending the viewport for 'niced' ticks.
   /// [tickHint] tick values for provider to calculate a desired tick range.
   List<Tick<D>> getTicks({
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required covariant MutableScale<D> scale,
-    @required TickFormatter<D> formatter,
-    @required Map<D, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
-    @required AxisOrientation orientation,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required covariant MutableScale<D> scale,
+    required TickFormatter<D> formatter,
+    required Map<D, String> formatterValueCache,
+    required TickDrawStrategy<D> tickDrawStrategy,
+    required AxisOrientation? orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<D> tickHint,
+    TickHint<D>? tickHint,
   });
 }
 
@@ -59,13 +56,13 @@ abstract class BaseTickProvider<D> implements TickProvider<D> {
   /// Create ticks from [domainValues].
   List<Tick<D>> createTicks(
     List<D> domainValues, {
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required MutableScale<D> scale,
-    @required TickFormatter<D> formatter,
-    @required Map<D, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
-    num stepSize,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required MutableScale<D> scale,
+    required TickFormatter<D> formatter,
+    required Map<D, String> formatterValueCache,
+    required TickDrawStrategy<D> tickDrawStrategy,
+    num? stepSize,
   }) {
     final ticks = <Tick<D>>[];
     final labels =
@@ -76,7 +73,7 @@ abstract class BaseTickProvider<D> implements TickProvider<D> {
       final tick = Tick(
           value: value,
           textElement: graphicsFactory.createTextElement(labels[i]),
-          locationPx: scale[value]);
+          locationPx: scale[value]?.toDouble());
 
       ticks.add(tick);
     }
@@ -99,5 +96,5 @@ class TickHint<D> {
   /// Number of ticks.
   final int tickCount;
 
-  TickHint(this.start, this.end, {this.tickCount});
+  TickHint(this.start, this.end, {required this.tickCount});
 }

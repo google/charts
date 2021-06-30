@@ -21,10 +21,10 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class SimpleSeriesLegend extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  SimpleSeriesLegend(this.seriesList, {this.animate});
+  SimpleSeriesLegend(this.seriesList, {this.animate = false});
 
   factory SimpleSeriesLegend.withSampleData() {
     return new SimpleSeriesLegend(

@@ -19,10 +19,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class SelectionLineHighlight extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SelectionLineHighlight(this.seriesList, {this.animate});
+  SelectionLineHighlight(this.seriesList, {this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory SelectionLineHighlight.withSampleData() {

@@ -15,8 +15,6 @@
 
 import 'dart:math' show Point, Rectangle, max;
 
-import 'package:meta/meta.dart' show required;
-
 import 'layout_config.dart' show LayoutConfig;
 import 'layout_manager.dart';
 import 'layout_margin_strategy.dart';
@@ -37,22 +35,22 @@ class LayoutManagerImpl implements LayoutManager {
   /// List of views in the order they should be drawn on the canvas.
   ///
   /// First element is painted first.
-  List<LayoutView> _paintOrderedViews;
+  late List<LayoutView> _paintOrderedViews;
 
   /// List of vies in the order they should be positioned in a chart margin.
   ///
   /// First element is closest to the draw area.
-  List<LayoutView> _positionOrderedViews;
+  late List<LayoutView> _positionOrderedViews;
 
-  _MeasuredSizes _measurements;
+  late _MeasuredSizes _measurements;
 
-  Rectangle<int> _drawAreaBounds;
+  late Rectangle<int> _drawAreaBounds;
   bool _drawAreaBoundsOutdated = true;
   bool _viewsNeedPaintSort = true;
   bool _viewsNeedPositionSort = true;
 
   /// Create a new [LayoutManager].
-  LayoutManagerImpl({LayoutConfig config}) : config = config ?? LayoutConfig();
+  LayoutManagerImpl({LayoutConfig? config}) : config = config ?? LayoutConfig();
 
   /// Add one [LayoutView].
   @override
@@ -77,14 +75,19 @@ class LayoutManagerImpl implements LayoutManager {
   @override
   bool isAttached(LayoutView view) => _views.contains(view);
 
+  @override
+  void updateConfig(LayoutConfig layoutConfig) {
+    config = layoutConfig;
+  }
+
   /// Get all layout components in the order to be drawn.
   @override
   List<LayoutView> get paintOrderedViews {
     if (_viewsNeedPaintSort) {
-      _paintOrderedViews = List<LayoutView>.from(_views);
+      _paintOrderedViews = List.of(_views);
 
       _paintOrderedViews.sort((LayoutView v1, LayoutView v2) =>
-          v1.layoutConfig.paintOrder.compareTo(v2.layoutConfig.paintOrder));
+          v1.layoutConfig.paintOrder!.compareTo(v2.layoutConfig.paintOrder!));
 
       _viewsNeedPaintSort = false;
     }
@@ -95,11 +98,11 @@ class LayoutManagerImpl implements LayoutManager {
   @override
   List<LayoutView> get positionOrderedViews {
     if (_viewsNeedPositionSort) {
-      _positionOrderedViews = List<LayoutView>.from(_views);
+      _positionOrderedViews = List.of(_views);
 
       _positionOrderedViews.sort((LayoutView v1, LayoutView v2) => v1
-          .layoutConfig.positionOrder
-          .compareTo(v2.layoutConfig.positionOrder));
+          .layoutConfig.positionOrder!
+          .compareTo(v2.layoutConfig.positionOrder!));
 
       _viewsNeedPositionSort = false;
     }
@@ -119,19 +122,21 @@ class LayoutManagerImpl implements LayoutManager {
     final drawableViews =
         _views.where((LayoutView view) => view.isSeriesRenderer);
 
-    var componentBounds = drawableViews?.first?.componentBounds;
+    var componentBounds = drawableViews.first.componentBounds;
 
     if (componentBounds != null) {
-      for (LayoutView view in drawableViews.skip(1)) {
+      for (final view in drawableViews.skip(1)) {
         if (view.componentBounds != null) {
-          componentBounds = componentBounds.boundingBox(view.componentBounds);
+          // See https://github.com/dart-lang/language/issues/1308 for why
+          // `componentBounds` isn't promoted to be non-nullable.
+          componentBounds = componentBounds!.boundingBox(view.componentBounds!);
         }
       }
     } else {
       componentBounds = Rectangle(0, 0, 0, 0);
     }
 
-    return componentBounds;
+    return componentBounds!;
   }
 
   @override
@@ -263,7 +268,7 @@ class LayoutManagerImpl implements LayoutManager {
   }
 
   Iterable<LayoutView> _viewsForPositions(LayoutPosition p1,
-      [LayoutPosition p2]) {
+      [LayoutPosition? p2]) {
     return positionOrderedViews.where((LayoutView view) =>
         view.layoutConfig.position == p1 ||
         (p2 != null && view.layoutConfig.position == p2));
@@ -275,12 +280,12 @@ class LayoutManagerImpl implements LayoutManager {
   _MeasuredSizes _measure(
     int width,
     int height, {
-    Iterable<LayoutView> topViews,
-    Iterable<LayoutView> rightViews,
-    Iterable<LayoutView> bottomViews,
-    Iterable<LayoutView> leftViews,
-    _MeasuredSizes previousMeasurements,
-    @required bool useMax,
+    required Iterable<LayoutView> topViews,
+    required Iterable<LayoutView> rightViews,
+    required Iterable<LayoutView> bottomViews,
+    required Iterable<LayoutView> leftViews,
+    _MeasuredSizes? previousMeasurements,
+    required bool useMax,
   }) {
     final maxLeftWidth = config.leftSpec.getMaxPixels(width);
     final maxRightWidth = config.rightSpec.getMaxPixels(width);
@@ -340,7 +345,7 @@ class LayoutManagerImpl implements LayoutManager {
 
   @override
   void applyToViews(void Function(LayoutView view) apply) {
-    _views.forEach((view) => apply(view));
+    _views.forEach(apply);
   }
 }
 
@@ -358,13 +363,14 @@ class _MeasuredSizes {
   final int bottomHeight;
   final SizeList bottomSizes;
 
-  _MeasuredSizes(
-      {this.leftWidth,
-      this.leftSizes,
-      this.rightWidth,
-      this.rightSizes,
-      this.topHeight,
-      this.topSizes,
-      this.bottomHeight,
-      this.bottomSizes});
+  _MeasuredSizes({
+    required this.leftWidth,
+    required this.leftSizes,
+    required this.rightWidth,
+    required this.rightSizes,
+    required this.topHeight,
+    required this.topSizes,
+    required this.bottomHeight,
+    required this.bottomSizes,
+  });
 }

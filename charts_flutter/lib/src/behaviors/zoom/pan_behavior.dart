@@ -27,7 +27,7 @@ import '../chart_behavior.dart'
     show ChartBehavior, ChartStateBehavior, GestureType;
 
 @immutable
-class PanBehavior extends ChartBehavior<common.PanBehavior> {
+class PanBehavior<D> extends ChartBehavior<D> {
   final _desiredGestures = new Set<GestureType>.from([
     GestureType.onDrag,
   ]);
@@ -36,14 +36,14 @@ class PanBehavior extends ChartBehavior<common.PanBehavior> {
   ///
   /// When flinging this callback is called after the fling is completed.
   /// This is because panning is only completed when the flinging stops.
-  final common.PanningCompletedCallback panningCompletedCallback;
+  final common.PanningCompletedCallback? panningCompletedCallback;
 
   PanBehavior({this.panningCompletedCallback});
 
   Set<GestureType> get desiredGestures => _desiredGestures;
 
   @override
-  common.PanBehavior<D> createCommonBehavior<D>() {
+  common.PanBehavior<D> createCommonBehavior() {
     return new FlutterPanBehavior<D>()
       ..panningCompletedCallback = panningCompletedCallback;
   }
@@ -72,20 +72,20 @@ class FlutterPanBehavior<D> = common.PanBehavior<D>
 /// thereof.
 mixin FlutterPanBehaviorMixin<D> on common.PanBehavior<D>
     implements ChartStateBehavior {
-  BaseChartState _chartState;
+  late BaseChartState _chartState;
 
   set chartState(BaseChartState chartState) {
     assert(chartState != null);
 
     _chartState = chartState;
-    _flingAnimator = _chartState.getAnimationController(this);
+    _flingAnimator = chartState.getAnimationController(this);
     _flingAnimator?.addListener(_onFlingTick);
   }
 
-  AnimationController _flingAnimator;
+  AnimationController? _flingAnimator;
 
-  double _flingAnimationInitialTranslatePx;
-  double _flingAnimationTargetTranslatePx;
+  double _flingAnimationInitialTranslatePx = 0;
+  double _flingAnimationTargetTranslatePx = 0;
 
   bool _isFlinging = false;
 
@@ -129,9 +129,9 @@ mixin FlutterPanBehaviorMixin<D> on common.PanBehavior<D>
 
   /// Starts a 'fling' in the direction and speed given by [pixelsPerSec].
   void _startFling(double pixelsPerSec) {
-    final domainAxis = chart.domainAxis;
+    final domainAxis = chart!.domainAxis;
 
-    _flingAnimationInitialTranslatePx = domainAxis.viewportTranslatePx;
+    _flingAnimationInitialTranslatePx = domainAxis!.viewportTranslatePx;
     _flingAnimationTargetTranslatePx = _flingAnimationInitialTranslatePx +
         pixelsPerSec * flingDistanceMultiplier;
 
@@ -139,7 +139,7 @@ mixin FlutterPanBehaviorMixin<D> on common.PanBehavior<D>
         milliseconds:
             max(200, (pixelsPerSec * flingDurationMultiplier).abs().round()));
 
-    _flingAnimator
+    _flingAnimator!
       ..duration = flingDuration
       ..forward(from: 0.0);
     _isFlinging = true;
@@ -156,23 +156,23 @@ mixin FlutterPanBehaviorMixin<D> on common.PanBehavior<D>
       return;
     }
 
-    final percent = _flingAnimator.value;
+    final percent = _flingAnimator!.value;
     final deceleratedPercent = _decelerate(percent);
     final translation = lerpDouble(_flingAnimationInitialTranslatePx,
         _flingAnimationTargetTranslatePx, deceleratedPercent);
 
-    final domainAxis = chart.domainAxis;
+    final domainAxis = chart!.domainAxis!;
 
     domainAxis.setViewportSettings(
-        domainAxis.viewportScalingFactor, translation,
-        drawAreaWidth: chart.drawAreaBounds.width);
+        domainAxis.viewportScalingFactor, translation!,
+        drawAreaWidth: chart!.drawAreaBounds.width);
 
     if (percent >= 1.0) {
       stopFlingAnimation();
       onPanEnd();
-      chart.redraw();
+      chart!.redraw();
     } else {
-      chart.redraw(skipAnimation: true, skipLayout: true);
+      chart!.redraw(skipAnimation: true, skipLayout: true);
     }
   }
 

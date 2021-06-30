@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -174,7 +176,7 @@ void main() {
             (_) => 'LabelC',
             data)
       ];
-      final decorator = BarLabelDecorator();
+      final decorator = BarLabelDecorator<String>();
 
       decorator.decorate(barElements, canvas, graphicsFactory,
           drawBounds: drawBounds,
@@ -187,34 +189,40 @@ void main() {
       // parameters were captured. Total parameters captured expected to be 9.
       expect(captured, hasLength(9));
       // Bar 'A' checks.
-      var labelWidth = captured[0].measurement.horizontalSliceWidth;
-      var labelHeight = captured[0].measurement.verticalSliceWidth;
+      var textElement = captured[0] as TextElement;
+      var offsetX = captured[1] as int;
+      var offsetY = captured[2] as int;
+      var labelWidth = textElement.measurement.horizontalSliceWidth;
+      var labelHeight = textElement.measurement.verticalSliceWidth;
       expect(labelWidth, equals(6));
       expect(labelHeight, equals(12));
-      expect(captured[0].maxWidth, equals(barWidthA));
-      expect(
-          captured[1], equals(leftPositionA + barWidthA / 2 - labelWidth / 2));
-      expect(captured[2], equals(topPositionA + decorator.labelPadding));
+      expect(textElement.maxWidth, equals(barWidthA));
+      expect(offsetX, equals(leftPositionA + barWidthA / 2 - labelWidth / 2));
+      expect(offsetY, equals(topPositionA + decorator.labelPadding));
       // Bar 'B' checks.
-      labelWidth = captured[3].measurement.horizontalSliceWidth;
-      labelHeight = captured[3].measurement.verticalSliceWidth;
+      textElement = captured[3] as TextElement;
+      offsetX = captured[4] as int;
+      offsetY = captured[5] as int;
+      labelWidth = textElement.measurement.horizontalSliceWidth;
+      labelHeight = textElement.measurement.verticalSliceWidth;
       expect(labelWidth, equals(6));
       expect(labelHeight, equals(12));
-      expect(captured[3].maxWidth, equals(barWidthB));
+      expect(textElement.maxWidth, equals(barWidthB));
+      expect(offsetX, equals(leftPositionB + barWidthB / 2 - labelWidth / 2));
       expect(
-          captured[4], equals(leftPositionB + barWidthB / 2 - labelWidth / 2));
-      expect(captured[5],
-          equals(topPositionB - decorator.labelPadding - labelHeight));
+          offsetY, equals(topPositionB - decorator.labelPadding - labelHeight));
       // Bar 'C' checks.
-      labelWidth = captured[6].measurement.horizontalSliceWidth;
-      labelHeight = captured[6].measurement.verticalSliceWidth;
+      textElement = captured[6] as TextElement;
+      offsetX = captured[7] as int;
+      offsetY = captured[8] as int;
+      labelWidth = textElement.measurement.horizontalSliceWidth;
+      labelHeight = textElement.measurement.verticalSliceWidth;
       expect(labelWidth, equals(6));
       expect(labelHeight, equals(12));
-      expect(captured[6].maxWidth, equals(barWidthC));
+      expect(textElement.maxWidth, equals(barWidthC));
+      expect(offsetX, equals(leftPositionC + barWidthC / 2 - labelWidth / 2));
       expect(
-          captured[7], equals(leftPositionC + barWidthC / 2 - labelWidth / 2));
-      expect(captured[8],
-          equals(topPositionC - decorator.labelPadding - labelHeight));
+          offsetY, equals(topPositionC - decorator.labelPadding - labelHeight));
     });
 
     test('LabelPosition.inside always paints inside the bar', () {
@@ -225,7 +233,7 @@ void main() {
             'A', Rectangle(10, 80, 6, 20), (_) => 'LabelABC', ['A']),
       ];
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelPosition: BarLabelPosition.inside,
               labelPadding: 0, // Turn off label padding for testing.
               insideLabelStyleSpec: TextStyleSpec(fontSize: 10))
@@ -250,7 +258,7 @@ void main() {
             'A', Rectangle(10, 80, 10, 20), (_) => 'LabelA', ['A']),
       ];
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelPosition: BarLabelPosition.outside,
               labelPadding: 0, // Turn off label padding for testing.
               outsideLabelStyleSpec: TextStyleSpec(fontSize: 10))
@@ -276,7 +284,7 @@ void main() {
             'A', Rectangle(10, 80, 10, 20), (_) => 'LabelA\n(50)', ['A']),
       ];
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelPosition: BarLabelPosition.outside,
               labelPadding: 0, // Turn off label padding for testing.
               outsideLabelStyleSpec: TextStyleSpec(fontSize: 10))
@@ -317,7 +325,7 @@ void main() {
       ];
       final insideColor = Color(r: 0, g: 0, b: 0);
       final outsideColor = Color(r: 255, g: 255, b: 255);
-      final decorator = BarLabelDecorator(
+      final decorator = BarLabelDecorator<String>(
           labelPadding: 0,
           insideLabelStyleSpec: TextStyleSpec(
               fontSize: 10, fontFamily: 'insideFont', color: insideColor),
@@ -357,7 +365,8 @@ void main() {
           FakeBarRendererElement('A', Rectangle(0, 0, 10, 20), null, ['A'])
         ];
 
-        BarLabelDecorator().decorate(barElements, canvas, graphicsFactory,
+        BarLabelDecorator<String>().decorate(
+            barElements, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: 1.0,
             renderingVertically: true);
@@ -373,7 +382,8 @@ void main() {
               'B', Rectangle(0, 50, 10, 20), (_) => '', data),
         ];
 
-        BarLabelDecorator().decorate(barElements, canvas, graphicsFactory,
+        BarLabelDecorator<String>().decorate(
+            barElements, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: 1.0,
             renderingVertically: true);
@@ -389,7 +399,7 @@ void main() {
               'A', Rectangle(10, 80, 10, 20), (_) => 'LabelA', ['A']),
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
                 labelPosition: BarLabelPosition.outside,
                 labelPlacement: BarLabelPlacement.opposeAxisBaseline,
                 labelPadding: 0, // Turn off label padding for testing.
@@ -418,7 +428,7 @@ void main() {
               measureFn: (_) => -1.0),
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
                 labelPosition: BarLabelPosition.outside,
                 labelPlacement: BarLabelPlacement.opposeAxisBaseline,
                 labelPadding: 0, // Turn off label padding for testing.
@@ -445,7 +455,7 @@ void main() {
               'A', Rectangle(10, 80, 10, 20), (_) => 'LabelA', ['A']),
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
                 labelPosition: BarLabelPosition.inside,
                 labelPlacement: BarLabelPlacement.opposeAxisBaseline,
                 labelPadding: 0, // Turn off label padding for testing.
@@ -473,7 +483,7 @@ void main() {
               measureFn: (_) => -1.0),
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
                 labelPosition: BarLabelPosition.inside,
                 labelPlacement: BarLabelPlacement.opposeAxisBaseline,
                 labelPadding: 0, // Turn off label padding for testing.
@@ -509,7 +519,7 @@ void main() {
         FakeBarRendererElement(
             'B', Rectangle(0, 70, 5, 20), (_) => 'LabelB', data)
       ];
-      final decorator = BarLabelDecorator();
+      final decorator = BarLabelDecorator<String>();
 
       decorator.decorate(barElements, canvas, graphicsFactory,
           drawBounds: drawBounds,
@@ -547,7 +557,7 @@ void main() {
       // Draw bounds with width of 14 means that space inside the bar is larger.
       final smallDrawBounds = Rectangle(0, 0, 14, 20);
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelPadding: 0, // Turn off label padding for testing.
               insideLabelStyleSpec: TextStyleSpec(fontSize: 10))
           .decorate(barElements, canvas, graphicsFactory,
@@ -572,7 +582,7 @@ void main() {
             'A', Rectangle(0, 0, 8, 20), (_) => 'LabelABC', ['A']),
       ];
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelPosition: BarLabelPosition.inside,
               labelPadding: 0, // Turn off label padding for testing.
               insideLabelStyleSpec: TextStyleSpec(fontSize: 10))
@@ -602,7 +612,7 @@ void main() {
       // nor outside.
       final smallDrawBounds = Rectangle(0, 0, 12, 20);
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelPadding: 0, // Turn off label padding for testing.
               insideLabelStyleSpec: TextStyleSpec(fontSize: 10))
           .decorate(barElements, canvas, graphicsFactory,
@@ -619,7 +629,7 @@ void main() {
             'A', Rectangle(0, 0, 10, 20), (_) => 'Label', ['A']),
       ];
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelPosition: BarLabelPosition.outside,
               labelPadding: 0, // Turn off label padding for testing.
               outsideLabelStyleSpec: TextStyleSpec(fontSize: 10))
@@ -650,7 +660,7 @@ void main() {
       ];
       final insideColor = Color(r: 0, g: 0, b: 0);
       final outsideColor = Color(r: 255, g: 255, b: 255);
-      final decorator = BarLabelDecorator(
+      final decorator = BarLabelDecorator<String>(
           labelPadding: 0,
           insideLabelStyleSpec: TextStyleSpec(
               fontSize: 10, fontFamily: 'insideFont', color: insideColor),
@@ -689,7 +699,7 @@ void main() {
             'A', Rectangle(0, 0, 10, 20), (_) => 'LabelA', ['A'])
       ];
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelAnchor: BarLabelAnchor.end,
               labelPosition: BarLabelPosition.inside,
               labelPadding: 0, // Turn off label padding for testing.
@@ -714,7 +724,7 @@ void main() {
             'A', Rectangle(0, 0, 10, 20), (_) => 'LabelA', ['A'])
       ];
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelAnchor: BarLabelAnchor.start,
               labelPosition: BarLabelPosition.inside,
               labelPadding: 0, // Turn off label padding for testing.
@@ -740,7 +750,7 @@ void main() {
             'A', Rectangle(0, 0, 10, 20), (_) => 'LabelA', ['A'])
       ];
 
-      BarLabelDecorator(
+      BarLabelDecorator<String>(
               labelAnchor: BarLabelAnchor.end,
               labelPosition: BarLabelPosition.inside,
               labelPadding: 0, // Turn off label padding for testing.
@@ -766,7 +776,8 @@ void main() {
           FakeBarRendererElement('A', Rectangle(0, 0, 10, 20), null, ['A']),
         ];
 
-        BarLabelDecorator().decorate(barElements, canvas, graphicsFactory,
+        BarLabelDecorator<String>().decorate(
+            barElements, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: 1.0,
             renderingVertically: false);
@@ -782,7 +793,8 @@ void main() {
               'B', Rectangle(0, 50, 10, 20), (_) => '', data),
         ];
 
-        BarLabelDecorator().decorate(barElements, canvas, graphicsFactory,
+        BarLabelDecorator<String>().decorate(
+            barElements, canvas, graphicsFactory,
             drawBounds: drawBounds,
             animationPercent: 1.0,
             renderingVertically: false);
@@ -796,7 +808,7 @@ void main() {
               'A', Rectangle(0, 0, 200, 20), (_) => 'a', ['A'])
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
           labelPadding: 0,
           labelPosition: BarLabelPosition.outside,
         ).decorate(barElements, canvas, graphicsFactory,
@@ -815,7 +827,7 @@ void main() {
               'A', Rectangle(10, 80, 10, 20), (_) => 'LabelA', ['A']),
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
                 labelPosition: BarLabelPosition.outside,
                 labelPlacement: BarLabelPlacement.opposeAxisBaseline,
                 labelPadding: 0, // Turn off label padding for testing.
@@ -843,7 +855,7 @@ void main() {
               measureFn: (_) => -1.0),
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
                 labelPosition: BarLabelPosition.outside,
                 labelPlacement: BarLabelPlacement.opposeAxisBaseline,
                 labelPadding: 0, // Turn off label padding for testing.
@@ -870,7 +882,7 @@ void main() {
               'A', Rectangle(10, 80, 10, 20), (_) => 'LabelA', ['A']),
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
                 labelPosition: BarLabelPosition.inside,
                 labelPlacement: BarLabelPlacement.opposeAxisBaseline,
                 labelPadding: 0, // Turn off label padding for testing.
@@ -898,7 +910,7 @@ void main() {
               measureFn: (_) => -1.0),
         ];
 
-        BarLabelDecorator(
+        BarLabelDecorator<String>(
                 labelPosition: BarLabelPosition.inside,
                 labelPlacement: BarLabelPlacement.opposeAxisBaseline,
                 labelPadding: 0, // Turn off label padding for testing.

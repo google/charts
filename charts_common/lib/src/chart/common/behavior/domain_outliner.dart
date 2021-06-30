@@ -40,20 +40,20 @@ class DomainOutliner<D> implements ChartBehavior<D> {
   /// defined.
   final double strokePaddingPx;
 
-  BaseChart<D> _chart;
+  late BaseChart<D> _chart;
 
-  LifecycleListener<D> _lifecycleListener;
+  late LifecycleListener<D> _lifecycleListener;
 
   DomainOutliner({
     this.selectionType = SelectionModelType.info,
-    double defaultStrokePx,
-    double strokePaddingPx,
+    double? defaultStrokePx,
+    double? strokePaddingPx,
   })  : defaultStrokePx = defaultStrokePx ?? 2.0,
         strokePaddingPx = strokePaddingPx ?? 1.0 {
     _lifecycleListener = LifecycleListener<D>(onPostprocess: _outline);
   }
 
-  void _selectionChange(SelectionModel selectionModel) {
+  void _selectionChange(SelectionModel<D> selectionModel) {
     _chart.redraw(skipLayout: true, skipAnimation: true);
   }
 
@@ -65,7 +65,7 @@ class DomainOutliner<D> implements ChartBehavior<D> {
       final colorFn = series.colorFn;
 
       if (colorFn != null) {
-        series.colorFn = (int index) {
+        series.colorFn = (int? index) {
           final color = colorFn(index);
           return selectionModel.isDatumSelected(series, index)
               ? color.darker
@@ -74,7 +74,7 @@ class DomainOutliner<D> implements ChartBehavior<D> {
       }
 
       if (strokeWidthPxFn != null) {
-        series.strokeWidthPxFn = (int index) {
+        series.strokeWidthPxFn = (int? index) {
           final strokeWidthPx = strokeWidthPxFn(index);
           if (!selectionModel.isDatumSelected(series, index)) {
             return strokeWidthPx;

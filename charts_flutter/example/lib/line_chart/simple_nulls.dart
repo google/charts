@@ -25,10 +25,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class SimpleNullsLineChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SimpleNullsLineChart(this.seriesList, {this.animate});
+  SimpleNullsLineChart(this.seriesList, {this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory SimpleNullsLineChart.withSampleData() {
@@ -173,7 +173,7 @@ class SimpleNullsLineChart extends StatelessWidget {
 /// Sample linear data type.
 class LinearSales {
   final int year;
-  final int sales;
+  final int? sales;
 
   LinearSales(this.year, this.sales);
 }

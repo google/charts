@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -33,6 +35,7 @@ import 'package:charts_common/src/common/text_measurement.dart'
 import 'package:charts_common/src/common/text_style.dart' show TextStyle;
 import 'package:charts_common/src/data/series.dart' show AccessorFn;
 
+import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -126,11 +129,25 @@ class FakeTreeMapRendererElement extends TreeMapRendererElement<String> {
   final AccessorFn<String> labelAccessor;
   final List<String> data;
 
-  FakeTreeMapRendererElement(this.labelAccessor, this.data) {
+  FakeTreeMapRendererElement(
+    this.labelAccessor,
+    this.data, {
+    @required Rectangle<num> /*?*/ boundingRect,
+    @required int index,
+    @required bool isLeaf,
+  }) : super(
+          boundingRect: boundingRect,
+          series: MockImmutableSeries<String>(),
+          domain: '',
+          isLeaf: isLeaf,
+          index: index,
+          measure: 0,
+        ) {
     when(_series.labelAccessorFn).thenReturn(labelAccessor);
     when(_series.data).thenReturn(data);
   }
 
+  @override
   ImmutableSeries<String> get series => _series;
 }
 
@@ -154,10 +171,13 @@ void main() {
   group('tree map', () {
     test('label can fit in a new single line, no rotation, ltr', () {
       final data = ['A'];
-      final renderElement = FakeTreeMapRendererElement((_) => 'Region', data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = false;
+      final renderElement = FakeTreeMapRendererElement(
+        (_) => 'Region',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: false,
+      );
       final decorator = TreeMapLabelDecorator();
 
       decorator.decorate(renderElement, canvas, graphicsFactory,
@@ -176,10 +196,13 @@ void main() {
 
     test('label can fit in a new single line, no rotation, rtl', () {
       final data = ['A'];
-      final renderElement = FakeTreeMapRendererElement((_) => 'Region', data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = false;
+      final renderElement = FakeTreeMapRendererElement(
+        (_) => 'Region',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: false,
+      );
 
       final decorator = TreeMapLabelDecorator();
 
@@ -199,10 +222,13 @@ void main() {
 
     test('label can fit in a new single line, with rotation, ltr', () {
       final data = ['A'];
-      final renderElement = FakeTreeMapRendererElement((_) => 'Region', data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = false;
+      final renderElement = FakeTreeMapRendererElement(
+        (_) => 'Region',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: false,
+      );
 
       final decorator = TreeMapLabelDecorator();
 
@@ -227,10 +253,13 @@ void main() {
 
     test('label can fit in a new single line, with rotation, rtl', () {
       final data = ['A'];
-      final renderElement = FakeTreeMapRendererElement((_) => 'Region', data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = false;
+      final renderElement = FakeTreeMapRendererElement(
+        (_) => 'Region',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: false,
+      );
 
       final decorator = TreeMapLabelDecorator();
 
@@ -260,13 +289,13 @@ void main() {
     test('label can not fit in a new single line, no multiline', () {
       final data = ['A'];
       final renderElement = FakeTreeMapRendererElement(
-          (_) =>
-              'This Label is too long for a single line therefore it will be '
-              'ellipsized with ellipsis at the end',
-          data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = false;
+        (_) => 'This Label is too long for a single line therefore it will be '
+            'ellipsized with ellipsis at the end',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: false,
+      );
 
       final decorator = TreeMapLabelDecorator();
 
@@ -286,13 +315,13 @@ void main() {
         'multiline. Label should be broke without cutting any word', () {
       final data = ['A'];
       final renderElement = FakeTreeMapRendererElement(
-          (_) =>
-              'This Label is too long for a single line therefore it will be '
-              'ellipsized with ellipsis at the end of the new truncated label',
-          data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = true;
+        (_) => 'This Label is too long for a single line therefore it will be '
+            'ellipsized with ellipsis at the end of the new truncated label',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: true,
+      );
 
       final decorator = TreeMapLabelDecorator(enableMultiline: true);
 
@@ -324,13 +353,13 @@ void main() {
         'two pieces', () {
       final data = ['A'];
       final renderElement = FakeTreeMapRendererElement(
-          (_) =>
-              'ThisLabelistoolongforasinglelinethereforeitwillbeellipsizedwith'
-              'ellipsisattheendofthenewtruncated label',
-          data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = true;
+        (_) => 'ThisLabelistoolongforasinglelinethereforeitwillbeellipsizedwith'
+            'ellipsisattheendofthenewtruncated label',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: true,
+      );
 
       final decorator = TreeMapLabelDecorator(enableMultiline: true);
 
@@ -364,17 +393,17 @@ void main() {
       final data = ['A'];
       final rect = Rectangle(0, 0, 50, 100);
       final renderElement = FakeTreeMapRendererElement(
-          (_) =>
-              'This Label is too long for a single line therefore it will be '
-              'ellipsized with ellipsis at the end of the new truncated label '
-              'This Label is too long for a single line therefore it will be '
-              'ellipsized with ellipsis at the end of the new truncated label '
-              'This Label is too long for a single line therefore it will be '
-              'ellipsized with ellipsis at the end of the new truncated label',
-          data)
-        ..boundingRect = rect
-        ..index = 0
-        ..isLeaf = true;
+        (_) => 'This Label is too long for a single line therefore it will be '
+            'ellipsized with ellipsis at the end of the new truncated label '
+            'This Label is too long for a single line therefore it will be '
+            'ellipsized with ellipsis at the end of the new truncated label '
+            'This Label is too long for a single line therefore it will be '
+            'ellipsized with ellipsis at the end of the new truncated label',
+        data,
+        boundingRect: rect,
+        index: 0,
+        isLeaf: true,
+      );
 
       final decorator = TreeMapLabelDecorator(enableMultiline: true);
 
@@ -417,13 +446,13 @@ void main() {
         () {
       final data = ['A'];
       final renderElement = FakeTreeMapRendererElement(
-          (_) =>
-              'This Label is too long for a single line therefore it will be '
-              'ellipsized with ellipsis at the end of the new truncated label',
-          data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = true;
+        (_) => 'This Label is too long for a single line therefore it will be '
+            'ellipsized with ellipsis at the end of the new truncated label',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: true,
+      );
 
       final decorator = TreeMapLabelDecorator(enableMultiline: true);
 
@@ -460,10 +489,13 @@ void main() {
   group('Null and empty label scenarios', () {
     test('Skip label if label is null', () {
       final data = ['A'];
-      final renderElement = FakeTreeMapRendererElement((_) => null, data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = true;
+      final renderElement = FakeTreeMapRendererElement(
+        (_) => null,
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: true,
+      );
 
       final decorator = TreeMapLabelDecorator();
 
@@ -475,10 +507,13 @@ void main() {
 
     test('Skip label if label is empty', () {
       final data = ['A'];
-      final renderElement = FakeTreeMapRendererElement((_) => '', data)
-        ..boundingRect = drawBounds
-        ..index = 0
-        ..isLeaf = true;
+      final renderElement = FakeTreeMapRendererElement(
+        (_) => '',
+        data,
+        boundingRect: drawBounds,
+        index: 0,
+        isLeaf: true,
+      );
 
       final decorator = TreeMapLabelDecorator();
 

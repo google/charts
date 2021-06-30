@@ -23,10 +23,10 @@ import 'package:flutter/material.dart';
 /// A series of [ChartTitle] behaviors are used to render titles, one per
 /// margin.
 class ChartTitleLine extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  ChartTitleLine(this.seriesList, {this.animate});
+  ChartTitleLine(this.seriesList, {this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory ChartTitleLine.withSampleData() {

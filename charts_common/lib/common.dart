@@ -30,6 +30,8 @@ export 'src/chart/bar/bar_renderer_decorator.dart' show BarRendererDecorator;
 export 'src/chart/bar/bar_target_line_renderer.dart' show BarTargetLineRenderer;
 export 'src/chart/bar/bar_target_line_renderer_config.dart'
     show BarTargetLineRendererConfig;
+export 'src/chart/bar/base_bar_renderer.dart'
+    show barGroupIndexKey, barGroupCountKey, barGroupWeightKey;
 export 'src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType, BaseBarRendererConfig;
 export 'src/chart/cartesian/axis/axis.dart'
@@ -38,6 +40,7 @@ export 'src/chart/cartesian/axis/axis.dart'
         measureAxisIdKey,
         measureAxisKey,
         Axis,
+        ImmutableAxis,
         AxisOrientation,
         NumericAxis,
         OrdinalAxis,
@@ -179,6 +182,8 @@ export 'src/chart/common/behavior/slider/slider.dart'
         SliderListenerDragState,
         SliderStyle;
 export 'src/chart/common/behavior/sliding_viewport.dart' show SlidingViewport;
+export 'src/chart/common/behavior/sunburst_ring_expander.dart'
+    show SunburstRingExpander;
 export 'src/chart/common/behavior/zoom/initial_hint_behavior.dart'
     show InitialHintBehavior;
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
@@ -242,6 +247,12 @@ export 'src/chart/scatter_plot/point_renderer_decorator.dart'
 export 'src/chart/scatter_plot/scatter_plot_chart.dart' show ScatterPlotChart;
 export 'src/chart/scatter_plot/symbol_annotation_renderer.dart'
     show SymbolAnnotationRenderer;
+export 'src/chart/sunburst/sunburst_chart.dart' show SunburstChart;
+export 'src/chart/sunburst/sunburst_arc_renderer.dart' show SunburstArcRenderer;
+export 'src/chart/sunburst/sunburst_arc_renderer_config.dart'
+    show SunburstArcRendererConfig, SunburstColorStrategy;
+export 'src/chart/sunburst/sunburst_arc_label_decorator.dart'
+    show SunburstArcLabelDecorator;
 export 'src/chart/scatter_plot/symbol_annotation_renderer_config.dart'
     show SymbolAnnotationRendererConfig;
 export 'src/chart/time_series/time_series_chart.dart' show TimeSeriesChart;
@@ -259,6 +270,7 @@ export 'src/common/gesture_listener.dart' show GestureListener;
 export 'src/common/graphics_factory.dart' show GraphicsFactory;
 export 'src/common/line_style.dart' show LineStyle;
 export 'src/common/material_palette.dart' show MaterialPalette;
+export 'src/common/math.dart' show NullablePoint;
 export 'src/common/performance.dart' show Performance;
 export 'src/common/proxy_gesture_listener.dart' show ProxyGestureListener;
 export 'src/common/rtl_spec.dart' show AxisDirection, RTLSpec;

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -16,13 +18,15 @@
 import 'dart:math' show Rectangle;
 
 import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
+import 'package:charts_common/src/chart/cartesian/axis/collision_report.dart';
+import 'package:charts_common/src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
-import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
-import 'package:charts_common/src/chart/cartesian/axis/linear/linear_scale.dart';
+import 'package:charts_common/src/chart/cartesian/axis/tick.dart';
 import 'package:charts_common/src/chart/common/base_chart.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/behavior/range_annotation.dart';
 import 'package:charts_common/src/chart/line/line_chart.dart';
+import 'package:charts_common/src/common/graphics_factory.dart';
 import 'package:charts_common/src/common/material_palette.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:mockito/mockito.dart';
@@ -38,35 +42,37 @@ class ConcreteChart extends LineChart {
   final _primaryMeasureAxis = ConcreteNumericAxis();
 
   @override
-  LifecycleListener addLifecycleListener(LifecycleListener listener) {
+  LifecycleListener<num> addLifecycleListener(LifecycleListener<num> listener) {
     lastListener = listener;
     return super.addLifecycleListener(listener);
   }
 
   @override
-  bool removeLifecycleListener(LifecycleListener listener) {
+  bool removeLifecycleListener(LifecycleListener<num> listener) {
     expect(listener, equals(lastListener));
     lastListener = null;
     return super.removeLifecycleListener(listener);
   }
 
   @override
-  Axis get domainAxis => _domainAxis;
+  Axis<num> get domainAxis => _domainAxis;
 
   @override
-  Axis getMeasureAxis({String axisId}) => _primaryMeasureAxis;
+  NumericAxis getMeasureAxis({String axisId}) => _primaryMeasureAxis;
 }
 
-class ConcreteNumericAxis extends Axis<num> {
+class ConcreteNumericAxis extends NumericAxis {
   ConcreteNumericAxis()
       : super(
           tickProvider: MockTickProvider(),
-          tickFormatter: NumericTickFormatter(),
-          scale: LinearScale(),
         );
 }
 
 class MockTickProvider extends Mock implements NumericTickProvider {}
+
+class MockGraphicsFactory extends Mock implements GraphicsFactory {}
+
+class MockTickDrawStrategy extends Mock implements TickDrawStrategy<num> {}
 
 void main() {
   Rectangle<int> drawBounds;
@@ -108,11 +114,36 @@ void main() {
   /// layout bounds.
   void _drawSeriesList(
       ConcreteChart chart, List<Series<MyRow, int>> seriesList) {
-    _chart.domainAxis.autoViewport = true;
-    _chart.domainAxis.resetDomains();
+    var graphicsFactory = MockGraphicsFactory();
+    var drawStrategy = MockTickDrawStrategy();
+    var tickProvider = MockTickProvider();
+    var ticks = <Tick<num>>[];
+    when(tickProvider.getTicks(
+      context: anyNamed('context'),
+      graphicsFactory: anyNamed('graphicsFactory'),
+      scale: anyNamed('scale'),
+      formatter: anyNamed('formatter'),
+      formatterValueCache: anyNamed('formatterValueCache'),
+      tickDrawStrategy: anyNamed('tickDrawStrategy'),
+      orientation: anyNamed('orientation'),
+      viewportExtensionEnabled: anyNamed('viewportExtensionEnabled'),
+    )).thenReturn(ticks);
+    when(drawStrategy.collides(ticks, any)).thenReturn(CollisionReport<num>(
+        ticks: [], ticksCollide: false, alternateTicksUsed: false));
 
-    _chart.getMeasureAxis().autoViewport = true;
-    _chart.getMeasureAxis().resetDomains();
+    _chart.domainAxis
+      ..autoViewport = true
+      ..graphicsFactory = graphicsFactory
+      ..tickDrawStrategy = drawStrategy
+      ..tickProvider = tickProvider
+      ..resetDomains();
+
+    _chart.getMeasureAxis()
+      ..autoViewport = true
+      ..graphicsFactory = graphicsFactory
+      ..tickDrawStrategy = drawStrategy
+      ..tickProvider = tickProvider
+      ..resetDomains();
 
     _chart.draw(seriesList);
 
@@ -135,15 +166,15 @@ void main() {
     _series1 = Series<MyRow, int>(
         id: 's1',
         data: [_s1D1, _s1D2, _s1D3],
-        domainFn: (dynamic row, _) => row.campaign,
-        measureFn: (dynamic row, _) => row.count,
+        domainFn: (row, _) => row.campaign,
+        measureFn: (row, _) => row.count,
         colorFn: (_, __) => MaterialPalette.blue.shadeDefault);
 
     _series2 = Series<MyRow, int>(
         id: 's2',
         data: [_s2D1, _s2D2, _s2D3],
-        domainFn: (dynamic row, _) => row.campaign,
-        measureFn: (dynamic row, _) => row.count,
+        domainFn: (row, _) => row.campaign,
+        measureFn: (row, _) => row.count,
         colorFn: (_, __) => MaterialPalette.red.shadeDefault);
 
     _annotations1 = [

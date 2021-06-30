@@ -16,6 +16,7 @@
 import 'dart:math' show Rectangle;
 import 'package:charts_common/common.dart' as common
     show
+        ChartBehavior,
         LayoutViewPaintOrder,
         RectSymbolRenderer,
         SelectionTrigger,
@@ -39,7 +40,7 @@ import '../chart_behavior.dart' show ChartBehavior, GestureType;
 ///   longPressHold - Mouse/Touch for a while on the handle, then drag across
 ///       the data.
 @immutable
-class Slider extends ChartBehavior<common.Slider> {
+class Slider<D> extends ChartBehavior<D> {
   final Set<GestureType> desiredGestures;
 
   /// Type of input event for the slider.
@@ -56,39 +57,39 @@ class Slider extends ChartBehavior<common.Slider> {
   ///
   /// The smaller number is drawn first.  This value should be relative to
   /// LayoutPaintViewOrder.slider (e.g. LayoutViewPaintOrder.slider + 1).
-  final int layoutPaintOrder;
+  final int? layoutPaintOrder;
 
   /// Initial domain position of the slider, in domain units.
-  final dynamic initialDomainValue;
+  final dynamic? initialDomainValue;
 
   /// Callback function that will be called when the position of the slider
   /// changes during a drag event.
   ///
   /// The callback will be given the current domain position of the slider.
-  final common.SliderListenerCallback onChangeCallback;
+  final common.SliderListenerCallback? onChangeCallback;
 
   /// Custom role ID for this slider
-  final String roleId;
+  final String? roleId;
 
   /// Whether or not the slider will snap onto the nearest datum (by domain
   /// distance) when dragged.
   final bool snapToDatum;
 
   /// Color and size styles for the slider.
-  final common.SliderStyle style;
+  final common.SliderStyle? style;
 
   /// Renderer for the handle. Defaults to a rectangle.
-  final common.SymbolRenderer handleRenderer;
+  final common.SymbolRenderer? handleRenderer;
 
   Slider._internal(
-      {this.eventTrigger,
+      {required this.eventTrigger,
       this.onChangeCallback,
       this.initialDomainValue,
       this.roleId,
-      this.snapToDatum,
+      required this.snapToDatum,
       this.style,
       this.handleRenderer,
-      this.desiredGestures,
+      required this.desiredGestures,
       this.layoutPaintOrder});
 
   /// Constructs a [Slider].
@@ -113,13 +114,13 @@ class Slider extends ChartBehavior<common.Slider> {
   /// painted. This value should be relative to LayoutPaintViewOrder.slider.
   /// (e.g. LayoutViewPaintOrder.slider + 1).
   factory Slider(
-      {common.SelectionTrigger eventTrigger,
-      common.SymbolRenderer handleRenderer,
-      dynamic initialDomainValue,
-      String roleId,
-      common.SliderListenerCallback onChangeCallback,
+      {common.SelectionTrigger? eventTrigger,
+      common.SymbolRenderer? handleRenderer,
+      dynamic? initialDomainValue,
+      String? roleId,
+      common.SliderListenerCallback? onChangeCallback,
       bool snapToDatum = false,
-      common.SliderStyle style,
+      common.SliderStyle? style,
       int layoutPaintOrder = common.LayoutViewPaintOrder.slider}) {
     eventTrigger ??= common.SelectionTrigger.tapAndDrag;
     handleRenderer ??= new common.RectSymbolRenderer();
@@ -154,13 +155,12 @@ class Slider extends ChartBehavior<common.Slider> {
       default:
         throw new ArgumentError(
             'Slider does not support the event trigger ' + '"${eventTrigger}"');
-        break;
     }
     return desiredGestures;
   }
 
   @override
-  common.Slider<D> createCommonBehavior<D>() => new common.Slider<D>(
+  common.Slider<D> createCommonBehavior() => new common.Slider<D>(
       eventTrigger: eventTrigger,
       handleRenderer: handleRenderer,
       initialDomainValue: initialDomainValue as D,
@@ -170,7 +170,7 @@ class Slider extends ChartBehavior<common.Slider> {
       style: style);
 
   @override
-  void updateCommonBehavior(common.Slider commonBehavior) {}
+  void updateCommonBehavior(common.ChartBehavior<D> commonBehavior) {}
 
   @override
   String get role => 'Slider-${eventTrigger.toString()}';

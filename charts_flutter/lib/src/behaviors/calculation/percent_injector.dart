@@ -14,7 +14,7 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart' as common
-    show PercentInjector, PercentInjectorTotalType;
+    show ChartBehavior, PercentInjector, PercentInjectorTotalType;
 import 'package:meta/meta.dart' show immutable;
 
 import '../chart_behavior.dart' show ChartBehavior, GestureType;
@@ -36,28 +36,23 @@ import '../chart_behavior.dart' show ChartBehavior, GestureType;
 /// then this behavior must be added after the [Legend] to ensure that it
 /// calculates values after series have been potentially removed from the list.
 @immutable
-class PercentInjector extends ChartBehavior<common.PercentInjector> {
+class PercentInjector<D> extends ChartBehavior<D> {
   final desiredGestures = new Set<GestureType>();
 
   /// The type of data total to be calculated.
   final common.PercentInjectorTotalType totalType;
 
-  PercentInjector._internal({this.totalType});
-
   /// Constructs a [PercentInjector].
   ///
   /// [totalType] configures the type of data total to be calculated.
-  factory PercentInjector({common.PercentInjectorTotalType totalType}) {
-    totalType ??= common.PercentInjectorTotalType.domain;
-    return new PercentInjector._internal(totalType: totalType);
-  }
+  PercentInjector({this.totalType = common.PercentInjectorTotalType.domain});
 
   @override
-  common.PercentInjector<D> createCommonBehavior<D>() =>
+  common.PercentInjector<D> createCommonBehavior() =>
       new common.PercentInjector<D>(totalType: totalType);
 
   @override
-  void updateCommonBehavior(common.PercentInjector commonBehavior) {}
+  void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
 
   @override
   String get role => 'PercentInjector';

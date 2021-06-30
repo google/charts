@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -30,7 +32,7 @@ import 'package:test/test.dart';
 class ConcreteChart extends BaseChart<String> {
   List<MutableSeries<String>> _seriesList;
 
-  SeriesRenderer<String> _seriesRenderer = LineRenderer<String>();
+  final SeriesRenderer<String> _seriesRenderer = LineRenderer<String>();
 
   ConcreteChart(this._seriesList);
 

@@ -26,201 +26,191 @@ class MutableSeries<D> extends ImmutableSeries<D> {
   final String id;
 
   @override
-  String displayName;
+  String? displayName;
 
   @override
   bool overlaySeries;
 
   @override
-  String seriesCategory;
+  String? seriesCategory;
 
   @override
-  Color seriesColor;
+  Color? seriesColor;
 
   @override
-  int seriesIndex;
+  late int seriesIndex;
 
   /// Sum of the measure values for the series.
   @override
-  num seriesMeasureTotal;
+  late num seriesMeasureTotal;
 
   @override
-  List data;
+  List<dynamic> data;
 
   @override
-  AccessorFn<String> keyFn;
+  AccessorFn<String>? keyFn;
 
   @override
   AccessorFn<D> domainFn;
 
   @override
-  AccessorFn<DomainFormatter<D>> domainFormatterFn;
+  AccessorFn<DomainFormatter<D>>? domainFormatterFn;
 
   @override
-  AccessorFn<D> domainLowerBoundFn;
+  AccessorFn<D?>? domainLowerBoundFn;
 
   @override
-  AccessorFn<D> domainUpperBoundFn;
+  AccessorFn<D?>? domainUpperBoundFn;
 
   @override
-  AccessorFn<num> measureFn;
+  AccessorFn<num?> measureFn;
 
   @override
-  AccessorFn<MeasureFormatter> measureFormatterFn;
+  AccessorFn<MeasureFormatter>? measureFormatterFn;
 
   @override
-  AccessorFn<num> measureLowerBoundFn;
+  AccessorFn<num?>? measureLowerBoundFn;
 
   @override
-  AccessorFn<num> measureUpperBoundFn;
+  AccessorFn<num?>? measureUpperBoundFn;
 
   @override
-  AccessorFn<num> measureOffsetFn;
+  AccessorFn<num?>? measureOffsetFn;
 
   @override
-  AccessorFn<num> rawMeasureFn;
+  AccessorFn<num?> rawMeasureFn;
 
   @override
-  AccessorFn<num> rawMeasureLowerBoundFn;
+  AccessorFn<num?>? rawMeasureLowerBoundFn;
 
   @override
-  AccessorFn<num> rawMeasureUpperBoundFn;
+  AccessorFn<num?>? rawMeasureUpperBoundFn;
 
   @override
-  AccessorFn<Color> areaColorFn;
+  AccessorFn<Color?>? areaColorFn;
 
   @override
-  AccessorFn<Color> colorFn;
+  AccessorFn<Color>? colorFn;
 
   @override
-  AccessorFn<List<int>> dashPatternFn;
+  AccessorFn<List<int>?>? dashPatternFn;
 
   @override
-  AccessorFn<Color> fillColorFn;
+  AccessorFn<Color?>? fillColorFn;
 
   @override
-  AccessorFn<FillPatternType> fillPatternFn;
+  AccessorFn<FillPatternType?>? fillPatternFn;
 
   @override
-  AccessorFn<Color> patternColorFn;
+  AccessorFn<Color?>? patternColorFn;
 
   @override
-  AccessorFn<num> radiusPxFn;
+  AccessorFn<num?>? radiusPxFn;
   @override
-  AccessorFn<num> strokeWidthPxFn;
+  AccessorFn<num?>? strokeWidthPxFn;
   @override
-  AccessorFn<String> labelAccessorFn;
+  AccessorFn<String>? labelAccessorFn;
 
   @override
-  AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;
+  AccessorFn<TextStyleSpec>? insideLabelStyleAccessorFn;
 
   @override
-  AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
+  AccessorFn<TextStyleSpec>? outsideLabelStyleAccessorFn;
 
   final _attrs = SeriesAttributes();
 
-  Axis measureAxis;
-  Axis domainAxis;
+  Axis<num>? measureAxis;
+  Axis<D>? domainAxis;
 
-  MutableSeries(Series<dynamic, D> series) : id = series.id {
-    displayName = series.displayName ?? series.id;
-    overlaySeries = series.overlaySeries;
-    seriesCategory = series.seriesCategory;
-    seriesColor = series.seriesColor;
+  MutableSeries(Series<dynamic, D> series)
+      : id = series.id,
+        displayName = series.displayName ?? series.id,
+        overlaySeries = series.overlaySeries,
+        seriesCategory = series.seriesCategory,
+        seriesColor = series.seriesColor,
+        data = series.data,
+        keyFn = series.keyFn,
+        domainFn = series.domainFn,
+        domainFormatterFn = series.domainFormatterFn,
+        domainLowerBoundFn = series.domainLowerBoundFn,
+        domainUpperBoundFn = series.domainUpperBoundFn,
+        measureFn = series.measureFn,
+        measureFormatterFn = series.measureFormatterFn,
+        measureLowerBoundFn = series.measureLowerBoundFn,
+        measureUpperBoundFn = series.measureUpperBoundFn,
+        measureOffsetFn = series.measureOffsetFn,
 
-    data = series.data;
-    keyFn = series.keyFn;
-
-    domainFn = series.domainFn;
-    domainFormatterFn = series.domainFormatterFn;
-    domainLowerBoundFn = series.domainLowerBoundFn;
-    domainUpperBoundFn = series.domainUpperBoundFn;
-
-    measureFn = series.measureFn;
-    measureFormatterFn = series.measureFormatterFn;
-    measureLowerBoundFn = series.measureLowerBoundFn;
-    measureUpperBoundFn = series.measureUpperBoundFn;
-    measureOffsetFn = series.measureOffsetFn;
-
-    // Save the original measure functions in case they get replaced later.
-    rawMeasureFn = series.measureFn;
-    rawMeasureLowerBoundFn = series.measureLowerBoundFn;
-    rawMeasureUpperBoundFn = series.measureUpperBoundFn;
-
+        // Save the original measure functions in case they get replaced later.
+        rawMeasureFn = series.measureFn,
+        rawMeasureLowerBoundFn = series.measureLowerBoundFn,
+        rawMeasureUpperBoundFn = series.measureUpperBoundFn,
+        areaColorFn = series.areaColorFn,
+        colorFn = series.colorFn,
+        dashPatternFn = series.dashPatternFn,
+        fillColorFn = series.fillColorFn,
+        fillPatternFn = series.fillPatternFn,
+        patternColorFn = series.patternColorFn,
+        insideLabelStyleAccessorFn = series.insideLabelStyleAccessorFn,
+        outsideLabelStyleAccessorFn = series.outsideLabelStyleAccessorFn,
+        radiusPxFn = series.radiusPxFn,
+        strokeWidthPxFn = series.strokeWidthPxFn {
     // Pre-compute the sum of the measure values to make it available on demand.
     seriesMeasureTotal = 0;
-    for (int i = 0; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
       final measure = measureFn(i);
       if (measure != null) {
         seriesMeasureTotal += measure;
       }
     }
 
-    areaColorFn = series.areaColorFn;
-    colorFn = series.colorFn;
-    dashPatternFn = series.dashPatternFn;
-    fillColorFn = series.fillColorFn;
-    fillPatternFn = series.fillPatternFn;
-    patternColorFn = series.patternColorFn;
     labelAccessorFn = series.labelAccessorFn ?? (i) => domainFn(i).toString();
-    insideLabelStyleAccessorFn = series.insideLabelStyleAccessorFn;
-    outsideLabelStyleAccessorFn = series.outsideLabelStyleAccessorFn;
-
-    radiusPxFn = series.radiusPxFn;
-    strokeWidthPxFn = series.strokeWidthPxFn;
 
     _attrs.mergeFrom(series.attributes);
   }
 
-  MutableSeries.clone(MutableSeries<D> other) : id = other.id {
-    displayName = other.displayName;
-    overlaySeries = other.overlaySeries;
-    seriesCategory = other.seriesCategory;
-    seriesColor = other.seriesColor;
-    seriesIndex = other.seriesIndex;
-
-    data = other.data;
-    keyFn = other.keyFn;
-
-    domainFn = other.domainFn;
-    domainFormatterFn = other.domainFormatterFn;
-    domainLowerBoundFn = other.domainLowerBoundFn;
-    domainUpperBoundFn = other.domainUpperBoundFn;
-
-    measureFn = other.measureFn;
-    measureFormatterFn = other.measureFormatterFn;
-    measureLowerBoundFn = other.measureLowerBoundFn;
-    measureUpperBoundFn = other.measureUpperBoundFn;
-    measureOffsetFn = other.measureOffsetFn;
-
-    rawMeasureFn = other.rawMeasureFn;
-    rawMeasureLowerBoundFn = other.rawMeasureLowerBoundFn;
-    rawMeasureUpperBoundFn = other.rawMeasureUpperBoundFn;
-
-    seriesMeasureTotal = other.seriesMeasureTotal;
-
-    areaColorFn = other.areaColorFn;
-    colorFn = other.colorFn;
-    dashPatternFn = other.dashPatternFn;
-    fillColorFn = other.fillColorFn;
-    fillPatternFn = other.fillPatternFn;
-    patternColorFn = other.patternColorFn;
-    labelAccessorFn = other.labelAccessorFn;
-    insideLabelStyleAccessorFn = other.insideLabelStyleAccessorFn;
-    outsideLabelStyleAccessorFn = other.outsideLabelStyleAccessorFn;
-    radiusPxFn = other.radiusPxFn;
-    strokeWidthPxFn = other.strokeWidthPxFn;
-
+  MutableSeries.clone(MutableSeries<D> other)
+      : id = other.id,
+        displayName = other.displayName,
+        overlaySeries = other.overlaySeries,
+        seriesCategory = other.seriesCategory,
+        seriesColor = other.seriesColor,
+        seriesIndex = other.seriesIndex,
+        data = other.data,
+        keyFn = other.keyFn,
+        domainFn = other.domainFn,
+        domainFormatterFn = other.domainFormatterFn,
+        domainLowerBoundFn = other.domainLowerBoundFn,
+        domainUpperBoundFn = other.domainUpperBoundFn,
+        measureFn = other.measureFn,
+        measureFormatterFn = other.measureFormatterFn,
+        measureLowerBoundFn = other.measureLowerBoundFn,
+        measureUpperBoundFn = other.measureUpperBoundFn,
+        measureOffsetFn = other.measureOffsetFn,
+        rawMeasureFn = other.rawMeasureFn,
+        rawMeasureLowerBoundFn = other.rawMeasureLowerBoundFn,
+        rawMeasureUpperBoundFn = other.rawMeasureUpperBoundFn,
+        seriesMeasureTotal = other.seriesMeasureTotal,
+        areaColorFn = other.areaColorFn,
+        colorFn = other.colorFn,
+        dashPatternFn = other.dashPatternFn,
+        fillColorFn = other.fillColorFn,
+        fillPatternFn = other.fillPatternFn,
+        patternColorFn = other.patternColorFn,
+        labelAccessorFn = other.labelAccessorFn,
+        insideLabelStyleAccessorFn = other.insideLabelStyleAccessorFn,
+        outsideLabelStyleAccessorFn = other.outsideLabelStyleAccessorFn,
+        radiusPxFn = other.radiusPxFn,
+        strokeWidthPxFn = other.strokeWidthPxFn,
+        measureAxis = other.measureAxis,
+        domainAxis = other.domainAxis {
     _attrs.mergeFrom(other._attrs);
-    measureAxis = other.measureAxis;
-    domainAxis = other.domainAxis;
   }
 
   @override
   void setAttr<R>(AttributeKey<R> key, R value) => _attrs.setAttr(key, value);
 
   @override
-  R getAttr<R>(AttributeKey<R> key) => _attrs.getAttr(key);
+  R? getAttr<R>(AttributeKey<R> key) => _attrs.getAttr(key);
 
   @override
   bool operator ==(Object other) =>
@@ -233,14 +223,14 @@ class MutableSeries<D> extends ImmutableSeries<D> {
 abstract class ImmutableSeries<D> {
   String get id;
 
-  String get displayName;
+  String? get displayName;
 
   /// Overlay series provided supplemental information on a chart, but are not
   /// considered to be primary data. They should not be selectable by user
   /// interaction.
   bool get overlaySeries;
 
-  String get seriesCategory;
+  String? get seriesCategory;
 
   /// Color which represents the entire series in legends.
   ///
@@ -252,14 +242,15 @@ abstract class ImmutableSeries<D> {
   ///
   /// If neither are provided, then the chart will insert colors for each series
   /// on the chart using a mapping function.
-  Color get seriesColor;
+  Color? get seriesColor;
 
   int get seriesIndex;
 
   /// Sum of the measure values for the series.
   num get seriesMeasureTotal;
 
-  List get data;
+  // Uses `dynamic` for convenience to callers.
+  List<dynamic> get data;
 
   /// [keyFn] defines a globally unique identifier for each datum.
   ///
@@ -268,54 +259,54 @@ abstract class ImmutableSeries<D> {
   ///
   /// Note: This is currently an optional function that is not fully used by all
   /// series renderers yet.
-  AccessorFn<String> keyFn;
+  AccessorFn<String>? keyFn;
 
   AccessorFn<D> get domainFn;
 
-  AccessorFn<DomainFormatter<D>> get domainFormatterFn;
+  AccessorFn<DomainFormatter<D>>? get domainFormatterFn;
 
-  AccessorFn<D> get domainLowerBoundFn;
+  AccessorFn<D?>? get domainLowerBoundFn;
 
-  AccessorFn<D> get domainUpperBoundFn;
+  AccessorFn<D?>? get domainUpperBoundFn;
 
-  AccessorFn<num> get measureFn;
+  AccessorFn<num?> get measureFn;
 
-  AccessorFn<MeasureFormatter> get measureFormatterFn;
+  AccessorFn<MeasureFormatter>? get measureFormatterFn;
 
-  AccessorFn<num> get measureLowerBoundFn;
+  AccessorFn<num?>? get measureLowerBoundFn;
 
-  AccessorFn<num> get measureUpperBoundFn;
+  AccessorFn<num?>? get measureUpperBoundFn;
 
-  AccessorFn<num> get measureOffsetFn;
+  AccessorFn<num?>? get measureOffsetFn;
 
-  AccessorFn<num> get rawMeasureFn;
+  AccessorFn<num?> get rawMeasureFn;
 
-  AccessorFn<num> get rawMeasureLowerBoundFn;
+  AccessorFn<num?>? get rawMeasureLowerBoundFn;
 
-  AccessorFn<num> get rawMeasureUpperBoundFn;
+  AccessorFn<num?>? get rawMeasureUpperBoundFn;
 
-  AccessorFn<Color> get areaColorFn;
+  AccessorFn<Color?>? get areaColorFn;
 
-  AccessorFn<Color> get colorFn;
+  AccessorFn<Color?>? get colorFn;
 
-  AccessorFn<List<int>> get dashPatternFn;
+  AccessorFn<List<int>?>? get dashPatternFn;
 
-  AccessorFn<Color> get fillColorFn;
+  AccessorFn<Color?>? get fillColorFn;
 
-  AccessorFn<Color> get patternColorFn;
+  AccessorFn<Color?>? get patternColorFn;
 
-  AccessorFn<FillPatternType> get fillPatternFn;
+  AccessorFn<FillPatternType?>? get fillPatternFn;
 
-  AccessorFn<String> get labelAccessorFn;
+  AccessorFn<String>? get labelAccessorFn;
 
-  AccessorFn<TextStyleSpec> insideLabelStyleAccessorFn;
-  AccessorFn<TextStyleSpec> outsideLabelStyleAccessorFn;
+  AccessorFn<TextStyleSpec>? insideLabelStyleAccessorFn;
+  AccessorFn<TextStyleSpec>? outsideLabelStyleAccessorFn;
 
-  AccessorFn<num> get radiusPxFn;
+  AccessorFn<num?>? get radiusPxFn;
 
-  AccessorFn<num> get strokeWidthPxFn;
+  AccessorFn<num?>? get strokeWidthPxFn;
 
   void setAttr<R>(AttributeKey<R> key, R value);
 
-  R getAttr<R>(AttributeKey<R> key);
+  R? getAttr<R>(AttributeKey<R> key);
 }

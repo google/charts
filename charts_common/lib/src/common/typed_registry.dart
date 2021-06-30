@@ -14,10 +14,10 @@
 // limitations under the License.
 
 class TypedRegistry {
-  final Map<TypedKey, Object> _registry = {};
+  final _registry = <TypedKey<Object?>, Object?>{};
 
-  R getAttr<R>(TypedKey<R> key) {
-    return _registry[key] as R;
+  R? getAttr<R>(TypedKey<R> key) {
+    return _registry[key] as R?;
   }
 
   void setAttr<R>(TypedKey<R> key, R value) {
@@ -37,5 +37,6 @@ class TypedKey<R> {
   int get hashCode => uniqueKey.hashCode;
 
   @override
-  bool operator ==(other) => other is TypedKey && uniqueKey == other.uniqueKey;
+  bool operator ==(Object other) =>
+      other is TypedKey && uniqueKey == other.uniqueKey;
 }

@@ -20,7 +20,6 @@ import '../../../cartesian/axis/spec/axis_spec.dart' show TextStyleSpec;
 import '../../datum_details.dart' show MeasureFormatter;
 import '../../processed_series.dart' show MutableSeries;
 import '../../selection_model/selection_model.dart';
-import '../../series_datum.dart' show SeriesDatum;
 import 'legend_entry.dart';
 import 'legend_entry_generator.dart';
 
@@ -29,27 +28,32 @@ import 'legend_entry_generator.dart';
 /// [D] the domain class type for the datum.
 class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   @override
-  TextStyleSpec entryTextStyle;
+  TextStyleSpec? entryTextStyle;
 
   @override
-  MeasureFormatter measureFormatter;
+  MeasureFormatter? measureFormatter;
 
   @override
-  MeasureFormatter secondaryMeasureFormatter;
+  MeasureFormatter? secondaryMeasureFormatter;
 
   @override
   bool showOverlaySeries = false;
 
   /// Option for showing measures when there is no selection.
   @override
-  LegendDefaultMeasure legendDefaultMeasure;
+  late LegendDefaultMeasure legendDefaultMeasure;
 
   @override
   List<LegendEntry<D>> getLegendEntries(List<MutableSeries<D>> seriesList) {
     final legendEntries = seriesList
         .where((series) => showOverlaySeries || !series.overlaySeries)
-        .map((series) => LegendEntry<D>(series, series.displayName,
-            color: series.seriesColor, textStyle: entryTextStyle))
+        .map((series) => LegendEntry<D>(
+              series,
+              series.displayName!,
+              // TODO: Should this use series.colorFn if seriesColor is null?
+              color: series.seriesColor!,
+              textStyle: entryTextStyle,
+            ))
         .toList();
 
     // Update with measures only if showing measure on no selection.
@@ -84,14 +88,12 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     // Hash set of series ID's that use the secondary measure axis
     final secondaryAxisSeriesIDs = HashSet<String>();
 
-    for (SeriesDatum<D> selectedDatum in selectionModel.selectedDatum) {
+    for (final selectedDatum in selectionModel.selectedDatum) {
       final series = selectedDatum.series;
       final seriesId = series.id;
       final measure = series.measureFn(selectedDatum.index) ?? 0;
 
-      seriesAndMeasure[seriesId] = seriesAndMeasure.containsKey(seriesId)
-          ? seriesAndMeasure[seriesId] + measure
-          : measure;
+      seriesAndMeasure[seriesId] = (seriesAndMeasure[seriesId] ?? 0) + measure;
 
       if (series.getAttr(measureAxisIdKey) == Axis.secondaryMeasureAxisId) {
         secondaryAxisSeriesIDs.add(seriesId);
@@ -102,8 +104,8 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
       final seriesId = entry.series.id;
       final measureValue = seriesAndMeasure[seriesId]?.toDouble();
       final formattedValue = secondaryAxisSeriesIDs.contains(seriesId)
-          ? secondaryMeasureFormatter(measureValue)
-          : measureFormatter(measureValue);
+          ? secondaryMeasureFormatter!(measureValue)
+          : measureFormatter!(measureValue);
 
       entry.value = measureValue;
       entry.formattedValue = formattedValue;
@@ -117,7 +119,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
   }
 
   void _resetLegendEntryMeasures(List<LegendEntry<D>> legendEntries) {
-    for (LegendEntry<D> entry in legendEntries) {
+    for (final entry in legendEntries) {
       entry.value = null;
       entry.formattedValue = null;
       entry.isSelected = false;
@@ -141,13 +143,13 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
     }
 
     // Map of series ID to the calculated measure for that series.
-    final seriesAndMeasure = <String, double>{};
+    final seriesAndMeasure = <String, double?>{};
     // Map of series ID and the formatted measure for that series.
     final seriesAndFormattedMeasure = <String, String>{};
 
-    for (MutableSeries<D> series in seriesList) {
+    for (final series in seriesList) {
       final seriesId = series.id;
-      num calculatedMeasure;
+      num? calculatedMeasure;
 
       switch (legendDefaultMeasure) {
         case LegendDefaultMeasure.sum:
@@ -171,8 +173,8 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
       seriesAndMeasure[seriesId] = calculatedMeasure?.toDouble();
       seriesAndFormattedMeasure[seriesId] =
           (series.getAttr(measureAxisIdKey) == Axis.secondaryMeasureAxisId)
-              ? secondaryMeasureFormatter(calculatedMeasure)
-              : measureFormatter(calculatedMeasure);
+              ? secondaryMeasureFormatter!(calculatedMeasure)
+              : measureFormatter!(calculatedMeasure);
     }
 
     for (var entry in legendEntries) {
@@ -195,7 +197,7 @@ class PerSeriesLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
   @override
   int get hashCode {
-    int hashcode = measureFormatter?.hashCode ?? 0;
+    var hashcode = measureFormatter.hashCode;
     hashcode = (hashcode * 37) + secondaryMeasureFormatter.hashCode;
     hashcode = (hashcode * 37) + legendDefaultMeasure.hashCode;
     hashcode = (hashcode * 37) + entryTextStyle.hashCode;

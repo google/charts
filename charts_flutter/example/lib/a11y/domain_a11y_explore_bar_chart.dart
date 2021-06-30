@@ -38,10 +38,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class DomainA11yExploreBarChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  DomainA11yExploreBarChart(this.seriesList, {this.animate});
+  DomainA11yExploreBarChart(this.seriesList, {this.animate = false});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory DomainA11yExploreBarChart.withSampleData() {

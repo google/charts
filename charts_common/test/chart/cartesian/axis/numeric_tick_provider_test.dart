@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -31,6 +33,7 @@ import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick_provider.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_extents.dart';
 import 'package:charts_common/src/chart/cartesian/axis/numeric_tick_provider.dart';
+import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -52,7 +55,7 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
       : super(null, FakeGraphicsFactory());
 
   @override
-  CollisionReport collides(List<Tick<num>> ticks, _) {
+  CollisionReport<num> collides(List<Tick<num>> ticks, _) {
     final ticksCollide = ticks.length >= collidesAfterTickCount;
     final alternateTicksUsed = ticks.length >= alternateRenderingAfterTickCount;
 
@@ -64,11 +67,12 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
 
   @override
   void draw(ChartCanvas canvas, Tick<num> tick,
-      {AxisOrientation orientation,
-      Rectangle<int> axisBounds,
-      Rectangle<int> drawAreaBounds,
-      bool isFirst,
-      bool isLast}) {}
+      {@required AxisOrientation orientation,
+      @required Rectangle<int> axisBounds,
+      @required Rectangle<int> drawAreaBounds,
+      @required bool isFirst,
+      @required bool isLast,
+      bool collision = false}) {}
 }
 
 /// A fake [GraphicsFactory] that returns [MockTextStyle] and [MockTextElement].

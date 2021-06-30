@@ -21,14 +21,14 @@ import 'package:charts_common/common.dart' as common show Color;
 ///
 /// TODO: Support for more shapes than circles?
 class PointPainter {
-  void draw(
-      {Canvas canvas,
-      Paint paint,
-      Point point,
-      double radius,
-      common.Color fill,
-      common.Color stroke,
-      double strokeWidthPx}) {
+  static void draw(
+      {required Canvas canvas,
+      required Paint paint,
+      required Point point,
+      required double radius,
+      common.Color? fill,
+      common.Color? stroke,
+      double? strokeWidthPx}) {
     if (point == null) {
       return;
     }

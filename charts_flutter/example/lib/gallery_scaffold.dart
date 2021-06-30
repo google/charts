@@ -25,8 +25,12 @@ class GalleryScaffold extends StatefulWidget {
   final String subtitle;
   final GalleryWidgetBuilder childBuilder;
 
-  GalleryScaffold(
-      {this.listTileIcon, this.title, this.subtitle, this.childBuilder});
+  GalleryScaffold({
+    required this.listTileIcon,
+    required this.title,
+    required this.subtitle,
+    required this.childBuilder,
+  });
 
   /// Gets the gallery
   Widget buildGalleryListTile(BuildContext context) => new ListTile(

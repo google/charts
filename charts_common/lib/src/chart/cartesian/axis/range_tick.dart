@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart';
 import '../../../common/text_element.dart';
 
 import 'tick.dart' show Tick;
@@ -35,14 +34,14 @@ class RangeTick<D> extends Tick<D> {
   double rangeEndLocationPx;
 
   RangeTick(
-      {@required D value,
-      @required TextElement textElement,
-      double locationPx,
-      double labelOffsetPx,
-      this.rangeStartValue,
-      this.rangeStartLocationPx,
-      this.rangeEndValue,
-      this.rangeEndLocationPx})
+      {required D value,
+      required TextElement textElement,
+      double? locationPx,
+      double? labelOffsetPx,
+      required this.rangeStartValue,
+      required this.rangeStartLocationPx,
+      required this.rangeEndValue,
+      required this.rangeEndLocationPx})
       : super(
             value: value,
             locationPx: locationPx,

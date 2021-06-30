@@ -36,7 +36,7 @@ abstract class Scale<D> {
   /// Returns the pixel location for the given [domainValue] or null if the
   /// domainValue could not be found/translated by this scale.
   /// Non-numeric scales should be the only ones that can return null.
-  num operator [](D domainValue);
+  num? operator [](D domainValue);
 
   /// Reverse application of the scale.
   D reverse(double pixelLocation);
@@ -49,7 +49,7 @@ abstract class Scale<D> {
   bool canTranslate(D domainValue);
 
   /// Returns the previously set output range for the scale function.
-  ScaleOutputExtent get range;
+  ScaleOutputExtent? get range;
 
   /// Returns the absolute width between the max and min range values.
   int get rangeWidth;
@@ -136,7 +136,7 @@ abstract class MutableScale<D> extends Scale<D> {
   ///
   /// [extent] is the extent of the range which will likely be the pixel
   /// range of the drawing area to convert to.
-  set range(ScaleOutputExtent extent);
+  set range(ScaleOutputExtent? extent);
 
   /// Configures the zoom and translate.
   ///
@@ -184,7 +184,7 @@ class ScaleOutputExtent {
   int get width => diff.abs();
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       other is ScaleOutputExtent && start == other.start && end == other.end;
 
   @override
@@ -269,7 +269,7 @@ class RangeBandConfig {
   /// the number of series in their preprocess.
   RangeBandConfig.styleAssignedPercent([int seriesCount = 1])
       : type = RangeBandType.styleAssignedPercentOfStep,
-        size = StyleFactory.style.rangeBandSize ?? 0.65;
+        size = StyleFactory.style.rangeBandSize;
 
   /// Creates a config that defines the rangeBand as the stepSize - pixels.
   ///

@@ -17,7 +17,7 @@ import 'color.dart';
 
 /// Style properties of a paintable object.
 abstract class PaintStyle {
-  Color get color;
+  Color? get color;
 
-  set color(Color value);
+  set color(Color? value);
 }

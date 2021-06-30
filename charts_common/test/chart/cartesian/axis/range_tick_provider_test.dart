@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -22,12 +24,15 @@ import 'package:charts_common/src/chart/cartesian/axis/spec/tick_spec.dart';
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/common/graphics_factory.dart';
+import 'package:charts_common/src/common/text_element.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 class MockChartContext extends Mock implements ChartContext {}
 
 class MockGraphicsFactory extends Mock implements GraphicsFactory {}
+
+class MockTextElement extends Mock implements TextElement {}
 
 class MockNumericTickFormatter extends Mock implements TickFormatter<num> {}
 
@@ -43,21 +48,23 @@ class FakeNumericTickFormatter implements TickFormatter<num> {
   }
 }
 
-class MockDrawStrategy extends Mock implements BaseTickDrawStrategy {}
+class MockDrawStrategy<D> extends Mock implements BaseTickDrawStrategy<D> {}
 
 void main() {
   ChartContext context;
   GraphicsFactory graphicsFactory;
-  TickFormatter formatter;
-  BaseTickDrawStrategy drawStrategy;
+  TickFormatter<num> formatter;
+  BaseTickDrawStrategy<num> drawStrategy;
   LinearScale scale;
 
   setUp(() {
     context = MockChartContext();
     graphicsFactory = MockGraphicsFactory();
     formatter = MockNumericTickFormatter();
-    drawStrategy = MockDrawStrategy();
+    drawStrategy = MockDrawStrategy<num>();
     scale = LinearScale()..range = ScaleOutputExtent(0, 300);
+
+    when(graphicsFactory.createTextElement(any)).thenReturn(MockTextElement());
   });
 
   group('scale is extended with range tick values', () {

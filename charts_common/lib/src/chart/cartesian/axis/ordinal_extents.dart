@@ -27,8 +27,10 @@ class OrdinalExtents extends Extents<String> {
   /// [D] is the domain class type for the elements in the extents.
   OrdinalExtents(List<String> range) : _range = range {
     // This asserts that all elements in [range] are unique.
-    final uniqueValueCount = HashSet.from(_range).length;
-    assert(uniqueValueCount == range.length);
+    assert(() {
+      final uniqueValueCount = HashSet.of(_range).length;
+      return uniqueValueCount == range.length;
+    }());
   }
 
   factory OrdinalExtents.all(List<String> range) => OrdinalExtents(range);
@@ -38,7 +40,7 @@ class OrdinalExtents extends Extents<String> {
   /// The number of values inside this extent.
   int get length => _range.length;
 
-  String operator [](int index) => _range[index];
+  String? operator [](int index) => _range[index];
 
   int indexOf(String value) => _range.indexOf(value);
 }

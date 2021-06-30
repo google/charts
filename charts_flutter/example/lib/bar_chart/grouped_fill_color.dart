@@ -23,10 +23,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 /// Example of a grouped bar chart with three series, each rendered with
 /// different fill colors.
 class GroupedFillColorBarChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  GroupedFillColorBarChart(this.seriesList, {this.animate});
+  GroupedFillColorBarChart(this.seriesList, {this.animate = false});
 
   factory GroupedFillColorBarChart.withSampleData() {
     return new GroupedFillColorBarChart(

@@ -21,11 +21,11 @@ import 'chart_canvas.dart' show FillPatternType;
 /// A rectangle to be painted by [ChartCanvas].
 class CanvasRect {
   final Rectangle<int> bounds;
-  final List<int> dashPattern;
-  final Color fill;
-  final FillPatternType pattern;
-  final Color stroke;
-  final double strokeWidthPx;
+  final List<int>? dashPattern;
+  final Color? fill;
+  final FillPatternType? pattern;
+  final Color? stroke;
+  final double? strokeWidthPx;
 
   CanvasRect(this.bounds,
       {this.dashPattern,
@@ -38,7 +38,7 @@ class CanvasRect {
 /// A stack of [CanvasRect] to be painted by [ChartCanvas].
 class CanvasBarStack {
   final List<CanvasRect> segments;
-  final int radius;
+  final int? radius;
   final int stackedBarPadding;
   final bool roundTopLeft;
   final bool roundTopRight;
@@ -46,13 +46,15 @@ class CanvasBarStack {
   final bool roundBottomRight;
   final Rectangle<int> fullStackRect;
 
-  factory CanvasBarStack(List<CanvasRect> segments,
-      {int radius,
-      int stackedBarPadding,
-      bool roundTopLeft,
-      bool roundTopRight,
-      bool roundBottomLeft,
-      bool roundBottomRight}) {
+  factory CanvasBarStack(
+    List<CanvasRect> segments, {
+    int? radius,
+    int stackedBarPadding = 1,
+    bool roundTopLeft = false,
+    bool roundTopRight = false,
+    bool roundBottomLeft = false,
+    bool roundBottomRight = false,
+  }) {
     final firstBarBounds = segments.first.bounds;
 
     // Find the rectangle that would represent the full stack of bars.
@@ -88,13 +90,13 @@ class CanvasBarStack {
 
   CanvasBarStack._internal(
     this.segments, {
-    this.radius,
-    this.stackedBarPadding = 1,
-    this.roundTopLeft = false,
-    this.roundTopRight = false,
-    this.roundBottomLeft = false,
-    this.roundBottomRight = false,
-    this.fullStackRect,
+    required this.radius,
+    required this.stackedBarPadding,
+    required this.roundTopLeft,
+    required this.roundTopRight,
+    required this.roundBottomLeft,
+    required this.roundBottomRight,
+    required this.fullStackRect,
   });
 }
 
@@ -106,7 +108,7 @@ class CanvasPie {
   double innerRadius;
 
   /// Color of separator lines between arcs.
-  final Color stroke;
+  final Color? stroke;
 
   /// Stroke width of separator lines between arcs.
   double strokeWidthPx;
@@ -119,7 +121,7 @@ class CanvasPie {
 class CanvasPieSlice {
   double startAngle;
   double endAngle;
-  Color fill;
+  Color? fill;
 
   CanvasPieSlice(this.startAngle, this.endAngle, {this.fill});
 }

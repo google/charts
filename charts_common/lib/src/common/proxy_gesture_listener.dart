@@ -15,6 +15,8 @@
 
 import 'dart:math' show Point;
 
+import 'package:collection/collection.dart' show IterableExtension;
+
 import 'gesture_listener.dart' show GestureListener;
 
 /// Listens to all gestures and proxies to child listeners.
@@ -39,10 +41,9 @@ class ProxyGestureListener {
 
   bool onLongPress(Point<double> localPosition) {
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = _activeListeners.firstWhere(
+    final claimingListener = _activeListeners.firstWhereOrNull(
         (GestureListener listener) =>
-            listener.onLongPress != null && listener.onLongPress(localPosition),
-        orElse: () => null);
+            listener.onLongPress?.call(localPosition) ?? false);
 
     // If someone claims the long press, then cancel everyone else.
     if (claimingListener != null) {
@@ -55,10 +56,9 @@ class ProxyGestureListener {
 
   bool onTap(Point<double> localPosition) {
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = _activeListeners.firstWhere(
+    final claimingListener = _activeListeners.firstWhereOrNull(
         (GestureListener listener) =>
-            listener.onTap != null && listener.onTap(localPosition),
-        orElse: () => null);
+            listener.onTap?.call(localPosition) ?? false);
 
     // If someone claims the tap, then cancel everyone else.
     // This should hopefully be rare, like for drilling.
@@ -76,7 +76,7 @@ class ProxyGestureListener {
 
     // Walk through listeners stopping at the first handled listener.
     return _listeners.any((GestureListener listener) =>
-        listener.onHover != null && listener.onHover(localPosition));
+        listener.onHover?.call(localPosition) ?? false);
   }
 
   bool onDragStart(Point<double> localPosition) {
@@ -87,10 +87,9 @@ class ProxyGestureListener {
     }
 
     // Walk through listeners stopping at the first handled listener.
-    final claimingListener = _activeListeners.firstWhere(
+    final claimingListener = _activeListeners.firstWhereOrNull(
         (GestureListener listener) =>
-            listener.onDragStart != null && listener.onDragStart(localPosition),
-        orElse: () => null);
+            listener.onDragStart?.call(localPosition) ?? false);
 
     if (claimingListener != null) {
       _activeListeners =
@@ -102,29 +101,30 @@ class ProxyGestureListener {
 
   bool onDragUpdate(Point<double> localPosition, double scale) {
     return _activeListeners.any((GestureListener listener) =>
-        listener.onDragUpdate != null &&
-        listener.onDragUpdate(localPosition, scale));
+        listener.onDragUpdate?.call(localPosition, scale) ?? false);
   }
 
   bool onDragEnd(
       Point<double> localPosition, double scale, double pixelsPerSecond) {
     return _activeListeners.any((GestureListener listener) =>
-        listener.onDragEnd != null &&
-        listener.onDragEnd(localPosition, scale, pixelsPerSecond));
+        listener.onDragEnd?.call(localPosition, scale, pixelsPerSecond) ??
+        false);
   }
 
   bool onFocus() {
-    return _listeners.any((GestureListener listener) =>
-        listener.onFocus != null && listener.onFocus());
+    return _listeners
+        .any((GestureListener listener) => listener.onFocus?.call() ?? false);
   }
 
   bool onBlur() {
-    return _listeners.any((GestureListener listener) =>
-        listener.onBlur != null && listener.onBlur());
+    return _listeners
+        .any((GestureListener listener) => listener.onBlur?.call() ?? false);
   }
 
-  List<GestureListener> _cancel(
-      {List<GestureListener> all, List<GestureListener> keep}) {
+  List<GestureListener> _cancel({
+    required List<GestureListener> all,
+    required List<GestureListener> keep,
+  }) {
     all.forEach((GestureListener listener) {
       if (!keep.contains(listener)) {
         listener.onTapCancel();
@@ -134,7 +134,7 @@ class ProxyGestureListener {
   }
 
   bool _populateActiveListeners(Point<double> localPosition) {
-    var localListeners = List<GestureListener>.from(_listeners);
+    var localListeners = List.of(_listeners);
 
     var previouslyClaimed = false;
     localListeners.forEach((GestureListener listener) {

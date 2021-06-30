@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -38,7 +40,7 @@ class MyRow {
 }
 
 class MockImmutableSeries<D> extends Mock implements ImmutableSeries<D> {
-  String _id;
+  final String _id;
   MockImmutableSeries(this._id);
 
   @override
@@ -88,23 +90,23 @@ void main() {
       MutableSeries<int>(Series<MyRow, int>(
           id: 'Desktop',
           colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-          domainFn: (dynamic row, _) => row.campaign,
-          measureFn: (dynamic row, _) => row.clickCount,
+          domainFn: (row, _) => row.campaign,
+          measureFn: (row, _) => row.clickCount,
           measureOffsetFn: (_, __) => 0,
           data: myFakeDesktopData)),
       MutableSeries<int>(Series<MyRow, int>(
           id: 'Tablet',
           colorFn: (_, __) => MaterialPalette.red.shadeDefault,
-          domainFn: (dynamic row, _) => row.campaign,
-          measureFn: (dynamic row, _) => row.clickCount,
+          domainFn: (row, _) => row.campaign,
+          measureFn: (row, _) => row.clickCount,
           measureOffsetFn: (_, __) => 0,
           strokeWidthPxFn: (_, __) => 1.25,
           data: myFakeTabletData)),
       MutableSeries<int>(Series<MyRow, int>(
           id: 'Mobile',
           colorFn: (_, __) => MaterialPalette.green.shadeDefault,
-          domainFn: (dynamic row, _) => row.campaign,
-          measureFn: (dynamic row, _) => row.clickCount,
+          domainFn: (row, _) => row.campaign,
+          measureFn: (row, _) => row.clickCount,
           measureOffsetFn: (_, __) => 0,
           strokeWidthPxFn: (_, __) => 3.0,
           data: myFakeMobileData))
@@ -114,23 +116,23 @@ void main() {
       MutableSeries<String>(Series<MyRow, String>(
           id: 'Desktop',
           colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
-          domainFn: (dynamic row, _) => row.campaignString,
-          measureFn: (dynamic row, _) => row.clickCount,
+          domainFn: (row, _) => row.campaignString,
+          measureFn: (row, _) => row.clickCount,
           measureOffsetFn: (_, __) => 0,
           data: myFakeDesktopData)),
       MutableSeries<String>(Series<MyRow, String>(
           id: 'Tablet',
           colorFn: (_, __) => MaterialPalette.red.shadeDefault,
-          domainFn: (dynamic row, _) => row.campaignString,
-          measureFn: (dynamic row, _) => row.clickCount,
+          domainFn: (row, _) => row.campaignString,
+          measureFn: (row, _) => row.clickCount,
           measureOffsetFn: (_, __) => 0,
           strokeWidthPxFn: (_, __) => 1.25,
           data: myFakeTabletData)),
       MutableSeries<String>(Series<MyRow, String>(
           id: 'Mobile',
           colorFn: (_, __) => MaterialPalette.green.shadeDefault,
-          domainFn: (dynamic row, _) => row.campaignString,
-          measureFn: (dynamic row, _) => row.clickCount,
+          domainFn: (row, _) => row.campaignString,
+          measureFn: (row, _) => row.clickCount,
           measureOffsetFn: (_, __) => 0,
           strokeWidthPxFn: (_, __) => 3.0,
           data: myFakeMobileData))
@@ -273,8 +275,8 @@ void main() {
             colorFn: (MyRow row, _) => row.color,
             dashPatternFn: (MyRow row, _) => row.dashPattern,
             strokeWidthPxFn: (MyRow row, _) => row.strokeWidthPx,
-            domainFn: (dynamic row, _) => row.campaign,
-            measureFn: (dynamic row, _) => row.clickCount,
+            domainFn: (row, _) => row.campaign,
+            measureFn: (row, _) => row.clickCount,
             measureOffsetFn: (_, __) => 0,
             data: myFakeDesktopData)),
         MutableSeries<int>(Series<MyRow, int>(
@@ -282,8 +284,8 @@ void main() {
             colorFn: (MyRow row, _) => row.color,
             dashPatternFn: (MyRow row, _) => row.dashPattern,
             strokeWidthPxFn: (MyRow row, _) => row.strokeWidthPx,
-            domainFn: (dynamic row, _) => row.campaign,
-            measureFn: (dynamic row, _) => row.clickCount,
+            domainFn: (row, _) => row.campaign,
+            measureFn: (row, _) => row.clickCount,
             measureOffsetFn: (_, __) => 0,
             data: myFakeTabletData)),
         MutableSeries<int>(Series<MyRow, int>(
@@ -291,8 +293,8 @@ void main() {
             colorFn: (MyRow row, _) => row.color,
             dashPatternFn: (MyRow row, _) => row.dashPattern,
             strokeWidthPxFn: (MyRow row, _) => row.strokeWidthPx,
-            domainFn: (dynamic row, _) => row.campaign,
-            measureFn: (dynamic row, _) => row.clickCount,
+            domainFn: (row, _) => row.campaign,
+            measureFn: (row, _) => row.clickCount,
             measureOffsetFn: (_, __) => 0,
             data: myFakeMobileData))
       ];
@@ -425,11 +427,11 @@ void main() {
       numericSeriesList = [
         MutableSeries<int>(Series<MyRow, int>(
             id: 'Desktop',
-            colorFn: (MyRow row, _) => row.color,
-            dashPatternFn: (MyRow row, _) => row.dashPattern,
-            strokeWidthPxFn: (MyRow row, _) => row.strokeWidthPx,
-            domainFn: (dynamic row, _) => row.campaign,
-            measureFn: (dynamic row, _) => row.clickCount,
+            colorFn: (row, _) => row.color,
+            dashPatternFn: (row, _) => row.dashPattern,
+            strokeWidthPxFn: (row, _) => row.strokeWidthPx,
+            domainFn: (row, _) => row.campaign,
+            measureFn: (row, _) => row.clickCount,
             measureOffsetFn: (_, __) => 0,
             data: myFakeData)),
       ];

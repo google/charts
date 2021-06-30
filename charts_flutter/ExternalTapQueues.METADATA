@@ -1,0 +1,20 @@
+# Format: google3/devtools/metadata/metadata.proto (go/google3metadata)
+# https://cs.corp.google.com/#google3/devtools/metadata/presubmit.proto
+
+# External Tap queues to run for CLs to Charts Flutter.
+#
+# All TAP projects added must comply with http://go/dart-charts-testing-sla.
+# Projects that violate the testing SLA will be removed immediately.
+presubmit {
+  path_expression: "//depot/google3/third_party/dart/charts_flutter/..."
+  path_expression: "//depot/google3/third_party/dart/charts_common/..."
+
+  check_tests: {
+    failure_status: ERROR
+    # For each client TAP, please add team name, email alias, and buganizer
+    # component ID.
+
+    # Connect Sales Mobile, gt-fe-dev@, bug component ID: 122320.
+    project: "greentea.flutter"
+  }
+}

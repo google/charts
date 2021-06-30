@@ -32,10 +32,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class SegmentsLineChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  SegmentsLineChart(this.seriesList, {this.animate});
+  SegmentsLineChart(this.seriesList, {this.animate = false});
 
   /// Creates a [LineChart] with sample data and no transition.
   factory SegmentsLineChart.withSampleData() {
@@ -226,7 +226,7 @@ class SegmentsLineChart extends StatelessWidget {
 class LinearSales {
   final int year;
   final int sales;
-  final List<int> dashPattern;
+  final List<int>? dashPattern;
   final double strokeWidthPx;
 
   LinearSales(this.year, this.sales, this.dashPattern, this.strokeWidthPx);

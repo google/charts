@@ -22,11 +22,12 @@ class SeriesDatum<D> {
 
   /// This is set after [index] getter is called. So accessing this directly is
   /// considered unsafe. Always uses [index] getter instead.
-  int _index;
+  int? _index;
 
   SeriesDatum(this.series, this.datum);
 
-  int get index {
+  /// Returns null if-and-only if [datum] is null.
+  int? get index {
     if (datum == null) return null;
     _index ??= series.data.indexOf(datum);
     return _index;
@@ -56,7 +57,7 @@ class SeriesDatumConfig<D> {
 
   @override
   int get hashCode {
-    int hashcode = seriesId.hashCode;
+    var hashcode = seriesId.hashCode;
     hashcode = hashcode * 37 + domainValue.hashCode;
     return hashcode;
   }

@@ -32,18 +32,17 @@ class CircleSectorPainter {
   /// [fill] Fill color for the sector.
   /// [stroke] Stroke color of the arc and radius lines.
   /// [strokeWidthPx] Stroke width of the arc and radius lines.
-  void draw(
-      {Canvas canvas,
-      Paint paint,
-      Point center,
-      double radius,
-      double innerRadius,
-      double startAngle,
-      double endAngle,
-      common.Color fill,
-      common.Color stroke,
-      double strokeWidthPx}) {
-    paint.color = new Color.fromARGB(fill.a, fill.r, fill.g, fill.b);
+  static void draw({
+    required Canvas canvas,
+    required Paint paint,
+    required Point center,
+    required double radius,
+    required double innerRadius,
+    required double startAngle,
+    required double endAngle,
+    common.Color? fill,
+  }) {
+    paint.color = new Color.fromARGB(fill!.a, fill.r, fill.g, fill.b);
     paint.style = PaintingStyle.fill;
 
     final innerRadiusStartPoint = new Point<double>(
@@ -58,7 +57,7 @@ class CircleSectorPainter {
         radius * cos(startAngle) + center.x,
         radius * sin(startAngle) + center.y);
 
-    final centerOffset = new Offset(center.x, center.y);
+    final centerOffset = new Offset(center.x.toDouble(), center.y.toDouble());
 
     final isFullCircle = startAngle != null &&
         endAngle != null &&

@@ -36,7 +36,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
   /// Sets viewport for this Axis.
   ///
   /// If pan / zoom behaviors are set, this is the initial viewport.
-  final OrdinalViewport viewport;
+  final OrdinalViewport? viewport;
 
   /// Creates a [AxisSpec] that specialized for ordinal domain charts.
   ///
@@ -49,18 +49,19 @@ class OrdinalAxisSpec extends AxisSpec<String> {
   ///     formatted.
   /// [showAxisLine] override to force the axis to draw the axis line.
   const OrdinalAxisSpec({
-    RenderSpec<String> renderSpec,
-    OrdinalTickProviderSpec tickProviderSpec,
-    OrdinalTickFormatterSpec tickFormatterSpec,
-    bool showAxisLine,
-    OrdinalScaleSpec scaleSpec,
+    RenderSpec<String>? renderSpec,
+    OrdinalTickProviderSpec? tickProviderSpec,
+    OrdinalTickFormatterSpec? tickFormatterSpec,
+    bool? showAxisLine,
+    OrdinalScaleSpec? scaleSpec,
     this.viewport,
   }) : super(
-            renderSpec: renderSpec,
-            tickProviderSpec: tickProviderSpec,
-            tickFormatterSpec: tickFormatterSpec,
-            showAxisLine: showAxisLine,
-            scaleSpec: scaleSpec);
+          renderSpec: renderSpec,
+          tickProviderSpec: tickProviderSpec,
+          tickFormatterSpec: tickFormatterSpec,
+          showAxisLine: showAxisLine,
+          scaleSpec: scaleSpec,
+        );
 
   @override
   void configure(Axis<String> axis, ChartContext context,
@@ -68,7 +69,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is OrdinalAxis && viewport != null) {
-      axis.setScaleViewport(viewport);
+      axis.setScaleViewport(viewport!);
     }
   }
 
@@ -85,7 +86,7 @@ class OrdinalAxisSpec extends AxisSpec<String> {
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + viewport.hashCode;
     return hashcode;
   }
@@ -189,12 +190,9 @@ class FixedPixelSpaceOrdinalScaleSpec implements OrdinalScaleSpec {
   const FixedPixelSpaceOrdinalScaleSpec(this.pixelSpaceBetweenBars);
 
   @override
-  OrdinalScale createScale() {
-    SimpleOrdinalScale scale = SimpleOrdinalScale();
-    scale.rangeBandConfig =
+  OrdinalScale createScale() => SimpleOrdinalScale()
+    ..rangeBandConfig =
         RangeBandConfig.fixedPixelSpaceBetweenStep(pixelSpaceBetweenBars);
-    return scale;
-  }
 
   @override
   bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;
@@ -211,11 +209,8 @@ class FixedPixelOrdinalScaleSpec implements OrdinalScaleSpec {
   const FixedPixelOrdinalScaleSpec(this.pixels);
 
   @override
-  OrdinalScale createScale() {
-    SimpleOrdinalScale scale = SimpleOrdinalScale();
-    scale.rangeBandConfig = RangeBandConfig.fixedPixel(pixels);
-    return scale;
-  }
+  OrdinalScale createScale() => SimpleOrdinalScale()
+    ..rangeBandConfig = RangeBandConfig.fixedPixel(pixels);
 
   @override
   bool operator ==(Object other) => other is SimpleOrdinalScaleSpec;

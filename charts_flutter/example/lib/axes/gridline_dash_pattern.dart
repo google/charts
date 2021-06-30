@@ -21,10 +21,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class GridlineDashPattern extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  GridlineDashPattern(this.seriesList, {this.animate});
+  GridlineDashPattern(this.seriesList, {this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory GridlineDashPattern.withSampleData() {

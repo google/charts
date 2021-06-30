@@ -29,16 +29,12 @@ class MinuteTimeStepper extends BaseTimeStepper {
         super(dateTimeFactory);
 
   factory MinuteTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int> allowedTickIncrements}) {
+      {List<int>? allowedTickIncrements}) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 
-    // Must have at least one increment
-    assert(allowedTickIncrements.isNotEmpty);
-    // Increment must be between 1 and 60 inclusive.
     assert(allowedTickIncrements
-            .any((increment) => increment <= 0 || increment > 60) ==
-        false);
+        .every((increment) => increment >= 1 && increment <= 60));
 
     return MinuteTimeStepper._internal(dateTimeFactory, allowedTickIncrements);
   }

@@ -27,21 +27,21 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   final CornerStrategy cornerStrategy;
 
   /// Decorator for optionally decorating painted bars.
-  final BarRendererDecorator barRendererDecorator;
+  final BarRendererDecorator<D>? barRendererDecorator;
 
   BarRendererConfig({
-    String customRendererId,
-    CornerStrategy cornerStrategy,
-    FillPatternType fillPattern,
-    BarGroupingType groupingType,
+    String? customRendererId,
+    CornerStrategy? cornerStrategy,
+    FillPatternType? fillPattern,
+    BarGroupingType? groupingType,
     int layoutPaintOrder = LayoutViewPaintOrder.bar,
     int minBarLengthPx = 0,
-    int maxBarWidthPx,
+    int? maxBarWidthPx,
     int stackedBarPaddingPx = 1,
     double strokeWidthPx = 0.0,
     this.barRendererDecorator,
-    SymbolRenderer symbolRenderer,
-    List<int> weightPattern,
+    SymbolRenderer? symbolRenderer,
+    List<int>? weightPattern,
   })  : cornerStrategy = cornerStrategy ?? const ConstCornerStrategy(2),
         super(
           customRendererId: customRendererId,
@@ -62,20 +62,19 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is BarRendererConfig)) {
-      return false;
-    }
-    return other.cornerStrategy == cornerStrategy && super == other;
+    return other is BarRendererConfig &&
+        other.cornerStrategy == cornerStrategy &&
+        super == other;
   }
 
   @override
   int get hashCode {
     var hash = super.hashCode;
-    hash = hash * 31 + (cornerStrategy?.hashCode ?? 0);
+    hash = hash * 31 + cornerStrategy.hashCode;
     return hash;
   }
 }
@@ -95,14 +94,11 @@ class ConstCornerStrategy implements CornerStrategy {
   int getRadius(_) => radius;
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is ConstCornerStrategy)) {
-      return false;
-    }
-    return other.radius == radius;
+    return other is ConstCornerStrategy && other.radius == radius;
   }
 
   @override

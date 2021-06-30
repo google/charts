@@ -22,10 +22,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class SlidingViewportOnSelection extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  SlidingViewportOnSelection(this.seriesList, {this.animate});
+  SlidingViewportOnSelection(this.seriesList, {this.animate = false});
 
   /// Creates a [BarChart] with sample data and no transition.
   factory SlidingViewportOnSelection.withSampleData() {

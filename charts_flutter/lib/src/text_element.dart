@@ -31,29 +31,29 @@ class TextElement implements common.TextElement {
   @override
   final String text;
 
-  final double textScaleFactor;
+  final double? textScaleFactor;
 
   var _painterReady = false;
-  common.TextStyle _textStyle;
+  common.TextStyle? _textStyle;
   common.TextDirection _textDirection = common.TextDirection.ltr;
 
-  int _maxWidth;
-  common.MaxWidthStrategy _maxWidthStrategy;
+  int? _maxWidth;
+  common.MaxWidthStrategy? _maxWidthStrategy;
 
-  TextPainter _textPainter;
+  late TextPainter _textPainter;
 
-  common.TextMeasurement _measurement;
+  late common.TextMeasurement _measurement;
 
-  double _opacity;
+  double? _opacity;
 
-  TextElement(this.text, {common.TextStyle style, this.textScaleFactor})
+  TextElement(this.text, {common.TextStyle? style, this.textScaleFactor})
       : _textStyle = style;
 
   @override
-  common.TextStyle get textStyle => _textStyle;
+  common.TextStyle? get textStyle => _textStyle;
 
   @override
-  set textStyle(common.TextStyle value) {
+  set textStyle(common.TextStyle? value) {
     if (_textStyle == value) {
       return;
     }
@@ -74,10 +74,10 @@ class TextElement implements common.TextElement {
   common.TextDirection get textDirection => _textDirection;
 
   @override
-  int get maxWidth => _maxWidth;
+  int? get maxWidth => _maxWidth;
 
   @override
-  set maxWidth(int value) {
+  set maxWidth(int? value) {
     if (_maxWidth == value) {
       return;
     }
@@ -86,10 +86,10 @@ class TextElement implements common.TextElement {
   }
 
   @override
-  common.MaxWidthStrategy get maxWidthStrategy => _maxWidthStrategy;
+  common.MaxWidthStrategy? get maxWidthStrategy => _maxWidthStrategy;
 
   @override
-  set maxWidthStrategy(common.MaxWidthStrategy maxWidthStrategy) {
+  set maxWidthStrategy(common.MaxWidthStrategy? maxWidthStrategy) {
     if (_maxWidthStrategy == maxWidthStrategy) {
       return;
     }
@@ -98,7 +98,7 @@ class TextElement implements common.TextElement {
   }
 
   @override
-  set opacity(double opacity) {
+  set opacity(double? opacity) {
     if (opacity != _opacity) {
       _painterReady = false;
       _opacity = opacity;
@@ -126,7 +126,7 @@ class TextElement implements common.TextElement {
     return (_textPainter.height * 0.1).ceil();
   }
 
-  TextPainter get textPainter {
+  TextPainter? get textPainter {
     if (!_painterReady) {
       _refreshPainter();
     }
@@ -136,21 +136,23 @@ class TextElement implements common.TextElement {
   /// Create text painter and measure based on current settings
   void _refreshPainter() {
     _opacity ??= 1.0;
-    var color = new Color.fromARGB(
-      (textStyle.color.a * _opacity).round(),
-      textStyle.color.r,
-      textStyle.color.g,
-      textStyle.color.b,
-    );
+    var color = (textStyle == null || textStyle!.color == null)
+        ? null
+        : new Color.fromARGB(
+            (textStyle!.color!.a * _opacity!).round(),
+            textStyle!.color!.r,
+            textStyle!.color!.g,
+            textStyle!.color!.b,
+          );
 
     _textPainter = new TextPainter(
         text: new TextSpan(
             text: text,
             style: new TextStyle(
                 color: color,
-                fontSize: textStyle.fontSize.toDouble(),
-                fontFamily: textStyle.fontFamily,
-                height: textStyle.lineHeight)))
+                fontSize: textStyle?.fontSize?.toDouble(),
+                fontFamily: textStyle?.fontFamily,
+                height: textStyle?.lineHeight)))
       ..textDirection = TextDirection.ltr
       // TODO Flip once textAlign works
       ..textAlign = TextAlign.left
@@ -161,7 +163,7 @@ class TextElement implements common.TextElement {
           : null;
 
     if (textScaleFactor != null) {
-      _textPainter.textScaleFactor = textScaleFactor;
+      _textPainter.textScaleFactor = textScaleFactor!;
     }
 
     _textPainter.layout(maxWidth: maxWidth?.toDouble() ?? double.infinity);

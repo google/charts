@@ -32,10 +32,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class TimeSeriesSymbolAnnotationChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
 
-  TimeSeriesSymbolAnnotationChart(this.seriesList, {this.animate});
+  TimeSeriesSymbolAnnotationChart(this.seriesList, {this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory TimeSeriesSymbolAnnotationChart.withSampleData() {
@@ -285,10 +285,14 @@ class TimeSeriesSymbolAnnotationChart extends StatelessWidget {
 /// Sample time series data type.
 class TimeSeriesSales {
   final DateTime timeCurrent;
-  final DateTime timePrevious;
-  final DateTime timeTarget;
-  final int sales;
+  final DateTime? timePrevious;
+  final DateTime? timeTarget;
+  final int? sales;
 
-  TimeSeriesSales(
-      {this.timeCurrent, this.timePrevious, this.timeTarget, this.sales});
+  TimeSeriesSales({
+    required this.timeCurrent,
+    this.timePrevious,
+    this.timeTarget,
+    this.sales,
+  });
 }
