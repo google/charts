@@ -19,13 +19,14 @@ import 'package:test/test.dart';
 
 import 'package:charts_flutter/src/behaviors/legend/legend_layout.dart';
 
-class MockContext extends Mock implements BuildContext {}
+// Can't use Mockito annotations with BuildContext yet? Fake it.
+class FakeBuildContext extends Fake implements BuildContext {}
 
 void main() {
   late BuildContext context;
 
   setUp(() {
-    context = new MockContext();
+    context = FakeBuildContext();
   });
 
   group('TabularLegendLayoutBuilder', () {
