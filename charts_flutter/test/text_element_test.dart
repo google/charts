@@ -15,13 +15,10 @@
 
 import 'package:flutter/material.dart' show BuildContext;
 import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart' show GenerateMocks;
 import 'package:flutter/widgets.dart' show InheritedWidget;
 import 'package:test/test.dart';
 import 'package:charts_flutter/src/graphics_factory.dart';
 import 'package:charts_flutter/src/text_element.dart';
-
-import 'text_element_test.mocks.dart' as mocks;
 
 // Can't use Mockito annotations with BuildContext yet? Fake it.
 class FakeBuildContext extends Fake implements BuildContext {
@@ -32,12 +29,20 @@ class FakeBuildContext extends Fake implements BuildContext {
   }
 }
 
-@GenerateMocks([GraphicsFactoryHelper])
+// Gave up trying to figure out how to use mockito for now.
+class FakeGraphicsFactoryHelper extends Fake implements GraphicsFactoryHelper {
+  double textScaleFactor;
+
+  FakeGraphicsFactoryHelper(this.textScaleFactor) {}
+
+  @override
+  double getTextScaleFactorOf(BuildContext context) => textScaleFactor;
+}
+
 void main() {
   test('Text element gets assigned scale factor', () {
     final context = FakeBuildContext();
-    final helper = new mocks.MockGraphicsFactoryHelper();
-    when(helper.getTextScaleFactorOf(argThat(equals(context)))).thenReturn(3.0);
+    final helper = FakeGraphicsFactoryHelper(3.0);
     final graphicsFactory = new GraphicsFactory(context, helper: helper);
 
     final textElement =
