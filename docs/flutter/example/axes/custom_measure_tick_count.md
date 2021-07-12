@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of timeseries chart with a custom number of ticks
 ///
 /// The tick count can be set by setting the [desiredMinTickCount] and

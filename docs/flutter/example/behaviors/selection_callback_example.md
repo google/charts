@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Timeseries chart with example of updating external state based on selection.
 ///
 /// A SelectionModelConfig can be provided for each of the different

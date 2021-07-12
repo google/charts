@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a stacked area chart.
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';

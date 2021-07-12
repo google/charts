@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Time series chart with range annotation example
 ///
 /// The example future range annotation extends beyond the range of the series

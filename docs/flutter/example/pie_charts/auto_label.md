@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Donut chart with labels example. This is a simple pie chart with a hole in
 /// the middle.
 import 'package:charts_flutter/flutter.dart' as charts;

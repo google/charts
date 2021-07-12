@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a bar chart with domain selection A11y behavior.
 ///
 /// The OS screen reader (TalkBack / VoiceOver) setting must be turned on, or

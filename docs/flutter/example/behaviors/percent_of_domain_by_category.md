@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a percentage bar chart with grouped, stacked series oriented
 /// vertically.
 ///

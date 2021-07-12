@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a time series chart with range annotations configured to render
 /// labels in the chart margin area.
 import 'package:charts_flutter/flutter.dart' as charts;

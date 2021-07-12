@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of using disjoint measure axes to render 4 series of lines with
 /// separate scales. The general use case for this type of chart is to show
 /// differences in the trends of the data, without comparing their absolute

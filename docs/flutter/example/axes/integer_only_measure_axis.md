@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of timeseries chart forcing the measure axis to have whole number
 /// ticks. This is useful if the measure units don't make sense to present as
 /// fractional.

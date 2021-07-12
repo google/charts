@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Forward pattern hatch bar chart example
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;

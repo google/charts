@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of adding an initial selection behavior.
 ///
 /// This example adds initial selection to a bar chart, but any chart can use

@@ -4,7 +4,7 @@
 
 Example:
 
-```
+```dart
 /// Example of a time series chart with a confidence interval.
 ///
 /// Confidence interval is defined by specifying the upper and lower measure
