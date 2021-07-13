@@ -1,7 +1,0 @@
-<configuration
-    name="Android Charts"
-    type="FlutterBazelRunConfigurationType"
-    factoryName="Flutter (Bazel)">
-  <option name="bazelTarget" value="//third_party/dart/charts_flutter/example/android:Charts" />
-  <method v="2" />
-</configuration>
