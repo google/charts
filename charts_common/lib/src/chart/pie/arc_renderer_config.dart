@@ -15,77 +15,35 @@
 
 import 'dart:math' show pi;
 
-import '../../common/color.dart' show Color;
-import '../../common/style/style_factory.dart' show StyleFactory;
 import '../../common/symbol_renderer.dart';
-import '../common/series_renderer_config.dart'
-    show RendererAttributes, SeriesRendererConfig;
-import '../layout/layout_view.dart' show LayoutViewConfig, LayoutViewPaintOrder;
+import '../layout/layout_view.dart' show LayoutViewPaintOrder;
 import 'arc_renderer.dart' show ArcRenderer;
 import 'arc_renderer_decorator.dart' show ArcRendererDecorator;
+import 'base_arc_renderer_config.dart' show BaseArcRendererConfig;
 
 /// Configuration for an [ArcRenderer].
-class ArcRendererConfig<D> extends LayoutViewConfig
-    implements SeriesRendererConfig<D> {
-  final String customRendererId;
-
-  /// List of decorators applied to rendered arcs.
-  final List<ArcRendererDecorator> arcRendererDecorators;
-
-  final SymbolRenderer symbolRenderer;
-
-  final rendererAttributes = RendererAttributes();
-
-  /// Total arc length, in radians.
-  ///
-  /// The default arcLength is 2π.
-  final double arcLength;
-
-  /// If set, configures the arcWidth to be a percentage of the radius.
-  final double arcRatio;
-
-  /// Fixed width of the arc within the radius.
-  ///
-  /// If arcRatio is set, this value will be ignored.
-  final int arcWidth;
-
-  /// The order to paint this renderer on the canvas.
-  final int layoutPaintOrder;
-
-  /// Minimum radius in pixels of the hole in a donut chart for center content
-  /// to appear.
-  final int minHoleWidthForCenterContent;
-
-  /// Start angle for pie slices, in radians.
-  ///
-  /// Angles are defined from the positive x axis in Cartesian space. The
-  /// default startAngle is -π/2.
-  final double startAngle;
-
-  /// Stroke width of the border of the arcs.
-  final double strokeWidthPx;
-
-  /// Stroke color of the border of the arcs.
-  final Color stroke;
-
-  /// Color of the "no data" state for the chart, used when an empty series is
-  /// drawn.
-  final Color noDataColor;
-
+class ArcRendererConfig<D> extends BaseArcRendererConfig<D> {
   ArcRendererConfig(
-      {this.customRendererId,
-      this.arcLength = 2 * pi,
-      this.arcRendererDecorators = const [],
-      this.arcRatio,
-      this.arcWidth,
-      this.layoutPaintOrder = LayoutViewPaintOrder.arc,
-      this.minHoleWidthForCenterContent = 30,
-      this.startAngle = -pi / 2,
-      this.strokeWidthPx = 2.0,
-      SymbolRenderer symbolRenderer})
-      : noDataColor = StyleFactory.style.noDataColor,
-        stroke = StyleFactory.style.arcStrokeColor,
-        this.symbolRenderer = symbolRenderer ?? CircleSymbolRenderer();
+      {String? customRendererId,
+      double arcLength = 2 * pi,
+      List<ArcRendererDecorator<D>> arcRendererDecorators = const [],
+      double? arcRatio,
+      int? arcWidth,
+      int layoutPaintOrder = LayoutViewPaintOrder.arc,
+      int minHoleWidthForCenterContent = 30,
+      double startAngle = -pi / 2,
+      double strokeWidthPx = 2.0,
+      SymbolRenderer? symbolRenderer})
+      : super(
+            customRendererId: customRendererId,
+            arcLength: arcLength,
+            arcRatio: arcRatio,
+            arcWidth: arcWidth,
+            layoutPaintOrder: layoutPaintOrder,
+            minHoleWidthForCenterContent: minHoleWidthForCenterContent,
+            startAngle: startAngle,
+            strokeWidthPx: strokeWidthPx,
+            arcRendererDecorators: arcRendererDecorators);
 
   @override
   ArcRenderer<D> build() {

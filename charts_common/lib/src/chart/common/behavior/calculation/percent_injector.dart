@@ -38,7 +38,7 @@ const percentInjectedKey =
 /// then this behavior must be added after the [Legend] to ensure that it
 /// calculates values after series have been potentially removed from the list.
 class PercentInjector<D> implements ChartBehavior<D> {
-  LifecycleListener<D> _lifecycleListener;
+  late final LifecycleListener<D> _lifecycleListener;
 
   /// The type of data total to be calculated.
   final PercentInjectorTotalType totalType;
@@ -65,7 +65,7 @@ class PercentInjector<D> implements ChartBehavior<D> {
   /// Resets the state of the behavior when new data is drawn on the chart.
   void _onData(List<MutableSeries<D>> seriesList) {
     // Reset tracking of percentage injection for new data.
-    seriesList.forEach((MutableSeries series) {
+    seriesList.forEach((series) {
       series.setAttr(percentInjectedKey, false);
     });
   }
@@ -77,8 +77,8 @@ class PercentInjector<D> implements ChartBehavior<D> {
   /// the [seriesList] between chart redraws.
   void _preProcess(List<MutableSeries<D>> seriesList) {
     var percentInjected = true;
-    seriesList.forEach((MutableSeries series) {
-      percentInjected = percentInjected && series.getAttr(percentInjectedKey);
+    seriesList.forEach((series) {
+      percentInjected = percentInjected && series.getAttr(percentInjectedKey)!;
     });
 
     if (percentInjected) {
@@ -95,113 +95,106 @@ class PercentInjector<D> implements ChartBehavior<D> {
 
         // Walk the series and compute the domain total. Series total is
         // automatically computed by [MutableSeries].
-        seriesList.forEach((MutableSeries series) {
+        for (final series in seriesList) {
           final seriesCategory = series.seriesCategory;
           final rawMeasureFn = series.rawMeasureFn;
           final domainFn = series.domainFn;
 
           for (var index = 0; index < series.data.length; index++) {
             final domain = domainFn(index);
-            var measure = rawMeasureFn(index);
-            measure ??= 0.0;
+            var measure = rawMeasureFn(index) ?? 0.0;
 
-            final key = useSeriesCategory
-                ? '${seriesCategory}__${domain.toString()}'
-                : '${domain.toString()}';
+            final key =
+                useSeriesCategory ? '${seriesCategory}__$domain' : '$domain';
 
-            if (totalsByDomain[key] != null) {
-              totalsByDomain[key] = totalsByDomain[key] + measure;
-            } else {
-              totalsByDomain[key] = measure;
-            }
+            totalsByDomain[key] = (totalsByDomain[key] ?? 0.0) + measure;
           }
-        });
 
-        // Add percent of domain and series accessor functions.
-        seriesList.forEach((MutableSeries series) {
+          // Add percent of domain and series accessor functions.
+          //
           // Replace the default measure accessor with one that computes the
           // percentage.
-          series.measureFn = (int index) {
-            final measure = series.rawMeasureFn(index);
+          series.measureFn = (int? index) {
+            final measure = rawMeasureFn(index);
 
             if (measure == null || measure == 0.0) {
               return 0.0;
             }
 
-            final domain = series.domainFn(index);
+            final domain = domainFn(index);
 
             final key = useSeriesCategory
-                ? '${series.seriesCategory}__${domain.toString()}'
-                : '${domain.toString()}';
+                ? '${series.seriesCategory}__$domain'
+                : '$domain';
 
-            return measure / totalsByDomain[key];
+            return measure / totalsByDomain[key]!;
           };
 
           // Replace the default measure lower bound accessor with one that
           // computes the  percentage.
           if (series.measureLowerBoundFn != null) {
-            series.measureLowerBoundFn = (int index) {
-              final measureLowerBound = series.rawMeasureLowerBoundFn(index);
+            series.measureLowerBoundFn = (int? index) {
+              final measureLowerBound = series.rawMeasureLowerBoundFn!(index);
 
               if (measureLowerBound == null || measureLowerBound == 0.0) {
                 return 0.0;
               }
 
-              final domain = series.domainFn(index);
+              final domain = domainFn(index);
 
               final key = useSeriesCategory
-                  ? '${series.seriesCategory}__${domain.toString()}'
-                  : '${domain.toString()}';
+                  ? '${series.seriesCategory}__$domain'
+                  : '$domain';
 
-              return measureLowerBound / totalsByDomain[key];
+              return measureLowerBound / totalsByDomain[key]!;
             };
           }
 
           // Replace the default measure upper bound accessor with one that
           // computes the  percentage.
           if (series.measureUpperBoundFn != null) {
-            series.measureUpperBoundFn = (int index) {
-              final measureUpperBound = series.rawMeasureUpperBoundFn(index);
+            series.measureUpperBoundFn = (int? index) {
+              final measureUpperBound = series.rawMeasureUpperBoundFn!(index);
 
               if (measureUpperBound == null || measureUpperBound == 0.0) {
                 return 0.0;
               }
 
-              final domain = series.domainFn(index);
+              final domain = domainFn(index);
 
               final key = useSeriesCategory
-                  ? '${series.seriesCategory}__${domain.toString()}'
-                  : '${domain.toString()}';
+                  ? '${series.seriesCategory}__$domain'
+                  : '$domain';
 
-              return measureUpperBound / totalsByDomain[key];
+              return measureUpperBound / totalsByDomain[key]!;
             };
           }
 
           series.setAttr(percentInjectedKey, true);
-        });
+        }
 
         break;
 
       case PercentInjectorTotalType.series:
-        seriesList.forEach((MutableSeries series) {
+        seriesList.forEach((series) {
           // Replace the default measure accessor with one that computes the
           // percentage.
-          series.measureFn = (int index) =>
-              series.rawMeasureFn(index) / series.seriesMeasureTotal;
+          series.measureFn = (int? index) =>
+              series.rawMeasureFn(index)! / series.seriesMeasureTotal;
 
           // Replace the default measure lower bound accessor with one that
           // computes the  percentage.
           if (series.measureLowerBoundFn != null) {
-            series.measureLowerBoundFn = (int index) =>
-                series.rawMeasureLowerBoundFn(index) /
+            series.measureLowerBoundFn = (int? index) =>
+                (series.rawMeasureLowerBoundFn!(index) ?? 0) /
                 series.seriesMeasureTotal;
           }
 
           // Replace the default measure upper bound accessor with one that
           // computes the  percentage.
           if (series.measureUpperBoundFn != null) {
-            series.measureUpperBoundFn = (int index) =>
-                series.rawMeasureUpperBoundFn(index) /
+            series.measureUpperBoundFn = (int? index) =>
+                (series.rawMeasureUpperBoundFn!(index) ?? 0) /
                 series.seriesMeasureTotal;
           }
 

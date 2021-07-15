@@ -25,8 +25,12 @@ class GalleryScaffold extends StatefulWidget {
   final String subtitle;
   final GalleryWidgetBuilder childBuilder;
 
-  GalleryScaffold(
-      {this.listTileIcon, this.title, this.subtitle, this.childBuilder});
+  GalleryScaffold({
+    required this.listTileIcon,
+    required this.title,
+    required this.subtitle,
+    required this.childBuilder,
+  });
 
   /// Gets the gallery
   Widget buildGalleryListTile(BuildContext context) => new ListTile(
@@ -56,7 +60,7 @@ class _GalleryScaffoldState extends State<GalleryScaffold> {
             new SizedBox(height: 250.0, child: widget.childBuilder()),
           ])),
       floatingActionButton: new FloatingActionButton(
-          child: new Icon(Icons.refresh), onPressed: _handleButtonPress),
+          onPressed: _handleButtonPress, child: new Icon(Icons.refresh)),
     );
   }
 }

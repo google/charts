@@ -1,3 +1,11 @@
+# 0.11.0
+* Null support
+* Update to latest from internal repo
+
+# 0.10.0
+* Internal bug fixes
+* Bump versions of intl due to pull request
+
 # 0.9.0
 * Internal bug fixes
 * Bump versions in Gemlock file due to security alerts

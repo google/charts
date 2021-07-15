@@ -22,10 +22,10 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class OrdinalComboBarLineChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  OrdinalComboBarLineChart(this.seriesList, {this.animate});
+  OrdinalComboBarLineChart(this.seriesList, {this.animate = false});
 
   factory OrdinalComboBarLineChart.withSampleData() {
     return new OrdinalComboBarLineChart(

@@ -27,10 +27,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 /// There are many axis styling options in the SmallTickRenderer allowing you
 /// to customize the font, tick lengths, and offsets.
 class ShortTickLengthAxis extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  ShortTickLengthAxis(this.seriesList, {this.animate});
+  ShortTickLengthAxis(this.seriesList, {this.animate = false});
 
   factory ShortTickLengthAxis.withSampleData() {
     return new ShortTickLengthAxis(

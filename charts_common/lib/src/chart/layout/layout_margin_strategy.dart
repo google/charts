@@ -14,20 +14,19 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
-import 'package:meta/meta.dart';
 import 'layout_view.dart';
 
 class SizeList {
   final _sizes = <int>[];
   int _total = 0;
 
-  int operator [](i) => _sizes[i];
+  int operator [](int i) => _sizes[i];
 
   int get total => _total;
 
   int get length => _sizes.length;
 
-  void add(size) {
+  void add(int size) {
     _sizes.add(size);
     _total += size;
   }
@@ -47,11 +46,11 @@ class _DesiredViewSizes {
     minimumSizes.add(minimum);
   }
 
-  void adjustedTo(maxSize) {
+  void adjustedTo(int maxSize) {
     if (maxSize < preferredSizes.total) {
-      int delta = preferredSizes.total - maxSize;
-      for (int i = preferredSizes.length - 1; i >= 0; i--) {
-        int viewAvailablePx = preferredSizes[i] - minimumSizes[i];
+      var delta = preferredSizes.total - maxSize;
+      for (var i = preferredSizes.length - 1; i >= 0; i--) {
+        final viewAvailablePx = preferredSizes[i] - minimumSizes[i];
 
         if (viewAvailablePx < delta) {
           // We need even more than this one view can give up, so assign the
@@ -71,11 +70,9 @@ class _DesiredViewSizes {
 /// A strategy for calculating size of vertical margins (RIGHT & LEFT).
 abstract class VerticalMarginStrategy {
   SizeList measure(Iterable<LayoutView> views,
-      {@required int maxWidth,
-      @required int height,
-      @required int fullHeight}) {
+      {required int maxWidth, required int height, required int fullHeight}) {
     final measuredWidths = _DesiredViewSizes();
-    int remainingWidth = maxWidth;
+    var remainingWidth = maxWidth;
 
     views.forEach((LayoutView view) {
       final params = view.layoutConfig;
@@ -95,7 +92,7 @@ abstract class VerticalMarginStrategy {
       // zero because if the component is an axis, the axis needs to still
       // recalculate ticks even if it is not to be shown.
       if (remainingWidth > 0 || availableHeight > 0) {
-        size = view.measure(remainingWidth, availableHeight);
+        size = view.measure(remainingWidth, availableHeight)!;
         remainingWidth -= size.preferredWidth;
       }
 
@@ -117,7 +114,7 @@ class LeftMarginLayoutStrategy extends VerticalMarginStrategy {
       Rectangle<int> fullBounds, Rectangle<int> drawAreaBounds) {
     var prevBoundsRight = drawAreaBounds.left;
 
-    int i = 0;
+    var i = 0;
     views.forEach((LayoutView view) {
       final params = view.layoutConfig;
 
@@ -147,8 +144,8 @@ class RightMarginLayoutStrategy extends VerticalMarginStrategy {
       Rectangle<int> fullBounds, Rectangle<int> drawAreaBounds) {
     var prevBoundsLeft = drawAreaBounds.right;
 
-    int i = 0;
-    views.forEach((LayoutView view) {
+    var i = 0;
+    views.forEach((view) {
       final params = view.layoutConfig;
 
       final width = measuredSizes[i];
@@ -173,9 +170,9 @@ class RightMarginLayoutStrategy extends VerticalMarginStrategy {
 /// A strategy for calculating size of horizontal margins (TOP & BOTTOM).
 abstract class HorizontalMarginStrategy {
   SizeList measure(Iterable<LayoutView> views,
-      {@required int maxHeight, @required int width, @required int fullWidth}) {
+      {required int maxHeight, required int width, required int fullWidth}) {
     final measuredHeights = _DesiredViewSizes();
-    int remainingHeight = maxHeight;
+    var remainingHeight = maxHeight;
 
     views.forEach((LayoutView view) {
       final params = view.layoutConfig;
@@ -195,7 +192,7 @@ abstract class HorizontalMarginStrategy {
       // zero because if the component is an axis, the axis needs to still
       // recalculate ticks even if it is not to be shown.
       if (remainingHeight > 0 || availableWidth > 0) {
-        size = view.measure(availableWidth, remainingHeight);
+        size = view.measure(availableWidth, remainingHeight)!;
         remainingHeight -= size.preferredHeight;
       }
 
@@ -217,7 +214,7 @@ class TopMarginLayoutStrategy extends HorizontalMarginStrategy {
       Rectangle<int> fullBounds, Rectangle<int> drawAreaBounds) {
     var prevBoundsBottom = drawAreaBounds.top;
 
-    int i = 0;
+    var i = 0;
     views.forEach((LayoutView view) {
       final params = view.layoutConfig;
 
@@ -248,8 +245,8 @@ class BottomMarginLayoutStrategy extends HorizontalMarginStrategy {
       Rectangle<int> fullBounds, Rectangle<int> drawAreaBounds) {
     var prevBoundsTop = drawAreaBounds.bottom;
 
-    int i = 0;
-    views.forEach((LayoutView view) {
+    var i = 0;
+    views.forEach((view) {
       final params = view.layoutConfig;
 
       final height = measuredSizes[i];

@@ -22,10 +22,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class GaugeChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  GaugeChart(this.seriesList, {this.animate});
+  GaugeChart(this.seriesList, {this.animate = false});
 
   /// Creates a [PieChart] with sample data and no transition.
   factory GaugeChart.withSampleData() {

@@ -21,10 +21,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class LineLineAnnotationChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  LineLineAnnotationChart(this.seriesList, {this.animate});
+  LineLineAnnotationChart(this.seriesList, {this.animate = false});
 
   /// Creates a [LineChart] with sample data and line annotations.
   ///

@@ -30,14 +30,11 @@ class DayTimeStepper extends BaseTimeStepper {
         super(dateTimeFactory);
 
   factory DayTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int> allowedTickIncrements}) {
+      {List<int>? allowedTickIncrements}) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 
-    // Must have at least one increment option.
-    assert(allowedTickIncrements.isNotEmpty);
-    // All increments must be > 0.
-    assert(allowedTickIncrements.any((increment) => increment <= 0) == false);
+    assert(allowedTickIncrements.every((increment) => increment > 0));
 
     return DayTimeStepper._internal(dateTimeFactory, allowedTickIncrements);
   }

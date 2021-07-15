@@ -54,6 +54,12 @@
 | Auto Label<br>[![](example/pie_charts/auto_label_thumb.png)](example/pie_charts/auto_label) | Gauge<br>[![](example/pie_charts/gauge_thumb.png)](example/pie_charts/gauge) | | |
 
 
+### TreeMap Charts
+
+| | | | |
+| --- | --- | --- | --- |
+
+
 ### Axes
 
 | | | | |

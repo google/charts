@@ -36,17 +36,17 @@ class BaseChartState<D> extends State<BaseChart<D>>
     with TickerProviderStateMixin
     implements ChartState {
   // Animation
-  AnimationController _animationController;
+  late AnimationController _animationController;
   double _animationValue = 0.0;
 
-  Widget _oldWidget;
+  BaseChart<D>? _oldWidget;
 
-  ChartGestureDetector _chartGestureDetector;
+  ChartGestureDetector? _chartGestureDetector;
 
   bool _configurationChanged = false;
 
-  final autoBehaviorWidgets = <ChartBehavior>[];
-  final addedBehaviorWidgets = <ChartBehavior>[];
+  final autoBehaviorWidgets = <ChartBehavior<D>>[];
+  final addedBehaviorWidgets = <ChartBehavior<D>>[];
   final addedCommonBehaviorsByRole = <String, common.ChartBehavior>{};
 
   final addedSelectionChangedListenersByType =
@@ -84,6 +84,13 @@ class BaseChartState<D> extends State<BaseChart<D>>
   @override
   bool get chartIsDirty => _configurationChanged;
 
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   /// Builds the common chart canvas widget.
   Widget _buildChartContainer() {
     final chartContainer = new ChartContainer<D>(
@@ -100,8 +107,8 @@ class BaseChartState<D> extends State<BaseChart<D>>
     final desiredGestures = widget.getDesiredGestures(this);
     if (desiredGestures.isNotEmpty) {
       _chartGestureDetector ??= new ChartGestureDetector();
-      return _chartGestureDetector.makeWidget(
-          context, chartContainer, desiredGestures);
+      return _chartGestureDetector!
+          .makeWidget(context, chartContainer, desiredGestures);
     } else {
       return chartContainer;
     }
@@ -141,7 +148,7 @@ class BaseChartState<D> extends State<BaseChart<D>>
   void dispose() {
     _animationController.dispose();
     _behaviorAnimationControllers
-        .forEach((_, controller) => controller?.dispose());
+        .forEach((_, controller) => controller.dispose());
     _behaviorAnimationControllers.clear();
     super.dispose();
   }
@@ -168,7 +175,7 @@ class BaseChartState<D> extends State<BaseChart<D>>
     _behaviorAnimationControllers[behavior] ??=
         new AnimationController(vsync: this);
 
-    return _behaviorAnimationControllers[behavior];
+    return _behaviorAnimationControllers[behavior]!;
   }
 
   /// Dispose of animation controller used by [behavior].

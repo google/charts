@@ -29,19 +29,19 @@ import '../chart_behavior.dart' show ChartBehavior;
 /// or scale factor.
 abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
   /// Listens for drag gestures.
-  GestureListener _listener;
+  late GestureListener _listener;
 
   /// Chart lifecycle listener to setup hint animation.
-  LifecycleListener<D> _lifecycleListener;
+  late LifecycleListener<D> _lifecycleListener;
 
   @override
   String get role => 'InitialHint';
 
   /// The chart to which the behavior is attached.
-  CartesianChart<D> _chart;
+  CartesianChart<D>? _chart;
 
   @protected
-  CartesianChart<D> get chart => _chart;
+  CartesianChart<D>? get chart => _chart;
 
   Duration _hintDuration = Duration(milliseconds: 3000);
 
@@ -70,7 +70,7 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
     _maxHintTranslate = maxHintTranslate;
   }
 
-  double _maxHintScaleFactor;
+  double? _maxHintScaleFactor;
 
   /// The amount the domain axis will be scaled for the start of the hint.
   ///
@@ -79,9 +79,9 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
   ///
   /// By default maxHintScaleFactor is not set.
   @protected
-  double get maxHintScaleFactor => _maxHintScaleFactor;
+  double? get maxHintScaleFactor => _maxHintScaleFactor;
 
-  set maxHintScaleFactor(double maxHintScaleFactor) {
+  set maxHintScaleFactor(double? maxHintScaleFactor) {
     assert(maxHintScaleFactor != null && maxHintScaleFactor >= 1.0);
 
     _maxHintScaleFactor = maxHintScaleFactor;
@@ -98,10 +98,10 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
   /// factor is only calculated on the first axis configuration.
   bool _firstAxisConfigured = false;
 
-  double _initialViewportTranslatePx;
-  double _initialViewportScalingFactor;
-  double _targetViewportTranslatePx;
-  double _targetViewportScalingFactor;
+  double? _initialViewportTranslatePx;
+  double? _initialViewportScalingFactor;
+  late double _targetViewportTranslatePx;
+  late double _targetViewportScalingFactor;
 
   InitialHintBehavior() {
     _listener = GestureListener(onTapTest: onTapTest);
@@ -113,29 +113,29 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
 
   @override
   void attachTo(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart<D>) {
       throw ArgumentError(
-          'InitialHintBehavior can only be attached to a CartesianChart');
+          'InitialHintBehavior can only be attached to a CartesianChart<D>');
     }
 
     _chart = chart;
 
-    _chart.addGestureListener(_listener);
-    _chart.addLifecycleListener(_lifecycleListener);
+    chart.addGestureListener(_listener);
+    chart.addLifecycleListener(_lifecycleListener);
   }
 
   @override
   void removeFrom(BaseChart<D> chart) {
-    if (!(chart is CartesianChart)) {
+    if (chart is! CartesianChart) {
       throw ArgumentError(
-          'InitialHintBehavior can only be removed from a CartesianChart');
+          'InitialHintBehavior can only be removed from a CartesianChart<D>');
     }
 
     stopHintAnimation();
 
-    _chart = chart;
-    _chart.removeGestureListener(_listener);
-    _chart.removeLifecycleListener(_lifecycleListener);
+    _chart = chart as CartesianChart<D>;
+    chart.removeGestureListener(_listener);
+    chart.removeLifecycleListener(_lifecycleListener);
 
     _chart = null;
   }
@@ -149,16 +149,16 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
     // If the user taps the chart, stop the hint animation immediately.
     stopHintAnimation();
 
-    return _chart.withinDrawArea(localPosition);
+    return _chart!.withinDrawArea(localPosition);
   }
 
   /// Calculate the animation's initial and target viewport and scale factor
   /// and shift the viewport to the start.
   void _onAxisConfigured() {
-    if (_firstAxisConfigured == false) {
+    if (!_firstAxisConfigured) {
       _firstAxisConfigured = true;
 
-      final domainAxis = chart.domainAxis;
+      final domainAxis = chart!.domainAxis!;
 
       // TODO: Translation animation only works for axis with a
       // rangeband type that returns a non zero step size. If two rows have
@@ -179,15 +179,16 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
       _initialViewportScalingFactor =
           maxHintScaleFactor ?? _targetViewportScalingFactor;
 
+      assert(_initialViewportScalingFactor != null);
       domainAxis.setViewportSettings(
-          _initialViewportScalingFactor, _initialViewportTranslatePx);
-      chart.redraw(skipAnimation: true, skipLayout: false);
+          _initialViewportScalingFactor!, _initialViewportTranslatePx!);
+      chart!.redraw(skipAnimation: true, skipLayout: false);
     }
   }
 
   /// Start the hint animation, only start the animation on the very first draw.
   void _onAnimationComplete() {
-    if (_hintSetupCompleted == false) {
+    if (!_hintSetupCompleted) {
       _hintSetupCompleted = true;
 
       startHintAnimation();
@@ -204,16 +205,16 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
     // after the tick provider generates the ticks. If we do not tell the axis
     // not to update the location of the measure axes, the measure axis will
     // change during the hint animation and make values jump back and forth.
-    _chart.getMeasureAxis().lockAxis = true;
-    _chart.getMeasureAxis(axisId: Axis.secondaryMeasureAxisId)?.lockAxis = true;
+    _chart!.getMeasureAxis().lockAxis = true;
+    _chart!.getMeasureAxis(axisId: Axis.secondaryMeasureAxisId).lockAxis = true;
   }
 
   /// Stop hint animation
   @protected
   void stopHintAnimation() {
     // When panning is completed, unlock the measure axis.
-    _chart.getMeasureAxis().lockAxis = false;
-    _chart.getMeasureAxis(axisId: Axis.secondaryMeasureAxisId)?.lockAxis =
+    _chart!.getMeasureAxis().lockAxis = false;
+    _chart!.getMeasureAxis(axisId: Axis.secondaryMeasureAxisId).lockAxis =
         false;
   }
 
@@ -229,7 +230,7 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
     final scaleFactor = _lerpDouble(
         _initialViewportScalingFactor, _targetViewportScalingFactor, percent);
 
-    double translatePx = _lerpDouble(
+    var translatePx = _lerpDouble(
         _initialViewportTranslatePx, _targetViewportTranslatePx, percent);
 
     // If there is a scale factor animation, need to scale the translatePx so
@@ -242,7 +243,8 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
       translatePx = translatePx * percent;
     }
 
-    final domainAxis = chart.domainAxis;
+    final chart = this.chart!;
+    final domainAxis = chart.domainAxis!;
     domainAxis.setViewportSettings(scaleFactor, translatePx,
         drawAreaWidth: chart.drawAreaBounds.width);
 
@@ -255,8 +257,7 @@ abstract class InitialHintBehavior<D> implements ChartBehavior<D> {
   }
 
   /// Linear interpolation for doubles.
-  double _lerpDouble(double a, double b, double t) {
-    if (a == null && b == null) return null;
+  double _lerpDouble(double? a, double? b, double t) {
     a ??= 0.0;
     b ??= 0.0;
     return a + (b - a) * t;

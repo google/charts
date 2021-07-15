@@ -31,28 +31,31 @@ import 'per_series_legend_entry_generator.dart';
 /// By default this behavior creates a legend entry per series.
 class SeriesLegend<D> extends Legend<D> {
   /// List of currently hidden series, by ID.
-  final _hiddenSeriesList = Set<String>();
+  final _hiddenSeriesList = <String>{};
 
   /// List of series IDs that should be hidden by default.
-  List<String> _defaultHiddenSeries;
+  List<String>? _defaultHiddenSeries;
+
+  /// List of series IDs that should not be hideable.
+  List<String>? _alwaysVisibleSeries;
 
   /// Whether or not the series legend should show measures on datum selection.
-  bool _showMeasures;
+  late bool _showMeasures;
 
   SeriesLegend({
-    SelectionModelType selectionModelType,
-    LegendEntryGenerator<D> legendEntryGenerator,
-    MeasureFormatter measureFormatter,
-    MeasureFormatter secondaryMeasureFormatter,
-    bool showMeasures,
-    LegendDefaultMeasure legendDefaultMeasure,
-    TextStyleSpec entryTextStyle,
+    SelectionModelType? selectionModelType,
+    LegendEntryGenerator<D>? legendEntryGenerator,
+    MeasureFormatter? measureFormatter,
+    MeasureFormatter? secondaryMeasureFormatter,
+    bool? showMeasures,
+    LegendDefaultMeasure? legendDefaultMeasure,
+    TextStyleSpec? entryTextStyle,
   }) : super(
             selectionModelType: selectionModelType ?? SelectionModelType.info,
             legendEntryGenerator:
                 legendEntryGenerator ?? PerSeriesLegendEntryGenerator(),
             entryTextStyle: entryTextStyle) {
-    // Call the setters that include the setting for default.
+    // Calling the setters will automatically use non-null default values.
     this.showMeasures = showMeasures;
     this.legendDefaultMeasure = legendDefaultMeasure;
     this.measureFormatter = measureFormatter;
@@ -64,19 +67,30 @@ class SeriesLegend<D> extends Legend<D> {
   ///
   /// This will also reset the current list of hidden series, filling it in with
   /// the new default list.
-  set defaultHiddenSeries(List<String> defaultHiddenSeries) {
+  set defaultHiddenSeries(List<String>? defaultHiddenSeries) {
     _defaultHiddenSeries = defaultHiddenSeries;
 
     _hiddenSeriesList.clear();
 
-    if (_defaultHiddenSeries != null) {
-      _defaultHiddenSeries.forEach(hideSeries);
-    }
+    _defaultHiddenSeries?.forEach(hideSeries);
   }
 
   /// Gets a list of series IDs that should be hidden by default on first chart
   /// draw.
-  List<String> get defaultHiddenSeries => _defaultHiddenSeries;
+  List<String>? get defaultHiddenSeries => _defaultHiddenSeries;
+
+  /// Sets a list of series IDs that should always be visible and therefore
+  /// cannot be hidden.
+  ///
+  /// This also shows any series that should always be visible in case
+  /// it was previously hidden.
+  set alwaysVisibleSeries(List<String>? alwaysVisibleSeries) {
+    _alwaysVisibleSeries = alwaysVisibleSeries;
+    _alwaysVisibleSeries?.forEach(showSeries);
+  }
+
+  /// Gets a list of series IDs that should always be visible.
+  List<String>? get alwaysVisibleSeries => _alwaysVisibleSeries;
 
   /// Whether or not the legend should show measures.
   ///
@@ -85,10 +99,10 @@ class SeriesLegend<D> extends Legend<D> {
   /// Please set [legendDefaultMeasure] to something other than none to enable
   /// showing measures when there is no selection.
   ///
-  /// If [showMeasure] is set to null, it is changed to the default of false.
+  /// If [showMeasures] is set to null, it is changed to the default of false.
   bool get showMeasures => _showMeasures;
 
-  set showMeasures(bool showMeasures) {
+  set showMeasures(bool? showMeasures) {
     _showMeasures = showMeasures ?? false;
   }
 
@@ -102,7 +116,7 @@ class SeriesLegend<D> extends Legend<D> {
   LegendDefaultMeasure get legendDefaultMeasure =>
       legendEntryGenerator.legendDefaultMeasure;
 
-  set legendDefaultMeasure(LegendDefaultMeasure legendDefaultMeasure) {
+  set legendDefaultMeasure(LegendDefaultMeasure? legendDefaultMeasure) {
     legendEntryGenerator.legendDefaultMeasure =
         legendDefaultMeasure ?? LegendDefaultMeasure.none;
   }
@@ -112,7 +126,7 @@ class SeriesLegend<D> extends Legend<D> {
   /// This is optional. The default formatter formats measure values with
   /// NumberFormat.decimalPattern. If the measure value is null, a dash is
   /// returned.
-  set measureFormatter(MeasureFormatter formatter) {
+  set measureFormatter(MeasureFormatter? formatter) {
     legendEntryGenerator.measureFormatter =
         formatter ?? defaultLegendMeasureFormatter;
   }
@@ -122,7 +136,7 @@ class SeriesLegend<D> extends Legend<D> {
   /// This is optional. The default formatter formats measure values with
   /// NumberFormat.decimalPattern. If the measure value is null, a dash is
   /// returned.
-  set secondaryMeasureFormatter(MeasureFormatter formatter) {
+  set secondaryMeasureFormatter(MeasureFormatter? formatter) {
     legendEntryGenerator.secondaryMeasureFormatter =
         formatter ?? defaultLegendMeasureFormatter;
   }
@@ -152,7 +166,9 @@ class SeriesLegend<D> extends Legend<D> {
   /// that it is hidden.
   @protected
   void hideSeries(String seriesId) {
-    _hiddenSeriesList.add(seriesId);
+    if (!isSeriesAlwaysVisible(seriesId)) {
+      _hiddenSeriesList.add(seriesId);
+    }
   }
 
   /// Shows the data for a series on the chart by [seriesId].
@@ -167,5 +183,11 @@ class SeriesLegend<D> extends Legend<D> {
   /// Returns whether or not a given series [seriesId] is currently hidden.
   bool isSeriesHidden(String seriesId) {
     return _hiddenSeriesList.contains(seriesId);
+  }
+
+  /// Returns whether or not a given series is always visible.
+  bool isSeriesAlwaysVisible(String seriesId) {
+    return _alwaysVisibleSeries != null &&
+        _alwaysVisibleSeries!.contains(seriesId);
   }
 }

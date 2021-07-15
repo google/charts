@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../../common/date_time_factory.dart' show DateTimeFactory;
 import '../tick_formatter.dart' show TickFormatter;
 import 'hour_tick_formatter.dart' show HourTickFormatter;
@@ -54,8 +52,8 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
   /// where these assumptions are not correct, please create a custom
   /// [TickFormatter].
   factory DateTimeTickFormatter(DateTimeFactory dateTimeFactory,
-      {Map<int, TimeTickFormatter> overrides}) {
-    final Map<int, TimeTickFormatter> map = {
+      {Map<int, TimeTickFormatter>? overrides}) {
+    final map = <int, TimeTickFormatter>{
       MINUTE: TimeTickFormatterImpl(
           dateTimeFactory: dateTimeFactory,
           simpleFormat: 'mm',
@@ -145,7 +143,7 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
 
   @override
   List<String> format(List<DateTime> tickValues, Map<DateTime, String> cache,
-      {@required num stepSize}) {
+      {num? stepSize}) {
     final tickLabels = <String>[];
     if (tickValues.isEmpty) {
       return tickLabels;
@@ -154,12 +152,12 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
     // Find the formatter that is the largest interval that has enough
     // resolution to describe the difference between ticks. If no such formatter
     // exists pick the highest res one.
-    var formatter = _timeFormatters[_timeFormatters.keys.first];
+    var formatter = _timeFormatters[_timeFormatters.keys.first]!;
     var formatterFound = false;
     if (_timeFormatters.keys.first == ANY) {
       formatterFound = true;
     } else {
-      int minTimeBetweenTicks = stepSize.toInt();
+      final minTimeBetweenTicks = stepSize?.toInt() ?? 0;
 
       // TODO: Skip the formatter if the formatter's step size is
       // smaller than the minimum step size of the data.
@@ -169,7 +167,7 @@ class DateTimeTickFormatter implements TickFormatter<DateTime> {
         if (keys.current > minTimeBetweenTicks) {
           formatterFound = true;
         } else {
-          formatter = _timeFormatters[keys.current];
+          formatter = _timeFormatters[keys.current]!;
         }
       }
     }

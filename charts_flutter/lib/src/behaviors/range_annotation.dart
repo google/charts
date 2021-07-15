@@ -19,6 +19,7 @@ import 'package:charts_common/common.dart' as common
         AnnotationLabelDirection,
         AnnotationLabelPosition,
         AnnotationSegment,
+        ChartBehavior,
         Color,
         MaterialPalette,
         RangeAnnotation,
@@ -36,46 +37,53 @@ import 'chart_behavior.dart' show ChartBehavior, GestureType;
 /// This is typically used for line charts to call out sections of the data
 /// range.
 @immutable
-class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
+class RangeAnnotation<D> extends ChartBehavior<D> {
   final desiredGestures = new Set<GestureType>();
 
   /// List of annotations to render on the chart.
-  final List<common.AnnotationSegment> annotations;
+  final List<common.AnnotationSegment<Object>> annotations;
 
   /// Configures where to anchor annotation label text.
-  final common.AnnotationLabelAnchor defaultLabelAnchor;
+  final common.AnnotationLabelAnchor? defaultLabelAnchor;
 
   /// Direction of label text on the annotations.
-  final common.AnnotationLabelDirection defaultLabelDirection;
+  final common.AnnotationLabelDirection? defaultLabelDirection;
 
   /// Configures where to place labels relative to the annotation.
-  final common.AnnotationLabelPosition defaultLabelPosition;
+  final common.AnnotationLabelPosition? defaultLabelPosition;
 
   /// Configures the style of label text.
-  final common.TextStyleSpec defaultLabelStyleSpec;
+  final common.TextStyleSpec? defaultLabelStyleSpec;
 
   /// Default color for annotations.
-  final common.Color defaultColor;
+  final common.Color? defaultColor;
 
   /// Whether or not the range of the axis should be extended to include the
   /// annotation start and end values.
-  final bool extendAxis;
+  final bool? extendAxis;
 
   /// Space before and after label text.
-  final int labelPadding;
+  final int? labelPadding;
+
+  /// Configures the order in which the behavior should be painted.
+  /// This value should be relative to LayoutPaintViewOrder.rangeAnnotation.
+  /// (e.g. LayoutViewPaintOrder.rangeAnnotation + 1)
+  final int? layoutPaintOrder;
 
   RangeAnnotation(this.annotations,
-      {common.Color defaultColor,
+      {common.Color? defaultColor,
       this.defaultLabelAnchor,
       this.defaultLabelDirection,
       this.defaultLabelPosition,
       this.defaultLabelStyleSpec,
       this.extendAxis,
-      this.labelPadding})
-      : defaultColor = common.MaterialPalette.gray.shade100;
+      this.labelPadding,
+      this.layoutPaintOrder})
+      : this.defaultColor =
+            defaultColor ?? common.MaterialPalette.gray.shade100;
 
   @override
-  common.RangeAnnotation<D> createCommonBehavior<D>() =>
+  common.RangeAnnotation<D> createCommonBehavior() =>
       new common.RangeAnnotation<D>(annotations,
           defaultColor: defaultColor,
           defaultLabelAnchor: defaultLabelAnchor,
@@ -83,10 +91,11 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
           defaultLabelPosition: defaultLabelPosition,
           defaultLabelStyleSpec: defaultLabelStyleSpec,
           extendAxis: extendAxis,
-          labelPadding: labelPadding);
+          labelPadding: labelPadding,
+          layoutPaintOrder: layoutPaintOrder);
 
   @override
-  void updateCommonBehavior(common.RangeAnnotation commonBehavior) {}
+  void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
 
   @override
   String get role => 'RangeAnnotation';
@@ -101,7 +110,8 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
         defaultLabelDirection == o.defaultLabelDirection &&
         defaultLabelPosition == o.defaultLabelPosition &&
         defaultLabelStyleSpec == o.defaultLabelStyleSpec &&
-        labelPadding == o.labelPadding;
+        labelPadding == o.labelPadding &&
+        layoutPaintOrder == o.layoutPaintOrder;
   }
 
   @override
@@ -113,5 +123,6 @@ class RangeAnnotation extends ChartBehavior<common.RangeAnnotation> {
       defaultLabelDirection,
       defaultLabelPosition,
       defaultLabelStyleSpec,
-      labelPadding);
+      labelPadding,
+      layoutPaintOrder);
 }

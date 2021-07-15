@@ -15,7 +15,6 @@
 
 import 'dart:math' show Rectangle;
 import 'package:flutter/material.dart';
-import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:charts_common/common.dart' as common
@@ -25,7 +24,21 @@ import 'package:charts_flutter/src/widget_layout_delegate.dart';
 
 const chartContainerLayoutID = 'chartContainer';
 
-class MockBuildableBehavior extends Mock implements BuildableBehavior {}
+// I couldn't get mockito to work with Widget return type, so fake it is.
+class FakeBuildableBehavior implements BuildableBehavior {
+  common.BehaviorPosition position;
+  common.OutsideJustification outsideJustification;
+  common.InsideJustification insideJustification;
+  Rectangle<int>? drawAreaBounds;
+
+  FakeBuildableBehavior(this.position, this.outsideJustification,
+      this.insideJustification, this.drawAreaBounds) {}
+
+  @override
+  Widget build(BuildContext context) {
+    throw UnimplementedError();
+  }
+}
 
 void main() {
   group('widget layout test', () {
@@ -38,17 +51,17 @@ void main() {
     /// Creates widget for testing.
     Widget createWidget(
         Size chartSize, Size behaviorSize, common.BehaviorPosition position,
-        {common.OutsideJustification outsideJustification,
-        common.InsideJustification insideJustification,
-        Rectangle<int> drawAreaBounds,
+        // Using these defaults, copied from DatumLegend.
+        {common.OutsideJustification outsideJustification =
+            common.OutsideJustification.startDrawArea,
+        common.InsideJustification insideJustification =
+            common.InsideJustification.topStart,
+        required Rectangle<int> drawAreaBounds,
         bool isRTL = false}) {
       // Create a mock buildable behavior that returns information about the
       // position and justification desired.
-      final behavior = new MockBuildableBehavior();
-      when(behavior.position).thenReturn(position);
-      when(behavior.outsideJustification).thenReturn(outsideJustification);
-      when(behavior.insideJustification).thenReturn(insideJustification);
-      when(behavior.drawAreaBounds).thenReturn(drawAreaBounds);
+      final behavior = new FakeBuildableBehavior(
+          position, outsideJustification, insideJustification, drawAreaBounds);
 
       // The 'chart' widget that expands to the full size allowed to test that
       // the behavior widget's size affects the size given to the chart.

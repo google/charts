@@ -21,10 +21,10 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class GroupedBarSingleTargetLineChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  GroupedBarSingleTargetLineChart(this.seriesList, {this.animate});
+  GroupedBarSingleTargetLineChart(this.seriesList, {this.animate = false});
 
   factory GroupedBarSingleTargetLineChart.withSampleData() {
     return new GroupedBarSingleTargetLineChart(

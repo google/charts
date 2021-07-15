@@ -40,12 +40,17 @@ class ScatterPlotChart extends NumericCartesianChart {
   @override
   bool get selectNearestByDomain => false;
 
+  /// On scatter plots, overlapping points that contain the click/tap location
+  /// are all added to the selection.
+  @override
+  bool get selectOverlappingPoints => true;
+
   ScatterPlotChart(
-      {bool vertical,
-      LayoutConfig layoutConfig,
-      NumericAxis primaryMeasureAxis,
-      NumericAxis secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis> disjointMeasureAxes})
+      {bool? vertical,
+      LayoutConfig? layoutConfig,
+      NumericAxis? primaryMeasureAxis,
+      NumericAxis? secondaryMeasureAxis,
+      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes})
       : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
@@ -60,7 +65,7 @@ class ScatterPlotChart extends NumericCartesianChart {
 
   @override
   void initDomainAxis() {
-    domainAxis.tickDrawStrategy = GridlineRendererSpec<num>()
-        .createDrawStrategy(context, graphicsFactory);
+    domainAxis!.tickDrawStrategy = GridlineRendererSpec<num>()
+        .createDrawStrategy(context, graphicsFactory!);
   }
 }

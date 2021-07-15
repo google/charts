@@ -30,16 +30,12 @@ class HourTimeStepper extends BaseTimeStepper {
         super(dateTimeFactory);
 
   factory HourTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int> allowedTickIncrements}) {
+      {List<int>? allowedTickIncrements}) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 
-    // Must have at least one increment option.
-    assert(allowedTickIncrements.isNotEmpty);
-    // All increments must be between 1 and 24 inclusive.
     assert(allowedTickIncrements
-            .any((increment) => increment <= 0 || increment > 24) ==
-        false);
+        .every((increment) => increment >= 1 && increment <= 24));
 
     return HourTimeStepper._internal(dateTimeFactory, allowedTickIncrements);
   }

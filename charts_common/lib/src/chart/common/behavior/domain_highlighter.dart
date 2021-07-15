@@ -29,27 +29,27 @@ import 'chart_behavior.dart' show ChartBehavior;
 class DomainHighlighter<D> implements ChartBehavior<D> {
   final SelectionModelType selectionModelType;
 
-  BaseChart<D> _chart;
+  late BaseChart<D> _chart;
 
-  LifecycleListener<D> _lifecycleListener;
+  late LifecycleListener<D> _lifecycleListener;
 
   DomainHighlighter([this.selectionModelType = SelectionModelType.info]) {
     _lifecycleListener =
         LifecycleListener<D>(onPostprocess: _updateColorFunctions);
   }
 
-  void _selectionChanged(SelectionModel selectionModel) {
+  void _selectionChanged(SelectionModel<D> selectionModel) {
     _chart.redraw(skipLayout: true, skipAnimation: true);
   }
 
   void _updateColorFunctions(List<MutableSeries<D>> seriesList) {
-    SelectionModel selectionModel =
+    SelectionModel<D> selectionModel =
         _chart.getSelectionModel(selectionModelType);
     seriesList.forEach((MutableSeries<D> series) {
       final origColorFn = series.colorFn;
 
       if (origColorFn != null) {
-        series.colorFn = (int index) {
+        series.colorFn = (int? index) {
           final origColor = origColorFn(index);
           if (selectionModel.isDatumSelected(series, index)) {
             return origColor.darker;
@@ -71,7 +71,7 @@ class DomainHighlighter<D> implements ChartBehavior<D> {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart
         .getSelectionModel(selectionModelType)
         .removeSelectionChangedListener(_selectionChanged);
@@ -79,5 +79,5 @@ class DomainHighlighter<D> implements ChartBehavior<D> {
   }
 
   @override
-  String get role => 'domainHighlight-${selectionModelType.toString()}';
+  String get role => 'domainHighlight-$selectionModelType';
 }

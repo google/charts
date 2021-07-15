@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -42,6 +44,7 @@ class MockAxis<D> extends Mock implements Axis<D> {}
 class MockCanvas extends Mock implements ChartCanvas {
   final drawLinePointsList = <List<Point>>[];
 
+  @override
   void drawLine(
       {List<Point> points,
       Rectangle<num> clipBounds,

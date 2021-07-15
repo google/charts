@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
@@ -29,8 +27,8 @@ import 'time/date_time_scale.dart' show DateTimeScale;
 
 /// A strategy that uses the ticks provided and only assigns positioning.
 ///
-/// The [TextStyle] is not overridden during tick draw strategy decorateTicks.
-/// If it is null, then the default is used.
+/// The [TextStyle] is not overridden during [TickDrawStrategy.decorateTicks].
+/// If the [TickSpec] style is null, then the default [TextStyle] is used.
 class StaticTickProvider<D> extends TickProvider<D> {
   final List<TickSpec<D>> tickSpec;
 
@@ -38,21 +36,21 @@ class StaticTickProvider<D> extends TickProvider<D> {
 
   @override
   List<Tick<D>> getTicks({
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required MutableScale<D> scale,
-    @required TickFormatter<D> formatter,
-    @required Map<D, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
-    @required AxisOrientation orientation,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required MutableScale<D> scale,
+    required TickFormatter<D> formatter,
+    required Map<D, String> formatterValueCache,
+    required TickDrawStrategy<D> tickDrawStrategy,
+    required AxisOrientation? orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<D> tickHint,
+    TickHint<D>? tickHint,
   }) {
     final ticks = <Tick<D>>[];
 
-    bool allTicksHaveLabels = true;
+    var allTicksHaveLabels = true;
 
-    for (TickSpec<D> spec in tickSpec) {
+    for (final spec in tickSpec) {
       // When static ticks are being used with a numeric axis, extend the axis
       // with the values specified.
       if (scale is NumericScale || scale is DateTimeScale) {
@@ -64,8 +62,8 @@ class StaticTickProvider<D> extends TickProvider<D> {
     }
 
     // Use the formatter's label if the tick spec does not provide one.
-    List<String> formattedValues;
-    if (allTicksHaveLabels == false) {
+    late List<String> formattedValues;
+    if (!allTicksHaveLabels) {
       formattedValues = formatter.format(
           tickSpec.map((spec) => spec.value).toList(), formatterValueCache,
           stepSize: scale.domainStepSize);
@@ -80,13 +78,14 @@ class StaticTickProvider<D> extends TickProvider<D> {
             value: spec.value,
             textElement: graphicsFactory
                 .createTextElement(spec.label ?? formattedValues[i]),
-            locationPx: scale[spec.value]);
-        if (spec.style != null) {
-          tick.textElement.textStyle = graphicsFactory.createTextPaint()
-            ..fontFamily = spec.style.fontFamily
-            ..fontSize = spec.style.fontSize
-            ..color = spec.style.color
-            ..lineHeight = spec.style.lineHeight;
+            locationPx: scale[spec.value]?.toDouble());
+        final style = spec.style;
+        if (style != null) {
+          tick.textElement!.textStyle = graphicsFactory.createTextPaint()
+            ..fontFamily = style.fontFamily
+            ..fontSize = style.fontSize
+            ..color = style.color
+            ..lineHeight = style.lineHeight;
         }
         ticks.add(tick);
       }
@@ -99,7 +98,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
   }
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       other is StaticTickProvider && tickSpec == other.tickSpec;
 
   @override

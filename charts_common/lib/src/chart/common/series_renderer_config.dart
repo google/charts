@@ -26,9 +26,9 @@ abstract class SeriesRendererConfig<D> {
   /// a native builder since legend is built natively.
   RendererAttributes get rendererAttributes;
 
-  String get customRendererId;
+  String? get customRendererId;
 
-  SymbolRenderer get symbolRenderer;
+  SymbolRenderer? get symbolRenderer;
 
   SeriesRenderer<D> build();
 }

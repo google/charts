@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -26,7 +28,7 @@ class FakeTimeTickFormatter implements TimeTickFormatter {
   static const firstTick = '-firstTick-';
   static const simpleTick = '-simpleTick-';
   static const transitionTick = '-transitionTick-';
-  static final transitionAlwaysFalse = (_, __) => false;
+  static final transitionAlwaysFalse = (DateTime _, DateTime __) => false;
 
   final String id;
   final IsTransitionFunction isTransitionFunction;

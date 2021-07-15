@@ -27,7 +27,8 @@ import '../../../layout/layout_view.dart'
         LayoutViewConfig,
         LayoutViewPositionOrder,
         LayoutViewPaintOrder,
-        ViewMeasuredSizes;
+        ViewMeasuredSizes,
+        layoutPosition;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../chart_canvas.dart' show ChartCanvas;
 import '../../chart_context.dart' show ChartContext;
@@ -54,98 +55,27 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   final legendState = LegendState<D>();
   final LegendEntryGenerator<D> legendEntryGenerator;
 
-  String _title;
+  /// The title text to display before legend entries.
+  late String title;
 
-  BaseChart _chart;
-  LifecycleListener<D> _lifecycleListener;
+  late BaseChart<D> _chart;
+  late final LifecycleListener<D> _lifecycleListener;
 
-  Rectangle<int> _componentBounds;
-  Rectangle<int> _drawAreaBounds;
-  GraphicsFactory _graphicsFactory;
+  Rectangle<int>? _componentBounds;
+  Rectangle<int>? _drawAreaBounds;
 
-  BehaviorPosition _behaviorPosition = BehaviorPosition.end;
-  OutsideJustification _outsideJustification =
+  @override
+  GraphicsFactory? graphicsFactory;
+
+  BehaviorPosition behaviorPosition = BehaviorPosition.end;
+  OutsideJustification outsideJustification =
       OutsideJustification.startDrawArea;
-  InsideJustification _insideJustification = InsideJustification.topStart;
-  LegendCellPadding _cellPadding;
-  LegendCellPadding _legendPadding;
-
-  TextStyleSpec _titleTextStyle;
-
-  LegendTapHandling _legendTapHandling = LegendTapHandling.hide;
-
-  List<MutableSeries<D>> _currentSeriesList;
-
-  /// Save this in order to check if series list have changed and regenerate
-  /// the legend entries.
-  List<MutableSeries<D>> _postProcessSeriesList;
-
-  static final _decimalPattern = NumberFormat.decimalPattern();
-
-  /// Default measure formatter for legends.
-  @protected
-  String defaultLegendMeasureFormatter(num value) {
-    return (value == null) ? '' : _decimalPattern.format(value);
-  }
-
-  Legend({this.selectionModelType, this.legendEntryGenerator, entryTextStyle}) {
-    _lifecycleListener = LifecycleListener(
-        onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
-    legendEntryGenerator.entryTextStyle = entryTextStyle;
-  }
-
-  String get title => _title;
-
-  /// Sets title text to display before legend entries.
-  set title(String title) {
-    _title = title;
-  }
-
-  BehaviorPosition get behaviorPosition => _behaviorPosition;
-
-  set behaviorPosition(BehaviorPosition behaviorPosition) {
-    _behaviorPosition = behaviorPosition;
-  }
-
-  OutsideJustification get outsideJustification => _outsideJustification;
-
-  set outsideJustification(OutsideJustification outsideJustification) {
-    _outsideJustification = outsideJustification;
-  }
-
-  InsideJustification get insideJustification => _insideJustification;
-
-  set insideJustification(InsideJustification insideJustification) {
-    _insideJustification = insideJustification;
-  }
-
-  LegendCellPadding get cellPadding => _cellPadding;
-
-  set cellPadding(LegendCellPadding cellPadding) {
-    _cellPadding = cellPadding;
-  }
-
-  LegendCellPadding get legendPadding => _legendPadding;
-
-  set legendPadding(LegendCellPadding legendPadding) {
-    _legendPadding = legendPadding;
-  }
-
-  LegendTapHandling get legendTapHandling => _legendTapHandling;
-
-  /// Text style of the legend entry text.
-  TextStyleSpec get entryTextStyle => legendEntryGenerator.entryTextStyle;
-
-  set entryTextStyle(TextStyleSpec entryTextStyle) {
-    legendEntryGenerator.entryTextStyle = entryTextStyle;
-  }
+  InsideJustification insideJustification = InsideJustification.topStart;
+  LegendCellPadding? cellPadding;
+  LegendCellPadding? legendPadding;
 
   /// Text style of the legend title text.
-  TextStyleSpec get titleTextStyle => _titleTextStyle;
-
-  set titleTextStyle(TextStyleSpec titleTextStyle) {
-    _titleTextStyle = titleTextStyle;
-  }
+  TextStyleSpec? titleTextStyle;
 
   /// Configures the behavior of the legend when the user taps/clicks on an
   /// entry. Defaults to no behavior.
@@ -154,8 +84,49 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   /// example, when [LegendTapHandling.hide] is configured, the series or datum
   /// associated with that entry will be removed from the chart. Tapping on that
   /// entry a second time will make the data visible again.
-  set legendTapHandling(LegendTapHandling legendTapHandling) {
-    _legendTapHandling = legendTapHandling;
+  LegendTapHandling legendTapHandling = LegendTapHandling.hide;
+
+  late List<MutableSeries<D>> _currentSeriesList;
+
+  /// List of series IDs in the order the series should appear in the legend.
+  /// Series that are not specified in the ordering will be sorted
+  /// alphabetically at the bottom.
+  List<String>? _customEntryOrder;
+
+  /// Save this in order to check if series list have changed and regenerate
+  /// the legend entries.
+  List<MutableSeries<D>>? _postProcessSeriesList;
+
+  static final _decimalPattern = NumberFormat.decimalPattern();
+
+  /// Default measure formatter for legends.
+  @protected
+  String defaultLegendMeasureFormatter(num? value) {
+    return (value == null) ? '' : _decimalPattern.format(value);
+  }
+
+  Legend({
+    required this.selectionModelType,
+    required this.legendEntryGenerator,
+    TextStyleSpec? entryTextStyle,
+  }) {
+    _lifecycleListener = LifecycleListener(
+        onPostprocess: _postProcess, onPreprocess: _preProcess, onData: onData);
+    legendEntryGenerator.entryTextStyle = entryTextStyle;
+
+    // Calling the setter will automatically use a non-null default value.
+    showOverlaySeries = null;
+  }
+
+  /// Text style of the legend entry text.
+  TextStyleSpec? get entryTextStyle => legendEntryGenerator.entryTextStyle;
+
+  set entryTextStyle(TextStyleSpec? entryTextStyle) {
+    legendEntryGenerator.entryTextStyle = entryTextStyle;
+  }
+
+  set customEntryOrder(List<String>? customEntryOrder) {
+    _customEntryOrder = customEntryOrder;
   }
 
   /// Whether or not the legend show overlay series.
@@ -166,7 +137,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   /// false.
   bool get showOverlaySeries => legendEntryGenerator.showOverlaySeries;
 
-  set showOverlaySeries(bool showOverlaySeries) {
+  set showOverlaySeries(bool? showOverlaySeries) {
     legendEntryGenerator.showOverlaySeries = showOverlaySeries ?? false;
   }
 
@@ -176,7 +147,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   /// Store off a copy of the series list for use when we render the legend.
   void _preProcess(List<MutableSeries<D>> seriesList) {
-    _currentSeriesList = List.from(seriesList);
+    _currentSeriesList = List.of(seriesList);
     preProcessSeriesList(seriesList);
   }
 
@@ -203,6 +174,23 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
     // Also update legend entries if the series list has changed.
     if (legendState._selectionModel != selectionModel ||
         _postProcessSeriesList != seriesList) {
+      final _customEntryOrder = this._customEntryOrder;
+      if (_customEntryOrder != null) {
+        _currentSeriesList.sort((a, b) {
+          final a_index = _customEntryOrder.indexOf(a.id);
+          final b_index = _customEntryOrder.indexOf(b.id);
+          if (a_index == -1) {
+            if (a_index == b_index) {
+              return a.displayName!.compareTo(b.displayName!);
+            }
+            return 1;
+          } else if (b_index == -1) {
+            return -1;
+          }
+          return a_index.compareTo(b_index);
+        });
+      }
+
       legendState._legendEntries =
           legendEntryGenerator.getLegendEntries(_currentSeriesList);
 
@@ -215,7 +203,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   // need to handle when series data changes, selection should be reset
 
   /// Update the legend state with [selectionModel] and request legend update.
-  void _selectionChanged(SelectionModel selectionModel) {
+  void _selectionChanged(SelectionModel<D> selectionModel) {
     legendState._selectionModel = selectionModel;
     _updateLegendEntries();
   }
@@ -224,9 +212,9 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   /// Internally update legend entries, before calling [updateLegend] that
   /// notifies the native platform.
-  void _updateLegendEntries({List<MutableSeries<D>> seriesList}) {
+  void _updateLegendEntries({List<MutableSeries<D>>? seriesList}) {
     legendEntryGenerator.updateLegendEntries(legendState._legendEntries,
-        legendState._selectionModel, seriesList ?? chart.currentSeriesList);
+        legendState._selectionModel!, seriesList ?? chart.currentSeriesList);
 
     updateLegend();
   }
@@ -246,7 +234,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart
         .getSelectionModel(selectionModelType)
         .removeSelectionChangedListener(_selectionChanged);
@@ -256,22 +244,14 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   }
 
   @protected
-  BaseChart get chart => _chart;
+  BaseChart<D> get chart => _chart;
 
   @override
-  String get role => 'legend-${selectionModelType.toString()}';
+  String get role => 'legend-$selectionModelType';
 
   bool get isRtl => _chart.context.chartContainerIsRtl;
 
   bool get isAxisFlipped => _chart.context.isRtl;
-
-  @override
-  GraphicsFactory get graphicsFactory => _graphicsFactory;
-
-  @override
-  set graphicsFactory(GraphicsFactory value) {
-    _graphicsFactory = value;
-  }
 
   @override
   LayoutViewConfig get layoutConfig {
@@ -283,26 +263,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
 
   /// Get layout position from legend position.
   LayoutPosition get _layoutPosition {
-    LayoutPosition position;
-    switch (_behaviorPosition) {
-      case BehaviorPosition.bottom:
-        position = LayoutPosition.Bottom;
-        break;
-      case BehaviorPosition.end:
-        position = isAxisFlipped ? LayoutPosition.Left : LayoutPosition.Right;
-        break;
-      case BehaviorPosition.inside:
-        position = LayoutPosition.DrawArea;
-        break;
-      case BehaviorPosition.start:
-        position = isAxisFlipped ? LayoutPosition.Right : LayoutPosition.Left;
-        break;
-      case BehaviorPosition.top:
-        position = LayoutPosition.Top;
-        break;
-    }
-
-    return position;
+    return layoutPosition(behaviorPosition, outsideJustification, isRtl);
   }
 
   @override
@@ -324,37 +285,37 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   void paint(ChartCanvas canvas, double animationPercent) {}
 
   @override
-  Rectangle<int> get componentBounds => _componentBounds;
+  Rectangle<int>? get componentBounds => _componentBounds;
 
   @override
   bool get isSeriesRenderer => false;
 
   // Gets the draw area bounds for native legend content to position itself
   // accordingly.
-  Rectangle<int> get drawAreaBounds => _drawAreaBounds;
+  Rectangle<int>? get drawAreaBounds => _drawAreaBounds;
 }
 
 /// Stores legend data used by native legend content builder.
 class LegendState<D> {
-  List<LegendEntry<D>> _legendEntries;
-  SelectionModel _selectionModel;
+  late List<LegendEntry<D>> _legendEntries;
+  SelectionModel<D>? _selectionModel;
 
   List<LegendEntry<D>> get legendEntries => _legendEntries;
-  SelectionModel get selectionModel => _selectionModel;
+  SelectionModel<D>? get selectionModel => _selectionModel;
 }
 
 /// Stores legend cell padding, in percents or pixels.
 ///
 /// If a percent is specified, it takes precedence over a flat pixel value.
 class LegendCellPadding {
-  final double bottomPct;
-  final double bottomPx;
-  final double leftPct;
-  final double leftPx;
-  final double rightPct;
-  final double rightPx;
-  final double topPct;
-  final double topPx;
+  final double? bottomPct;
+  final double? bottomPx;
+  final double? leftPct;
+  final double? leftPx;
+  final double? rightPct;
+  final double? rightPx;
+  final double? topPct;
+  final double? topPx;
 
   /// Creates padding in percents from the left, top, right, and bottom.
   const LegendCellPadding.fromLTRBPct(
@@ -398,14 +359,7 @@ class LegendCellPadding {
   /// const LegendCellPadding.allPct(8.0)
   /// ```
   const LegendCellPadding.allPct(double value)
-      : leftPct = value,
-        topPct = value,
-        rightPct = value,
-        bottomPct = value,
-        leftPx = null,
-        topPx = null,
-        rightPx = null,
-        bottomPx = null;
+      : this.fromLTRBPct(value, value, value, value);
 
   /// Creates cell padding where all the offsets are `value` in pixels.
   ///
@@ -417,23 +371,16 @@ class LegendCellPadding {
   /// const LegendCellPadding.allPx(8.0)
   /// ```
   const LegendCellPadding.allPx(double value)
-      : leftPx = value,
-        topPx = value,
-        rightPx = value,
-        bottomPx = value,
-        leftPct = null,
-        topPct = null,
-        rightPct = null,
-        bottomPct = null;
+      : this.fromLTRBPx(value, value, value, value);
 
   double bottom(num height) =>
-      bottomPct != null ? bottomPct * height : bottomPx;
+      bottomPct != null ? bottomPct! * height : bottomPx!;
 
-  double left(num width) => leftPct != null ? leftPct * width : leftPx;
+  double left(num width) => leftPct != null ? leftPct! * width : leftPx!;
 
-  double right(num width) => rightPct != null ? rightPct * width : rightPx;
+  double right(num width) => rightPct != null ? rightPct! * width : rightPx!;
 
-  double top(num height) => topPct != null ? topPct * height : topPx;
+  double top(num height) => topPct != null ? topPct! * height : topPx!;
 }
 
 /// Options for behavior of tapping/clicking on entries in the legend.

@@ -28,13 +28,16 @@ abstract class OrdinalScale extends MutableScale<String> {
   /// the starting domain is in terms of position less than [domainValuesToShow]
   /// from the last domain value the viewport will be fixed to the last value
   /// and not guaranteed that this domain value is the first in the viewport.
-  void setViewport(int viewportDataSize, String startingDomain);
+  void setViewport(int? viewportDataSize, String? startingDomain);
 
   /// The number of full ordinal steps that fit in the viewport.
   int get viewportDataSize;
 
   /// The first fully visible ordinal step within the viewport.
   ///
+  /// Start is defined by the leftmost domain for horizontal axes, and
+  /// topmost domain for vertical axes.
+  ///
   /// Null if no domains exist.
-  String get viewportStartingDomain;
+  String? get viewportStartingDomain;
 }

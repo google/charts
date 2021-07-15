@@ -25,7 +25,8 @@ abstract class TickFormatter<D> {
   const TickFormatter();
 
   /// Formats a list of tick values.
-  List<String> format(List<D> tickValues, Map<D, String> cache, {num stepSize});
+  List<String> format(List<D> tickValues, Map<D, String> cache,
+      {num? stepSize});
 }
 
 abstract class SimpleTickFormatterBase<D> implements TickFormatter<D> {
@@ -33,10 +34,10 @@ abstract class SimpleTickFormatterBase<D> implements TickFormatter<D> {
 
   @override
   List<String> format(List<D> tickValues, Map<D, String> cache,
-          {num stepSize}) =>
-      tickValues.map((D value) {
+          {num? stepSize}) =>
+      tickValues.map((value) {
         // Try to use the cached formats first.
-        String formattedString = cache[value];
+        var formattedString = cache[value];
         if (formattedString == null) {
           formattedString = formatValue(value);
           cache[value] = formattedString;
@@ -56,7 +57,7 @@ class OrdinalTickFormatter extends SimpleTickFormatterBase<String> {
   String formatValue(String value) => value;
 
   @override
-  bool operator ==(other) => other is OrdinalTickFormatter;
+  bool operator ==(Object other) => other is OrdinalTickFormatter;
 
   @override
   int get hashCode => 31;
@@ -74,7 +75,7 @@ class NumericTickFormatter extends SimpleTickFormatterBase<num> {
   ///
   /// [formatter] optionally specify a formatter to be used. Defaults to using
   /// [NumberFormat.decimalPattern] if none is specified.
-  factory NumericTickFormatter({MeasureFormatter formatter}) {
+  factory NumericTickFormatter({MeasureFormatter? formatter}) {
     formatter ??= _getFormatter(NumberFormat.decimalPattern());
     return NumericTickFormatter._internal(formatter);
   }
@@ -92,14 +93,14 @@ class NumericTickFormatter extends SimpleTickFormatterBase<num> {
 
   /// Returns a [MeasureFormatter] that calls format on [numberFormat].
   static MeasureFormatter _getFormatter(NumberFormat numberFormat) {
-    return (num value) => numberFormat.format(value);
+    return (num? value) => (value == null) ? '' : numberFormat.format(value);
   }
 
   @override
   String formatValue(num value) => formatter(value);
 
   @override
-  bool operator ==(other) =>
+  bool operator ==(Object other) =>
       other is NumericTickFormatter && formatter == other.formatter;
 
   @override

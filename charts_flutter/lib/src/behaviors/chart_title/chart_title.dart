@@ -16,6 +16,7 @@
 import 'package:charts_common/common.dart' as common
     show
         BehaviorPosition,
+        ChartBehavior,
         ChartTitle,
         ChartTitleDirection,
         MaxWidthStrategy,
@@ -28,28 +29,28 @@ import '../chart_behavior.dart' show ChartBehavior, GestureType;
 
 /// Chart behavior that adds a ChartTitle widget to a chart.
 @immutable
-class ChartTitle extends ChartBehavior<common.ChartTitle> {
+class ChartTitle<D> extends ChartBehavior<D> {
   final desiredGestures = new Set<GestureType>();
 
-  final common.BehaviorPosition behaviorPosition;
+  final common.BehaviorPosition? behaviorPosition;
 
   /// Minimum size of the legend component. Optional.
   ///
   /// If the legend is positioned in the top or bottom margin, then this
   /// configures the legend's height. If positioned in the start or end
   /// position, this configures the legend's width.
-  final int layoutMinSize;
+  final int? layoutMinSize;
 
   /// Preferred size of the legend component. Defaults to 0.
   ///
   /// If the legend is positioned in the top or bottom margin, then this
   /// configures the legend's height. If positioned in the start or end
   /// position, this configures the legend's width.
-  final int layoutPreferredSize;
+  final int? layoutPreferredSize;
 
   /// Strategy for handling title text that is too large to fit. Defaults to
   /// truncating the text with ellipses.
-  final common.MaxWidthStrategy maxWidthStrategy;
+  final common.MaxWidthStrategy? maxWidthStrategy;
 
   /// Primary text for the title.
   final String title;
@@ -58,28 +59,28 @@ class ChartTitle extends ChartBehavior<common.ChartTitle> {
   ///
   /// This defaults to horizontal for a title in the top or bottom
   /// [behaviorPosition], or vertical for start or end [behaviorPosition].
-  final common.ChartTitleDirection titleDirection;
+  final common.ChartTitleDirection? titleDirection;
 
   /// Justification of the title text if it is positioned outside of the draw
   /// area.
-  final common.OutsideJustification titleOutsideJustification;
+  final common.OutsideJustification? titleOutsideJustification;
 
   /// Space between the title and sub-title text, if defined.
   ///
   /// This padding is not used if no sub-title is provided.
-  final int titlePadding;
+  final int? titlePadding;
 
   /// Style of the [title] text.
-  final common.TextStyleSpec titleStyleSpec;
+  final common.TextStyleSpec? titleStyleSpec;
 
   /// Secondary text for the sub-title.
   ///
   /// [subTitle] is rendered on a second line below the [title], and may be
   /// styled differently.
-  final String subTitle;
+  final String? subTitle;
 
   /// Style of the [subTitle] text.
-  final common.TextStyleSpec subTitleStyleSpec;
+  final common.TextStyleSpec? subTitleStyleSpec;
 
   /// Space between the "inside" of the chart, and the title behavior itself.
   ///
@@ -91,7 +92,7 @@ class ChartTitle extends ChartBehavior<common.ChartTitle> {
   /// If a sub-title is defined, this is the space between the sub-title text
   /// and the inside of the chart. Otherwise, it is the space between the title
   /// text and the inside of chart.
-  final int innerPadding;
+  final int? innerPadding;
 
   /// Space between the "outside" of the chart, and the title behavior itself.
   ///
@@ -99,7 +100,7 @@ class ChartTitle extends ChartBehavior<common.ChartTitle> {
   /// direction of the draw area. For a top positioned title, this is applied
   /// to the top, left, and right edges. [innerPadding] is applied to the
   /// bottom edge.
-  final int outerPadding;
+  final int? outerPadding;
 
   /// Constructs a [ChartTitle].
   ///
@@ -126,38 +127,39 @@ class ChartTitle extends ChartBehavior<common.ChartTitle> {
   /// [subTitle] secondary text for the sub-title. Optional.
   ///
   /// [subTitleStyleSpec] style of the [subTitle] text.
-  ChartTitle(this.title,
-      {this.behaviorPosition,
-      this.innerPadding,
-      this.layoutMinSize,
-      this.layoutPreferredSize,
-      this.outerPadding,
-      this.maxWidthStrategy,
-      this.titleDirection,
-      this.titleOutsideJustification,
-      this.titlePadding,
-      this.titleStyleSpec,
-      this.subTitle,
-      this.subTitleStyleSpec});
+  ChartTitle(
+    this.title, {
+    this.behaviorPosition,
+    this.innerPadding,
+    this.layoutMinSize,
+    this.layoutPreferredSize,
+    this.outerPadding,
+    this.maxWidthStrategy,
+    this.titleDirection,
+    this.titleOutsideJustification,
+    this.titlePadding,
+    this.titleStyleSpec,
+    this.subTitle,
+    this.subTitleStyleSpec,
+  });
 
   @override
-  common.ChartTitle<D> createCommonBehavior<D>() =>
-      new common.ChartTitle<D>(title,
-          behaviorPosition: behaviorPosition,
-          innerPadding: innerPadding,
-          layoutMinSize: layoutMinSize,
-          layoutPreferredSize: layoutPreferredSize,
-          outerPadding: outerPadding,
-          maxWidthStrategy: maxWidthStrategy,
-          titleDirection: titleDirection,
-          titleOutsideJustification: titleOutsideJustification,
-          titlePadding: titlePadding,
-          titleStyleSpec: titleStyleSpec,
-          subTitle: subTitle,
-          subTitleStyleSpec: subTitleStyleSpec);
+  common.ChartTitle<D> createCommonBehavior() => new common.ChartTitle<D>(title,
+      behaviorPosition: behaviorPosition,
+      innerPadding: innerPadding,
+      layoutMinSize: layoutMinSize,
+      layoutPreferredSize: layoutPreferredSize,
+      outerPadding: outerPadding,
+      maxWidthStrategy: maxWidthStrategy,
+      titleDirection: titleDirection,
+      titleOutsideJustification: titleOutsideJustification,
+      titlePadding: titlePadding,
+      titleStyleSpec: titleStyleSpec,
+      subTitle: subTitle,
+      subTitleStyleSpec: subTitleStyleSpec);
 
   @override
-  void updateCommonBehavior(common.ChartTitle commonBehavior) {}
+  void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
 
   @override
   String get role => 'ChartTitle-${behaviorPosition.toString()}';

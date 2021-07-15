@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:charts_common/src/chart/common/series_renderer_config.dart';
+import 'package:charts_common/src/chart/layout/layout_view.dart';
 import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/common/style/style_factory.dart';
 import 'package:charts_common/src/common/symbol_renderer.dart';
-import 'package:charts_common/src/chart/common/series_renderer_config.dart';
-import 'package:charts_common/src/chart/layout/layout_view.dart';
 
 import 'base_treemap_renderer.dart';
 import 'dice_treemap_renderer.dart';
@@ -33,10 +33,13 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
   static const _defaultRectPadding =
       ViewMargin(topPx: 26, leftPx: 4, rightPx: 4, bottomPx: 4);
 
-  final String customRendererId;
+  @override
+  final String? customRendererId;
 
+  @override
   final SymbolRenderer symbolRenderer;
 
+  @override
   final rendererAttributes = RendererAttributes();
 
   /// Tiling algorithm, which is the way to divide a region into sub-regions of
@@ -59,7 +62,7 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
   final double patternStrokeWidthPx;
 
   /// Decorator for optionally decorating treemap rectangle label.
-  final TreeMapLabelDecorator labelDecorator;
+  final TreeMapLabelDecorator<D>? labelDecorator;
 
   TreeMapRendererConfig(
       {this.customRendererId,
@@ -69,10 +72,10 @@ class TreeMapRendererConfig<D> extends LayoutViewConfig
       this.rectPaddingPx = _defaultRectPadding,
       this.tileType = TreeMapTileType.squarified,
       this.labelDecorator,
-      Color strokeColor,
-      SymbolRenderer symbolRenderer})
-      : this.strokeColor = strokeColor ?? StyleFactory.style.black,
-        this.symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
+      Color? strokeColor,
+      SymbolRenderer? symbolRenderer})
+      : strokeColor = strokeColor ?? StyleFactory.style.black,
+        symbolRenderer = symbolRenderer ?? RectSymbolRenderer();
 
   @override
   BaseTreeMapRenderer<D> build() {

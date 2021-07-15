@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -40,6 +42,7 @@ class MockChart extends Mock implements BaseChart {
 }
 
 class MockSelectionModel extends Mock implements MutableSelectionModel {
+  @override
   bool locked = false;
 }
 

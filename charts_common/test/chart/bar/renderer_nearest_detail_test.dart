@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -107,11 +109,11 @@ void main() {
       MyRow('camp1', 10),
     ];
 
-    final series = MutableSeries<String>(Series(
+    final series = MutableSeries(Series<MyRow, String>(
       id: id,
       data: data,
-      domainFn: (dynamic row, _) => row.campaign,
-      measureFn: (dynamic row, _) => row.clickCount,
+      domainFn: (row, _) => row.campaign,
+      measureFn: (row, _) => row.clickCount,
       seriesCategory: seriesCategory,
     ));
 
@@ -163,11 +165,11 @@ void main() {
       MyDateTimeRow(date1, 10),
     ];
 
-    final series = MutableSeries<DateTime>(Series(
+    final series = MutableSeries(Series<MyDateTimeRow, DateTime>(
       id: id,
       data: data,
-      domainFn: (dynamic row, _) => row.time,
-      measureFn: (dynamic row, _) => row.clickCount,
+      domainFn: (row, _) => row.time,
+      measureFn: (row, _) => row.clickCount,
       seriesCategory: seriesCategory,
     ));
 
