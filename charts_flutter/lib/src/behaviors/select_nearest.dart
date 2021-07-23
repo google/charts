@@ -94,7 +94,9 @@ class SelectNearest<D> extends ChartBehavior<D> {
         desiredGestures..add(GestureType.onTap);
         break;
       case common.SelectionTrigger.tapAndDrag:
-        desiredGestures..add(GestureType.onTap)..add(GestureType.onDrag);
+        desiredGestures
+          ..add(GestureType.onTap)
+          ..add(GestureType.onDrag);
         break;
       case common.SelectionTrigger.pressHold:
       case common.SelectionTrigger.longPressHold:

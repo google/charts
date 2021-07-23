@@ -57,12 +57,15 @@ export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart'
     show TickDrawStrategy;
+export 'src/chart/cartesian/axis/linear/linear_scale.dart' show LinearScale;
 export 'src/chart/cartesian/axis/numeric_extents.dart' show NumericExtents;
+export 'src/chart/cartesian/axis/numeric_scale.dart' show NumericScale;
 export 'src/chart/cartesian/axis/spec/axis_spec.dart'
     show
         AxisSpec,
         LineStyleSpec,
         RenderSpec,
+        ScaleSpec,
         TextStyleSpec,
         TickLabelAnchor,
         TickLabelJustification,

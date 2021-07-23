@@ -64,7 +64,7 @@ class BarRenderer<D>
   BarRenderer.internal({
     required BarRendererConfig<Object?> config,
     required String rendererId,
-  })   : barRendererDecorator = config.barRendererDecorator,
+  })  : barRendererDecorator = config.barRendererDecorator,
         _stackedBarPaddingPx = config.stackedBarPaddingPx,
         super(
             config: config,

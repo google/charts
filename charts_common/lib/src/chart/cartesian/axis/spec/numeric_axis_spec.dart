@@ -14,8 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common/src/chart/cartesian/axis/tick_formatter.dart';
-import 'package:meta/meta.dart' show immutable;
 import 'package:intl/intl.dart';
+import 'package:meta/meta.dart' show immutable;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
@@ -27,7 +27,7 @@ import '../numeric_tick_provider.dart' show NumericTickProvider;
 import '../static_tick_provider.dart' show StaticTickProvider;
 import '../tick_formatter.dart' show NumericTickFormatter;
 import 'axis_spec.dart'
-    show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec;
+    show AxisSpec, TickProviderSpec, TickFormatterSpec, RenderSpec, ScaleSpec;
 import 'tick_spec.dart' show TickSpec;
 
 /// [AxisSpec] specialized for numeric/continuous axes like the measure axis.
@@ -53,12 +53,14 @@ class NumericAxisSpec extends AxisSpec<num> {
     NumericTickProviderSpec? tickProviderSpec,
     NumericTickFormatterSpec? tickFormatterSpec,
     bool? showAxisLine,
+    ScaleSpec<num>? scaleSpec,
     this.viewport,
   }) : super(
             renderSpec: renderSpec,
             tickProviderSpec: tickProviderSpec,
             tickFormatterSpec: tickFormatterSpec,
-            showAxisLine: showAxisLine);
+            showAxisLine: showAxisLine,
+            scaleSpec: scaleSpec);
 
   factory NumericAxisSpec.from(
     NumericAxisSpec other, {
@@ -66,6 +68,7 @@ class NumericAxisSpec extends AxisSpec<num> {
     TickProviderSpec<num>? tickProviderSpec,
     TickFormatterSpec<num>? tickFormatterSpec,
     bool? showAxisLine,
+    ScaleSpec<num>? scaleSpec,
     NumericExtents? viewport,
   }) {
     return NumericAxisSpec(
@@ -75,6 +78,7 @@ class NumericAxisSpec extends AxisSpec<num> {
       tickFormatterSpec: (tickFormatterSpec ?? other.tickFormatterSpec)
           as NumericTickFormatterSpec?,
       showAxisLine: showAxisLine ?? other.showAxisLine,
+      scaleSpec: scaleSpec ?? other.scaleSpec,
       viewport: viewport ?? other.viewport,
     );
   }
