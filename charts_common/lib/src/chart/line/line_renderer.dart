@@ -1076,6 +1076,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       return nearest;
     }
 
+    var isFirstSeriesAbovePoint = false;
+
     for (final seriesSegments in _seriesLineMap.values) {
       _DatumPoint<D>? nearestPoint;
       var nearestDomainDistance = 10000.0;
@@ -1127,6 +1129,19 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             }
           }
         }
+
+        // For area charts, check if the current series is the first series
+        // above [chartPoint] or not. If it is, it means that [chartPoint] is
+        // inside the area skirt of the current series. In this case, set the
+        // measure distance to 0 so the current [nearestPoint] has the smallest
+        // measure distance among all.
+        if (config.includeArea &&
+            !isFirstSeriesAbovePoint &&
+            nearestPoint != null &&
+            _isPointBelowSeries(chartPoint, nearestPoint, segment.allPoints)) {
+          nearestMeasureDistance = 0;
+          isFirstSeriesAbovePoint = true;
+        }
       }
 
       // Found a point, add it to the list.
@@ -1146,6 +1161,29 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     // base chart.
 
     return nearest;
+  }
+
+  /// Checks if [chartPoint] is below the series represented by
+  /// [allPointsForSeries] or not.
+  ///
+  /// [nearestPoint] is the point in [allPointsForSeries] that is closest to
+  /// [chartPoint].
+  bool _isPointBelowSeries(Point<double> chartPoint,
+      _DatumPoint<D> nearestPoint, List<_DatumPoint<D>> allPointsForSeries) {
+    _DatumPoint<D> leftPoint;
+    _DatumPoint<D> rightPoint;
+    var nearestPoingIdx =
+        allPointsForSeries.indexWhere((p) => p == nearestPoint);
+    if (chartPoint.x < nearestPoint.x!) {
+      leftPoint = allPointsForSeries[nearestPoingIdx - 1];
+      rightPoint = nearestPoint;
+    } else {
+      leftPoint = nearestPoint;
+      rightPoint = allPointsForSeries[nearestPoingIdx + 1];
+    }
+    var slope = (rightPoint.y! - leftPoint.y!) / (rightPoint.x! - leftPoint.x!);
+    var limit = (chartPoint.x - leftPoint.x!) * slope + leftPoint.y!;
+    return chartPoint.y >= limit;
   }
 
   @override
