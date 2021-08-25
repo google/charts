@@ -1076,6 +1076,8 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
       return nearest;
     }
 
+    var isFirstSeriesAbovePoint = false;
+
     for (final seriesSegments in _seriesLineMap.values) {
       _DatumPoint<D>? nearestPoint;
       var nearestDomainDistance = 10000.0;
@@ -1127,6 +1129,19 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
             }
           }
         }
+
+        // For area charts, check if the current series is the first series
+        // above [chartPoint] or not. If it is, it means that [chartPoint] is
+        // inside the area skirt of the current series. In this case, set the
+        // measure distance to 0 so the current [nearestPoint] has the smallest
+        // measure distance among all.
+        if (config.includeArea &&
+            !isFirstSeriesAbovePoint &&
+            nearestPoint != null &&
+            _isPointBelowSeries(chartPoint, nearestPoint, segment.allPoints)) {
+          nearestMeasureDistance = 0;
+          isFirstSeriesAbovePoint = true;
+        }
       }
 
       // Found a point, add it to the list.
@@ -1146,6 +1161,41 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
     // base chart.
 
     return nearest;
+  }
+
+  /// Checks if [chartPoint] is below the series represented by
+  /// [allPointsForSeries] or not.
+  ///
+  /// [nearestPoint] is the point in [allPointsForSeries] that is closest to
+  /// [chartPoint].
+  bool _isPointBelowSeries(Point<double> chartPoint,
+      _DatumPoint<D> nearestPoint, List<_DatumPoint<D>> allPointsForSeries) {
+    _DatumPoint<D>? leftPoint;
+    _DatumPoint<D>? rightPoint;
+    var nearestPointIdx =
+        allPointsForSeries.indexWhere((p) => p == nearestPoint);
+    if (chartPoint.x < nearestPoint.x!) {
+      leftPoint =
+          nearestPointIdx > 0 ? allPointsForSeries[nearestPointIdx - 1] : null;
+      rightPoint = nearestPoint;
+    } else {
+      leftPoint = nearestPoint;
+      rightPoint = nearestPointIdx < allPointsForSeries.length - 1
+          ? allPointsForSeries[nearestPointIdx + 1]
+          : null;
+    }
+    var limit = chartPoint.y;
+    if (leftPoint != null && rightPoint != null) {
+      var slope =
+          (rightPoint.y! - leftPoint.y!) / (rightPoint.x! - leftPoint.x!);
+      limit = (chartPoint.x - leftPoint.x!) * slope + leftPoint.y!;
+    } else if (leftPoint != null) {
+      limit = leftPoint.y!;
+    } else if (rightPoint != null) {
+      limit = rightPoint.y!;
+    }
+
+    return chartPoint.y >= limit;
   }
 
   @override
