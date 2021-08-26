@@ -1185,13 +1185,16 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
           : null;
     }
     var limit = chartPoint.y;
-    if (leftPoint != null && rightPoint != null) {
+    if (leftPoint != null &&
+        leftPoint.y != null &&
+        rightPoint != null &&
+        rightPoint.y != null) {
       var slope =
           (rightPoint.y! - leftPoint.y!) / (rightPoint.x! - leftPoint.x!);
       limit = (chartPoint.x - leftPoint.x!) * slope + leftPoint.y!;
-    } else if (leftPoint != null) {
+    } else if (leftPoint != null && leftPoint.y != null) {
       limit = leftPoint.y!;
-    } else if (rightPoint != null) {
+    } else if (rightPoint != null && rightPoint.y != null) {
       limit = rightPoint.y!;
     }
 
