@@ -198,7 +198,7 @@ export 'src/chart/common/behavior/zoom/panning_tick_provider.dart'
 export 'src/chart/common/canvas_shapes.dart'
     show CanvasBarStack, CanvasPie, CanvasPieSlice, CanvasRect;
 export 'src/chart/common/chart_canvas.dart'
-    show ChartCanvas, FillPatternType, BlendMode;
+    show ChartCanvas, FillPatternType, BlendMode, LinkOrientation, Link;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
@@ -267,6 +267,8 @@ export 'src/chart/treemap/treemap_label_decorator.dart'
 export 'src/chart/treemap/treemap_renderer_config.dart'
     show TreeMapRendererConfig, TreeMapTileType;
 export 'src/common/color.dart' show Color;
+export 'src/chart/link/link_chart.dart' show LinkChart;
+export 'src/chart/link/link_renderer_config.dart' show LinkRendererConfig;
 export 'src/common/date_time_factory.dart'
     show DateTimeFactory, LocalDateTimeFactory, UTCDateTimeFactory;
 export 'src/common/gesture_listener.dart' show GestureListener;

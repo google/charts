@@ -24,6 +24,8 @@ import 'package:charts_common/common.dart' as common
         Color,
         FillPatternType,
         GraphicsFactory,
+        Link,
+        LinkOrientation,
         StyleFactory,
         TextElement,
         TextDirection;
@@ -59,6 +61,13 @@ class ChartCanvas implements common.ChartCanvas {
       endAngle: endAngle,
       fill: fill,
     );
+  }
+
+  @override
+  void drawLink(
+      common.Link link, common.LinkOrientation orientation, common.Color fill) {
+    // TODO: Implement drawLink for flutter.
+    throw ("Flutter drawLink() has not been implemented.");
   }
 
   @override
