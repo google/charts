@@ -161,7 +161,8 @@ class SunburstArcRenderer<D> extends BaseArcRenderer<D> {
           continue;
         }
 
-        final percentOfLevel = measure / childrenMeasureTotal;
+        final percentOfLevel =
+            childrenMeasureTotal > 0 ? measure / childrenMeasureTotal : 0;
         var angle = _getParentArcLength(node) * percentOfLevel;
         var endAngle = startAngle + angle;
 
