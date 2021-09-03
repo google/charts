@@ -181,18 +181,24 @@ abstract class BaseArcRenderer<D> extends BaseSeriesRenderer<D> {
         strokeWidthPx: arcList.strokeWidthPx,
       );
 
-      // Decorate the arcs with decorators that should appear below the main
-      // series data.
-      arcRendererDecorators
-          .where((decorator) => !decorator.renderAbove)
-          .forEach((decorator) {
-        decorator.decorate(elementsList, canvas, graphicsFactory!,
-            drawBounds: drawBounds!,
-            animationPercent: animationPercent,
-            rtl: isRtl);
-      });
       arcListToElementsList[arcList] = elementsList;
     }
+
+    // Decorate the arcs with decorators that should appear below the main
+    // series data.
+    arcRendererDecorators
+        .where((decorator) => !decorator.renderAbove)
+        .forEach((decorator) {
+      decorator.decorate(
+          arcLists
+              .map<ArcRendererElementList<D>>((e) => arcListToElementsList[e])
+              .toList(),
+          canvas,
+          graphicsFactory!,
+          drawBounds: drawBounds!,
+          animationPercent: animationPercent,
+          rtl: isRtl);
+    });
 
     for (var arcList in arcLists) {
       final circleSectors = <CanvasPieSlice>[];
@@ -215,17 +221,19 @@ abstract class BaseArcRenderer<D> extends BaseSeriesRenderer<D> {
 
     // Decorate the arcs with decorators that should appear above the main
     // series data. This is the typical place for labels.
-    for (var arcList in arcLists) {
-      arcRendererDecorators
-          .where((decorator) => decorator.renderAbove)
-          .forEach((decorator) {
-        decorator.decorate(
-            arcListToElementsList[arcList], canvas, graphicsFactory!,
-            drawBounds: drawBounds!,
-            animationPercent: animationPercent,
-            rtl: isRtl);
-      });
-    }
+    arcRendererDecorators
+        .where((decorator) => decorator.renderAbove)
+        .forEach((decorator) {
+      decorator.decorate(
+          arcLists
+              .map<ArcRendererElementList<D>>((e) => arcListToElementsList[e])
+              .toList(),
+          canvas,
+          graphicsFactory!,
+          drawBounds: drawBounds!,
+          animationPercent: animationPercent,
+          rtl: isRtl);
+    });
   }
 
   @override

@@ -150,7 +150,7 @@ void main() {
 
       final decorator = ArcLabelDecorator();
 
-      decorator.decorate(arcElements, canvas, graphicsFactory,
+      decorator.decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
@@ -195,7 +195,7 @@ void main() {
           labelPosition: ArcLabelPosition.inside,
           insideLabelStyleSpec: TextStyleSpec(fontSize: 10));
 
-      decorator.decorate(arcElements, canvas, graphicsFactory,
+      decorator.decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
@@ -227,7 +227,7 @@ void main() {
           labelPosition: ArcLabelPosition.outside,
           outsideLabelStyleSpec: TextStyleSpec(fontSize: 10));
 
-      decorator.decorate(arcElements, canvas, graphicsFactory,
+      decorator.decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
@@ -273,7 +273,7 @@ void main() {
           outsideLabelStyleSpec: TextStyleSpec(
               fontSize: 8, fontFamily: 'outsideFont', color: outsideColor));
 
-      decorator.decorate(arcElements, canvas, graphicsFactory,
+      decorator.decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
@@ -318,7 +318,7 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
+      ArcLabelDecorator().decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       verifyNever(canvas.drawText(any, any, any));
@@ -341,7 +341,7 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
+      ArcLabelDecorator().decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       verifyNever(canvas.drawText(any, any, any));
