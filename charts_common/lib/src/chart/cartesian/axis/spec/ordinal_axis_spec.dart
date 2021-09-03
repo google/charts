@@ -19,6 +19,8 @@ import 'package:meta/meta.dart' show immutable;
 
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
+import '../auto_adjusting_static_tick_provider.dart'
+    show AutoAdjustingStaticTickProvider;
 import '../axis.dart' show Axis, OrdinalAxis, OrdinalViewport;
 import '../ordinal_scale.dart' show OrdinalScale;
 import '../ordinal_tick_provider.dart' show OrdinalTickProvider;
@@ -128,6 +130,32 @@ class StaticOrdinalTickProviderSpec implements OrdinalTickProviderSpec {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is StaticOrdinalTickProviderSpec && tickSpecs == other.tickSpecs);
+
+  @override
+  int get hashCode => tickSpecs.hashCode;
+}
+
+/// [TickProviderSpec] that tries different tick increments to avoid tick
+/// collisions.
+@immutable
+class AutoAdjustingStaticOrdinalTickProviderSpec
+    implements OrdinalTickProviderSpec {
+  final List<TickSpec<String>> tickSpecs;
+  final List<int> allowedTickIncrements;
+
+  const AutoAdjustingStaticOrdinalTickProviderSpec(
+      this.tickSpecs, this.allowedTickIncrements);
+
+  @override
+  AutoAdjustingStaticTickProvider<String> createTickProvider(
+          ChartContext context) =>
+      AutoAdjustingStaticTickProvider<String>(tickSpecs, allowedTickIncrements);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AutoAdjustingStaticOrdinalTickProviderSpec &&
+          tickSpecs == other.tickSpecs);
 
   @override
   int get hashCode => tickSpecs.hashCode;

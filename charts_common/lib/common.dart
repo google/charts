@@ -98,6 +98,7 @@ export 'src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
         StaticNumericTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
     show
+        AutoAdjustingStaticOrdinalTickProviderSpec,
         BasicOrdinalTickProviderSpec,
         BasicOrdinalTickFormatterSpec,
         FixedPixelOrdinalScaleSpec,

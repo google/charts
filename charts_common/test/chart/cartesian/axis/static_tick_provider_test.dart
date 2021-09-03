@@ -184,4 +184,27 @@ void main() {
       expect(fakeFormatter.calledTimes, equals(1));
     });
   });
+
+  group('with tick increment', () {
+    test('returns every Nth tick', () {
+      final tickProvider = StaticTickProvider<num>([
+        TickSpec<num>(50, label: '50'),
+        TickSpec<num>(75, label: '75'),
+        TickSpec<num>(100, label: '100'),
+        TickSpec<num>(125, label: '125'),
+        TickSpec<num>(150, label: '150'),
+      ], tickIncrement: 2);
+
+      final ticks = tickProvider.getTicks(
+          context: context,
+          graphicsFactory: graphicsFactory,
+          scale: scale,
+          formatter: formatter,
+          formatterValueCache: <num, String>{},
+          tickDrawStrategy: drawStrategy,
+          orientation: null);
+
+      expect(ticks.map((tick) => tick.value).toList(), [50, 100, 150]);
+    });
+  });
 }
