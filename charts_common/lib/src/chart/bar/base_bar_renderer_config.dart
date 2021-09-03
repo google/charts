@@ -42,6 +42,9 @@ import '../layout/layout_view.dart' show LayoutViewConfig;
 ///   series.
 abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
+  /// Spacing between the bars in a group.
+  final int barGroupInnerPaddingPx;
+
   @override
   final String? customRendererId;
 
@@ -93,7 +96,8 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   final rendererAttributes = RendererAttributes();
 
   BaseBarRendererConfig(
-      {this.customRendererId,
+      {this.barGroupInnerPaddingPx = 2,
+      this.customRendererId,
       this.dashPattern,
       this.groupingType = BarGroupingType.grouped,
       this.layoutPaintOrder,
