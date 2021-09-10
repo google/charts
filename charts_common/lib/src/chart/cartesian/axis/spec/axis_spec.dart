@@ -19,8 +19,8 @@ import '../../../../common/color.dart' show Color;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis;
-import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import '../scale.dart' show Scale, MutableScale;
+import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 import '../tick_formatter.dart' show TickFormatter;
 import '../tick_provider.dart' show TickProvider;
 

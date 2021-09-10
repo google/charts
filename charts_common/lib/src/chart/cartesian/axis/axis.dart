@@ -279,6 +279,20 @@ abstract class Axis<D> extends ImmutableAxis<D> implements LayoutView {
 
   /// Request update ticks from tick provider and update the painted ticks.
   void updateTicks() {
+    // Update the output range because it could be dropped by a prior
+    // AxisScope.configure call on the Axis.
+    if (_componentBounds != null) {
+      final outputStart =
+          isVertical ? _componentBounds!.bottom : _componentBounds!.left;
+      final outputEnd =
+          isVertical ? _componentBounds!.top : _componentBounds!.right;
+      if (reverseOutputRange) {
+        setOutputRange(outputEnd, outputStart);
+      } else {
+        setOutputRange(outputStart, outputEnd);
+      }
+    }
+
     _updateProvidedTicks();
     if (_componentBounds != null) {
       _updateProvidedTickWidth(

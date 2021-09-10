@@ -104,6 +104,7 @@ class NumericAxisSpec extends AxisSpec<num> {
   int get hashCode {
     var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + viewport.hashCode;
+    hashcode = (hashcode * 37) + super.hashCode;
     return hashcode;
   }
 }
