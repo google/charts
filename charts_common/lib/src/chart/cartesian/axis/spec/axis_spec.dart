@@ -102,7 +102,7 @@ class AxisSpec<D> {
     hashcode = (hashcode * 37) + tickProviderSpec.hashCode;
     hashcode = (hashcode * 37) + tickFormatterSpec.hashCode;
     hashcode = (hashcode * 37) + showAxisLine.hashCode;
-    hashcode = (hashCode * 37) + scaleSpec.hashCode;
+    hashcode = (hashcode * 37) + scaleSpec.hashCode;
     return hashcode;
   }
 }
