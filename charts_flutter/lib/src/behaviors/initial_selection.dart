@@ -13,11 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:collection/collection.dart' show ListEquality;
-
 import 'package:charts_common/common.dart' as common
     show ChartBehavior, InitialSelection, SeriesDatumConfig, SelectionModelType;
-
+import 'package:collection/collection.dart' show ListEquality;
 import 'package:meta/meta.dart' show immutable;
 
 import 'chart_behavior.dart' show ChartBehavior, GestureType;
@@ -30,18 +28,21 @@ class InitialSelection<D> extends ChartBehavior<D> {
   final common.SelectionModelType selectionModelType;
   final List<String>? selectedSeriesConfig;
   final List<common.SeriesDatumConfig<D>>? selectedDataConfig;
+  final bool shouldPreserveSelectionOnDraw;
 
   InitialSelection(
       {this.selectionModelType = common.SelectionModelType.info,
       this.selectedSeriesConfig,
-      this.selectedDataConfig});
+      this.selectedDataConfig,
+      this.shouldPreserveSelectionOnDraw = false});
 
   @override
   common.InitialSelection<D> createCommonBehavior() =>
       new common.InitialSelection<D>(
           selectionModelType: selectionModelType,
           selectedDataConfig: selectedDataConfig,
-          selectedSeriesConfig: selectedSeriesConfig);
+          selectedSeriesConfig: selectedSeriesConfig,
+          shouldPreserveSelectionOnDraw: shouldPreserveSelectionOnDraw);
 
   @override
   void updateCommonBehavior(common.ChartBehavior commonBehavior) {}
