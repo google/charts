@@ -267,6 +267,8 @@ export 'src/chart/treemap/treemap_label_decorator.dart'
     show TreeMapLabelDecorator;
 export 'src/chart/treemap/treemap_renderer_config.dart'
     show TreeMapRendererConfig, TreeMapTileType;
+export 'src/chart/sankey/sankey_chart.dart' show SankeyChart;
+export 'src/chart/sankey/sankey_renderer_config.dart' show SankeyRendererConfig;
 export 'src/common/color.dart' show Color;
 export 'src/chart/link/link_chart.dart' show LinkChart;
 export 'src/chart/link/link_renderer_config.dart' show LinkRendererConfig;

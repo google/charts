@@ -55,6 +55,7 @@ class LayoutViewPaintOrder {
   static const arc = 10;
   static const bar = 10;
   static const treeMap = 10;
+  static const sankey = 10;
   static const barTargetLine = 15;
   static const line = 20;
   static const point = 25;
