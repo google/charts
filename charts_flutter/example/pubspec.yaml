@@ -1,7 +1,7 @@
 name: example
 description: Charts-Flutter Demo
 environment:
-  sdk: '>=1.23.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 dependencies:
   charts_flutter:
     path: ../
