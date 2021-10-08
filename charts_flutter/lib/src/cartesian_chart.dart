@@ -33,7 +33,7 @@ import 'selection_model_config.dart' show SelectionModelConfig;
 import 'user_managed_state.dart' show UserManagedState;
 
 @immutable
-abstract class CartesianChart<D> extends BaseChart<D> {
+abstract class BaseCartesianChart<D> extends BaseChart<D> {
   final common.AxisSpec? domainAxis;
   final common.NumericAxisSpec? primaryMeasureAxis;
   final common.NumericAxisSpec? secondaryMeasureAxis;
@@ -76,7 +76,7 @@ abstract class CartesianChart<D> extends BaseChart<D> {
       BaseChartState<D> chartState) {
     super.updateCommonChart(baseChart, oldWidget, chartState);
 
-    final prev = oldWidget as CartesianChart?;
+    final prev = oldWidget as BaseCartesianChart?;
     final chart = baseChart as common.CartesianChart;
 
     if (flipVerticalAxis != null) {

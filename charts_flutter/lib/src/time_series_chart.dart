@@ -32,7 +32,7 @@ import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;
 import 'user_managed_state.dart' show UserManagedState;
 
-class TimeSeriesChart extends CartesianChart<DateTime> {
+class TimeSeriesChart extends BaseCartesianChart<DateTime> {
   final common.DateTimeFactory? dateTimeFactory;
 
   /// Create a [TimeSeriesChart].
