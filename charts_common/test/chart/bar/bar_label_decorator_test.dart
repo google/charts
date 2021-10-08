@@ -34,7 +34,12 @@ import 'package:charts_common/src/chart/cartesian/axis/spec/axis_spec.dart'
 import 'package:charts_common/src/chart/common/chart_canvas.dart'
     show ChartCanvas;
 import 'package:charts_common/src/chart/bar/bar_label_decorator.dart'
-    show BarLabelDecorator, BarLabelAnchor, BarLabelPlacement, BarLabelPosition;
+    show
+        BarLabelDecorator,
+        BarLabelAnchor,
+        BarLabelPlacement,
+        BarLabelPosition,
+        BarLabelVerticalPosition;
 import 'package:charts_common/src/data/series.dart' show AccessorFn;
 
 import 'package:mockito/mockito.dart';
@@ -67,6 +72,9 @@ class FakeTextStyle implements TextStyle {
 
   @override
   double lineHeight;
+
+  @override
+  String fontWeight;
 }
 
 /// Fake [TextElement] which returns text length as [horizontalSliceWidth].
@@ -768,6 +776,55 @@ void main() {
       expect(captured[0].textDirection, equals(TextDirection.ltr));
       expect(captured[1], equals(0));
       expect(captured[2], equals(5));
+    });
+
+    test('RTL right label position', () {
+      final barElements = [
+        FakeBarRendererElement(
+            'A', Rectangle(0, 0, 10, 20), (_) => 'LabelA', ['A'])
+      ];
+
+      BarLabelDecorator<String>(
+              labelPosition: BarLabelPosition.right,
+              labelPadding: 0, // Turn off label padding for testing.
+              insideLabelStyleSpec: TextStyleSpec(fontSize: 10))
+          .decorate(barElements, canvas, graphicsFactory,
+              drawBounds: drawBounds,
+              animationPercent: 1.0,
+              renderingVertically: false,
+              rtl: true);
+
+      final captured =
+          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      expect(captured, hasLength(3));
+      expect(captured[0].maxWidth, equals(190));
+      expect(captured[1], equals(194));
+      expect(captured[2], equals(4));
+    });
+
+    test('RTL top right label position', () {
+      final barElements = [
+        FakeBarRendererElement(
+            'A', Rectangle(0, 0, 10, 20), (_) => 'LabelA', ['A'])
+      ];
+
+      BarLabelDecorator<String>(
+              labelPosition: BarLabelPosition.right,
+              labelVerticalPosition: BarLabelVerticalPosition.top,
+              labelPadding: 0, // Turn off label padding for testing.
+              insideLabelStyleSpec: TextStyleSpec(fontSize: 10))
+          .decorate(barElements, canvas, graphicsFactory,
+              drawBounds: drawBounds,
+              animationPercent: 1.0,
+              renderingVertically: false,
+              rtl: true);
+
+      final captured =
+          verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
+      expect(captured, hasLength(3));
+      expect(captured[0].maxWidth, equals(190));
+      expect(captured[1], equals(194));
+      expect(captured[2], equals(-12));
     });
 
     group('Null and empty label scenarios', () {

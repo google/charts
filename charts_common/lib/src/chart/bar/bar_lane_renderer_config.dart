@@ -42,6 +42,9 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   /// one wide lane if all measure values for said domain are null.
   final bool mergeEmptyLanes;
 
+  /// Whether or not to render negative bar lanes on bars with negative values
+  final bool renderNegativeLanes;
+
   BarLaneRendererConfig({
     String? customRendererId,
     CornerStrategy? cornerStrategy,
@@ -51,6 +54,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
     int layoutPaintOrder = LayoutViewPaintOrder.bar,
     this.mergeEmptyLanes = false,
     int minBarLengthPx = 0,
+    bool renderNegativeLanes = false,
     int stackedBarPaddingPx = 1,
     double strokeWidthPx = 0.0,
     BarRendererDecorator<String>? barRendererDecorator,
@@ -59,6 +63,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
     List<int>? weightPattern,
   })  : backgroundBarColor =
             backgroundBarColor ?? StyleFactory.style.noDataColor,
+        renderNegativeLanes = renderNegativeLanes,
         super(
           barRendererDecorator: barRendererDecorator,
           cornerStrategy: cornerStrategy,
@@ -87,6 +92,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
         other.backgroundBarColor == backgroundBarColor &&
         other.emptyLaneLabel == emptyLaneLabel &&
         other.mergeEmptyLanes == mergeEmptyLanes &&
+        other.renderNegativeLanes == renderNegativeLanes &&
         super == other;
   }
 
@@ -96,6 +102,7 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
     hash = hash * 31 + backgroundBarColor.hashCode;
     hash = hash * 31 + emptyLaneLabel.hashCode;
     hash = hash * 31 + mergeEmptyLanes.hashCode;
+    hash = hash * 31 + renderNegativeLanes.hashCode;
     return hash;
   }
 }

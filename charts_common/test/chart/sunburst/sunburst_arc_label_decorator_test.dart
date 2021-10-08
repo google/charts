@@ -71,6 +71,9 @@ class FakeTextStyle implements TextStyle {
 
   @override
   double lineHeight;
+
+  @override
+  String fontWeight;
 }
 
 /// Fake [TextElement] which returns text length as [horizontalSliceWidth].

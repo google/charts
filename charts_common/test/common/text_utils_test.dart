@@ -53,6 +53,9 @@ class FakeTextStyle implements TextStyle {
   String fontFamily;
 
   @override
+  String fontWeight;
+
+  @override
   double lineHeight;
 }
 

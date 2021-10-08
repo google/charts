@@ -16,7 +16,12 @@
 export 'src/chart/bar/bar_chart.dart' show BarChart;
 export 'src/chart/bar/bar_error_decorator.dart' show BarErrorDecorator;
 export 'src/chart/bar/bar_label_decorator.dart'
-    show BarLabelAnchor, BarLabelDecorator, BarLabelPlacement, BarLabelPosition;
+    show
+        BarLabelAnchor,
+        BarLabelDecorator,
+        BarLabelPlacement,
+        BarLabelPosition,
+        BarLabelVerticalPosition;
 export 'src/chart/bar/bar_lane_renderer_config.dart' show BarLaneRendererConfig;
 export 'src/chart/bar/bar_renderer.dart'
     show BarRenderer, BarRendererElement, ImmutableBarRendererElement;
