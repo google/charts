@@ -12,12 +12,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:collection' show LinkedHashMap;
 
 import 'package:charts_common/src/chart/common/chart_canvas.dart';
 import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/common/typed_registry.dart';
 
-import 'series.dart' show TypedAccessorFn;
+import 'series.dart' show AttributeKey, Series, TypedAccessorFn;
 
 class Graph<N, L, D> {
   /// Unique identifier for this graph
@@ -87,7 +88,8 @@ class Graph<N, L, D> {
       TypedAccessorFn<L, Color>? linkFillColorFn}) {
     return Graph._(
       id: id,
-      nodes: _convertGraphNodes<N, L>(nodes, links, sourceFn, targetFn),
+      nodes: _convertGraphNodes<N, L, D>(
+          nodes, links, sourceFn, targetFn, nodeDomainFn),
       links: _convertGraphLinks<N, L>(links, sourceFn, targetFn),
       nodeDomainFn: _actOnNodeData<N, L, D>(nodeDomainFn)!,
       linkDomainFn: _actOnLinkData<N, L, D>(linkDomainFn)!,
@@ -116,6 +118,52 @@ class Graph<N, L, D> {
     required this.nodeStrokeWidthPxFn,
     required this.linkFillColorFn,
   });
+
+  /// Transform graph data given by links and nodes into a [Series] list.
+  ///
+  /// Output should contain two [Series] with the format:
+  /// `[Series<Node<N,L>> nodeSeries, Series<Link<N,L>> linkSeries]`
+  List<Series<GraphElement, D>> toSeriesList() {
+    Series<Node<N, L>, D> nodeSeries = Series(
+      id: '${id}_nodes',
+      data: nodes,
+      domainFn: nodeDomainFn,
+      measureFn: nodeMeasureFn,
+      colorFn: nodeColorFn,
+      fillColorFn: nodeFillColorFn,
+      fillPatternFn: nodeFillPatternFn,
+      strokeWidthPxFn: nodeStrokeWidthPxFn,
+    )..attributes.mergeFrom(nodeAttributes);
+
+    Series<Link<N, L>, D> linkSeries = Series(
+      id: '${id}_links',
+      data: links,
+      domainFn: linkDomainFn,
+      measureFn: linkMeasureFn,
+      fillColorFn: linkFillColorFn,
+    )..attributes.mergeFrom(linkAttributes);
+    return [nodeSeries, linkSeries];
+  }
+
+  /// Set attribute of given generic type R for a node series
+  void setNodeAttribute<R>(AttributeKey<R> key, R value) {
+    nodeAttributes.setAttr(key, value);
+  }
+
+  /// Get attribute of given generic type R for a node series
+  R? getNodeAttribute<R>(AttributeKey<R> key) {
+    return nodeAttributes.getAttr<R>(key);
+  }
+
+  /// Set attribute of given generic type R for a link series
+  void setLinkAttribute<R>(AttributeKey<R> key, R value) {
+    linkAttributes.setAttr(key, value);
+  }
+
+  /// Get attribute of given generic type R for a link series
+  R? getLinkAttribute<R>(AttributeKey<R> key) {
+    return linkAttributes.getAttr<R>(key);
+  }
 }
 
 TypedAccessorFn<Node<N, L>, R>? _actOnNodeData<N, L, R>(
@@ -145,14 +193,53 @@ List<Link<N, L>> _convertGraphLinks<N, L>(List<L> links,
 }
 
 /// Return a list of nodes from the generic node data type
-List<Node<N, L>> _convertGraphNodes<N, L>(List<N> nodes, List<L> links,
-    TypedAccessorFn<L, N> sourceFn, TypedAccessorFn<L, N> targetFn) {
-  // TODO: Add graph traversal calculations for node parameters
+List<Node<N, L>> _convertGraphNodes<N, L, D>(
+    List<N> nodes,
+    List<L> links,
+    TypedAccessorFn<L, N> sourceFn,
+    TypedAccessorFn<L, N> targetFn,
+    TypedAccessorFn<N, D> nodeDomainFn) {
   List<Node<N, L>> graphNodes = [];
-  for (var i = 0; i < nodes.length; i++) {
-    graphNodes.add(Node(nodes[i]));
+  List<Link<N, L>> graphLinks = _convertGraphLinks(links, sourceFn, targetFn);
+  TypedAccessorFn<Node<N, L>, D> nodeClassDomainFn =
+      _actOnNodeData<N, L, D>(nodeDomainFn)!;
+  LinkedHashMap<D, Node<N, L>> nodeMap = LinkedHashMap<D, Node<N, L>>();
+
+  // Populate nodeMap with user provided nodes
+  for (var node in nodes) {
+    nodeMap.putIfAbsent(nodeDomainFn(node, 0), () => Node(node));
   }
+
+  // Add ingoing and outgoing links to the nodes in nodeMap
+  for (var link in graphLinks) {
+    nodeMap.update(nodeClassDomainFn(link.target, 0),
+        (node) => _addLinkToNode(node, link, isIncomingLink: true),
+        ifAbsent: () => _addLinkToAbsentNode(link, isIncomingLink: true));
+    nodeMap.update(nodeClassDomainFn(link.source, 0),
+        (node) => _addLinkToNode(node, link, isIncomingLink: false),
+        ifAbsent: () => _addLinkToAbsentNode(link, isIncomingLink: false));
+  }
+
+  nodeMap.forEach((domainId, node) => graphNodes.add(node));
   return graphNodes;
+}
+
+Node<N, L> _addLinkToNode<N, L>(Node<N, L> node, Link<N, L> link,
+    {required bool isIncomingLink}) {
+  if (isIncomingLink) {
+    node.incomingLinks.add(link);
+  } else {
+    node.outgoingLinks.add(link);
+  }
+
+  return node;
+}
+
+Node<N, L> _addLinkToAbsentNode<N, L>(Link<N, L> link,
+    {required bool isIncomingLink}) {
+  Node<N, L> node = isIncomingLink ? link.target : link.source;
+
+  return _addLinkToNode(node, link, isIncomingLink: isIncomingLink);
 }
 
 /// A registry that stores key-value pairs of attributes for nodes, links.
