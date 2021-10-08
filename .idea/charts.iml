@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/charts_flutter/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/charts_flutter/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/charts_flutter/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/charts_flutter/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/charts_flutter/build" />
+      <excludeFolder url="file://$MODULE_DIR$/charts_flutter/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/charts_common/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/charts_common/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/charts_common/build" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
