@@ -21,10 +21,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class ComparisonPointsScatterPlotChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, num>> seriesList;
   final bool animate;
 
-  ComparisonPointsScatterPlotChart(this.seriesList, {this.animate});
+  ComparisonPointsScatterPlotChart(this.seriesList, {this.animate = false});
 
   /// Creates a [ScatterPlotChart] with sample data and no transition.
   factory ComparisonPointsScatterPlotChart.withSampleData() {

@@ -19,7 +19,7 @@ export 'src/chart/bar/bar_label_decorator.dart'
     show BarLabelAnchor, BarLabelDecorator, BarLabelPlacement, BarLabelPosition;
 export 'src/chart/bar/bar_lane_renderer_config.dart' show BarLaneRendererConfig;
 export 'src/chart/bar/bar_renderer.dart'
-    show BarRenderer, ImmutableBarRendererElement;
+    show BarRenderer, BarRendererElement, ImmutableBarRendererElement;
 export 'src/chart/bar/bar_renderer_config.dart'
     show
     BarRendererConfig,
@@ -30,6 +30,8 @@ export 'src/chart/bar/bar_renderer_decorator.dart' show BarRendererDecorator;
 export 'src/chart/bar/bar_target_line_renderer.dart' show BarTargetLineRenderer;
 export 'src/chart/bar/bar_target_line_renderer_config.dart'
     show BarTargetLineRendererConfig;
+export 'src/chart/bar/base_bar_renderer.dart'
+    show barGroupIndexKey, barGroupCountKey, barGroupWeightKey;
 export 'src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType, BaseBarRendererConfig;
 export 'src/chart/cartesian/axis/axis.dart'
@@ -86,8 +88,12 @@ export 'src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
     show NoneRenderSpec;
+export 'src/chart/cartesian/axis/draw_strategy/range_tick_draw_strategy.dart'
+    show RangeTickRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
+export 'src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart'
+    show TickDrawStrategy;
 export 'src/chart/cartesian/axis/numeric_extents.dart' show NumericExtents;
 export 'src/chart/cartesian/axis/tick.dart' show Tick;
 export 'src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
@@ -140,13 +146,21 @@ export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
     StaticOrdinalTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
     show PercentAxisSpec;
+export 'src/chart/cartesian/axis/spec/range_tick_spec.dart' show RangeTickSpec;
 export 'src/chart/cartesian/axis/spec/tick_spec.dart' show TickSpec;
+export 'src/chart/cartesian/axis/tick.dart' show Tick;
 export 'src/chart/cartesian/axis/tick_formatter.dart'
     show SimpleTickFormatterBase, TickFormatter;
+export 'src/chart/cartesian/axis/time/auto_adjusting_date_time_tick_provider.dart'
+    show AutoAdjustingDateTimeTickProvider;
+export 'src/chart/cartesian/axis/time/base_time_stepper.dart'
+    show BaseTimeStepper;
 export 'src/chart/cartesian/axis/time/date_time_extents.dart'
     show DateTimeExtents;
 export 'src/chart/cartesian/axis/time/date_time_tick_formatter.dart'
     show DateTimeTickFormatter;
+export 'src/chart/cartesian/axis/time/time_range_tick_provider_impl.dart'
+    show TimeRangeTickProviderImpl;
 export 'src/chart/cartesian/cartesian_chart.dart'
     show CartesianChart, NumericCartesianChart, OrdinalCartesianChart;
 export 'src/chart/cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
@@ -195,7 +209,7 @@ export 'src/chart/common/behavior/range_annotation.dart'
 export 'src/chart/common/behavior/selection/lock_selection.dart'
     show LockSelection;
 export 'src/chart/common/behavior/selection/select_nearest.dart'
-    show SelectNearest;
+    show SelectNearest, SelectionMode;
 export 'src/chart/common/behavior/selection/selection_trigger.dart'
     show SelectionTrigger;
 export 'src/chart/common/behavior/slider/slider.dart'
@@ -206,6 +220,8 @@ export 'src/chart/common/behavior/slider/slider.dart'
     SliderListenerDragState,
     SliderStyle;
 export 'src/chart/common/behavior/sliding_viewport.dart' show SlidingViewport;
+export 'src/chart/common/behavior/sunburst_ring_expander.dart'
+    show SunburstRingExpander;
 export 'src/chart/common/behavior/zoom/initial_hint_behavior.dart'
     show InitialHintBehavior;
 export 'src/chart/common/behavior/zoom/pan_and_zoom_behavior.dart'
@@ -216,7 +232,8 @@ export 'src/chart/common/behavior/zoom/panning_tick_provider.dart'
     show PanningTickProviderMode;
 export 'src/chart/common/canvas_shapes.dart'
     show CanvasBarStack, CanvasPie, CanvasPieSlice, CanvasRect;
-export 'src/chart/common/chart_canvas.dart' show ChartCanvas, FillPatternType;
+export 'src/chart/common/chart_canvas.dart'
+    show ChartCanvas, FillPatternType, BlendMode;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
@@ -268,6 +285,12 @@ export 'src/chart/scatter_plot/point_renderer_decorator.dart'
 export 'src/chart/scatter_plot/scatter_plot_chart.dart' show ScatterPlotChart;
 export 'src/chart/scatter_plot/symbol_annotation_renderer.dart'
     show SymbolAnnotationRenderer;
+export 'src/chart/sunburst/sunburst_chart.dart' show SunburstChart;
+export 'src/chart/sunburst/sunburst_arc_renderer.dart' show SunburstArcRenderer;
+export 'src/chart/sunburst/sunburst_arc_renderer_config.dart'
+    show SunburstArcRendererConfig, SunburstColorStrategy;
+export 'src/chart/sunburst/sunburst_arc_label_decorator.dart'
+    show SunburstArcLabelDecorator;
 export 'src/chart/scatter_plot/symbol_annotation_renderer_config.dart'
     show SymbolAnnotationRendererConfig;
 export 'src/chart/time_series/time_series_chart.dart' show TimeSeriesChart;
@@ -285,6 +308,7 @@ export 'src/common/gesture_listener.dart' show GestureListener;
 export 'src/common/graphics_factory.dart' show GraphicsFactory;
 export 'src/common/line_style.dart' show LineStyle;
 export 'src/common/material_palette.dart' show MaterialPalette;
+export 'src/common/math.dart' show NullablePoint;
 export 'src/common/performance.dart' show Performance;
 export 'src/common/proxy_gesture_listener.dart' show ProxyGestureListener;
 export 'src/common/rtl_spec.dart' show AxisDirection, RTLSpec;
@@ -303,5 +327,8 @@ export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;
 export 'src/common/text_style.dart' show TextStyle;
-export 'src/data/series.dart' show Series, TypedAccessorFn;
+export 'src/data/series.dart' show AttributeKey, Series, TypedAccessorFn;
 export 'src/data/tree.dart' show Tree, TreeNode;
+//
+// DO NOT ADD ANYTHING BELOW THIS. IT WILL BREAK OPENSOURCE.
+//

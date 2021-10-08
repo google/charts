@@ -13,8 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import 'axis.dart' show AxisOrientation;
@@ -31,15 +29,15 @@ import 'time/date_time_scale.dart' show DateTimeScale;
 class EndPointsTickProvider<D> extends BaseTickProvider<D> {
   @override
   List<Tick<D>> getTicks({
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required MutableScale<D> scale,
-    @required TickFormatter<D> formatter,
-    @required Map<D, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
-    @required AxisOrientation orientation,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required MutableScale<D> scale,
+    required TickFormatter<D> formatter,
+    required Map<D, String> formatterValueCache,
+    required TickDrawStrategy<D> tickDrawStrategy,
+    required AxisOrientation? orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<D> tickHint,
+    TickHint<D>? tickHint,
   }) {
     final ticks = <Tick<D>>[];
 
@@ -54,15 +52,19 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
       final labels = formatter.format([start, end], formatterValueCache,
           stepSize: scale.domainStepSize);
 
-      ticks.add(Tick(
-          value: start,
-          textElement: graphicsFactory.createTextElement(labels[0]),
-          locationPx: scale[start]));
+      if (start != null) {
+        ticks.add(Tick(
+            value: start,
+            textElement: graphicsFactory.createTextElement(labels[0]),
+            locationPx: scale[start]?.toDouble()));
+      }
 
-      ticks.add(Tick(
-          value: end,
-          textElement: graphicsFactory.createTextElement(labels[1]),
-          locationPx: scale[end]));
+      if (end != null) {
+        ticks.add(Tick(
+            value: end,
+            textElement: graphicsFactory.createTextElement(labels[1]),
+            locationPx: scale[end]?.toDouble()));
+      }
 
       // Allow draw strategy to decorate the ticks.
       tickDrawStrategy.decorateTicks(ticks);
@@ -72,40 +74,50 @@ class EndPointsTickProvider<D> extends BaseTickProvider<D> {
   }
 
   /// Get the start value from the scale.
-  D _getStartValue(TickHint<D> tickHint, MutableScale<D> scale) {
-    Object start;
+  D _getStartValue(TickHint<D>? tickHint, MutableScale<D> scale) {
+    Object? start;
 
     if (tickHint != null) {
       start = tickHint.start;
     } else {
-      if (scale is NumericScale) {
-        start = (scale as NumericScale).viewportDomain.min;
-      } else if (scale is DateTimeScale) {
-        start = (scale as DateTimeScale).viewportDomain.start;
-      } else if (scale is OrdinalScale) {
-        start = (scale as OrdinalScale).domain.first;
+      // Upcast to allow type promotion.
+      // See https://github.com/dart-lang/sdk/issues/34018.
+      Object _scale = scale;
+      if (_scale is NumericScale) {
+        start = _scale.viewportDomain.min;
+      } else if (_scale is DateTimeScale) {
+        start = _scale.viewportDomain.start;
+      } else if (_scale is OrdinalScale) {
+        start = _scale.domain.first;
+      } else {
+        throw UnsupportedError('Unrecognized scale: {scale.runtimeType}');
       }
     }
 
-    return start;
+    return start as D;
   }
 
   /// Get the end value from the scale.
-  D _getEndValue(TickHint<D> tickHint, MutableScale<D> scale) {
-    Object end;
+  D _getEndValue(TickHint<D>? tickHint, MutableScale<D> scale) {
+    Object? end;
 
     if (tickHint != null) {
       end = tickHint.end;
     } else {
-      if (scale is NumericScale) {
-        end = (scale as NumericScale).viewportDomain.max;
-      } else if (scale is DateTimeScale) {
-        end = (scale as DateTimeScale).viewportDomain.end;
-      } else if (scale is OrdinalScale) {
-        end = (scale as OrdinalScale).domain.last;
+      // Upcast to allow type promotion.
+      // See https://github.com/dart-lang/sdk/issues/34018.
+      Object _scale = scale;
+      if (_scale is NumericScale) {
+        end = _scale.viewportDomain.max;
+      } else if (_scale is DateTimeScale) {
+        end = _scale.viewportDomain.end;
+      } else if (_scale is OrdinalScale) {
+        end = _scale.domain.last;
+      } else {
+        throw UnsupportedError('Unrecognized scale: {scale.runtimeType}');
       }
     }
 
-    return end;
+    return end as D;
   }
 }

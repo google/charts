@@ -22,10 +22,10 @@ class SelectionModelConfig<D> {
   final common.SelectionModelType type;
 
   /// Listens for change in selection.
-  final common.SelectionModelListener<D> changedListener;
+  final common.SelectionModelListener<D>? changedListener;
 
   /// Listens anytime update selection is called.
-  final common.SelectionModelListener<D> updatedListener;
+  final common.SelectionModelListener<D>? updatedListener;
 
   SelectionModelConfig(
       {this.type = common.SelectionModelType.info,

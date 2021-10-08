@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -28,9 +30,16 @@ import 'package:test/test.dart';
 
 /// For testing viewport start / end.
 class FakeCartesianRenderer extends BaseCartesianRenderer {
+  FakeCartesianRenderer() : super(rendererId: 'fake', layoutPaintOrder: 0);
+
   @override
-  List<DatumDetails> getNearestDatumDetailPerSeries(Point<double> chartPoint,
-          bool byDomain, Rectangle<int> boundsOverride) =>
+  List<DatumDetails> getNearestDatumDetailPerSeries(
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    selectOverlappingPoints = false,
+    selectExactEventLocation = false,
+  }) =>
       null;
 
   @override
@@ -42,8 +51,10 @@ class FakeCartesianRenderer extends BaseCartesianRenderer {
   @override
   SymbolRenderer get symbolRenderer => null;
 
+  @override
   DatumDetails addPositionToDetailsForSeriesDatum(
       DatumDetails details, SeriesDatum seriesDatum) {
+    assert(details != null);
     return details;
   }
 }

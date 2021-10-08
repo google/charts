@@ -50,13 +50,19 @@ class GestureListener {
   /// Called after the tap event has been going on for a period of time (500ms)
   /// without moving much (20px).
   /// The onTap or onDragStart gestures can still trigger after this gesture.
-  final GestureSinglePointCallback onLongPress;
+  final GestureSinglePointCallback? onLongPress;
 
   /// Called on tap up if not dragging.
-  final GestureSinglePointCallback onTap;
+  final GestureSinglePointCallback? onTap;
 
   /// Called when a mouse hovers over the chart. (No tap event).
-  final GestureSinglePointCallback onHover;
+  final GestureSinglePointCallback? onHover;
+
+  /// Called when the chart is focused.
+  final GestureCallback? onFocus;
+
+  /// Called when the chart is blured.
+  final GestureCallback? onBlur;
 
   /// Called when the tap event has moved beyond a threshold indicating that
   /// the user is dragging.
@@ -78,24 +84,27 @@ class GestureListener {
   ///
   /// TODO: Investigate low performance of chart rendering from
   /// flutter when animation is enabled and we pinch to zoom on the chart.
-  final GestureDragStartCallback onDragStart;
-  final GestureDragUpdateCallback onDragUpdate;
-  final GestureDragEndCallback onDragEnd;
+  final GestureDragStartCallback? onDragStart;
+  final GestureDragUpdateCallback? onDragUpdate;
+  final GestureDragEndCallback? onDragEnd;
 
-  GestureListener(
-      {GestureSinglePointCallback onTapTest,
-      GestureCancelCallback onTapCancel,
-      this.onLongPress,
-      this.onTap,
-      this.onHover,
-      this.onDragStart,
-      this.onDragUpdate,
-      this.onDragEnd})
-      : this.onTapTest = onTapTest ?? defaultTapTest,
-        this.onTapCancel = onTapCancel ?? defaultTapCancel;
+  GestureListener({
+    GestureSinglePointCallback? onTapTest,
+    GestureCancelCallback? onTapCancel,
+    this.onLongPress,
+    this.onTap,
+    this.onHover,
+    this.onDragStart,
+    this.onDragUpdate,
+    this.onDragEnd,
+    this.onFocus,
+    this.onBlur,
+  })  : onTapTest = onTapTest ?? defaultTapTest,
+        onTapCancel = onTapCancel ?? defaultTapCancel;
 }
 
 typedef GestureCancelCallback = void Function();
+typedef GestureCallback = bool Function();
 typedef GestureSinglePointCallback = bool Function(Point<double> localPosition);
 
 typedef GestureDragStartCallback = bool Function(Point<double> localPosition);

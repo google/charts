@@ -44,35 +44,34 @@ class UserManagedState<D> {
 /// The configuration is converted to a selection model after the series data
 /// has been processed.
 class UserManagedSelectionModel<D> {
-  final List<String> selectedSeriesConfig;
-  final List<common.SeriesDatumConfig> selectedDataConfig;
-  common.SelectionModel<D> _model;
+  final List<String>? selectedSeriesConfig;
+  final List<common.SeriesDatumConfig<D>>? selectedDataConfig;
+  common.SelectionModel<D>? _model;
 
   /// Creates a [UserManagedSelectionModel] that holds [SelectionModel].
   ///
   /// [selectedSeriesConfig] and [selectedDataConfig] is set to null because the
   /// [_model] is returned when [getModel] is called.
-  UserManagedSelectionModel({common.SelectionModel<D> model})
-      : _model = model ?? new common.SelectionModel(),
+  UserManagedSelectionModel({common.SelectionModel<D>? model})
+      : _model = model ?? common.SelectionModel(),
         selectedSeriesConfig = null,
         selectedDataConfig = null;
 
   /// Creates a [UserManagedSelectionModel] with configuration that is converted
   /// to a [SelectionModel] when [getModel] provides a processed series list.
   UserManagedSelectionModel.fromConfig(
-      {List<String> selectedSeriesConfig,
-      List<common.SeriesDatumConfig> selectedDataConfig})
-      : this.selectedSeriesConfig = selectedSeriesConfig ?? <String>[],
-        this.selectedDataConfig =
-            selectedDataConfig ?? <common.SeriesDatumConfig>[];
+      {List<String>? selectedSeriesConfig,
+      List<common.SeriesDatumConfig<D>>? selectedDataConfig})
+      : this.selectedSeriesConfig = selectedSeriesConfig,
+        this.selectedDataConfig = selectedDataConfig;
 
   /// Gets the selection model. If the model is null, create one from
   /// configuration and the processed [seriesList] passed in.
   common.SelectionModel<D> getModel(
       List<common.ImmutableSeries<D>> seriesList) {
-    _model ??= new common.SelectionModel.fromConfig(
+    _model ??= common.SelectionModel<D>.fromConfig(
         selectedDataConfig, selectedSeriesConfig, seriesList);
 
-    return _model;
+    return _model!;
   }
 }

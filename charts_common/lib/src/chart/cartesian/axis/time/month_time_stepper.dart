@@ -28,14 +28,11 @@ class MonthTimeStepper extends BaseTimeStepper {
         super(dateTimeFactory);
 
   factory MonthTimeStepper(DateTimeFactory dateTimeFactory,
-      {List<int> allowedTickIncrements}) {
+      {List<int>? allowedTickIncrements}) {
     // Set the default increments if null.
     allowedTickIncrements ??= _defaultIncrements;
 
-    // Must have at least one increment option.
-    assert(allowedTickIncrements.isNotEmpty);
-    // All increments must be > 0.
-    assert(allowedTickIncrements.any((increment) => increment <= 0) == false);
+    assert(allowedTickIncrements.every((increment) => increment > 0));
 
     return MonthTimeStepper._internal(dateTimeFactory, allowedTickIncrements);
   }

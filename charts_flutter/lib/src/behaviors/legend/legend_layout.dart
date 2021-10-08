@@ -33,12 +33,12 @@ class TabularLegendLayout implements LegendLayout {
   final bool isHorizontalFirst;
   final int desiredMaxRows;
   final int desiredMaxColumns;
-  final EdgeInsets cellPadding;
+  final EdgeInsets? cellPadding;
 
   TabularLegendLayout._internal(
-      {this.isHorizontalFirst,
-      this.desiredMaxRows,
-      this.desiredMaxColumns,
+      {required this.isHorizontalFirst,
+      required this.desiredMaxRows,
+      required this.desiredMaxColumns,
       this.cellPadding});
 
   /// Layout horizontally until columns exceed [desiredMaxColumns].
@@ -49,8 +49,8 @@ class TabularLegendLayout implements LegendLayout {
   ///
   /// [cellPadding] the [EdgeInsets] for each widget.
   factory TabularLegendLayout.horizontalFirst({
-    int desiredMaxColumns,
-    EdgeInsets cellPadding,
+    int? desiredMaxColumns,
+    EdgeInsets? cellPadding,
   }) {
     return new TabularLegendLayout._internal(
       isHorizontalFirst: true,
@@ -68,8 +68,8 @@ class TabularLegendLayout implements LegendLayout {
   ///
   /// [cellPadding] the [EdgeInsets] for each widget.
   factory TabularLegendLayout.verticalFirst({
-    int desiredMaxRows,
-    EdgeInsets cellPadding,
+    int? desiredMaxRows,
+    EdgeInsets? cellPadding,
   }) {
     return new TabularLegendLayout._internal(
       isHorizontalFirst: false,
@@ -84,7 +84,7 @@ class TabularLegendLayout implements LegendLayout {
     final paddedLegendEntries = ((cellPadding == null)
         ? legendEntries
         : legendEntries
-            .map((entry) => new Padding(padding: cellPadding, child: entry))
+            .map((entry) => new Padding(padding: cellPadding!, child: entry))
             .toList());
 
     return isHorizontalFirst
@@ -128,7 +128,7 @@ class TabularLegendLayout implements LegendLayout {
     final rows =
         new List.generate(maxRows, (_) => new TableRow(children: <Widget>[]));
     for (var i = 0; i < legendEntries.length; i++) {
-      rows[i % maxRows].children.add(legendEntries[i]);
+      rows[i % maxRows].children!.add(legendEntries[i]);
     }
 
     return _buildTableFromRows(rows);
@@ -140,12 +140,12 @@ class TabularLegendLayout implements LegendLayout {
     // Pad rows to the max column count, because each TableRow in a table is
     // required to have the same number of children.
     final columnCount = rows
-        .map((r) => r.children.length)
-        .fold(0, (max, current) => (current > max) ? current : max);
+        .map((r) => r.children!.length)
+        .fold<int>(0, (max, current) => (current > max) ? current : max);
 
     for (var i = 0; i < rows.length; i++) {
       final rowChildren = rows[i].children;
-      final padCount = columnCount - rowChildren.length;
+      final padCount = columnCount - rowChildren!.length;
       if (padCount > 0) {
         rowChildren
             .addAll(new Iterable<Padding>.generate(padCount, (_) => padWidget));

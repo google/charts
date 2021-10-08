@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -30,6 +32,7 @@ class ParentBehavior implements ChartBehavior<String> {
 
   ParentBehavior(this.child);
 
+  @override
   String get role => null;
 
   @override

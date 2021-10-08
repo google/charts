@@ -34,22 +34,22 @@ import 'user_managed_state.dart' show UserManagedState;
 
 class LineChart extends BaseCartesianChart<num> {
   LineChart(
-    List<common.Series> seriesList, {
-    bool animate,
-    Duration animationDuration,
-    common.AxisSpec domainAxis,
-    common.AxisSpec primaryMeasureAxis,
-    common.AxisSpec secondaryMeasureAxis,
-    LinkedHashMap<String, common.NumericAxisSpec> disjointMeasureAxes,
-    common.LineRendererConfig<num> defaultRenderer,
-    List<common.SeriesRendererConfig<num>> customSeriesRenderers,
-    List<ChartBehavior> behaviors,
-    List<SelectionModelConfig<num>> selectionModels,
-    common.RTLSpec rtlSpec,
-    LayoutConfig layoutConfig,
+    List<common.Series<dynamic, num>> seriesList, {
+    bool? animate,
+    Duration? animationDuration,
+    common.AxisSpec? domainAxis,
+    common.NumericAxisSpec? primaryMeasureAxis,
+    common.NumericAxisSpec? secondaryMeasureAxis,
+    LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes,
+    common.LineRendererConfig<num>? defaultRenderer,
+    List<common.SeriesRendererConfig<num>>? customSeriesRenderers,
+    List<ChartBehavior<num>>? behaviors,
+    List<SelectionModelConfig<num>>? selectionModels,
+    common.RTLSpec? rtlSpec,
+    LayoutConfig? layoutConfig,
     bool defaultInteractions = true,
-    bool flipVerticalAxis,
-    UserManagedState<num> userManagedState,
+    bool? flipVerticalAxis,
+    UserManagedState<num>? userManagedState,
   }) : super(
           seriesList,
           animate: animate,
@@ -85,6 +85,6 @@ class LineChart extends BaseCartesianChart<num> {
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
     super.addDefaultInteractions(behaviors);
 
-    behaviors.add(new LinePointHighlighter());
+    behaviors.add(new LinePointHighlighter<num>());
   }
 }

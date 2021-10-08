@@ -18,6 +18,7 @@ import 'package:charts_common/common.dart' as common
         AxisSpec,
         NumericCartesianChart,
         OrdinalCartesianChart,
+        NumericAxisSpec,
         RTLSpec,
         Series,
         SeriesRendererConfig;
@@ -35,18 +36,18 @@ import '../selection_model_config.dart' show SelectionModelConfig;
 /// that chart.
 class NumericComboChart extends BaseCartesianChart<num> {
   NumericComboChart(
-    List<common.Series> seriesList, {
-    bool animate,
-    Duration animationDuration,
-    common.AxisSpec domainAxis,
-    common.AxisSpec primaryMeasureAxis,
-    common.AxisSpec secondaryMeasureAxis,
-    common.SeriesRendererConfig<num> defaultRenderer,
-    List<common.SeriesRendererConfig<num>> customSeriesRenderers,
-    List<ChartBehavior> behaviors,
-    List<SelectionModelConfig<num>> selectionModels,
-    common.RTLSpec rtlSpec,
-    LayoutConfig layoutConfig,
+    List<common.Series<dynamic, num>> seriesList, {
+    bool? animate,
+    Duration? animationDuration,
+    common.AxisSpec? domainAxis,
+    common.NumericAxisSpec? primaryMeasureAxis,
+    common.NumericAxisSpec? secondaryMeasureAxis,
+    common.SeriesRendererConfig<num>? defaultRenderer,
+    List<common.SeriesRendererConfig<num>>? customSeriesRenderers,
+    List<ChartBehavior<num>>? behaviors,
+    List<SelectionModelConfig<num>>? selectionModels,
+    common.RTLSpec? rtlSpec,
+    LayoutConfig? layoutConfig,
     bool defaultInteractions = true,
   }) : super(
           seriesList,
@@ -80,18 +81,18 @@ class NumericComboChart extends BaseCartesianChart<num> {
 /// series renderers.
 class OrdinalComboChart extends BaseCartesianChart<String> {
   OrdinalComboChart(
-    List<common.Series> seriesList, {
-    bool animate,
-    Duration animationDuration,
-    common.AxisSpec domainAxis,
-    common.AxisSpec primaryMeasureAxis,
-    common.AxisSpec secondaryMeasureAxis,
-    common.SeriesRendererConfig<String> defaultRenderer,
-    List<common.SeriesRendererConfig<String>> customSeriesRenderers,
-    List<ChartBehavior> behaviors,
-    List<SelectionModelConfig<String>> selectionModels,
-    common.RTLSpec rtlSpec,
-    LayoutConfig layoutConfig,
+    List<common.Series<dynamic, String>> seriesList, {
+    bool? animate,
+    Duration? animationDuration,
+    common.AxisSpec? domainAxis,
+    common.NumericAxisSpec? primaryMeasureAxis,
+    common.NumericAxisSpec? secondaryMeasureAxis,
+    common.SeriesRendererConfig<String>? defaultRenderer,
+    List<common.SeriesRendererConfig<String>>? customSeriesRenderers,
+    List<ChartBehavior<String>>? behaviors,
+    List<SelectionModelConfig<String>>? selectionModels,
+    common.RTLSpec? rtlSpec,
+    LayoutConfig? layoutConfig,
     bool defaultInteractions = true,
   }) : super(
           seriesList,

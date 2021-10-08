@@ -33,22 +33,22 @@ import 'user_managed_state.dart' show UserManagedState;
 
 class ScatterPlotChart extends BaseCartesianChart<num> {
   ScatterPlotChart(
-    List<common.Series> seriesList, {
-    bool animate,
-    Duration animationDuration,
-    common.AxisSpec domainAxis,
-    common.AxisSpec primaryMeasureAxis,
-    common.AxisSpec secondaryMeasureAxis,
-    LinkedHashMap<String, common.NumericAxisSpec> disjointMeasureAxes,
-    common.PointRendererConfig<num> defaultRenderer,
-    List<common.SeriesRendererConfig<num>> customSeriesRenderers,
-    List<ChartBehavior> behaviors,
-    List<SelectionModelConfig<num>> selectionModels,
-    common.RTLSpec rtlSpec,
-    LayoutConfig layoutConfig,
+    List<common.Series<dynamic, num>> seriesList, {
+    bool? animate,
+    Duration? animationDuration,
+    common.AxisSpec? domainAxis,
+    common.NumericAxisSpec? primaryMeasureAxis,
+    common.NumericAxisSpec? secondaryMeasureAxis,
+    LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes,
+    common.PointRendererConfig<num>? defaultRenderer,
+    List<common.SeriesRendererConfig<num>>? customSeriesRenderers,
+    List<ChartBehavior<num>>? behaviors,
+    List<SelectionModelConfig<num>>? selectionModels,
+    common.RTLSpec? rtlSpec,
+    LayoutConfig? layoutConfig,
     bool defaultInteractions = true,
-    bool flipVerticalAxis,
-    UserManagedState<num> userManagedState,
+    bool? flipVerticalAxis,
+    UserManagedState<num>? userManagedState,
   }) : super(
           seriesList,
           animate: animate,

@@ -46,7 +46,7 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// Sets viewport for this Axis.
   ///
   /// If pan / zoom behaviors are set, this is the initial viewport.
-  final DateTimeExtents viewport;
+  final DateTimeExtents? viewport;
 
   /// Creates a [AxisSpec] that specialized for timeseries charts.
   ///
@@ -60,10 +60,10 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
   /// [showAxisLine] override to force the axis to draw the axis
   ///     line.
   const DateTimeAxisSpec({
-    RenderSpec<DateTime> renderSpec,
-    DateTimeTickProviderSpec tickProviderSpec,
-    DateTimeTickFormatterSpec tickFormatterSpec,
-    bool showAxisLine,
+    RenderSpec<DateTime>? renderSpec,
+    DateTimeTickProviderSpec? tickProviderSpec,
+    DateTimeTickFormatterSpec? tickFormatterSpec,
+    bool? showAxisLine,
     this.viewport,
   }) : super(
             renderSpec: renderSpec,
@@ -77,11 +77,12 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
     super.configure(axis, context, graphicsFactory);
 
     if (axis is DateTimeAxis && viewport != null) {
-      axis.setScaleViewport(viewport);
+      axis.setScaleViewport(viewport!);
     }
   }
 
-  Axis<DateTime> createAxis() {
+  @override
+  Axis<DateTime>? createAxis() {
     assert(false, 'Call createDateTimeAxis() to create a DateTimeAxis.');
     return null;
   }
@@ -92,13 +93,11 @@ class DateTimeAxisSpec extends AxisSpec<DateTime> {
 
   @override
   bool operator ==(Object other) =>
-      other is DateTimeAxisSpec &&
-      viewport == other.viewport &&
-      super == (other);
+      other is DateTimeAxisSpec && viewport == other.viewport && super == other;
 
   @override
   int get hashCode {
-    int hashcode = super.hashCode;
+    var hashcode = super.hashCode;
     hashcode = (hashcode * 37) + viewport.hashCode;
     return hashcode;
   }
@@ -137,13 +136,13 @@ class AutoDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
       other is AutoDateTimeTickProviderSpec && includeTime == other.includeTime;
 
   @override
-  int get hashCode => includeTime?.hashCode ?? 0;
+  int get hashCode => includeTime.hashCode;
 }
 
 /// [TickProviderSpec] that sets up time ticks with days increments only.
 @immutable
 class DayTickProviderSpec implements DateTimeTickProviderSpec {
-  final List<int> increments;
+  final List<int>? increments;
 
   const DayTickProviderSpec({this.increments});
 
@@ -165,7 +164,7 @@ class DayTickProviderSpec implements DateTimeTickProviderSpec {
       other is DayTickProviderSpec && increments == other.increments;
 
   @override
-  int get hashCode => increments?.hashCode ?? 0;
+  int get hashCode => increments.hashCode;
 }
 
 /// [TickProviderSpec] that sets up time ticks at the two end points of the axis
@@ -182,6 +181,7 @@ class DateTimeEndPointsTickProviderSpec implements DateTimeTickProviderSpec {
   }
 
   @override
+  // ignore: hash_and_equals
   bool operator ==(Object other) => other is DateTimeEndPointsTickProviderSpec;
 }
 
@@ -207,9 +207,9 @@ class StaticDateTimeTickProviderSpec implements DateTimeTickProviderSpec {
 /// Formatters for a single level of the [DateTimeTickFormatterSpec].
 @immutable
 class TimeFormatterSpec {
-  final String format;
-  final String transitionFormat;
-  final String noonFormat;
+  final String? format;
+  final String? transitionFormat;
+  final String? noonFormat;
 
   /// Creates a formatter for a particular granularity of data.
   ///
@@ -235,9 +235,9 @@ class TimeFormatterSpec {
 
   @override
   int get hashCode {
-    int hashcode = format?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + transitionFormat?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + noonFormat?.hashCode ?? 0;
+    var hashcode = format.hashCode;
+    hashcode = (hashcode * 37) + transitionFormat.hashCode;
+    hashcode = (hashcode * 37) + noonFormat.hashCode;
     return hashcode;
   }
 }
@@ -246,21 +246,25 @@ class TimeFormatterSpec {
 /// [DateTimeFormatterFunction].
 @immutable
 class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
-  final DateTimeFormatterFunction formatter;
-  final DateFormat dateFormat;
+  final DateTimeFormatterFunction? formatter;
+  final DateFormat? dateFormat;
 
-  const BasicDateTimeTickFormatterSpec(this.formatter) : dateFormat = null;
+  const BasicDateTimeTickFormatterSpec(DateTimeFormatterFunction formatter)
+      : formatter = formatter,
+        dateFormat = null;
 
-  const BasicDateTimeTickFormatterSpec.fromDateFormat(this.dateFormat)
-      : formatter = null;
+  const BasicDateTimeTickFormatterSpec.fromDateFormat(DateFormat dateFormat)
+      : formatter = null,
+        dateFormat = dateFormat;
 
   /// A formatter will be created with the [DateFormat] if it is not null.
   /// Otherwise, it will create one with the provided
   /// [DateTimeFormatterFunction].
   @override
   DateTimeTickFormatter createTickFormatter(ChartContext context) {
+    assert(dateFormat != null || formatter != null);
     return DateTimeTickFormatter.uniform(SimpleTimeTickFormatter(
-        formatter: dateFormat != null ? dateFormat.format : formatter));
+        formatter: dateFormat != null ? dateFormat!.format : formatter!));
   }
 
   @override
@@ -273,7 +277,7 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   int get hashCode {
-    int hash = formatter.hashCode;
+    var hash = formatter.hashCode;
     hash = (hash * 37) * dateFormat.hashCode;
     return hash;
   }
@@ -285,11 +289,11 @@ class BasicDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 /// level.
 @immutable
 class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
-  final TimeFormatterSpec minute;
-  final TimeFormatterSpec hour;
-  final TimeFormatterSpec day;
-  final TimeFormatterSpec month;
-  final TimeFormatterSpec year;
+  final TimeFormatterSpec? minute;
+  final TimeFormatterSpec? hour;
+  final TimeFormatterSpec? day;
+  final TimeFormatterSpec? month;
+  final TimeFormatterSpec? year;
 
   /// Creates a [TickFormatterSpec] that automatically chooses the formatting
   /// given the individual [TimeFormatterSpec] formatters that are set.
@@ -302,27 +306,27 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   DateTimeTickFormatter createTickFormatter(ChartContext context) {
-    final Map<int, TimeTickFormatter> map = {};
+    final map = <int, TimeTickFormatter>{};
 
     if (minute != null) {
       map[DateTimeTickFormatter.MINUTE] =
-          _makeFormatter(minute, CalendarField.hourOfDay, context);
+          _makeFormatter(minute!, CalendarField.hourOfDay, context);
     }
     if (hour != null) {
       map[DateTimeTickFormatter.HOUR] =
-          _makeFormatter(hour, CalendarField.date, context);
+          _makeFormatter(hour!, CalendarField.date, context);
     }
     if (day != null) {
       map[23 * DateTimeTickFormatter.HOUR] =
-          _makeFormatter(day, CalendarField.month, context);
+          _makeFormatter(day!, CalendarField.month, context);
     }
     if (month != null) {
       map[28 * DateTimeTickFormatter.DAY] =
-          _makeFormatter(month, CalendarField.year, context);
+          _makeFormatter(month!, CalendarField.year, context);
     }
     if (year != null) {
       map[364 * DateTimeTickFormatter.DAY] =
-          _makeFormatter(year, CalendarField.year, context);
+          _makeFormatter(year!, CalendarField.year, context);
     }
 
     return DateTimeTickFormatter(context.dateTimeFactory, overrides: map);
@@ -357,11 +361,11 @@ class AutoDateTimeTickFormatterSpec implements DateTimeTickFormatterSpec {
 
   @override
   int get hashCode {
-    int hashcode = minute?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + hour?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + day?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + month?.hashCode ?? 0;
-    hashcode = (hashcode * 37) + year?.hashCode ?? 0;
+    var hashcode = minute.hashCode;
+    hashcode = (hashcode * 37) + hour.hashCode;
+    hashcode = (hashcode * 37) + day.hashCode;
+    hashcode = (hashcode * 37) + month.hashCode;
+    hashcode = (hashcode * 37) + year.hashCode;
     return hashcode;
   }
 }

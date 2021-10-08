@@ -22,28 +22,32 @@ import 'package:charts_common/src/common/color.dart';
 /// A renderer element that represents a TreeNode.
 class TreeMapRendererElement<D> {
   /// Bounding rectangle of this element.
-  Rectangle boundingRect;
+  Rectangle<num> get boundingRect => _boundingRect!;
+  set boundingRect(Rectangle<num> value) => _boundingRect = value;
+  Rectangle<num>? _boundingRect;
 
   /// Occupied area of this element in pixel.
-  num area;
+  num get area => _area!;
+  set area(num value) => _area = value;
+  num? _area;
 
   /// Fill color of this element.
-  Color fillColor;
+  Color? fillColor;
 
   /// Fill pattern of the background of the treemap rectangle.
-  FillPatternType fillPattern;
+  FillPatternType? fillPattern;
 
   /// Pattern color of this element.
-  Color patternColor;
+  Color? patternColor;
 
   /// Stroke color of this element.
-  Color strokeColor;
+  Color? strokeColor;
 
   /// Whether this element is a leaf in the treemap.
   bool isLeaf;
 
   /// Stroke width of this element.
-  num strokeWidthPx;
+  num? strokeWidthPx;
 
   /// Associated index in the [series].
   int index;
@@ -57,34 +61,56 @@ class TreeMapRendererElement<D> {
   /// Measure of this element.
   num measure;
 
+  TreeMapRendererElement({
+    Rectangle<num>? boundingRect,
+    num? area,
+    this.fillColor,
+    this.fillPattern,
+    this.patternColor,
+    this.strokeColor,
+    required this.isLeaf,
+    this.strokeWidthPx,
+    required this.index,
+    required this.series,
+    required this.domain,
+    required this.measure,
+  })   : _boundingRect = boundingRect,
+        _area = area;
+
   /// Clones a new renderer element with the same properties.
-  TreeMapRendererElement<D> clone() => TreeMapRendererElement()
-    ..boundingRect =
-        Rectangle.fromPoints(boundingRect.topLeft, boundingRect.bottomRight)
-    ..area = area
-    ..fillPattern = fillPattern
-    ..fillColor = Color.fromOther(color: fillColor)
-    ..patternColor = Color.fromOther(color: patternColor)
-    ..strokeColor = Color.fromOther(color: strokeColor)
-    ..strokeWidthPx = strokeWidthPx
-    ..isLeaf = isLeaf
-    ..index = index
-    ..series = series
-    ..domain = domain
-    ..measure = measure;
+  TreeMapRendererElement<D> clone() => TreeMapRendererElement(
+        boundingRect: _boundingRect == null
+            ? null
+            : Rectangle.fromPoints(
+                boundingRect.topLeft, boundingRect.bottomRight),
+        area: area,
+        fillPattern: fillPattern,
+        fillColor:
+            fillColor == null ? null : Color.fromOther(color: fillColor!),
+        patternColor:
+            patternColor == null ? null : Color.fromOther(color: patternColor!),
+        strokeColor:
+            strokeColor == null ? null : Color.fromOther(color: strokeColor!),
+        strokeWidthPx: strokeWidthPx,
+        isLeaf: isLeaf,
+        index: index,
+        series: series,
+        domain: domain,
+        measure: measure,
+      );
 
   /// Refreshes paint properties by invoking series accessor functions again.
   ///
   /// This is useful when series accessor functions are updated by behaviors
   /// and redraw of this element is triggered.
   void refreshPaintProperties() {
-    strokeColor = series.colorFn(index);
-    strokeWidthPx = series.strokeWidthPxFn(index);
-    fillColor = series.fillColorFn(index);
+    strokeColor = series.colorFn!(index);
+    strokeWidthPx = series.strokeWidthPxFn!(index);
+    fillColor = series.fillColorFn!(index);
     fillPattern = series.fillPatternFn == null
         ? FillPatternType.solid
-        : series.fillPatternFn(index);
-    patternColor = series.patternColorFn(index);
+        : series.fillPatternFn!(index);
+    patternColor = series.patternColorFn!(index);
   }
 
   /// Updates properties of this element based on [animationPercent].

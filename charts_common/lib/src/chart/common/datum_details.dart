@@ -13,125 +13,133 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:math' show Point;
+import 'dart:math';
 
 import '../../common/color.dart' show Color;
+import '../../common/math.dart' show NullablePoint;
 import '../../common/symbol_renderer.dart' show SymbolRenderer;
 import 'chart_canvas.dart' show FillPatternType;
 import 'processed_series.dart' show ImmutableSeries;
 
 typedef DomainFormatter<D> = String Function(D domain);
-typedef MeasureFormatter = String Function(num measure);
+typedef MeasureFormatter = String Function(num? measure);
 
 /// Represents processed rendering details for a data point from a series.
 class DatumDetails<D> {
   final dynamic datum;
 
   /// The index of the datum in the series.
-  final int index;
+  final int? index;
 
   /// Domain value of [datum].
-  final D domain;
+  final D? domain;
 
   /// Domain lower bound value of [datum]. This may represent an error bound, or
   /// a previous domain value.
-  final D domainLowerBound;
+  final D? domainLowerBound;
 
   /// Domain upper bound value of [datum]. This may represent an error bound, or
   /// a target domain value.
-  final D domainUpperBound;
+  final D? domainUpperBound;
 
   /// Measure value of [datum].
-  final num measure;
+  final num? measure;
 
   /// Measure lower bound value of [datum]. This may represent an error bound,
   /// or a previous value.
-  final num measureLowerBound;
+  final num? measureLowerBound;
 
   /// Measure upper bound value of [datum]. This may represent an error bound,
   /// or a target measure value.
-  final num measureUpperBound;
+  final num? measureUpperBound;
 
   /// Measure offset value of [datum].
-  final num measureOffset;
+  final num? measureOffset;
 
   /// Original measure value of [datum]. This may differ from [measure] if a
   /// behavior attached to a chart automatically adjusts measure values.
-  final num rawMeasure;
+  final num? rawMeasure;
 
   /// Original measure lower bound value of [datum]. This may differ from
   /// [measureLowerBound] if a behavior attached to a chart automatically
   /// adjusts measure values.
-  final num rawMeasureLowerBound;
+  final num? rawMeasureLowerBound;
 
   /// Original measure upper bound value of [datum]. This may differ from
   /// [measureUpperBound] if a behavior attached to a chart automatically
   /// adjusts measure values.
-  final num rawMeasureUpperBound;
+  final num? rawMeasureUpperBound;
 
   /// The series the [datum] is from.
-  final ImmutableSeries<D> series;
+  final ImmutableSeries<D>? series;
 
   /// The color of this [datum].
-  final Color color;
+  final Color? color;
 
   /// Optional fill color of this [datum].
   ///
   /// If this is defined, then [color] will be used as a stroke color.
   /// Otherwise, [color] will be used for the fill color.
-  final Color fillColor;
+  final Color? fillColor;
 
   /// Optional fill pattern of this [datum].
-  final FillPatternType fillPattern;
+  final FillPatternType? fillPattern;
 
   /// Optional area color of this [datum].
   ///
   /// This color is used for supplemental information on the series, such as
   /// confidence intervals or area skirts. If not provided, then some variation
   /// of the main [color] will be used (e.g. 10% opacity).
-  final Color areaColor;
+  final Color? areaColor;
 
   /// Optional dash pattern of this [datum].
-  final List<int> dashPattern;
+  final List<int>? dashPattern;
 
   /// The chart position of the (domain, measure) for the [datum] from a
   /// renderer.
-  final Point<double> chartPosition;
+  final NullablePoint? chartPosition;
 
   /// The chart position of the (domainLowerBound, measureLowerBound) for the
   /// [datum] from a renderer.
-  final Point<double> chartPositionLower;
+  final NullablePoint? chartPositionLower;
 
   /// The chart position of the (domainUpperBound, measureUpperBound) for the
   /// [datum] from a renderer.
-  final Point<double> chartPositionUpper;
+  final NullablePoint? chartPositionUpper;
+
+  /// The bounding box for the chart space occupied by this datum.
+  ///
+  /// This is currently only populated by the bar series renderer.
+  ///
+  /// TODO: Fill this in for other series renderers.
+  final Rectangle<int>? bounds;
 
   /// Distance of [domain] from a given (x, y) coordinate.
-  final double domainDistance;
+  final double? domainDistance;
 
   /// Distance of [measure] from a given (x, y) coordinate.
-  final double measureDistance;
+  final double? measureDistance;
 
   /// Relative Cartesian distance of ([domain], [measure]) from a given (x, y)
   /// coordinate.
-  final double relativeDistance;
+  final double? relativeDistance;
 
   /// The radius of this [datum].
-  final double radiusPx;
+  final double? radiusPx;
 
   /// Renderer used to draw the shape of this datum.
   ///
   /// This is primarily used for point shapes on line and scatter plot charts.
-  final SymbolRenderer symbolRenderer;
+  final SymbolRenderer? symbolRenderer;
 
   /// The stroke width of this [datum].
-  final double strokeWidthPx;
+  final double? strokeWidthPx;
 
   /// Optional formatter for [domain].
-  DomainFormatter<D> domainFormatter;
+  DomainFormatter<D>? domainFormatter;
 
   /// Optional formatter for [measure].
-  MeasureFormatter measureFormatter;
+  MeasureFormatter? measureFormatter;
 
   DatumDetails(
       {this.datum,
@@ -157,6 +165,7 @@ class DatumDetails<D> {
       this.chartPosition,
       this.chartPositionLower,
       this.chartPositionUpper,
+      this.bounds,
       this.domainDistance,
       this.measureDistance,
       this.relativeDistance,
@@ -165,34 +174,35 @@ class DatumDetails<D> {
       this.strokeWidthPx});
 
   factory DatumDetails.from(DatumDetails<D> other,
-      {D datum,
-      int index,
-      D domain,
-      D domainLowerBound,
-      D domainUpperBound,
-      num measure,
-      MeasureFormatter measureFormatter,
-      num measureLowerBound,
-      num measureUpperBound,
-      num measureOffset,
-      num rawMeasure,
-      num rawMeasureLowerBound,
-      num rawMeasureUpperBound,
-      ImmutableSeries<D> series,
-      Color color,
-      Color fillColor,
-      FillPatternType fillPattern,
-      Color areaColor,
-      List<int> dashPattern,
-      Point<double> chartPosition,
-      Point<double> chartPositionLower,
-      Point<double> chartPositionUpper,
-      DomainFormatter domainFormatter,
-      double domainDistance,
-      double measureDistance,
-      double radiusPx,
-      SymbolRenderer symbolRenderer,
-      double strokeWidthPx}) {
+      {D? datum,
+      int? index,
+      D? domain,
+      D? domainLowerBound,
+      D? domainUpperBound,
+      num? measure,
+      MeasureFormatter? measureFormatter,
+      num? measureLowerBound,
+      num? measureUpperBound,
+      num? measureOffset,
+      num? rawMeasure,
+      num? rawMeasureLowerBound,
+      num? rawMeasureUpperBound,
+      ImmutableSeries<D>? series,
+      Color? color,
+      Color? fillColor,
+      FillPatternType? fillPattern,
+      Color? areaColor,
+      List<int>? dashPattern,
+      NullablePoint? chartPosition,
+      NullablePoint? chartPositionLower,
+      NullablePoint? chartPositionUpper,
+      Rectangle<int>? bounds,
+      DomainFormatter<D>? domainFormatter,
+      double? domainDistance,
+      double? measureDistance,
+      double? radiusPx,
+      SymbolRenderer? symbolRenderer,
+      double? strokeWidthPx}) {
     return DatumDetails<D>(
         datum: datum ?? other.datum,
         index: index ?? other.index,
@@ -219,6 +229,7 @@ class DatumDetails<D> {
         chartPosition: chartPosition ?? other.chartPosition,
         chartPositionLower: chartPositionLower ?? other.chartPositionLower,
         chartPositionUpper: chartPositionUpper ?? other.chartPositionUpper,
+        bounds: bounds ?? other.bounds,
         domainDistance: domainDistance ?? other.domainDistance,
         measureDistance: measureDistance ?? other.measureDistance,
         radiusPx: radiusPx ?? other.radiusPx,
@@ -227,9 +238,9 @@ class DatumDetails<D> {
   }
 
   String get formattedDomain =>
-      (domainFormatter != null) ? domainFormatter(domain) : domain.toString();
+      (domainFormatter != null) ? domainFormatter!(domain!) : domain.toString();
 
   String get formattedMeasure => (measureFormatter != null)
-      ? measureFormatter(measure)
+      ? measureFormatter!(measure)
       : measure.toString();
 }

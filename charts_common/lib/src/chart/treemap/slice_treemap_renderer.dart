@@ -20,7 +20,7 @@ import 'treemap_renderer_config.dart';
 
 /// A treemap renderer that renders a treemap with slice layout.
 class SliceTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
-  SliceTreeMapRenderer({String rendererId, TreeMapRendererConfig config})
+  SliceTreeMapRenderer({String? rendererId, TreeMapRendererConfig<D>? config})
       : super(
             config: config ??
                 TreeMapRendererConfig(tileType: TreeMapTileType.slice),
@@ -28,7 +28,7 @@ class SliceTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
 
   /// Uses slicing as the tiling algorithm for this tree map.
   @override
-  void tile(TreeNode node) {
+  void tile(TreeNode<Object> node) {
     final children = node.children;
     if (children.isNotEmpty) {
       final rect = availableLayoutBoundingRect(node);

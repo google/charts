@@ -27,7 +27,7 @@ void main() {
           new charts.SeriesDatumConfig<String>('Sales', '2016')
         ]);
 
-    charts.SelectionModel<String> currentSelectionModel;
+    charts.SelectionModel<String>? currentSelectionModel;
 
     void selectionChangedListener(charts.SelectionModel<String> model) {
       currentSelectionModel = model;
@@ -35,7 +35,12 @@ void main() {
 
     final testChart = new TestChart(selectionChangedListener, onTapSelection);
 
-    await tester.pumpWidget(testChart);
+    await tester.pumpWidget(
+      new Directionality(
+        textDirection: TextDirection.ltr,
+        child: testChart,
+      ),
+    );
 
     expect(currentSelectionModel, isNull);
 
@@ -43,13 +48,14 @@ void main() {
 
     await tester.pump();
 
-    expect(currentSelectionModel.selectedDatum, hasLength(1));
+    expect(currentSelectionModel, isNotNull);
+    expect(currentSelectionModel!.selectedDatum, hasLength(1));
     final selectedDatum =
-        currentSelectionModel.selectedDatum.first.datum as OrdinalSales;
+        currentSelectionModel!.selectedDatum.first.datum as OrdinalSales;
     expect(selectedDatum.year, equals('2016'));
     expect(selectedDatum.sales, equals(100));
-    expect(currentSelectionModel.selectedSeries, hasLength(1));
-    expect(currentSelectionModel.selectedSeries.first.id, equals('Sales'));
+    expect(currentSelectionModel!.selectedSeries, hasLength(1));
+    expect(currentSelectionModel!.selectedSeries.first.id, equals('Sales'));
   });
 }
 
@@ -89,7 +95,10 @@ class TestChartState extends State<TestChart> {
       defaultInteractions: false,
     );
 
-    return new GestureDetector(child: chart, onTap: handleOnTap);
+    return new Directionality(
+      textDirection: TextDirection.ltr,
+      child: new GestureDetector(child: chart, onTap: handleOnTap),
+    );
   }
 
   void handleOnTap() {

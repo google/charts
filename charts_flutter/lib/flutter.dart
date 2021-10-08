@@ -44,6 +44,7 @@ export 'package:charts_common/common.dart'
         BarTargetLineRenderer,
         BarTargetLineRendererConfig,
         BaseCartesianRenderer,
+        BasicDateTimeTickFormatterSpec,
         BasicNumericTickFormatterSpec,
         BasicNumericTickProviderSpec,
         BasicOrdinalTickProviderSpec,

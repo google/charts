@@ -23,12 +23,11 @@ typedef UnaryFunction<T, R> = R Function(T argument);
 ///
 /// [delay] specifies the amount of time to wait until [callback] can be called
 /// again.
-/// [defaultReturn] is used as the return value when throttle event occurs. The
-/// default return value is null.
+/// [defaultReturn] is used as the return value when throttle event occurs.
 UnaryFunction<T, R> throttle<T, R>(UnaryFunction<T, R> callback,
-    {Duration delay = Duration.zero, R defaultReturn}) {
-  Timer timer;
-  Stopwatch stopwatch;
+    {Duration delay = Duration.zero, required R defaultReturn}) {
+  Timer? timer;
+  Stopwatch? stopwatch;
 
   return (T argument) {
     stopwatch ??= Stopwatch()..start();
@@ -36,8 +35,8 @@ UnaryFunction<T, R> throttle<T, R>(UnaryFunction<T, R> callback,
     // This event happened too soon. Do not call the [callback] function yet,
     // unless it turns out to be the very last event. [delay]s for a period of
     // time before calling the [callback] function again.
-    if (stopwatch.elapsedMilliseconds < delay.inMilliseconds) {
-      if (timer?.isActive == true) timer.cancel();
+    if (stopwatch!.elapsedMilliseconds < delay.inMilliseconds) {
+      timer?.cancel();
       timer = Timer(delay, () {
         callback(argument);
         timer = null;
@@ -46,11 +45,11 @@ UnaryFunction<T, R> throttle<T, R>(UnaryFunction<T, R> callback,
       return defaultReturn;
     }
 
-    stopwatch.reset();
+    stopwatch = null;
 
     // This is a non-throttled event, go ahead and clear away the last throttled
     // event callback so that we do not move the hover point back in time.
-    if (timer?.isActive == true) timer.cancel();
+    timer?.cancel();
     return callback(argument);
   };
 }

@@ -35,7 +35,7 @@ class GraphicsFactory implements common.GraphicsFactory {
   common.TextStyle createTextPaint() =>
       TextStyle()..fontFamily = defaultTextStyle.style.fontFamily;
 
-  /// Returns a text element from [text] and [style].
+  /// Returns a text element from [text].
   @override
   common.TextElement createTextElement(String text) {
     return TextElement(text, textScaleFactor: textScaleFactor)

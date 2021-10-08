@@ -21,10 +21,10 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class StackedBarChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  StackedBarChart(this.seriesList, {this.animate});
+  StackedBarChart(this.seriesList, {this.animate = false});
 
   /// Creates a stacked [BarChart] with sample data and no transition.
   factory StackedBarChart.withSampleData() {

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -26,18 +28,24 @@ import 'package:charts_common/src/chart/common/series_renderer.dart';
 import 'package:charts_common/src/data/series.dart';
 import 'package:test/test.dart';
 
-class FakeRenderer extends BaseSeriesRenderer {
+class FakeRenderer<D> extends BaseSeriesRenderer<D> {
+  FakeRenderer() : super(rendererId: 'fake', layoutPaintOrder: 0);
+
   @override
-  DatumDetails addPositionToDetailsForSeriesDatum(
-      DatumDetails details, SeriesDatum seriesDatum) {
+  DatumDetails<D> addPositionToDetailsForSeriesDatum(
+      DatumDetails<D> details, SeriesDatum<D> seriesDatum) {
     return null;
   }
 
   @override
-  List<DatumDetails> getNearestDatumDetailPerSeries(
-      Point<double> chartPoint, bool byDomain, Rectangle<int> boundsOverride) {
-    return null;
-  }
+  List<DatumDetails<D>> getNearestDatumDetailPerSeries(
+    Point<double> chartPoint,
+    bool byDomain,
+    Rectangle<int> boundsOverride, {
+    selectOverlappingPoints = false,
+    selectExactEventLocation = false,
+  }) =>
+      null;
 
   @override
   void paint(ChartCanvas canvas, double animationPercent) {}
@@ -60,10 +68,10 @@ class FakeChart extends BaseChart {
 
 void main() {
   FakeChart _chart;
-  ImmutableSeries _series1;
-  ImmutableSeries _series2;
-  ImmutableSeries _series3;
-  ImmutableSeries _series4;
+  MutableSeries _series1;
+  MutableSeries _series2;
+  MutableSeries _series3;
+  MutableSeries _series4;
   final infoSelectionType = SelectionModelType.info;
 
   InitialSelection _makeBehavior(SelectionModelType selectionModelType,
@@ -85,33 +93,25 @@ void main() {
         id: 'mySeries1',
         data: ['A', 'B', 'C', 'D'],
         domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) {
-          return 0;
-        }));
+        measureFn: (_, __) => null));
 
     _series2 = MutableSeries(Series(
         id: 'mySeries2',
         data: ['W', 'X', 'Y', 'Z'],
         domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) {
-          return 0;
-        }));
+        measureFn: (_, __) => null));
 
     _series3 = MutableSeries(Series(
         id: 'mySeries3',
         data: ['W', 'X', 'Y', 'Z'],
         domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) {
-          return 0;
-        }));
+        measureFn: (_, __) => null));
 
     _series4 = MutableSeries(Series(
         id: 'mySeries4',
         data: ['W', 'X', 'Y', 'Z'],
         domainFn: (dynamic datum, __) => datum,
-        measureFn: (_, __) {
-          return 0;
-        }));
+        measureFn: (_, __) => null));
   });
 
   test('selects initial datum', () {
@@ -209,9 +209,7 @@ void main() {
             id: 'mySeries2',
             data: ['W', 'X', 'Y', 'Z'],
             domainFn: (dynamic datum, __) => datum,
-            measureFn: (_, __) {
-              return 0;
-            })
+            measureFn: (_, __) => null)
       ],
     );
 

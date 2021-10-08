@@ -23,16 +23,18 @@ import 'point_renderer_decorator.dart' show PointRendererDecorator;
 /// Configuration for a line renderer.
 class PointRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
-  final String customRendererId;
+  @override
+  final String? customRendererId;
 
   /// The order to paint this renderer on the canvas.
   final int layoutPaintOrder;
 
   /// List of decorators applied to rendered points.
-  final List<PointRendererDecorator> pointRendererDecorators;
+  final List<PointRendererDecorator<D>> pointRendererDecorators;
 
   /// Renderer used to draw the points. Defaults to a circle.
-  final SymbolRenderer symbolRenderer;
+  @override
+  final SymbolRenderer? symbolRenderer;
 
   /// Map of custom symbol renderers used to draw points.
   ///
@@ -40,8 +42,9 @@ class PointRendererConfig<D> extends LayoutViewConfig
   /// specifying a [pointSymbolRendererIdKey] matching a key in the map. Any
   /// point that doesn't define one will fall back to the default
   /// [symbolRenderer].
-  final Map<String, SymbolRenderer> customSymbolRenderers;
+  final Map<String, SymbolRenderer>? customSymbolRenderers;
 
+  @override
   final rendererAttributes = RendererAttributes();
 
   /// Default radius of the points, used if a series does not define a radiusPx
@@ -61,7 +64,7 @@ class PointRendererConfig<D> extends LayoutViewConfig
   /// 1) boundsLineRadiusPx property defined on the series.
   /// 2) boundsLineRadiusPx property defined on this renderer config.
   /// 3) Final fallback is to use the point radiusPx for the datum.
-  final double boundsLineRadiusPx;
+  final double? boundsLineRadiusPx;
 
   PointRendererConfig(
       {this.customRendererId,

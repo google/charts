@@ -15,8 +15,6 @@
 
 import 'dart:math' show Rectangle;
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../cartesian/axis/axis.dart' show ImmutableAxis, domainAxisKey;
 import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
@@ -42,17 +40,17 @@ String domainVocalization<D>(List<SeriesDatum<D>> seriesDatums) {
 
 /// Behavior that generates semantic nodes for each domain.
 class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
-  final VocalizationCallback _vocalizationCallback;
-  LifecycleListener<D> _lifecycleListener;
-  CartesianChart<D> _chart;
-  List<MutableSeries<D>> _seriesList;
+  final VocalizationCallback<D> _vocalizationCallback;
+  late final LifecycleListener<D> _lifecycleListener;
+  late CartesianChart<D> _chart;
+  late List<MutableSeries<D>> _seriesList;
 
   DomainA11yExploreBehavior(
-      {VocalizationCallback vocalizationCallback,
-      ExploreModeTrigger exploreModeTrigger,
-      double minimumWidth,
-      String exploreModeEnabledAnnouncement,
-      String exploreModeDisabledAnnouncement})
+      {VocalizationCallback<D>? vocalizationCallback,
+      ExploreModeTrigger? exploreModeTrigger,
+      double? minimumWidth,
+      String? exploreModeEnabledAnnouncement,
+      String? exploreModeDisabledAnnouncement})
       : _vocalizationCallback = vocalizationCallback ?? domainVocalization,
         super(
             exploreModeTrigger: exploreModeTrigger,
@@ -71,13 +69,13 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
 
     final domainSeriesDatum = <D, List<SeriesDatum<D>>>{};
 
-    for (MutableSeries<D> series in _seriesList) {
+    for (final series in _seriesList) {
       for (var index = 0; index < series.data.length; index++) {
-        final datum = series.data[index];
-        D domain = series.domainFn(index);
+        final Object? datum = series.data[index];
+        final domain = series.domainFn(index);
 
         domainSeriesDatum[domain] ??= <SeriesDatum<D>>[];
-        domainSeriesDatum[domain].add(SeriesDatum<D>(series, datum));
+        domainSeriesDatum[domain]!.add(SeriesDatum<D>(series, datum));
       }
     }
 
@@ -86,7 +84,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
 
       final firstSeries = seriesDatums.first.series;
       final domainAxis = firstSeries.getAttr(domainAxisKey) as ImmutableAxis<D>;
-      final location = domainAxis.getLocation(domain);
+      final location = domainAxis.getLocation(domain)!;
 
       /// If the step size is smaller than the minimum width, use minimum.
       final stepSize = (domainAxis.stepSize > minimumWidth)
@@ -120,8 +118,8 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
   @override
   void attachTo(BaseChart<D> chart) {
     // Domain selection behavior only works for cartesian charts.
-    assert(chart is CartesianChart);
-    _chart = chart as CartesianChart;
+    assert(chart is CartesianChart<D>);
+    _chart = chart as CartesianChart<D>;
 
     chart.addLifecycleListener(_lifecycleListener);
 
@@ -129,7 +127,7 @@ class DomainA11yExploreBehavior<D> extends A11yExploreBehavior<D> {
   }
 
   @override
-  void removeFrom(BaseChart chart) {
+  void removeFrom(BaseChart<D> chart) {
     chart.removeLifecycleListener(_lifecycleListener);
   }
 
@@ -145,12 +143,12 @@ class _DomainA11yNode extends A11yNode implements Comparable<_DomainA11yNode> {
   final bool renderVertically;
 
   factory _DomainA11yNode(String label,
-      {@required double location,
-      @required double stepSize,
-      @required Rectangle<int> chartDrawBounds,
-      @required bool isRtl,
-      @required bool renderVertically,
-      OnFocus onFocus}) {
+      {required double location,
+      required double stepSize,
+      required Rectangle<int> chartDrawBounds,
+      required bool isRtl,
+      required bool renderVertically,
+      OnFocus? onFocus}) {
     Rectangle<int> boundingBox;
     if (renderVertically) {
       var left = (location - stepSize / 2).round();
@@ -174,17 +172,17 @@ class _DomainA11yNode extends A11yNode implements Comparable<_DomainA11yNode> {
   }
 
   _DomainA11yNode._internal(String label, Rectangle<int> boundingBox,
-      {@required this.location,
-      @required this.isRtl,
-      @required this.renderVertically,
-      OnFocus onFocus})
+      {required this.location,
+      required this.isRtl,
+      required this.renderVertically,
+      OnFocus? onFocus})
       : super(label, boundingBox, onFocus: onFocus);
 
   @override
   int compareTo(_DomainA11yNode other) {
     // Ordered by smaller location first, unless rendering vertically and RTL,
     // then flip to sort by larger location first.
-    int result = location.compareTo(other.location);
+    var result = location.compareTo(other.location);
 
     if (renderVertically && isRtl && result != 0) {
       result = -result;

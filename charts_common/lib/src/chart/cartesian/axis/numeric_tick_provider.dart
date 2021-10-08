@@ -15,8 +15,6 @@
 
 import 'dart:math' show log, log10e, max, min, pow;
 
-import 'package:meta/meta.dart' show required;
-
 import '../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/chart_context.dart' show ChartContext;
 import '../../common/unitconverter/identity_converter.dart'
@@ -104,8 +102,8 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
   // Desired min and max tick counts are set by [setFixedTickCount] and
   // [setTickCount]. These are not guaranteed tick counts.
-  int _desiredMaxTickCount;
-  int _desiredMinTickCount;
+  int? _desiredMaxTickCount;
+  int? _desiredMinTickCount;
 
   /// Allowed steps the tick provider can choose from.
   var _allowedSteps = DEFAULT_STEPS;
@@ -118,20 +116,16 @@ class NumericTickProvider extends BaseTickProvider<num> {
   UnitConverter<num, num> dataToAxisUnitConverter =
       const IdentityConverter<num>();
 
-  // Tick calculation state
-  num _low;
-  num _high;
-  int _rangeWidth;
-  int _minTickCount;
-  int _maxTickCount;
-
-  // The parameters used in previous tick calculation
-  num _prevLow;
-  num _prevHigh;
-  int _prevRangeWidth;
-  int _prevMinTickCount;
-  int _prevMaxTickCount;
-  bool _prevDataIsInWholeNumbers;
+  // Internal tick calculation state for [getTicks].
+  //
+  // [_low] and [_high] are valid only after calling [_updateDomainExtents].
+  //
+  // [_minTickCount] and [_maxTickCount] are valid only after calling
+  // [_updateTickCounts].
+  late num _low;
+  late num _high;
+  int? _minTickCount;
+  int? _maxTickCount;
 
   /// Sets the desired tick count.
   ///
@@ -141,7 +135,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
   /// [tickCount] the fixed number of major (labeled) ticks to draw for the axis
   /// Passing null will result in falling back on the automatic tick count
   /// assignment.
-  void setFixedTickCount(int tickCount) {
+  void setFixedTickCount(int? tickCount) {
     // Don't allow a single tick, it doesn't make sense. so tickCount > 1
     _desiredMinTickCount =
         tickCount != null && tickCount > 1 ? tickCount : null;
@@ -161,7 +155,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       _desiredMaxTickCount = maxTickCount;
       if (minTickCount != null &&
           minTickCount > 1 &&
-          minTickCount <= _desiredMaxTickCount) {
+          minTickCount <= _desiredMaxTickCount!) {
         _desiredMinTickCount = minTickCount;
       } else {
         _desiredMinTickCount = 2;
@@ -170,6 +164,8 @@ class NumericTickProvider extends BaseTickProvider<num> {
       _desiredMaxTickCount = null;
       _desiredMinTickCount = null;
     }
+
+    assert((_desiredMinTickCount == null) == (_desiredMaxTickCount == null));
   }
 
   /// Sets the allowed step sizes this tick provider can choose from.
@@ -187,14 +183,14 @@ class NumericTickProvider extends BaseTickProvider<num> {
     assert(steps != null && steps.isNotEmpty);
     steps.sort();
 
-    final stepSet = Set.from(steps);
-    _allowedSteps = List<double>(stepSet.length * 3);
-    int stepIndex = 0;
-    for (double step in stepSet) {
+    final stepSet = Set.of(steps);
+    _allowedSteps = List<double>.filled(stepSet.length * 3, 0);
+    var stepIndex = 0;
+    for (final step in stepSet) {
       assert(1.0 <= step && step < 10.0);
       _allowedSteps[stepIndex] = _removeRoundingErrors(step / 100);
       _allowedSteps[stepSet.length + stepIndex] =
-          _removeRoundingErrors(step / 10).toDouble();
+          _removeRoundingErrors(step / 10);
       _allowedSteps[2 * stepSet.length + stepIndex] =
           _removeRoundingErrors(step);
       stepIndex++;
@@ -202,18 +198,18 @@ class NumericTickProvider extends BaseTickProvider<num> {
   }
 
   List<Tick<num>> _getTicksFromHint({
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required NumericScale scale,
-    @required TickFormatter<num> formatter,
-    @required Map<num, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
-    @required TickHint<num> tickHint,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required NumericScale scale,
+    required TickFormatter<num> formatter,
+    required Map<num, String> formatterValueCache,
+    required TickDrawStrategy<num> tickDrawStrategy,
+    required TickHint<num> tickHint,
   }) {
     final stepSize = (tickHint.end - tickHint.start) / (tickHint.tickCount - 1);
     // Find the first tick that is greater than or equal to the min
     // viewportDomain.
-    final tickZeroShift = tickHint.start -
+    final tickZeroShift = tickHint.start.toDouble() -
         (stepSize *
             (tickHint.start >= 0
                 ? (tickHint.start / stepSize).floor()
@@ -236,19 +232,16 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
   @override
   List<Tick<num>> getTicks({
-    @required ChartContext context,
-    @required GraphicsFactory graphicsFactory,
-    @required NumericScale scale,
-    @required TickFormatter<num> formatter,
-    @required Map<num, String> formatterValueCache,
-    @required TickDrawStrategy tickDrawStrategy,
-    @required AxisOrientation orientation,
+    required ChartContext? context,
+    required GraphicsFactory graphicsFactory,
+    required NumericScale scale,
+    required TickFormatter<num> formatter,
+    required Map<num, String> formatterValueCache,
+    required TickDrawStrategy<num> tickDrawStrategy,
+    required AxisOrientation? orientation,
     bool viewportExtensionEnabled = false,
-    TickHint<num> tickHint,
+    TickHint<num>? tickHint,
   }) {
-    List<Tick<num>> ticks;
-
-    _rangeWidth = scale.rangeWidth;
     _updateDomainExtents(scale.viewportDomain);
 
     // Bypass searching for a tick range since we are getting ticks using
@@ -265,107 +258,84 @@ class NumericTickProvider extends BaseTickProvider<num> {
       );
     }
 
-    if (_hasTickParametersChanged() || ticks == null) {
-      var selectedTicksRange = double.maxFinite;
-      var foundPreferredTicks = false;
-      var viewportDomain = scale.viewportDomain;
-      final axisUnitsHigh = dataToAxisUnitConverter.convert(_high);
-      final axisUnitsLow = dataToAxisUnitConverter.convert(_low);
+    // TODO: Recalculate ticks only if something changed.
+    var selectedTicksRange = double.maxFinite;
+    var foundPreferredTicks = false;
+    var viewportDomain = scale.viewportDomain;
+    final axisUnitsHigh = dataToAxisUnitConverter.convert(_high);
+    final axisUnitsLow = dataToAxisUnitConverter.convert(_low);
 
-      _updateTickCounts(axisUnitsHigh, axisUnitsLow);
+    _updateTickCounts(
+        high: axisUnitsHigh, low: axisUnitsLow, rangeWidth: scale.rangeWidth);
 
-      // Only create a copy of the scale if [viewportExtensionEnabled].
-      NumericScale mutableScale =
-          viewportExtensionEnabled ? scale.copy() : null;
+    // Only create a copy of the scale if [viewportExtensionEnabled].
+    final mutableScale =
+        viewportExtensionEnabled ? scale.copy() as NumericScale : null;
 
-      // Walk to available tick count from max to min looking for the first one
-      // that gives you the least amount of range used. If a non colliding tick
-      // count is not found use the min tick count to generate ticks.
-      for (int tickCount = _maxTickCount;
-          tickCount >= _minTickCount;
-          tickCount--) {
-        final stepInfo =
-            _getStepsForTickCount(tickCount, axisUnitsHigh, axisUnitsLow);
-        if (stepInfo == null) {
+    // Walk to available tick count from max to min looking for the first one
+    // that gives you the least amount of range used. If a non colliding tick
+    // count is not found use the min tick count to generate ticks.
+    var ticks = <Tick<num>>[];
+    for (var tickCount = _maxTickCount!;
+        tickCount >= _minTickCount!;
+        tickCount--) {
+      final stepInfo =
+          _getStepsForTickCount(tickCount, axisUnitsHigh, axisUnitsLow);
+      final firstTick =
+          dataToAxisUnitConverter.invert(stepInfo.tickStart).toDouble();
+      final lastTick = dataToAxisUnitConverter
+          .invert(stepInfo.tickStart + stepInfo.stepSize * (tickCount - 1))
+          .toDouble();
+      final range = lastTick - firstTick;
+      // Calculate ticks if it is a better range or if preferred ticks have
+      // not been found yet.
+      if (range < selectedTicksRange || !foundPreferredTicks) {
+        final tickValues = _getTickValues(stepInfo, tickCount);
+
+        if (mutableScale != null) {
+          mutableScale.viewportDomain = NumericExtents(firstTick, lastTick);
+        }
+
+        // Create ticks from domain values.
+        final preferredTicks = createTicks(tickValues,
+            context: context,
+            graphicsFactory: graphicsFactory,
+            scale: mutableScale ?? scale,
+            formatter: formatter,
+            formatterValueCache: formatterValueCache,
+            tickDrawStrategy: tickDrawStrategy,
+            stepSize: stepInfo.stepSize);
+
+        // Request collision check from draw strategy.
+        final collisionReport =
+            tickDrawStrategy.collides(preferredTicks, orientation);
+
+        // Don't choose colliding ticks unless it was our last resort
+        if (collisionReport.ticksCollide && tickCount > _minTickCount!) {
           continue;
         }
-        final firstTick = dataToAxisUnitConverter.invert(stepInfo.tickStart);
-        final lastTick = dataToAxisUnitConverter
-            .invert(stepInfo.tickStart + stepInfo.stepSize * (tickCount - 1));
-        final range = lastTick - firstTick;
-        // Calculate ticks if it is a better range or if preferred ticks have
-        // not been found yet.
-        if (range < selectedTicksRange || !foundPreferredTicks) {
-          final tickValues = _getTickValues(stepInfo, tickCount);
-
-          if (viewportExtensionEnabled) {
-            mutableScale.viewportDomain = NumericExtents(firstTick, lastTick);
-          }
-
-          // Create ticks from domain values.
-          final preferredTicks = createTicks(tickValues,
-              context: context,
-              graphicsFactory: graphicsFactory,
-              scale: viewportExtensionEnabled ? mutableScale : scale,
-              formatter: formatter,
-              formatterValueCache: formatterValueCache,
-              tickDrawStrategy: tickDrawStrategy,
-              stepSize: stepInfo.stepSize);
-
-          // Request collision check from draw strategy.
-          final collisionReport =
-              tickDrawStrategy.collides(preferredTicks, orientation);
-
-          // Don't choose colliding ticks unless it was our last resort
-          if (collisionReport.ticksCollide && tickCount > _minTickCount) {
-            continue;
-          }
-          // Only choose alternate ticks if preferred ticks is not found.
-          if (foundPreferredTicks && collisionReport.alternateTicksUsed) {
-            continue;
-          }
-
-          ticks = collisionReport.alternateTicksUsed
-              ? collisionReport.ticks
-              : preferredTicks;
-          foundPreferredTicks = !collisionReport.alternateTicksUsed;
-          selectedTicksRange = range;
-          // If viewport extended, save the viewport used.
-          viewportDomain = mutableScale?.viewportDomain ?? scale.viewportDomain;
+        // Only choose alternate ticks if preferred ticks is not found.
+        if (foundPreferredTicks && collisionReport.alternateTicksUsed) {
+          continue;
         }
+
+        ticks = collisionReport.alternateTicksUsed
+            ? collisionReport.ticks
+            : preferredTicks;
+        foundPreferredTicks = !collisionReport.alternateTicksUsed;
+        selectedTicksRange = range;
+        // If viewport extended, save the viewport used.
+        viewportDomain = mutableScale?.viewportDomain ?? scale.viewportDomain;
       }
-      _setPreviousTickCalculationParameters();
-      // If [viewportExtensionEnabled] and has changed, then set the scale's
-      // viewport to what was used to generate ticks. By only setting viewport
-      // when it has changed, we do not trigger the flag to recalculate scale.
-      if (viewportExtensionEnabled && scale.viewportDomain != viewportDomain) {
-        scale.viewportDomain = viewportDomain;
-      }
+    }
+    // If [viewportExtensionEnabled] and has changed, then set the scale's
+    // viewport to what was used to generate ticks. By only setting viewport
+    // when it has changed, we do not trigger the flag to recalculate scale.
+    if (viewportExtensionEnabled && scale.viewportDomain != viewportDomain) {
+      scale.viewportDomain = viewportDomain;
     }
 
     return ticks;
-  }
-
-  /// Checks whether the parameters that are used in determining the right set
-  /// of ticks changed from the last time we calculated ticks. If not we should
-  /// be able to use the cached ticks.
-  bool _hasTickParametersChanged() {
-    return _low != _prevLow ||
-        _high != _prevHigh ||
-        _rangeWidth != _prevRangeWidth ||
-        _minTickCount != _prevMinTickCount ||
-        _maxTickCount != _prevMaxTickCount ||
-        dataIsInWholeNumbers != _prevDataIsInWholeNumbers;
-  }
-
-  /// Save the last set of parameters used while determining ticks.
-  void _setPreviousTickCalculationParameters() {
-    _prevLow = _low;
-    _prevHigh = _high;
-    _prevRangeWidth = _rangeWidth;
-    _prevMinTickCount = _minTickCount;
-    _prevMaxTickCount = _maxTickCount;
-    _prevDataIsInWholeNumbers = dataIsInWholeNumbers;
   }
 
   /// Calculates the domain extents that this provider will cover based on the
@@ -392,12 +362,12 @@ class NumericTickProvider extends BaseTickProvider<num> {
         // The values are all the same, so assume a range of -5% to +5% from the
         // single value.
         if (_high > 0.0) {
-          _high = _high * 1.05;
-          _low = _low * 0.95;
+          _high *= 1.05;
+          _low *= 0.95;
         } else {
-          // (high == low) < 0
-          _high = _high * 0.95;
-          _low = _low * 1.05;
+          // (_high == _low) < 0
+          _high *= 0.95;
+          _low *= 1.05;
         }
       }
     }
@@ -413,7 +383,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
     // If the range contains zero, ensure that zero is a tick.
     if (high >= 0 && low <= 0) {
       // determine the ratio of regions that are above the zero axis.
-      final posRegionRatio = (high > 0 ? min(1.0, high / (high - low)) : 0.0);
+      final posRegionRatio = high > 0 ? min(1.0, high / (high - low)) : 0.0;
       var positiveRegionCount = (regionCount * posRegionRatio).ceil();
       var negativeRegionCount = regionCount - positiveRegionCount;
       // Ensure that negative regions are not excluded, unless there are no
@@ -451,11 +421,11 @@ class NumericTickProvider extends BaseTickProvider<num> {
       final favoredTensBase = (_getEnclosingPowerOfTen(favoredNum)).abs();
 
       // Check each step size and see if it would contain the "favored" value
-      for (double step in _allowedSteps) {
+      for (final step in _allowedSteps) {
         final tmpStepSize = _removeRoundingErrors(step * favoredTensBase);
 
         // If prefer whole number, then don't allow a step that isn't one.
-        if (dataIsInWholeNumbers && (tmpStepSize).round() != tmpStepSize) {
+        if (dataIsInWholeNumbers && tmpStepSize.round() != tmpStepSize) {
           continue;
         }
 
@@ -463,7 +433,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
         // But wait until the last step to prevent the cost of the formatter.
         // Potentially store the formatted strings in TickStepInfo?
         if (tmpStepSize * favoredRegionCount >= favoredNum) {
-          double stepStart = negativeRegionCount > 0
+          final stepStart = negativeRegionCount > 0
               ? (-1 * tmpStepSize * negativeRegionCount)
               : 0.0;
           return _TickStepInfo(tmpStepSize, stepStart);
@@ -474,17 +444,17 @@ class NumericTickProvider extends BaseTickProvider<num> {
       final diffTensBase = _getEnclosingPowerOfTen(high - low);
       // Walk the step sizes calculating a starting point and seeing if the high
       // end is included in the range given that step size.
-      for (double step in _allowedSteps) {
+      for (final step in _allowedSteps) {
         final tmpStepSize = _removeRoundingErrors(step * diffTensBase);
 
         // If prefer whole number, then don't allow a step that isn't one.
-        if (dataIsInWholeNumbers && (tmpStepSize).round() != tmpStepSize) {
+        if (dataIsInWholeNumbers && tmpStepSize.round() != tmpStepSize) {
           continue;
         }
 
         // TODO: Skip steps that format to the same string.
         // But wait until the last step to prevent the cost of the formatter.
-        double tmpStepStart = _getStepLessThan(low, tmpStepSize);
+        final tmpStepStart = _getStepLessThan(low.toDouble(), tmpStepSize);
         if (tmpStepStart + (tmpStepSize * regionCount) >= high) {
           return _TickStepInfo(tmpStepSize, tmpStepStart);
         }
@@ -495,17 +465,22 @@ class NumericTickProvider extends BaseTickProvider<num> {
   }
 
   List<double> _getTickValues(_TickStepInfo steps, int tickCount) {
-    final tickValues = List<double>(tickCount);
     // We have our size and start, assign all the tick values to the given array.
-    for (int i = 0; i < tickCount; i++) {
-      tickValues[i] = dataToAxisUnitConverter.invert(
-          _removeRoundingErrors(steps.tickStart + (i * steps.stepSize)));
-    }
-    return tickValues;
+    return [
+      for (int i = 0; i < tickCount; i++)
+        dataToAxisUnitConverter
+            .invert(
+                _removeRoundingErrors(steps.tickStart + (i * steps.stepSize)))
+            .toDouble(),
+    ];
   }
 
   /// Given the axisDimensions update the tick counts given they are not fixed.
-  void _updateTickCounts(num high, num low) {
+  void _updateTickCounts({
+    required num high,
+    required num low,
+    required int rangeWidth,
+  }) {
     int tmpMaxNumMajorTicks;
     int tmpMinNumMajorTicks;
 
@@ -516,13 +491,13 @@ class NumericTickProvider extends BaseTickProvider<num> {
 
     // If there is a desired tick range use it, if not calculate one.
     if (_desiredMaxTickCount != null) {
-      tmpMinNumMajorTicks = max(_desiredMinTickCount, absoluteMinTicks);
-      tmpMaxNumMajorTicks = max(_desiredMaxTickCount, tmpMinNumMajorTicks);
+      tmpMinNumMajorTicks = max(_desiredMinTickCount!, absoluteMinTicks);
+      tmpMaxNumMajorTicks = max(_desiredMaxTickCount!, tmpMinNumMajorTicks);
     } else {
-      double minPixelsPerTick = MIN_DIPS_BETWEEN_TICKS.toDouble();
+      final minPixelsPerTick = MIN_DIPS_BETWEEN_TICKS.toDouble();
       tmpMinNumMajorTicks = absoluteMinTicks;
       tmpMaxNumMajorTicks =
-          max(absoluteMinTicks, (_rangeWidth / minPixelsPerTick).floor());
+          max(absoluteMinTicks, (rangeWidth / minPixelsPerTick).floor());
     }
 
     // Don't blow away the previous array if it hasn't changed.
@@ -545,7 +520,7 @@ class NumericTickProvider extends BaseTickProvider<num> {
       return 1.0;
     }
 
-    return pow(10, (log10e * log(number.abs())).ceil()) *
+    return pow(10, (log10e * log(number.abs())).ceil()).toDouble() *
         (number < 0.0 ? -1.0 : 1.0);
   }
 
