@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'dart:math' show Rectangle;
+
 import 'package:charts_common/common.dart' as common
     show
         ChartBehavior,
@@ -154,7 +155,8 @@ class Slider<D> extends ChartBehavior<D> {
         break;
       default:
         throw new ArgumentError(
-            'Slider does not support the event trigger ' + '"${eventTrigger}"');
+            'Slider does not support the event trigger ' + '"$eventTrigger"');
+        break;
     }
     return desiredGestures;
   }

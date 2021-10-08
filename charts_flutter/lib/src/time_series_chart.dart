@@ -26,7 +26,7 @@ import 'package:charts_common/common.dart' as common
         TimeSeriesChart;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
-import 'cartesian_chart.dart' show CartesianChart;
+import 'cartesian_chart.dart' show BaseCartesianChart;
 import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
 import 'selection_model_config.dart' show SelectionModelConfig;

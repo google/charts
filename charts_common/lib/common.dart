@@ -22,10 +22,10 @@ export 'src/chart/bar/bar_renderer.dart'
     show BarRenderer, BarRendererElement, ImmutableBarRendererElement;
 export 'src/chart/bar/bar_renderer_config.dart'
     show
-        BarRendererConfig,
-        CornerStrategy,
-        ConstCornerStrategy,
-        NoCornerStrategy;
+    BarRendererConfig,
+    CornerStrategy,
+    ConstCornerStrategy,
+    NoCornerStrategy;
 export 'src/chart/bar/bar_renderer_decorator.dart' show BarRendererDecorator;
 export 'src/chart/bar/bar_target_line_renderer.dart' show BarTargetLineRenderer;
 export 'src/chart/bar/bar_target_line_renderer_config.dart'
@@ -36,17 +36,54 @@ export 'src/chart/bar/base_bar_renderer_config.dart'
     show BarGroupingType, BaseBarRendererConfig;
 export 'src/chart/cartesian/axis/axis.dart'
     show
-        domainAxisKey,
-        measureAxisIdKey,
-        measureAxisKey,
-        Axis,
-        ImmutableAxis,
-        AxisOrientation,
-        NumericAxis,
-        OrdinalAxis,
-        OrdinalViewport;
-export 'src/chart/cartesian/axis/draw_strategy/base_tick_draw_strategy.dart'
-    show BaseRenderSpec, BaseTickDrawStrategy;
+    domainAxisKey,
+    measureAxisIdKey,
+    measureAxisKey,
+    Axis,
+    NumericAxis,
+    OrdinalAxis,
+    AxisOrientation,
+    OrdinalViewport;
+export 'src/chart/cartesian/axis/scale.dart'
+    show
+    Scale,
+    Extents,
+    ScaleOutputExtent,
+    RangeBandType,
+    RangeBandConfig,
+    StepSizeType,
+    StepSizeConfig,
+    MutableScale;
+export 'src/chart/cartesian/axis/tick_provider.dart'
+    show
+    TickProvider,
+    TickHint,
+    BaseTickProvider;
+export 'src/chart/cartesian/axis/tick_formatter.dart'
+    show
+    TickFormatter,
+    NumericTickFormatter,
+    OrdinalTickFormatter,
+    SimpleTickFormatterBase;
+export 'src/chart/cartesian/axis/linear/linear_scale.dart'
+    show
+    LinearScale;
+export 'src/chart/cartesian/axis/tick_formatter.dart'
+    show
+    SimpleTickFormatterBase,
+    OrdinalTickFormatter,
+    NumericTickFormatter,
+    TickFormatter;
+export 'src/chart/cartesian/axis/tick_provider.dart'
+    show
+    BaseTickProvider,
+    TickProvider;
+export 'src/chart/cartesian/axis/static_tick_provider.dart'
+    show
+    StaticTickProvider;
+export 'src/chart/cartesian/axis/end_points_tick_provider.dart'
+    show
+    EndPointsTickProvider;
 export 'src/chart/cartesian/axis/draw_strategy/gridline_draw_strategy.dart'
     show GridlineRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/none_draw_strategy.dart'
@@ -58,54 +95,55 @@ export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
 export 'src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart'
     show TickDrawStrategy;
 export 'src/chart/cartesian/axis/numeric_extents.dart' show NumericExtents;
+export 'src/chart/cartesian/axis/tick.dart' show Tick;
+export 'src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
 export 'src/chart/cartesian/axis/spec/axis_spec.dart'
     show
-        AxisSpec,
-        LineStyleSpec,
-        RenderSpec,
-        TextStyleSpec,
-        TickLabelAnchor,
-        TickLabelJustification,
-        TickFormatterSpec,
-        TickProviderSpec;
+    AxisSpec,
+    LineStyleSpec,
+    RenderSpec,
+    TextStyleSpec,
+    TickLabelAnchor,
+    TickLabelJustification,
+    TickFormatterSpec,
+    TickProviderSpec;
 export 'src/chart/cartesian/axis/spec/bucketing_axis_spec.dart'
     show BucketingAxisSpec, BucketingNumericTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/date_time_axis_spec.dart'
     show
-        DateTimeAxisSpec,
-        DayTickProviderSpec,
-        AutoDateTimeTickFormatterSpec,
-        AutoDateTimeTickProviderSpec,
-        DateTimeEndPointsTickProviderSpec,
-        DateTimeTickFormatterSpec,
-        DateTimeTickProviderSpec,
-        BasicDateTimeTickFormatterSpec,
-        TimeFormatterSpec,
-        StaticDateTimeTickProviderSpec;
+    DateTimeAxisSpec,
+    DayTickProviderSpec,
+    AutoDateTimeTickFormatterSpec,
+    AutoDateTimeTickProviderSpec,
+    DateTimeEndPointsTickProviderSpec,
+    DateTimeTickFormatterSpec,
+    DateTimeTickProviderSpec,
+    BasicDateTimeTickFormatterSpec,
+    TimeFormatterSpec,
+    StaticDateTimeTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/end_points_time_axis_spec.dart'
     show EndPointsTimeAxisSpec;
 export 'src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
     show
-        NumericAxisSpec,
-        NumericEndPointsTickProviderSpec,
-        NumericTickProviderSpec,
-        NumericTickFormatterSpec,
-        BasicNumericTickFormatterSpec,
-        BasicNumericTickProviderSpec,
-        StaticNumericTickProviderSpec;
+    NumericAxisSpec,
+    NumericEndPointsTickProviderSpec,
+    NumericTickProviderSpec,
+    NumericTickFormatterSpec,
+    BasicNumericTickFormatterSpec,
+    BasicNumericTickProviderSpec,
+    StaticNumericTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
     show
-        BasicOrdinalTickProviderSpec,
-        BasicOrdinalTickFormatterSpec,
-        FixedPixelOrdinalScaleSpec,
-        FixedPixelSpaceOrdinalScaleSpec,
-        OrdinalAxisSpec,
-        OrdinalTickFormatterSpec,
-        OrdinalTickProviderSpec,
-        OrdinalScaleSpec,
-        RangeOrdinalTickProviderSpec,
-        SimpleOrdinalScaleSpec,
-        StaticOrdinalTickProviderSpec;
+    BasicOrdinalTickProviderSpec,
+    BasicOrdinalTickFormatterSpec,
+    FixedPixelOrdinalScaleSpec,
+    FixedPixelSpaceOrdinalScaleSpec,
+    OrdinalAxisSpec,
+    OrdinalTickFormatterSpec,
+    OrdinalTickProviderSpec,
+    OrdinalScaleSpec,
+    SimpleOrdinalScaleSpec,
+    StaticOrdinalTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/percent_axis_spec.dart'
     show PercentAxisSpec;
 export 'src/chart/cartesian/axis/spec/range_tick_spec.dart' show RangeTickSpec;
@@ -138,10 +176,10 @@ export 'src/chart/common/behavior/calculation/percent_injector.dart'
     show PercentInjector, PercentInjectorTotalType;
 export 'src/chart/common/behavior/chart_behavior.dart'
     show
-        BehaviorPosition,
-        ChartBehavior,
-        InsideJustification,
-        OutsideJustification;
+    BehaviorPosition,
+    ChartBehavior,
+    InsideJustification,
+    OutsideJustification;
 export 'src/chart/common/behavior/chart_title/chart_title.dart'
     show ChartTitle, ChartTitleDirection;
 export 'src/chart/common/behavior/domain_highlighter.dart'
@@ -160,14 +198,14 @@ export 'src/chart/common/behavior/line_point_highlighter.dart'
     show LinePointHighlighter, LinePointHighlighterFollowLineType;
 export 'src/chart/common/behavior/range_annotation.dart'
     show
-        AnnotationLabelAnchor,
-        AnnotationLabelDirection,
-        AnnotationLabelPosition,
-        AnnotationSegment,
-        LineAnnotationSegment,
-        RangeAnnotation,
-        RangeAnnotationAxisType,
-        RangeAnnotationSegment;
+    AnnotationLabelAnchor,
+    AnnotationLabelDirection,
+    AnnotationLabelPosition,
+    AnnotationSegment,
+    LineAnnotationSegment,
+    RangeAnnotation,
+    RangeAnnotationAxisType,
+    RangeAnnotationSegment;
 export 'src/chart/common/behavior/selection/lock_selection.dart'
     show LockSelection;
 export 'src/chart/common/behavior/selection/select_nearest.dart'
@@ -176,11 +214,11 @@ export 'src/chart/common/behavior/selection/selection_trigger.dart'
     show SelectionTrigger;
 export 'src/chart/common/behavior/slider/slider.dart'
     show
-        Slider,
-        SliderHandlePosition,
-        SliderListenerCallback,
-        SliderListenerDragState,
-        SliderStyle;
+    Slider,
+    SliderHandlePosition,
+    SliderListenerCallback,
+    SliderListenerDragState,
+    SliderStyle;
 export 'src/chart/common/behavior/sliding_viewport.dart' show SlidingViewport;
 export 'src/chart/common/behavior/sunburst_ring_expander.dart'
     show SunburstRingExpander;
@@ -203,10 +241,10 @@ export 'src/chart/common/processed_series.dart'
     show ImmutableSeries, MutableSeries;
 export 'src/chart/common/selection_model/selection_model.dart'
     show
-        MutableSelectionModel,
-        SelectionModel,
-        SelectionModelType,
-        SelectionModelListener;
+    MutableSelectionModel,
+    SelectionModel,
+    SelectionModelType,
+    SelectionModelListener;
 export 'src/chart/common/series_datum.dart' show SeriesDatum, SeriesDatumConfig;
 export 'src/chart/common/series_renderer.dart'
     show rendererIdKey, rendererKey, SeriesRenderer;
@@ -215,13 +253,13 @@ export 'src/chart/common/series_renderer_config.dart'
 export 'src/chart/layout/layout_config.dart' show LayoutConfig, MarginSpec;
 export 'src/chart/layout/layout_view.dart'
     show
-        LayoutPosition,
-        LayoutView,
-        LayoutViewConfig,
-        LayoutViewPaintOrder,
-        LayoutViewPositionOrder,
-        ViewMargin,
-        ViewMeasuredSizes;
+    LayoutPosition,
+    LayoutView,
+    LayoutViewConfig,
+    LayoutViewPaintOrder,
+    LayoutViewPositionOrder,
+    ViewMargin,
+    ViewMeasuredSizes;
 export 'src/chart/line/line_chart.dart' show LineChart;
 export 'src/chart/line/line_renderer.dart' show LineRenderer;
 export 'src/chart/line/line_renderer_config.dart' show LineRendererConfig;
@@ -234,12 +272,12 @@ export 'src/chart/scatter_plot/comparison_points_decorator.dart'
     show ComparisonPointsDecorator;
 export 'src/chart/scatter_plot/point_renderer.dart'
     show
-        boundsLineRadiusPxKey,
-        boundsLineRadiusPxFnKey,
-        pointSymbolRendererFnKey,
-        pointSymbolRendererIdKey,
-        PointRenderer,
-        PointRendererElement;
+    boundsLineRadiusPxKey,
+    boundsLineRadiusPxFnKey,
+    pointSymbolRendererFnKey,
+    pointSymbolRendererIdKey,
+    PointRenderer,
+    PointRendererElement;
 export 'src/chart/scatter_plot/point_renderer_config.dart'
     show PointRendererConfig;
 export 'src/chart/scatter_plot/point_renderer_decorator.dart'
@@ -278,15 +316,13 @@ export 'src/common/style/material_style.dart' show MaterialStyle;
 export 'src/common/style/style_factory.dart' show StyleFactory;
 export 'src/common/symbol_renderer.dart'
     show
-        CircleSymbolRenderer,
-        CylinderSymbolRenderer,
-        LineSymbolRenderer,
-        PointSymbolRenderer,
-        RectSymbolRenderer,
-        RectangleRangeSymbolRenderer,
-        RoundedRectSymbolRenderer,
-        SymbolRenderer,
-        TriangleSymbolRenderer;
+    CircleSymbolRenderer,
+    CylinderSymbolRenderer,
+    LineSymbolRenderer,
+    PointSymbolRenderer,
+    RectSymbolRenderer,
+    RoundedRectSymbolRenderer,
+    SymbolRenderer;
 export 'src/common/text_element.dart'
     show TextElement, TextDirection, MaxWidthStrategy;
 export 'src/common/text_measurement.dart' show TextMeasurement;

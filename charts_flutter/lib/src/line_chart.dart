@@ -28,11 +28,11 @@ import 'behaviors/line_point_highlighter.dart' show LinePointHighlighter;
 import 'behaviors/chart_behavior.dart' show ChartBehavior;
 import 'base_chart.dart' show LayoutConfig;
 import 'base_chart_state.dart' show BaseChartState;
-import 'cartesian_chart.dart' show CartesianChart;
+import 'cartesian_chart.dart' show BaseCartesianChart;
 import 'selection_model_config.dart' show SelectionModelConfig;
 import 'user_managed_state.dart' show UserManagedState;
 
-class LineChart extends CartesianChart<num> {
+class LineChart extends BaseCartesianChart<num> {
   LineChart(
     List<common.Series<dynamic, num>> seriesList, {
     bool? animate,
