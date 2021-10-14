@@ -39,7 +39,8 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   final bool roundEndCaps;
 
   BarTargetLineRendererConfig(
-      {String? customRendererId,
+      {int barGroupInnerPaddingPx = 2,
+      String? customRendererId,
       List<int>? dashPattern,
       BarGroupingType groupingType = BarGroupingType.grouped,
       int layoutPaintOrder = LayoutViewPaintOrder.barTargetLine,
@@ -51,6 +52,7 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
       SymbolRenderer? symbolRenderer,
       List<int>? weightPattern})
       : super(
+          barGroupInnerPaddingPx: barGroupInnerPaddingPx,
           customRendererId: customRendererId,
           dashPattern: dashPattern,
           groupingType: groupingType,

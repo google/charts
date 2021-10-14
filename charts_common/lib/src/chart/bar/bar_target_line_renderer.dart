@@ -43,7 +43,7 @@ import 'base_bar_renderer_element.dart'
 class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     _BarTargetLineRendererElement, _AnimatedBarTargetLine<D>> {
   /// If we are grouped, use this spacing between the bars in a group.
-  final _barGroupInnerPadding = 2;
+  final int _barGroupInnerPaddingPx;
 
   /// Standard color for all bar target lines.
   final _color = Color(r: 0, g: 0, b: 0, a: 153);
@@ -61,7 +61,8 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
   BarTargetLineRenderer._internal({
     required BarTargetLineRendererConfig<D> config,
     required String rendererId,
-  }) : super(
+  })  : _barGroupInnerPaddingPx = config.barGroupInnerPaddingPx,
+        super(
             config: config,
             rendererId: rendererId,
             layoutPaintOrder:
@@ -278,7 +279,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
     // Calculate how wide each bar target line should be within the group of
     // bar target lines. If we only have one series, or are stacked, then
     // barWidth should equal domainWidth.
-    var spacingLoss = _barGroupInnerPadding * (numBarGroups - 1);
+    var spacingLoss = _barGroupInnerPaddingPx * (numBarGroups - 1);
     var desiredWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
 
     if (maxBarWidthPx != null) {
@@ -322,7 +323,7 @@ class BarTargetLineRenderer<D> extends BaseBarRenderer<D,
 
     var domainStart = (domainAxis.getLocation(domainValue)! -
             (domainWidth / 2) +
-            (previousAverageWidth + _barGroupInnerPadding) *
+            (previousAverageWidth + _barGroupInnerPaddingPx) *
                 adjustedBarGroupIndex -
             overDrawStartPx)
         .round();
