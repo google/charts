@@ -42,7 +42,7 @@ class SquarifiedTreeMapRenderer<D> extends BaseTreeMapRenderer<D> {
   /// Squarified Treemaps:
   /// https://www.win.tue.nl/~vanwijk/stm.pdf
   /// Squarify algorithm from Charted:
-  /// https://cs.corp.google.com/piper///depot/google3/third_party/dart/charted/lib/layout/src/treemap_layout.dart?l=158
+  /// https://github.com/google/charted/blob/948ba890fc75e985b80ad0fc826cfc13ff55b633/lib/layout/src/treemap_layout.dart#L156
   @override
   void tile(TreeNode<Object> node) {
     final children = node.children;
