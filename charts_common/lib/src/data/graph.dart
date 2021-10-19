@@ -17,8 +17,13 @@ import 'dart:collection' show LinkedHashMap;
 import 'package:charts_common/src/chart/common/chart_canvas.dart';
 import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/common/typed_registry.dart';
+import 'graph_utils.dart';
 
 import 'series.dart' show AttributeKey, Series, TypedAccessorFn;
+
+// Used for readability to indicate where any indexed value can be returned
+// by a [TypedAccessorFn].
+const int indexNotRelevant = 0;
 
 class Graph<N, L, D> {
   /// Unique identifier for this graph
@@ -86,25 +91,25 @@ class Graph<N, L, D> {
       TypedAccessorFn<N, FillPatternType>? nodeFillPatternFn,
       TypedAccessorFn<N, num>? nodeStrokeWidthPxFn,
       TypedAccessorFn<L, Color>? linkFillColorFn}) {
-    return Graph._(
+    return Graph.base(
       id: id,
-      nodes: _convertGraphNodes<N, L, D>(
+      nodes: convertGraphNodes<N, L, D>(
           nodes, links, sourceFn, targetFn, nodeDomainFn),
-      links: _convertGraphLinks<N, L>(links, sourceFn, targetFn),
-      nodeDomainFn: _actOnNodeData<N, L, D>(nodeDomainFn)!,
-      linkDomainFn: _actOnLinkData<N, L, D>(linkDomainFn)!,
-      nodeMeasureFn: _actOnNodeData<N, L, num?>(nodeMeasureFn)!,
-      linkMeasureFn: _actOnLinkData<N, L, num?>(linkMeasureFn)!,
-      nodeColorFn: _actOnNodeData<N, L, Color>(nodeColorFn),
-      nodeFillColorFn: _actOnNodeData<N, L, Color>(nodeFillColorFn),
+      links: convertGraphLinks<N, L>(links, sourceFn, targetFn),
+      nodeDomainFn: actOnNodeData<N, L, D>(nodeDomainFn)!,
+      linkDomainFn: actOnLinkData<N, L, D>(linkDomainFn)!,
+      nodeMeasureFn: actOnNodeData<N, L, num?>(nodeMeasureFn)!,
+      linkMeasureFn: actOnLinkData<N, L, num?>(linkMeasureFn)!,
+      nodeColorFn: actOnNodeData<N, L, Color>(nodeColorFn),
+      nodeFillColorFn: actOnNodeData<N, L, Color>(nodeFillColorFn),
       nodeFillPatternFn:
-          _actOnNodeData<N, L, FillPatternType>(nodeFillPatternFn),
-      nodeStrokeWidthPxFn: _actOnNodeData<N, L, num>(nodeStrokeWidthPxFn),
-      linkFillColorFn: _actOnLinkData<N, L, Color>(linkFillColorFn),
+          actOnNodeData<N, L, FillPatternType>(nodeFillPatternFn),
+      nodeStrokeWidthPxFn: actOnNodeData<N, L, num>(nodeStrokeWidthPxFn),
+      linkFillColorFn: actOnLinkData<N, L, Color>(linkFillColorFn),
     );
   }
 
-  Graph._({
+  Graph.base({
     required this.id,
     required this.nodes,
     required this.links,
@@ -166,22 +171,8 @@ class Graph<N, L, D> {
   }
 }
 
-TypedAccessorFn<Node<N, L>, R>? _actOnNodeData<N, L, R>(
-    TypedAccessorFn<N, R>? f) {
-  return f == null
-      ? null
-      : (Node<N, L> node, int? index) => f(node.data, index);
-}
-
-TypedAccessorFn<Link<N, L>, R>? _actOnLinkData<N, L, R>(
-    TypedAccessorFn<L, R>? f) {
-  return f == null
-      ? null
-      : (Link<N, L> link, int? index) => f(link.data, index);
-}
-
 /// Return a list of links from the generic link data type
-List<Link<N, L>> _convertGraphLinks<N, L>(List<L> links,
+List<Link<N, L>> convertGraphLinks<N, L>(List<L> links,
     TypedAccessorFn<L, N> sourceFn, TypedAccessorFn<L, N> targetFn) {
   List<Link<N, L>> graphLinks = [];
   for (var i = 0; i < links.length; i++) {
@@ -193,53 +184,34 @@ List<Link<N, L>> _convertGraphLinks<N, L>(List<L> links,
 }
 
 /// Return a list of nodes from the generic node data type
-List<Node<N, L>> _convertGraphNodes<N, L, D>(
+List<Node<N, L>> convertGraphNodes<N, L, D>(
     List<N> nodes,
     List<L> links,
     TypedAccessorFn<L, N> sourceFn,
     TypedAccessorFn<L, N> targetFn,
     TypedAccessorFn<N, D> nodeDomainFn) {
   List<Node<N, L>> graphNodes = [];
-  List<Link<N, L>> graphLinks = _convertGraphLinks(links, sourceFn, targetFn);
-  TypedAccessorFn<Node<N, L>, D> nodeClassDomainFn =
-      _actOnNodeData<N, L, D>(nodeDomainFn)!;
-  LinkedHashMap<D, Node<N, L>> nodeMap = LinkedHashMap<D, Node<N, L>>();
+  var graphLinks = convertGraphLinks(links, sourceFn, targetFn);
+  var nodeClassDomainFn = actOnNodeData<N, L, D>(nodeDomainFn)!;
+  var nodeMap = LinkedHashMap<D, Node<N, L>>();
 
   // Populate nodeMap with user provided nodes
   for (var node in nodes) {
-    nodeMap.putIfAbsent(nodeDomainFn(node, 0), () => Node(node));
+    nodeMap.putIfAbsent(nodeDomainFn(node, indexNotRelevant), () => Node(node));
   }
 
   // Add ingoing and outgoing links to the nodes in nodeMap
   for (var link in graphLinks) {
-    nodeMap.update(nodeClassDomainFn(link.target, 0),
-        (node) => _addLinkToNode(node, link, isIncomingLink: true),
-        ifAbsent: () => _addLinkToAbsentNode(link, isIncomingLink: true));
-    nodeMap.update(nodeClassDomainFn(link.source, 0),
-        (node) => _addLinkToNode(node, link, isIncomingLink: false),
-        ifAbsent: () => _addLinkToAbsentNode(link, isIncomingLink: false));
+    nodeMap.update(nodeClassDomainFn(link.target, indexNotRelevant),
+        (node) => addLinkToNode(node, link, isIncomingLink: true),
+        ifAbsent: () => addLinkToAbsentNode(link, isIncomingLink: true));
+    nodeMap.update(nodeClassDomainFn(link.source, indexNotRelevant),
+        (node) => addLinkToNode(node, link, isIncomingLink: false),
+        ifAbsent: () => addLinkToAbsentNode(link, isIncomingLink: false));
   }
 
   nodeMap.forEach((domainId, node) => graphNodes.add(node));
   return graphNodes;
-}
-
-Node<N, L> _addLinkToNode<N, L>(Node<N, L> node, Link<N, L> link,
-    {required bool isIncomingLink}) {
-  if (isIncomingLink) {
-    node.incomingLinks.add(link);
-  } else {
-    node.outgoingLinks.add(link);
-  }
-
-  return node;
-}
-
-Node<N, L> _addLinkToAbsentNode<N, L>(Link<N, L> link,
-    {required bool isIncomingLink}) {
-  Node<N, L> node = isIncomingLink ? link.target : link.source;
-
-  return _addLinkToNode(node, link, isIncomingLink: isIncomingLink);
 }
 
 /// A registry that stores key-value pairs of attributes for nodes, links.

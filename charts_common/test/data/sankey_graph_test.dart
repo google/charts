@@ -14,7 +14,9 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart';
+
 import 'package:test/test.dart';
+
 import 'package:charts_common/src/data/graph.dart' as graph_structure
     show indexNotRelevant;
 
@@ -34,34 +36,35 @@ class MyLink {
   MyLink(this.domainId, this.sourceNode, this.targetNode, this.measure);
 }
 
-var myMockNodes = [
-  MyNode('Node 1', 4),
-  MyNode('Node 2', 5),
-  MyNode('Node 3', 6),
-];
+SankeyGraph<MyNode, MyLink, String> mockLinearGraph() {
+  var myNodes = [
+    MyNode('Node 1', 4),
+    MyNode('Node 2', 5),
+    MyNode('Node 3', 6),
+  ];
 
-var myMockLinks = [
-  MyLink('Link A', myMockNodes[0], myMockNodes[1], 1),
-  MyLink('Link B', myMockNodes[1], myMockNodes[2], 2),
-];
+  var myLinks = [
+    MyLink('Link A', myNodes[0], myNodes[1], 1),
+    MyLink('Link B', myNodes[1], myNodes[2], 2),
+  ];
 
-Graph<MyNode, MyLink, String> mockLinearGraph() {
-  var myGraph = Graph<MyNode, MyLink, String>(
+  SankeyGraph<MyNode, MyLink, String> myGraph = SankeyGraph(
       id: 'MyGraph',
-      nodes: myMockNodes,
-      links: myMockLinks,
+      nodes: myNodes,
+      links: myLinks,
       nodeDomainFn: (node, _) => node.domainId,
       linkDomainFn: (link, _) => link.domainId,
       sourceFn: (link, _) => link.sourceNode,
       targetFn: (link, _) => link.targetNode,
       nodeMeasureFn: (node, _) => node.measure,
-      linkMeasureFn: (link, _) => link.measure);
+      linkMeasureFn: (link, _) => link.measure,
+      secondaryLinkMeasureFn: (link, _) => 1);
 
   return myGraph;
 }
 
 void main() {
-  group('GraphDataClass', () {
+  group('SankeyGraphDataClass', () {
     test('returns null for null accessor functions', () {
       var myGraph = mockLinearGraph();
 
@@ -71,7 +74,7 @@ void main() {
       expect(myGraph.nodeStrokeWidthPxFn, null);
     });
 
-    test('converts generic node into standard graph node', () {
+    test('executes accessor functions on a given node', () {
       var myGraph = mockLinearGraph();
 
       expect(
@@ -79,26 +82,9 @@ void main() {
               myGraph.nodes[0], graph_structure.indexNotRelevant),
           'Node 1');
       expect(
-          myGraph.nodeDomainFn(
-              myGraph.nodes[1], graph_structure.indexNotRelevant),
-          'Node 2');
-      expect(
-          myGraph.nodeDomainFn(
-              myGraph.nodes[2], graph_structure.indexNotRelevant),
-          'Node 3');
-      expect(myGraph.nodes.length, 3);
-      expect(
           myGraph.nodeMeasureFn(
               myGraph.nodes[0], graph_structure.indexNotRelevant),
           4);
-      expect(
-          myGraph.nodeMeasureFn(
-              myGraph.nodes[1], graph_structure.indexNotRelevant),
-          5);
-      expect(
-          myGraph.nodeMeasureFn(
-              myGraph.nodes[2], graph_structure.indexNotRelevant),
-          6);
     });
 
     test('executes accessor functions on a given link', () {
@@ -114,7 +100,7 @@ void main() {
           1);
     });
 
-    test('converts generic link into standard graph link', () {
+    test('converts generic link into sankey graph link', () {
       var myGraph = mockLinearGraph();
 
       expect(
@@ -127,26 +113,10 @@ void main() {
               myGraph.links[0].target, graph_structure.indexNotRelevant),
           myGraph.nodeDomainFn(
               myGraph.nodes[1], graph_structure.indexNotRelevant));
-      expect(
-          myGraph.linkDomainFn(
-              myGraph.links[0], graph_structure.indexNotRelevant),
-          'Link A');
-      expect(
-          myGraph.linkDomainFn(
-              myGraph.links[1], graph_structure.indexNotRelevant),
-          'Link B');
-      expect(
-          myGraph.linkMeasureFn(
-              myGraph.links[0], graph_structure.indexNotRelevant),
-          1);
-      expect(
-          myGraph.linkMeasureFn(
-              myGraph.links[1], graph_structure.indexNotRelevant),
-          2);
-      expect(myGraph.links.length, 2);
+      expect(myGraph.links[0].secondaryLinkMeasure, 1);
     });
 
-    test('add ingoing and outgoing links to node', () {
+    test('converts generic node into sankey graph node', () {
       var myGraph = mockLinearGraph();
 
       expect(myGraph.nodes[0].incomingLinks.length, 0);
@@ -168,7 +138,7 @@ void main() {
       expect(myGraph.nodes[2].outgoingLinks.length, 0);
     });
 
-    test('preserves graph specific data when converting to series', () {
+    test('converts sankey graph data to series data', () {
       var myNodes = [
         MyNode('Node 1', 4),
         MyNode('Node 2', 5),
@@ -178,7 +148,7 @@ void main() {
         MyLink('Link A', myNodes[0], myNodes[1], 1),
       ];
 
-      var myGraph = Graph<MyNode, MyLink, String>(
+      var myGraph = SankeyGraph<MyNode, MyLink, String>(
           id: 'MyGraph',
           nodes: myNodes,
           links: myLinks,
@@ -187,7 +157,8 @@ void main() {
           sourceFn: (link, _) => link.sourceNode,
           targetFn: (link, _) => link.targetNode,
           nodeMeasureFn: (node, _) => node.measure,
-          linkMeasureFn: (link, _) => link.measure);
+          linkMeasureFn: (link, _) => link.measure,
+          secondaryLinkMeasureFn: (link, _) => 1);
 
       List<Series<dynamic, String>> mySeriesList = myGraph.toSeriesList();
 
@@ -206,6 +177,7 @@ void main() {
               mySeriesList[1].data[0].target, graph_structure.indexNotRelevant),
           'Node 2');
       expect(mySeriesList[0].data[0].incomingLinks.length, 0);
+      expect(mySeriesList[1].data[0].secondaryLinkMeasure, 1);
       expect(
           myGraph.linkDomainFn(mySeriesList[0].data[0].outgoingLinks[0],
               graph_structure.indexNotRelevant),
