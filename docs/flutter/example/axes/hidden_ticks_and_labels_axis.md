@@ -14,6 +14,7 @@ class HiddenTicksAndLabelsAxis extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
 
+
   HiddenTicksAndLabelsAxis(this.seriesList, {this.animate});
 
   factory HiddenTicksAndLabelsAxis.withSampleData() {
@@ -23,8 +24,6 @@ class HiddenTicksAndLabelsAxis extends StatelessWidget {
       animate: false,
     );
   }
-
-
   @override
   Widget build(BuildContext context) {
     return new charts.BarChart(
