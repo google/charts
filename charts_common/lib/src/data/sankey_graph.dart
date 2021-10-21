@@ -14,14 +14,13 @@
 // limitations under the License.
 import 'dart:collection' show LinkedHashMap;
 
-import 'package:charts_common/src/common/color.dart';
-import 'package:charts_common/src/chart/common/chart_canvas.dart'
-    show FillPatternType;
+import 'package:meta/meta.dart';
 
-import 'series.dart' show TypedAccessorFn;
-
+import '../chart/common/chart_canvas.dart' show FillPatternType;
+import '../common/color.dart';
 import 'graph.dart';
 import 'graph_utils.dart';
+import 'series.dart' show TypedAccessorFn;
 
 /// Directed acyclic graph with Sankey diagram related data.
 class SankeyGraph<N, L, D> extends Graph<N, L, D> {
@@ -143,6 +142,60 @@ List<SankeyNode<N, L>> _convertSankeyNodes<N, L, D>(
   return graphNodes;
 }
 
+/// Returns a list of nodes sorted topologically for a directed acyclic graph.
+@visibleForTesting
+List<Node<N, L>> topologicalNodeSort<N, L, D>(
+    List<Node<N, L>> givenNodes,
+    TypedAccessorFn<Node<N, L>, D> nodeDomainFn,
+    TypedAccessorFn<Link<N, L>, D> linkDomainFn) {
+  var nodeMap = <D, Node<N, L>>{};
+  var givenNodeMap = <D, Node<N, L>>{};
+  var sortedNodes = <Node<N, L>>[];
+  var sourceNodes = <Node<N, L>>[];
+  var nodes = _cloneNodeList(givenNodes);
+
+  for (var i = 0; i < nodes.length; i++) {
+    nodeMap.putIfAbsent(
+        nodeDomainFn(nodes[i], indexNotRelevant), () => nodes[i]);
+    givenNodeMap.putIfAbsent(
+        nodeDomainFn(givenNodes[i], indexNotRelevant), () => givenNodes[i]);
+    if (nodes[i].incomingLinks.isEmpty) {
+      sourceNodes.add(nodes[i]);
+    }
+  }
+
+  while (sourceNodes.isNotEmpty) {
+    var source = sourceNodes.removeLast();
+    sortedNodes.add(
+        givenNodeMap[nodeDomainFn(source, indexNotRelevant)] as Node<N, L>);
+    while (source.outgoingLinks.isNotEmpty) {
+      var toRemove = source.outgoingLinks.removeLast();
+      nodeMap[nodeDomainFn(toRemove.target, indexNotRelevant)]
+          ?.incomingLinks
+          .removeWhere((link) =>
+              linkDomainFn(link, indexNotRelevant) ==
+              linkDomainFn(toRemove, indexNotRelevant));
+      if (nodeMap[nodeDomainFn(toRemove.target, indexNotRelevant)]!
+          .incomingLinks
+          .isEmpty) {
+        sourceNodes.add(nodeMap[nodeDomainFn(toRemove.target, indexNotRelevant)]
+            as Node<N, L>);
+      }
+    }
+  }
+
+  if (nodeMap.values.any((node) =>
+      node.incomingLinks.isNotEmpty || node.outgoingLinks.isNotEmpty)) {
+    throw UnsupportedError(graphCycleErrorMsg);
+  }
+
+  return sortedNodes;
+}
+
+List<Node<N, L>> _cloneNodeList<N, L>(List<Node<N, L>> nodeList) {
+  return nodeList.map((node) => Node.clone(node)).toList();
+}
+
 SankeyNode<N, L> _addLinkToSankeyNode<N, L>(
     SankeyNode<N, L> node, SankeyLink<N, L> link,
     {required bool isIncomingLink}) {
@@ -162,14 +215,20 @@ SankeyNode<N, L> _addLinkToAbsentSankeyNode<N, L>(SankeyLink<N, L> link,
 /// [SankeyGraph] is directed and acyclic. These cannot be stored on a [Series].
 class SankeyNode<N, L> extends Node<N, L> {
   /// Number of links from node to nearest root.
+  ///
   /// Calculated from graph structure.
   int? depth;
 
   /// Number of links on the longest path to a leaf node.
+  ///
   /// Calculated from graph structure.
   int? height;
 
   /// The column this node occupies in the Sankey graph.
+  ///
+  /// Sankey column may or may not be equal to depth. It can be assigned to
+  /// height or defined to align nodes left or right, depending on if they are
+  /// roots or leaves.
   int? column;
 
   SankeyNode(N data,
@@ -187,6 +246,7 @@ class SankeyNode<N, L> extends Node<N, L> {
 /// [SankeyLink] for variable links since it cannot be stored on a [Series].
 class SankeyLink<N, L> extends Link<N, L> {
   /// Measure of a link at the target node if the link has variable value.
+  ///
   /// Standard series measure will be the source value.
   num? secondaryLinkMeasure;
 

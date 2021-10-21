@@ -14,11 +14,10 @@
 // limitations under the License.
 import 'dart:collection' show LinkedHashMap;
 
-import 'package:charts_common/src/chart/common/chart_canvas.dart';
-import 'package:charts_common/src/common/color.dart';
-import 'package:charts_common/src/common/typed_registry.dart';
+import '../chart/common/chart_canvas.dart';
+import '../common/color.dart';
+import '../common/typed_registry.dart';
 import 'graph_utils.dart';
-
 import 'series.dart' show AttributeKey, Series, TypedAccessorFn;
 
 // Used for readability to indicate where any indexed value can be returned
@@ -214,11 +213,13 @@ List<Node<N, L>> convertGraphNodes<N, L, D>(
   return graphNodes;
 }
 
-/// A registry that stores key-value pairs of attributes for nodes, links.
+/// A registry that stores key-value pairs of attributes for nodes.
 class NodeAttributes extends TypedRegistry {}
 
+/// A registry that stores key-value pairs of attributes for links.
 class LinkAttributes extends TypedRegistry {}
 
+/// A node in a graph containing user defined data and connected links.
 class Node<N, L> extends GraphElement<N> {
   /// All links that flow into this SankeyNode. Calculated from graph links.
   List<Link<N, L>> incomingLinks;
@@ -233,8 +234,18 @@ class Node<N, L> extends GraphElement<N> {
   })  : incomingLinks = incomingLinks ?? [],
         outgoingLinks = outgoingLinks ?? [],
         super(data);
+
+  /// Return.a new copy of a node with all associated links.
+  Node.clone(Node<N, L> node)
+      : this(node.data,
+            incomingLinks: _cloneLinkList<N, L>(node.incomingLinks),
+            outgoingLinks: _cloneLinkList<N, L>(node.outgoingLinks));
+
+  /// Return a new copy of a node with user defined data only, no links.
+  Node.cloneData(Node<N, L> node) : this(node.data);
 }
 
+/// A link in a graph connecting a source node and target node.
 class Link<N, L> extends GraphElement<L> {
   /// The source Node for this Link.
   final Node<N, L> source;
@@ -243,8 +254,17 @@ class Link<N, L> extends GraphElement<L> {
   final Node<N, L> target;
 
   Link(this.source, this.target, L data) : super(data);
+
+  Link.clone(Link<N, L> link)
+      : this(Node.cloneData(link.source), Node.cloneData(link.target),
+            link.data);
 }
 
+List<Link<N, L>> _cloneLinkList<N, L>(List<Link<N, L>> linkList) {
+  return linkList.map((link) => Link.clone(link)).toList();
+}
+
+/// A [Link] or [Node] elmeent in a graph containing user defined data.
 abstract class GraphElement<G> {
   /// Data associated with this graph element
   final G data;

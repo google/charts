@@ -13,8 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'series.dart' show TypedAccessorFn;
 import 'graph.dart';
+import 'series.dart' show TypedAccessorFn;
+
+const graphCycleErrorMsg = 'The given graph contains a cycle.';
 
 /// If the node accessor is not null return a function to act on a graph [Node].
 TypedAccessorFn<Node<N, L>, R>? actOnNodeData<N, L, R>(

@@ -14,11 +14,33 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart';
-
+import 'package:charts_common/src/data/graph.dart' as graph_structure
+    show indexNotRelevant, Node;
+import 'package:charts_common/src/data/sankey_graph.dart';
 import 'package:test/test.dart';
 
-import 'package:charts_common/src/data/graph.dart' as graph_structure
-    show indexNotRelevant;
+const nodeIds = [
+  'Node 0',
+  'Node 1',
+  'Node 2',
+  'Node 3',
+  'Node 4',
+  'Node 5',
+  'Node 6',
+];
+
+const linkIds = [
+  'Link 0',
+  'Link 1',
+  'Link 2',
+  'Link 3',
+  'Link 4',
+  'Link 5',
+  'Link 6',
+  'Link 7',
+  'Link 8',
+  'Link 9',
+];
 
 class MyNode {
   final String domainId;
@@ -63,7 +85,145 @@ SankeyGraph<MyNode, MyLink, String> mockLinearGraph() {
   return myGraph;
 }
 
+String nodeDomain(Graph<MyNode, MyLink, String> myGraph,
+        graph_structure.Node<MyNode, MyLink> node) =>
+    myGraph.nodeDomainFn(node, graph_structure.indexNotRelevant);
+
 void main() {
+  group('GraphTopologyFunctions', () {
+    test('sort a simple graph', () {
+      var myGraph = mockLinearGraph();
+      var simpleSort = topologicalNodeSort(
+          myGraph.nodes, myGraph.nodeDomainFn, myGraph.linkDomainFn);
+      expect(simpleSort.map((node) => nodeDomain(myGraph, node)).toList(),
+          [nodeIds[1], nodeIds[2], nodeIds[3]]);
+    });
+
+    test('returns one of many valid topological sorts for complex graph', () {
+      var myNodes = [
+        MyNode(nodeIds[1], 4),
+        MyNode(nodeIds[2], 5),
+        MyNode(nodeIds[3], 6),
+        MyNode(nodeIds[4], 7),
+        MyNode(nodeIds[5], 8),
+        MyNode(nodeIds[6], 9),
+      ];
+
+      var myLinks = [
+        MyLink(linkIds[1], myNodes[5], myNodes[0], 1),
+        MyLink(linkIds[2], myNodes[4], myNodes[0], 2),
+        MyLink(linkIds[3], myNodes[5], myNodes[2], 1),
+        MyLink(linkIds[4], myNodes[4], myNodes[1], 1),
+        MyLink(linkIds[5], myNodes[2], myNodes[3], 1),
+        MyLink(linkIds[6], myNodes[3], myNodes[1], 2),
+      ];
+
+      var myGraph = Graph<MyNode, MyLink, String>(
+          id: 'MyGraph',
+          nodes: myNodes,
+          links: myLinks,
+          nodeDomainFn: (node, _) => node.domainId,
+          linkDomainFn: (link, _) => link.domainId,
+          sourceFn: (link, _) => link.sourceNode,
+          targetFn: (link, _) => link.targetNode,
+          nodeMeasureFn: (node, _) => node.measure,
+          linkMeasureFn: (link, _) => link.measure);
+
+      var multiSort = topologicalNodeSort(
+          myGraph.nodes, myGraph.nodeDomainFn, myGraph.linkDomainFn);
+
+      var firstIndex = multiSort
+          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[1]);
+      var secondIndex = multiSort
+          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[2]);
+      var thirdIndex = multiSort
+          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[3]);
+      var fourthIndex = multiSort
+          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[4]);
+      var fifthIndex = multiSort
+          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[5]);
+      var sixthIndex = multiSort
+          .indexWhere((node) => nodeDomain(myGraph, node) == nodeIds[6]);
+
+      expect([
+        firstIndex > sixthIndex,
+        firstIndex > fifthIndex,
+        thirdIndex > sixthIndex,
+        fourthIndex > thirdIndex,
+        secondIndex > fourthIndex,
+        secondIndex > fifthIndex
+      ], everyElement(isTrue));
+    });
+
+    test('throws UnsupportedError when graph contains a cycle', () {
+      var myNodes = [
+        MyNode(nodeIds[1], 4),
+        MyNode(nodeIds[2], 5),
+        MyNode(nodeIds[3], 6),
+      ];
+
+      var myLinks = [
+        MyLink(linkIds[1], myNodes[0], myNodes[1], 1),
+        MyLink(linkIds[2], myNodes[1], myNodes[2], 2),
+        MyLink(linkIds[3], myNodes[2], myNodes[0], 3),
+      ];
+
+      var myGraph = Graph<MyNode, MyLink, String>(
+          id: 'MyGraph',
+          nodes: myNodes,
+          links: myLinks,
+          nodeDomainFn: (node, _) => node.domainId,
+          linkDomainFn: (link, _) => link.domainId,
+          sourceFn: (link, _) => link.sourceNode,
+          targetFn: (link, _) => link.targetNode,
+          nodeMeasureFn: (node, _) => node.measure,
+          linkMeasureFn: (link, _) => link.measure);
+
+      expect(
+          () => topologicalNodeSort(
+              myGraph.nodes, myGraph.nodeDomainFn, myGraph.linkDomainFn),
+          throwsUnsupportedError);
+    });
+
+    test('throws UnsupportedError when graph contains long cycle', () {
+      var myNodes = [
+        MyNode(nodeIds[1], 4),
+        MyNode(nodeIds[2], 5),
+        MyNode(nodeIds[3], 6),
+        MyNode(nodeIds[4], 7),
+        MyNode(nodeIds[5], 8),
+        MyNode(nodeIds[6], 9),
+      ];
+
+      var myLinks = [
+        MyLink(linkIds[1], myNodes[5], myNodes[0], 1),
+        MyLink(linkIds[2], myNodes[4], myNodes[0], 2),
+        MyLink(linkIds[3], myNodes[5], myNodes[2], 1),
+        MyLink(linkIds[4], myNodes[4], myNodes[1], 1),
+        MyLink(linkIds[5], myNodes[2], myNodes[3], 1),
+        MyLink(linkIds[6], myNodes[3], myNodes[1], 2),
+        MyLink(linkIds[7], myNodes[1], myNodes[0], 1),
+        MyLink(linkIds[8], myNodes[0], myNodes[2], 1),
+      ];
+
+      var myGraph = Graph<MyNode, MyLink, String>(
+          id: 'MyGraph',
+          nodes: myNodes,
+          links: myLinks,
+          nodeDomainFn: (node, _) => node.domainId,
+          linkDomainFn: (link, _) => link.domainId,
+          sourceFn: (link, _) => link.sourceNode,
+          targetFn: (link, _) => link.targetNode,
+          nodeMeasureFn: (node, _) => node.measure,
+          linkMeasureFn: (link, _) => link.measure);
+
+      expect(
+          () => topologicalNodeSort(
+              myGraph.nodes, myGraph.nodeDomainFn, myGraph.linkDomainFn),
+          throwsUnsupportedError);
+    });
+  });
+
   group('SankeyGraphDataClass', () {
     test('returns null for null accessor functions', () {
       var myGraph = mockLinearGraph();
