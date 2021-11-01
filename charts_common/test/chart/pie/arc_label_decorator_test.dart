@@ -168,7 +168,7 @@ void main() {
       expect(captured[2],
           equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
       // For arc 'B'.
-      expect(captured[3].maxWidth, equals(80));
+      expect(captured[3].maxWidth, equals(20));
       expect(captured[3].textDirection, equals(TextDirection.rtl));
       expect(
           captured[4],
@@ -236,7 +236,7 @@ void main() {
       final captured =
           verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
       expect(captured, hasLength(3));
-      expect(captured[0].maxWidth, equals(40));
+      expect(captured[0].maxWidth, equals(20));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
       expect(
           captured[1],
@@ -293,7 +293,7 @@ void main() {
       expect(captured[2],
           equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
       // For arc 'B'.
-      expect(captured[3].maxWidth, equals(90));
+      expect(captured[3].maxWidth, equals(30));
       expect(captured[3].textDirection, equals(TextDirection.rtl));
       expect(captured[3].textStyle.fontFamily, equals('outsideFont'));
       expect(captured[3].textStyle.color, equals(outsideColor));

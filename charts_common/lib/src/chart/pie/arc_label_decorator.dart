@@ -143,15 +143,12 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
         final centerRadius = arcElements.innerRadius +
             ((arcElements.radius - arcElements.innerRadius) / 2);
 
-        final innerPoint = Point<double>(
-            arcElements.center.x + arcElements.innerRadius * cos(centerAngle),
-            arcElements.center.y + arcElements.innerRadius * sin(centerAngle));
-
         final outerPoint = Point<double>(
             arcElements.center.x + arcElements.radius * cos(centerAngle),
             arcElements.center.y + arcElements.radius * sin(centerAngle));
 
-        final bounds = Rectangle<double>.fromPoints(innerPoint, outerPoint);
+        final bounds =
+            Rectangle<double>.fromPoints(arcElements.center, outerPoint);
 
         // Get space available inside and outside the arc.
         final totalPadding = labelPadding * 2;
@@ -167,7 +164,8 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
         final outsideArcWidth = ((drawBounds.width / 2) -
                 bounds.width -
                 totalPadding -
-                leaderLineLength)
+                // Half of the leader line is drawn inside the arc
+                leaderLineLength / 2)
             .round();
 
         final labelElement = graphicsFactory.createTextElement(label)
@@ -331,7 +329,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       // Shift the label horizontally by the length of the leader line.
       labelX = (labelX + tailX).round();
 
-      labelElement.maxWidth = (labelElement.maxWidth! - tailX).round();
+      labelElement.maxWidth = (labelElement.maxWidth! - tailX.abs()).round();
     }
 
     canvas.drawText(labelElement, labelX, labelY);
