@@ -1,3 +1,12 @@
+# 0.12.0
+* Expose `NumericScale`, `LinearScale` and `ScaleSpec`
+* Add functions to draw horizontal or vertical links.
+* Added more padding options.
+* Create `AutoAdjustingStatickTickProvider` for bar charts.
+* Add generic graph class initializers.
+* Add ingoing and outgoing node links and toSeriesList conversion.
+* Bug fixes.
+
 # 0.11.0
 * Null support
 * Update to latest from internal repo
