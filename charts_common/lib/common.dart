@@ -16,7 +16,12 @@
 export 'src/chart/bar/bar_chart.dart' show BarChart;
 export 'src/chart/bar/bar_error_decorator.dart' show BarErrorDecorator;
 export 'src/chart/bar/bar_label_decorator.dart'
-    show BarLabelAnchor, BarLabelDecorator, BarLabelPlacement, BarLabelPosition;
+    show
+        BarLabelAnchor,
+        BarLabelDecorator,
+        BarLabelPlacement,
+        BarLabelPosition,
+        BarLabelVerticalPosition;
 export 'src/chart/bar/bar_lane_renderer_config.dart' show BarLaneRendererConfig;
 export 'src/chart/bar/bar_renderer.dart'
     show BarRenderer, BarRendererElement, ImmutableBarRendererElement;
@@ -57,12 +62,15 @@ export 'src/chart/cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
 export 'src/chart/cartesian/axis/draw_strategy/tick_draw_strategy.dart'
     show TickDrawStrategy;
+export 'src/chart/cartesian/axis/linear/linear_scale.dart' show LinearScale;
 export 'src/chart/cartesian/axis/numeric_extents.dart' show NumericExtents;
+export 'src/chart/cartesian/axis/numeric_scale.dart' show NumericScale;
 export 'src/chart/cartesian/axis/spec/axis_spec.dart'
     show
         AxisSpec,
         LineStyleSpec,
         RenderSpec,
+        ScaleSpec,
         TextStyleSpec,
         TickLabelAnchor,
         TickLabelJustification,
@@ -95,6 +103,7 @@ export 'src/chart/cartesian/axis/spec/numeric_axis_spec.dart'
         StaticNumericTickProviderSpec;
 export 'src/chart/cartesian/axis/spec/ordinal_axis_spec.dart'
     show
+        AutoAdjustingStaticOrdinalTickProviderSpec,
         BasicOrdinalTickProviderSpec,
         BasicOrdinalTickFormatterSpec,
         FixedPixelOrdinalScaleSpec,
@@ -195,7 +204,7 @@ export 'src/chart/common/behavior/zoom/panning_tick_provider.dart'
 export 'src/chart/common/canvas_shapes.dart'
     show CanvasBarStack, CanvasPie, CanvasPieSlice, CanvasRect;
 export 'src/chart/common/chart_canvas.dart'
-    show ChartCanvas, FillPatternType, BlendMode;
+    show ChartCanvas, FillPatternType, BlendMode, LinkOrientation, Link;
 export 'src/chart/common/chart_context.dart' show ChartContext;
 export 'src/chart/common/datum_details.dart'
     show DatumDetails, DomainFormatter, MeasureFormatter;
@@ -263,7 +272,11 @@ export 'src/chart/treemap/treemap_label_decorator.dart'
     show TreeMapLabelDecorator;
 export 'src/chart/treemap/treemap_renderer_config.dart'
     show TreeMapRendererConfig, TreeMapTileType;
+export 'src/chart/sankey/sankey_chart.dart' show SankeyChart;
+export 'src/chart/sankey/sankey_renderer_config.dart' show SankeyRendererConfig;
 export 'src/common/color.dart' show Color;
+export 'src/chart/link/link_chart.dart' show LinkChart;
+export 'src/chart/link/link_renderer_config.dart' show LinkRendererConfig;
 export 'src/common/date_time_factory.dart'
     show DateTimeFactory, LocalDateTimeFactory, UTCDateTimeFactory;
 export 'src/common/gesture_listener.dart' show GestureListener;
@@ -293,6 +306,8 @@ export 'src/common/text_measurement.dart' show TextMeasurement;
 export 'src/common/text_style.dart' show TextStyle;
 export 'src/data/series.dart' show AttributeKey, Series, TypedAccessorFn;
 export 'src/data/tree.dart' show Tree, TreeNode;
+export 'src/data/graph.dart' show Graph;
+export 'src/data/sankey_graph.dart' show SankeyGraph;
 //
 // DO NOT ADD ANYTHING BELOW THIS. IT WILL BREAK OPENSOURCE.
 //

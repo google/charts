@@ -29,10 +29,14 @@ import 'time/date_time_scale.dart' show DateTimeScale;
 ///
 /// The [TextStyle] is not overridden during [TickDrawStrategy.decorateTicks].
 /// If the [TickSpec] style is null, then the default [TextStyle] is used.
+///
+/// Optionally the [tickIncrement] can be provided in which case every Nth tick
+/// is selected.
 class StaticTickProvider<D> extends TickProvider<D> {
   final List<TickSpec<D>> tickSpec;
+  final int tickIncrement;
 
-  StaticTickProvider(this.tickSpec);
+  StaticTickProvider(this.tickSpec, {this.tickIncrement = 1});
 
   @override
   List<Tick<D>> getTicks({
@@ -69,7 +73,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
           stepSize: scale.domainStepSize);
     }
 
-    for (var i = 0; i < tickSpec.length; i++) {
+    for (var i = 0; i < tickSpec.length; i += tickIncrement) {
       final spec = tickSpec[i];
       // We still check if the spec is within the viewport because we do not
       // extend the axis for OrdinalScale.

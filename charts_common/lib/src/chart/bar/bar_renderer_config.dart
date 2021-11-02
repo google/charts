@@ -30,6 +30,7 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
   final BarRendererDecorator<D>? barRendererDecorator;
 
   BarRendererConfig({
+    int barGroupInnerPaddingPx = 2,
     String? customRendererId,
     CornerStrategy? cornerStrategy,
     FillPatternType? fillPattern,
@@ -44,6 +45,7 @@ class BarRendererConfig<D> extends BaseBarRendererConfig<D> {
     List<int>? weightPattern,
   })  : cornerStrategy = cornerStrategy ?? const ConstCornerStrategy(2),
         super(
+          barGroupInnerPaddingPx: barGroupInnerPaddingPx,
           customRendererId: customRendererId,
           groupingType: groupingType ?? BarGroupingType.grouped,
           layoutPaintOrder: layoutPaintOrder,

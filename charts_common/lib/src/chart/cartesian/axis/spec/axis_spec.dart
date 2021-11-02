@@ -19,8 +19,8 @@ import '../../../../common/color.dart' show Color;
 import '../../../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../../common/chart_context.dart' show ChartContext;
 import '../axis.dart' show Axis;
-import '../scale.dart' show Scale, MutableScale;
 import '../draw_strategy/tick_draw_strategy.dart' show TickDrawStrategy;
+import '../scale.dart' show Scale, MutableScale;
 import '../tick_formatter.dart' show TickFormatter;
 import '../tick_provider.dart' show TickProvider;
 
@@ -102,7 +102,7 @@ class AxisSpec<D> {
     hashcode = (hashcode * 37) + tickProviderSpec.hashCode;
     hashcode = (hashcode * 37) + tickFormatterSpec.hashCode;
     hashcode = (hashcode * 37) + showAxisLine.hashCode;
-    hashcode = (hashCode * 37) + scaleSpec.hashCode;
+    hashcode = (hashcode * 37) + scaleSpec.hashCode;
     return hashcode;
   }
 }

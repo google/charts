@@ -32,6 +32,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   static const _defaultLabelPlacement = BarLabelPlacement.followMeasureAxis;
   static const _defaultHorizontalLabelAnchor = BarLabelAnchor.start;
   static const _defaultVerticalLabelAnchor = BarLabelAnchor.end;
+  static const _defaultlabelVerticalPosition = BarLabelVerticalPosition.middle;
   static final _defaultInsideLabelStyle =
       TextStyleSpec(fontSize: 12, color: Color.white);
   static final _defaultOutsideLabelStyle =
@@ -54,17 +55,21 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
   /// For labels drawn inside the bar, configures label anchor position.
   final BarLabelAnchor? labelAnchor;
 
+  /// For labels on horizontal bars, configures the label's vertical position.
+  final BarLabelVerticalPosition? labelVerticalPosition;
+
   /// Space before and after the label text.
   final int labelPadding;
 
-  BarLabelDecorator(
-      {TextStyleSpec? insideLabelStyleSpec,
-      TextStyleSpec? outsideLabelStyleSpec,
-      this.labelAnchor,
-      this.labelPosition = _defaultLabelPosition,
-      this.labelPlacement = _defaultLabelPlacement,
-      this.labelPadding = _defaultLabelPadding})
-      : insideLabelStyleSpec = insideLabelStyleSpec ?? _defaultInsideLabelStyle,
+  BarLabelDecorator({
+    TextStyleSpec? insideLabelStyleSpec,
+    TextStyleSpec? outsideLabelStyleSpec,
+    this.labelAnchor,
+    this.labelPosition = _defaultLabelPosition,
+    this.labelPlacement = _defaultLabelPlacement,
+    this.labelPadding = _defaultLabelPadding,
+    this.labelVerticalPosition = _defaultlabelVerticalPosition,
+  })  : insideLabelStyleSpec = insideLabelStyleSpec ?? _defaultInsideLabelStyle,
         outsideLabelStyleSpec =
             outsideLabelStyleSpec ?? _defaultOutsideLabelStyle;
 
@@ -287,16 +292,19 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
         labelElement.textStyle = datumInsideLabelStyle;
         labelElement.maxWidth = insideBarWidth;
       } else {
-        // calculatedLabelPosition == LabelPosition.outside
+        // this block for...
+        // calculatedLabelPosition == LabelPosition.outside ||
+        // calculatedLabelPosition == LabelPosition.right
         labelElement.textStyle = datumOutsideLabelStyle;
         labelElement.maxWidth = outsideBarWidth;
       }
 
       // Only calculate and draw label if there's actually space for the label.
-      if (labelElement.maxWidth! < 0 ||
-          (labelElement.maxWidthStrategy == null &&
-              labelElement.measurement.horizontalSliceWidth >
-                  labelElement.maxWidth!)) {
+      if ((labelElement.maxWidth! < 0 ||
+              (labelElement.maxWidthStrategy == null &&
+                  labelElement.measurement.horizontalSliceWidth >
+                      labelElement.maxWidth!)) &&
+          labelVerticalPosition != BarLabelVerticalPosition.top) {
         return;
       }
 
@@ -331,8 +339,7 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
             }
             break;
         }
-      } else {
-        // calculatedLabelPosition == LabelPosition.outside
+      } else if (calculatedLabelPosition == BarLabelPosition.outside) {
         if (measure < 0 &&
             labelPlacement == BarLabelPlacement.opposeAxisBaseline) {
           labelX = bounds.left - labelPadding;
@@ -341,13 +348,35 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
           labelX = bounds.right + labelPadding;
           labelElement.textDirection = TextDirection.ltr;
         }
+      } else {
+        // calculatedLabelPosition == BarLabelPosition.right
+        if (measure < 0) {
+          labelX =
+              (bounds.right - labelElement.measurement.horizontalSliceWidth)
+                  .round();
+        } else {
+          labelX = (bounds.left +
+                  drawBounds.width -
+                  labelElement.measurement.horizontalSliceWidth)
+              .round();
+        }
       }
 
-      // Center the label inside the bar.
-      final labelY = (bounds.top +
-              (bounds.bottom - bounds.top) / 2 -
-              labelElement.measurement.verticalSliceWidth / 2)
-          .round();
+      // Calculate label's y position based on BarLabelVerticalPosition.
+      final labelY;
+      if (labelVerticalPosition == BarLabelVerticalPosition.middle) {
+        // Center the label inside the bar.
+        labelY = (bounds.top +
+                (bounds.bottom - bounds.top) / 2 -
+                labelElement.measurement.verticalSliceWidth / 2)
+            .round();
+      } else {
+        /// labelVerticalPosition == BarLabelVerticalPosition.top
+        labelY = (bounds.top -
+                labelElement.measurement.verticalSliceWidth -
+                labelPadding)
+            .round();
+      }
 
       canvas.drawText(labelElement, labelX, labelY);
     }
@@ -368,7 +397,8 @@ class BarLabelDecorator<D> extends BarRendererDecorator<D> {
       ..color = labelSpec?.color ?? Color.black
       ..fontFamily = labelSpec?.fontFamily
       ..fontSize = labelSpec?.fontSize ?? 12
-      ..lineHeight = labelSpec?.lineHeight;
+      ..lineHeight = labelSpec?.lineHeight
+      ..fontWeight = labelSpec?.fontWeight ?? "400";
   }
 
   /// Helper function to get datum specific style
@@ -409,6 +439,10 @@ enum BarLabelPosition {
 
   /// Always place label on the inside.
   inside,
+
+  /// Right align the label with the horizontal bars. The label will be inside
+  /// or above the bar based on the BarLabelVerticalPosition.
+  right,
 }
 
 /// Configures where to place the label relative to the axis.
@@ -434,4 +468,13 @@ enum BarLabelAnchor {
 
   /// Anchor to the measure end.
   end,
+}
+
+/// Configures where to place labels vertically on horizontal bars.
+enum BarLabelVerticalPosition {
+  /// Anchors label to be on top of bar
+  top,
+
+  /// Anchors label to be inline with bar
+  middle,
 }

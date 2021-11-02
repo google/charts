@@ -24,6 +24,8 @@ import 'package:charts_common/common.dart' as common
         Color,
         FillPatternType,
         GraphicsFactory,
+        Link,
+        LinkOrientation,
         StyleFactory,
         TextElement,
         TextDirection;
@@ -59,6 +61,13 @@ class ChartCanvas implements common.ChartCanvas {
       endAngle: endAngle,
       fill: fill,
     );
+  }
+
+  @override
+  void drawLink(
+      common.Link link, common.LinkOrientation orientation, common.Color fill) {
+    // TODO: Implement drawLink for flutter.
+    throw ("Flutter drawLink() has not been implemented.");
   }
 
   @override
@@ -141,14 +150,16 @@ class ChartCanvas implements common.ChartCanvas {
       common.Color? stroke,
       double? strokeWidthPx,
       Rectangle<num>? drawAreaBounds}) {
-    final drawStroke =
+    // TODO: remove this explicit `bool` type when no longer needed
+    // to work around https://github.com/dart-lang/language/issues/1785
+    final bool drawStroke =
         (strokeWidthPx != null && strokeWidthPx > 0.0 && stroke != null);
 
     final strokeWidthOffset = (drawStroke ? strokeWidthPx : 0);
 
     // Factor out stroke width, if a stroke is enabled.
     final fillRectBounds = new Rectangle<num>(
-        bounds.left + strokeWidthOffset! / 2,
+        bounds.left + strokeWidthOffset / 2,
         bounds.top + strokeWidthOffset / 2,
         bounds.width - strokeWidthOffset,
         bounds.height - strokeWidthOffset);
@@ -179,8 +190,7 @@ class ChartCanvas implements common.ChartCanvas {
     // [Canvas.drawRect] does not support drawing a rectangle with both a fill
     // and a stroke at this time. Use a separate rect for the stroke.
     if (drawStroke) {
-      _paint.color =
-          new Color.fromARGB(stroke!.a, stroke.r, stroke.g, stroke.b);
+      _paint.color = new Color.fromARGB(stroke.a, stroke.r, stroke.g, stroke.b);
       // Set shader to null if no draw area bounds so it can use the color
       // instead.
       _paint.shader = drawAreaBounds != null
@@ -188,7 +198,7 @@ class ChartCanvas implements common.ChartCanvas {
               drawAreaBounds.top.toDouble(), stroke)
           : null;
       _paint.strokeJoin = StrokeJoin.round;
-      _paint.strokeWidth = strokeWidthPx!;
+      _paint.strokeWidth = strokeWidthPx;
       _paint.style = PaintingStyle.stroke;
 
       canvas.drawRect(_getRect(bounds), _paint);

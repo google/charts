@@ -72,6 +72,10 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
   @override
   final bool renderAbove = true;
 
+  /// fields for collision detection.
+  num? _previousOutsideLabelY;
+  bool? _previousLabelLeftOfChart;
+
   ArcLabelDecorator(
       {TextStyleSpec? insideLabelStyleSpec,
       TextStyleSpec? outsideLabelStyleSpec,
@@ -86,8 +90,8 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
         leaderLineStyleSpec = leaderLineStyleSpec ?? _defaultLeaderLineStyle;
 
   @override
-  void decorate(ArcRendererElementList<D> arcElements, ChartCanvas canvas,
-      GraphicsFactory graphicsFactory,
+  void decorate(List<ArcRendererElementList<D>> arcElementsList,
+      ChartCanvas canvas, GraphicsFactory graphicsFactory,
       {required Rectangle drawBounds,
       required double animationPercent,
       bool rtl = false}) {
@@ -105,105 +109,99 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
 
     // Track the Y position of the previous outside label for collision
     // detection purposes.
-    num? previousOutsideLabelY;
-    bool? previousLabelLeftOfChart;
+    for (var arcElements in arcElementsList) {
+      _previousOutsideLabelY = null;
+      _previousLabelLeftOfChart = null;
 
-    for (var element in arcElements.arcs) {
-      final labelFn = element.series.labelAccessorFn;
-      final datumIndex = element.index;
-      final label = (labelFn != null) ? labelFn(datumIndex) : null;
+      for (var element in arcElements.arcs) {
+        final labelFn = element.series.labelAccessorFn;
+        final datumIndex = element.index;
+        final label = (labelFn != null) ? labelFn(datumIndex) : null;
 
-      // If there are custom styles, use that instead of the default or the
-      // style defined for the entire decorator.
-      final datumInsideLabelStyle = _getDatumStyle(
-          element.series.insideLabelStyleAccessorFn,
-          datumIndex,
-          graphicsFactory,
-          defaultStyle: insideLabelStyle);
-      final datumOutsideLabelStyle = _getDatumStyle(
-          element.series.outsideLabelStyleAccessorFn,
-          datumIndex,
-          graphicsFactory,
-          defaultStyle: outsideLabelStyle);
+        // If there are custom styles, use that instead of the default or the
+        // style defined for the entire decorator.
+        final datumInsideLabelStyle = _getDatumStyle(
+            element.series.insideLabelStyleAccessorFn,
+            datumIndex,
+            graphicsFactory,
+            defaultStyle: insideLabelStyle);
+        final datumOutsideLabelStyle = _getDatumStyle(
+            element.series.outsideLabelStyleAccessorFn,
+            datumIndex,
+            graphicsFactory,
+            defaultStyle: outsideLabelStyle);
 
-      // Skip calculation and drawing for this element if no label.
-      if (label == null || label.isEmpty) {
-        continue;
-      }
+        // Skip calculation and drawing for this element if no label.
+        if (label == null || label.isEmpty) {
+          continue;
+        }
 
-      final arcAngle = element.endAngle - element.startAngle;
+        final arcAngle = element.endAngle - element.startAngle;
 
-      final centerAngle = element.startAngle + (arcAngle / 2);
+        final centerAngle = element.startAngle + (arcAngle / 2);
 
-      final centerRadius = arcElements.innerRadius +
-          ((arcElements.radius - arcElements.innerRadius) / 2);
+        final centerRadius = arcElements.innerRadius +
+            ((arcElements.radius - arcElements.innerRadius) / 2);
 
-      final innerPoint = Point<double>(
-          arcElements.center.x + arcElements.innerRadius * cos(centerAngle),
-          arcElements.center.y + arcElements.innerRadius * sin(centerAngle));
+        final outerPoint = Point<double>(
+            arcElements.center.x + arcElements.radius * cos(centerAngle),
+            arcElements.center.y + arcElements.radius * sin(centerAngle));
 
-      final outerPoint = Point<double>(
-          arcElements.center.x + arcElements.radius * cos(centerAngle),
-          arcElements.center.y + arcElements.radius * sin(centerAngle));
+        final bounds =
+            Rectangle<double>.fromPoints(arcElements.center, outerPoint);
 
-      //final bounds = element.bounds;
-      final bounds = Rectangle<double>.fromPoints(innerPoint, outerPoint);
+        // Get space available inside and outside the arc.
+        final totalPadding = labelPadding * 2;
+        final insideArcWidth = min(
+                (((arcAngle * 180 / pi) / 360) * (2 * pi * centerRadius))
+                    .round(),
+                (arcElements.radius - arcElements.innerRadius) - labelPadding)
+            .round();
 
-      // Get space available inside and outside the arc.
-      final totalPadding = labelPadding * 2;
-      final insideArcWidth = min(
-              (((arcAngle * 180 / pi) / 360) * (2 * pi * centerRadius)).round(),
-              (arcElements.radius - arcElements.innerRadius) - labelPadding)
-          .round();
+        final leaderLineLength =
+            showLeaderLines ? leaderLineStyleSpec.length : 0;
 
-      final leaderLineLength = showLeaderLines ? leaderLineStyleSpec.length : 0;
+        final outsideArcWidth = ((drawBounds.width / 2) -
+                bounds.width -
+                totalPadding -
+                // Half of the leader line is drawn inside the arc
+                leaderLineLength / 2)
+            .round();
 
-      final outsideArcWidth = ((drawBounds.width / 2) -
-              bounds.width -
-              totalPadding -
-              leaderLineLength)
-          .round();
+        final labelElement = graphicsFactory.createTextElement(label)
+          ..maxWidthStrategy = MaxWidthStrategy.ellipsize;
 
-      final labelElement = graphicsFactory.createTextElement(label)
-        ..maxWidthStrategy = MaxWidthStrategy.ellipsize;
+        var calculatedLabelPosition = calculateLabelPosition(
+            labelElement,
+            datumInsideLabelStyle,
+            insideArcWidth,
+            outsideArcWidth,
+            element,
+            labelPosition);
 
-      var calculatedLabelPosition = calculateLabelPosition(
-          labelElement,
-          datumInsideLabelStyle,
-          insideArcWidth,
-          outsideArcWidth,
-          element,
-          labelPosition);
-
-      // Set the max width and text style.
-      if (calculatedLabelPosition == ArcLabelPosition.inside) {
-        labelElement.textStyle = datumInsideLabelStyle;
-        labelElement.maxWidth = insideArcWidth;
-      } else {
-        // calculatedLabelPosition == LabelPosition.outside
-        labelElement.textStyle = datumOutsideLabelStyle;
-        labelElement.maxWidth = outsideArcWidth;
-      }
-
-      // Only calculate and draw label if there's actually space for the label.
-      if (labelElement.maxWidth! > 0) {
-        // Calculate the start position of label based on [labelAnchor].
+        // Set the max width and text style.
         if (calculatedLabelPosition == ArcLabelPosition.inside) {
-          _drawInsideLabel(canvas, arcElements, labelElement, centerAngle);
+          labelElement.textStyle = datumInsideLabelStyle;
+          labelElement.maxWidth = insideArcWidth;
         } else {
-          final l = _drawOutsideLabel(
-              canvas,
-              drawBounds,
-              arcElements,
-              labelElement,
-              centerAngle,
-              previousOutsideLabelY,
-              previousLabelLeftOfChart);
+          // calculatedLabelPosition == LabelPosition.outside
+          labelElement.textStyle = datumOutsideLabelStyle;
+          labelElement.maxWidth = outsideArcWidth;
+        }
 
-          // List destructuring.
-          if (l != null) {
-            previousLabelLeftOfChart = l[0] as bool;
-            previousOutsideLabelY = l[1] as int;
+        // Only calculate and draw label if there's actually space for the
+        // label.
+        if (labelElement.maxWidth! > 0) {
+          // Calculate the start position of label based on [labelAnchor].
+          if (calculatedLabelPosition == ArcLabelPosition.inside) {
+            _drawInsideLabel(canvas, arcElements, labelElement, centerAngle);
+          } else {
+            final l = _drawOutsideLabel(
+                canvas, drawBounds, arcElements, labelElement, centerAngle);
+
+            if (l != null) {
+              updateCollisionDetectionParams(l);
+            }
           }
         }
       }
@@ -278,16 +276,24 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
     canvas.drawText(labelElement, labelX, labelY);
   }
 
+  @protected
+  void updateCollisionDetectionParams(List<Object> params) {
+    // List destructuring.
+    _previousLabelLeftOfChart = params[0] as bool;
+    _previousOutsideLabelY = params[1] as int;
+  }
+
+  double getLabelRadius(ArcRendererElementList<D> arcElements) =>
+      arcElements.radius + leaderLineStyleSpec.length / 2;
+
   /// Draws a label outside of an arc.
   List<Object>? _drawOutsideLabel(
       ChartCanvas canvas,
       Rectangle drawBounds,
       ArcRendererElementList<D> arcElements,
       TextElement labelElement,
-      double centerAngle,
-      num? previousOutsideLabelY,
-      bool? previousLabelLeftOfChart) {
-    final labelRadius = arcElements.radius + leaderLineStyleSpec.length / 2;
+      double centerAngle) {
+    final labelRadius = getLabelRadius(arcElements);
 
     final labelPoint = Point<double>(
         arcElements.center.x + labelRadius * cos(centerAngle),
@@ -311,8 +317,8 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
         labelLeftOfChart ? TextDirection.rtl : TextDirection.ltr;
 
     // Skip this label if it collides with the previously drawn label.
-    if (_detectOutsideLabelCollision(labelY, labelLeftOfChart,
-        previousOutsideLabelY, previousLabelLeftOfChart)) {
+    if (detectOutsideLabelCollision(labelY, labelLeftOfChart,
+        _previousOutsideLabelY, _previousLabelLeftOfChart)) {
       return null;
     }
 
@@ -323,7 +329,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       // Shift the label horizontally by the length of the leader line.
       labelX = (labelX + tailX).round();
 
-      labelElement.maxWidth = (labelElement.maxWidth! - tailX).round();
+      labelElement.maxWidth = (labelElement.maxWidth! - tailX.abs()).round();
     }
 
     canvas.drawText(labelElement, labelX, labelY);
@@ -333,7 +339,8 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
   }
 
   /// Detects whether the current outside label collides with the previous label.
-  bool _detectOutsideLabelCollision(num labelY, bool labelLeftOfChart,
+  @protected
+  bool detectOutsideLabelCollision(num labelY, bool labelLeftOfChart,
       num? previousOutsideLabelY, bool? previousLabelLeftOfChart) {
     var collides = false;
 

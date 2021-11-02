@@ -25,4 +25,7 @@ abstract class TextStyle extends PaintStyle {
 
   double? get lineHeight;
   set lineHeight(double? value);
+
+  String? get fontWeight;
+  set fontWeight(String? value);
 }

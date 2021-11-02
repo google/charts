@@ -27,8 +27,8 @@ abstract class ArcRendererDecorator<D> {
   /// series data elements.
   bool get renderAbove;
 
-  void decorate(ArcRendererElementList<D> arcElements, ChartCanvas canvas,
-      GraphicsFactory graphicsFactory,
+  void decorate(List<ArcRendererElementList<D>> arcElementsList,
+      ChartCanvas canvas, GraphicsFactory graphicsFactory,
       {required Rectangle drawBounds,
       required double animationPercent,
       bool rtl = false});

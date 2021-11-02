@@ -43,7 +43,7 @@ import 'base_bar_renderer_element.dart'
 class BarRenderer<D>
     extends BaseBarRenderer<D, BarRendererElement<D>, AnimatedBar<D>> {
   /// If we are grouped, use this spacing between the bars in a group.
-  final _barGroupInnerPadding = 2;
+  final int _barGroupInnerPaddingPx;
 
   /// The padding between bar stacks.
   ///
@@ -64,8 +64,9 @@ class BarRenderer<D>
   BarRenderer.internal({
     required BarRendererConfig<Object?> config,
     required String rendererId,
-  })   : barRendererDecorator = config.barRendererDecorator,
+  })  : barRendererDecorator = config.barRendererDecorator,
         _stackedBarPaddingPx = config.stackedBarPaddingPx,
+        _barGroupInnerPaddingPx = config.barGroupInnerPaddingPx,
         super(
             config: config,
             rendererId: rendererId,
@@ -418,7 +419,7 @@ class BarRenderer<D>
     // Calculate how wide each bar should be within the group of bars. If we
     // only have one series, or are stacked, then barWidth should equal
     // domainWidth.
-    final spacingLoss = _barGroupInnerPadding * (numBarGroups - 1);
+    final spacingLoss = _barGroupInnerPaddingPx * (numBarGroups - 1);
     var desiredWidth = ((domainWidth - spacingLoss) / numBarGroups).round();
 
     if (maxBarWidthPx != null) {
@@ -456,7 +457,7 @@ class BarRenderer<D>
 
     final domainStart = (domainAxis.getLocation(domainValue)! -
             (domainWidth / 2) +
-            (previousAverageWidth + _barGroupInnerPadding) *
+            (previousAverageWidth + _barGroupInnerPaddingPx) *
                 adjustedBarGroupIndex)
         .round();
 

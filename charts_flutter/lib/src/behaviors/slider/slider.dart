@@ -143,7 +143,9 @@ class Slider<D> extends ChartBehavior<D> {
     final desiredGestures = new Set<GestureType>();
     switch (eventTrigger) {
       case common.SelectionTrigger.tapAndDrag:
-        desiredGestures..add(GestureType.onTap)..add(GestureType.onDrag);
+        desiredGestures
+          ..add(GestureType.onTap)
+          ..add(GestureType.onDrag);
         break;
       case common.SelectionTrigger.pressHold:
       case common.SelectionTrigger.longPressHold:

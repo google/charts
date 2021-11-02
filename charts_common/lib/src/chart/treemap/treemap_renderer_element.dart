@@ -74,7 +74,7 @@ class TreeMapRendererElement<D> {
     required this.series,
     required this.domain,
     required this.measure,
-  })   : _boundingRect = boundingRect,
+  })  : _boundingRect = boundingRect,
         _area = area;
 
   /// Clones a new renderer element with the same properties.

@@ -45,6 +45,16 @@ class SunburstArcLabelDecorator<D> extends ArcLabelDecorator<D> {
   /// Configures the [ArcLabelPosition] for the arcs in the outer most ring.
   final ArcLabelPosition outerRingArcLabelPosition;
 
+  /// When set to true, extend the leader line to outside of the outer most
+  /// ring to avoid collision between inner arc's label with outer arcs.
+  final bool extendLeaderLine;
+
+  /// Tracks the outerMostRadius when extendLeaderLine is true.
+  double? _outerMostRadius;
+
+  /// fields for collision detection when extendLeaderLine is true.
+  List<_CollisionDetectionParams> _collisionDetectionParams = [];
+
   SunburstArcLabelDecorator(
       {TextStyleSpec? insideLabelStyleSpec,
       TextStyleSpec? outsideLabelStyleSpec,
@@ -52,6 +62,7 @@ class SunburstArcLabelDecorator<D> extends ArcLabelDecorator<D> {
       int labelPadding = 5,
       bool showLeaderLines = true,
       Color? leaderLineColor,
+      this.extendLeaderLine = false,
       // TODO: Change to auto when we can detect collision of inner
       // arcs' label with outer arcs.
       this.innerRingArcLabelPosition = ArcLabelPosition.inside,
@@ -69,22 +80,65 @@ class SunburstArcLabelDecorator<D> extends ArcLabelDecorator<D> {
             leaderLineColor: leaderLineColor);
 
   @override
-  void decorate(ArcRendererElementList<D> arcElements, ChartCanvas canvas,
-      GraphicsFactory graphicsFactory,
+  void decorate(List<ArcRendererElementList<D>> arcElementsList,
+      ChartCanvas canvas, GraphicsFactory graphicsFactory,
       {required Rectangle drawBounds,
       required double animationPercent,
       bool rtl = false}) {
     /// TODO: Improve label handling for sunburst chart. When a
     /// more sophisticated collision detection is in place, we can draw the
     /// label for inner arc outside when it doesn't collide with outer arcs.
+    if (extendLeaderLine) {
+      // Resets collision detection params.
+      _collisionDetectionParams = [];
+      // Find the largest of radius in the arcElementList for the leader line.
+      _outerMostRadius = 0.0;
+      for (var arcElements in arcElementsList) {
+        if (arcElements.radius > _outerMostRadius!) {
+          _outerMostRadius = arcElements.radius;
+        }
+      }
+    }
 
     // Do not draw label for arcs on the inner ring if positioned outside.
     if (innerRingArcLabelPosition == ArcLabelPosition.outside) {
-      arcElements.arcs
-          .retainWhere((e) => (e as SunburstArcRendererElement).isLeaf == true);
+      for (var arcElements in arcElementsList) {
+        arcElements.arcs.retainWhere(
+            (e) => (e as SunburstArcRendererElement).isLeaf == true);
+      }
     }
-    super.decorate(arcElements, canvas, graphicsFactory,
+    super.decorate(arcElementsList, canvas, graphicsFactory,
         drawBounds: drawBounds, animationPercent: animationPercent, rtl: rtl);
+  }
+
+  @override
+  double getLabelRadius(ArcRendererElementList<D> arcElements) =>
+      (extendLeaderLine
+          ? (_outerMostRadius ?? arcElements.radius)
+          : arcElements.radius) +
+      leaderLineStyleSpec.length / 2;
+
+  @override
+  bool detectOutsideLabelCollision(num labelY, bool labelLeftOfChart,
+      num? previousOutsideLabelY, bool? previousLabelLeftOfChart) {
+    if (!extendLeaderLine) {
+      return super.detectOutsideLabelCollision(labelY, labelLeftOfChart,
+          previousOutsideLabelY, previousLabelLeftOfChart);
+    } else {
+      return _collisionDetectionParams.any((param) => super
+          .detectOutsideLabelCollision(labelY, labelLeftOfChart,
+              param.previousOutsideLabelY, param.previousLabelLeftOfChart));
+    }
+  }
+
+  @override
+  void updateCollisionDetectionParams(List<Object> params) {
+    if (!extendLeaderLine) {
+      super.updateCollisionDetectionParams(params);
+    } else {
+      _collisionDetectionParams.add(
+          _CollisionDetectionParams(params.first as bool, params.last as int));
+    }
   }
 
   @override
@@ -124,4 +178,12 @@ class SunburstArcLabelDecorator<D> extends ArcLabelDecorator<D> {
       return ArcLabelPosition.inside;
     }
   }
+}
+
+class _CollisionDetectionParams {
+  final bool previousLabelLeftOfChart;
+  final num previousOutsideLabelY;
+
+  _CollisionDetectionParams(
+      this.previousLabelLeftOfChart, this.previousOutsideLabelY);
 }

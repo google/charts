@@ -30,6 +30,10 @@ class InitialSelection<D> implements ChartBehavior<D> {
   /// List of [SeriesDatumConfig] that represents the initially selected datums.
   final List<SeriesDatumConfig<D>>? selectedDataConfig;
 
+  /// Preserve selection on every draw. False by default and only preserves
+  /// selection until the fist draw or redraw call.
+  final bool shouldPreserveSelectionOnDraw;
+
   BaseChart<D>? _chart;
   late LifecycleListener<D> _lifecycleListener;
   bool _firstDraw = true;
@@ -39,12 +43,13 @@ class InitialSelection<D> implements ChartBehavior<D> {
   InitialSelection(
       {this.selectionModelType = SelectionModelType.info,
       this.selectedDataConfig,
-      this.selectedSeriesConfig}) {
+      this.selectedSeriesConfig,
+      this.shouldPreserveSelectionOnDraw = false}) {
     _lifecycleListener = LifecycleListener<D>(onData: _setInitialSelection);
   }
 
   void _setInitialSelection(List<MutableSeries<D>> seriesList) {
-    if (!_firstDraw) {
+    if (!_firstDraw && !shouldPreserveSelectionOnDraw) {
       return;
     }
     _firstDraw = false;

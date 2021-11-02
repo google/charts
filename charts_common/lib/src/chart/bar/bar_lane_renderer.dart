@@ -133,7 +133,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
       final barGroupWeight = series.getAttr(barGroupWeightKey);
       final allBarGroupWeights = series.getAttr(allBarGroupWeightsKey);
       final measureAxisPosition = measureAxis.getLocation(0.0);
-      final maxMeasureValue = _getMaxMeasureValue(measureAxis);
+      final measureFn = series.measureFn;
 
       // Create a fake series for [BarLabelDecorator] to use when looking up the
       // index of each datum.
@@ -173,6 +173,14 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
         var animatingBar =
             barStackList.firstWhereOrNull((bar) => bar.key == barKey);
 
+        final renderNegativeLanes =
+            (config as BarLaneRendererConfig).renderNegativeLanes;
+
+        final measureValue = measureFn(0);
+        final measureIsNegative = measureValue != null && measureValue < 0;
+        final maxMeasureValue = _getMaxMeasureValue(
+            measureAxis, measureIsNegative && renderNegativeLanes);
+
         // If we don't have any existing bar element, create a new bar and have
         // it animate in from the domain axis.
         if (animatingBar == null) {
@@ -197,7 +205,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
               numBarGroups: barGroupCount,
               strokeWidthPx: config.strokeWidthPx,
               measureIsNull: false,
-              measureIsNegative: false);
+              measureIsNegative: renderNegativeLanes && measureIsNegative);
 
           barStackList.add(animatingBar);
         } else {
@@ -227,7 +235,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
             numBarGroups: barGroupCount,
             strokeWidthPx: config.strokeWidthPx,
             measureIsNull: false,
-            measureIsNegative: false);
+            measureIsNegative: renderNegativeLanes && measureIsNegative);
 
         animatingBar.setNewTarget(barElement);
 
@@ -245,7 +253,7 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
           seriesList[0].getAttr(measureAxisKey) as ImmutableAxis<num>;
 
       final measureAxisPosition = measureAxis.getLocation(0.0);
-      final maxMeasureValue = _getMaxMeasureValue(measureAxis);
+      final maxMeasureValue = _getMaxMeasureValue(measureAxis, false);
 
       final barGroupIndex = 0;
       final previousBarGroupWeight = 0.0;
@@ -344,10 +352,10 @@ class BarLaneRenderer<D> extends BarRenderer<D> {
   }
 
   /// Gets the maximum measure value that will fit in the draw area.
-  num _getMaxMeasureValue(ImmutableAxis<num> measureAxis) {
+  num _getMaxMeasureValue(ImmutableAxis<num> measureAxis, bool laneIsNegative) {
     final pos = chart.vertical
         ? chart.drawAreaBounds.top
-        : isRtl
+        : ((isRtl && !laneIsNegative) || (!isRtl && laneIsNegative))
             ? chart.drawAreaBounds.left
             : chart.drawAreaBounds.right;
 

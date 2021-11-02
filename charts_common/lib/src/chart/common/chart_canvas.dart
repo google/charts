@@ -45,6 +45,16 @@ abstract class ChartCanvas {
       double startAngle, double endAngle,
       {Color? fill, Color? stroke, double? strokeWidthPx});
 
+  /// Draws a smooth link from source to target.
+  ///
+  /// [sourceUpper] The location of the upper link at the source node.
+  /// [sourceLower] The location of the lower link at the source node.
+  /// [targetUpper] The location of the upper link at the target node.
+  /// [targetLower] The location of the lower link at the target node.
+  /// [fill] The fill color for the link.
+  /// [orientation] Orientation enum of the link, vertical or horizontal.
+  void drawLink(Link link, LinkOrientation orientation, Color fill);
+
   /// Renders a simple line.
   ///
   /// [dashPattern] controls the pattern of dashes and gaps in a line. It is a
@@ -198,4 +208,26 @@ enum BlendMode {
   sourceOut,
   sourceOver,
   xor
+}
+
+/// Determines the orientation of a drawn link.
+///
+/// * [horizontal] Link control points are averaged across the x-axis.
+/// * [vertical] Link control points are averaged across the y-axis.
+enum LinkOrientation { horizontal, vertical }
+
+/// A link as defined by the two sets of points that determine the bezier
+/// curves of the link.
+///
+/// [sourceUpper] The location of the upper link at the source node.
+/// [sourceLower] The location of the lower link at the source node.
+/// [targetUpper] The location of the upper link at the target node.
+/// [targetLower] The location of the lower link at the target node.
+class Link {
+  final Point sourceUpper;
+  final Point sourceLower;
+  final Point targetUpper;
+  final Point targetLower;
+
+  Link(this.sourceUpper, this.sourceLower, this.targetUpper, this.targetLower);
 }

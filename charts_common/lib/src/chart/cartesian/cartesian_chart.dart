@@ -314,20 +314,12 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   /// the domain axis.
   set primaryMeasureAxisSpec(NumericAxisSpec? axisSpec) {
     _newPrimaryMeasureAxisSpec = axisSpec;
-
-    // Must set the spec to the current axis instance in the case of
-    // errant reads that expect the spec to be changed.
-    axisSpec?.configure(_primaryMeasureAxis, context, graphicsFactory!);
   }
 
   /// Sets the secondary measure axis for the chart, rendered on the end side of
   /// the domain axis.
   set secondaryMeasureAxisSpec(NumericAxisSpec? axisSpec) {
     _newSecondaryMeasureAxisSpec = axisSpec;
-
-    // Must set the spec to the current axis instance in the case of
-    // errant reads that expect the spec to be changed.
-    axisSpec?.configure(_secondaryMeasureAxis, context, graphicsFactory!);
   }
 
   /// Sets a map of disjoint measure axes for the chart.
@@ -350,15 +342,6 @@ abstract class CartesianChart<D> extends BaseChart<D> {
   set disjointMeasureAxisSpecs(
       LinkedHashMap<String, NumericAxisSpec>? axisSpecs) {
     _newDisjointMeasureAxesSpec = axisSpecs;
-
-    // Must set the spec to the current axis instance in the case of
-    // errant reads that expect the spec to be changed.
-    axisSpecs?.forEach((axisId, axisSpec) {
-      if (_disjointMeasureAxes.containsKey(axisId)) {
-        axisSpec.configure(
-            _disjointMeasureAxes[axisId]!, context, graphicsFactory!);
-      }
-    });
   }
 
   @override

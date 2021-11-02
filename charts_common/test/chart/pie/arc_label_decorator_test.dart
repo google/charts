@@ -67,6 +67,9 @@ class FakeTextStyle implements TextStyle {
 
   @override
   double lineHeight;
+
+  @override
+  String fontWeight;
 }
 
 /// Fake [TextElement] which returns text length as [horizontalSliceWidth].
@@ -150,7 +153,7 @@ void main() {
 
       final decorator = ArcLabelDecorator();
 
-      decorator.decorate(arcElements, canvas, graphicsFactory,
+      decorator.decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
@@ -165,7 +168,7 @@ void main() {
       expect(captured[2],
           equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
       // For arc 'B'.
-      expect(captured[3].maxWidth, equals(80));
+      expect(captured[3].maxWidth, equals(20));
       expect(captured[3].textDirection, equals(TextDirection.rtl));
       expect(
           captured[4],
@@ -195,7 +198,7 @@ void main() {
           labelPosition: ArcLabelPosition.inside,
           insideLabelStyleSpec: TextStyleSpec(fontSize: 10));
 
-      decorator.decorate(arcElements, canvas, graphicsFactory,
+      decorator.decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
@@ -227,13 +230,13 @@ void main() {
           labelPosition: ArcLabelPosition.outside,
           outsideLabelStyleSpec: TextStyleSpec(fontSize: 10));
 
-      decorator.decorate(arcElements, canvas, graphicsFactory,
+      decorator.decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
           verify(canvas.drawText(captureAny, captureAny, captureAny)).captured;
       expect(captured, hasLength(3));
-      expect(captured[0].maxWidth, equals(40));
+      expect(captured[0].maxWidth, equals(20));
       expect(captured[0].textDirection, equals(TextDirection.ltr));
       expect(
           captured[1],
@@ -273,7 +276,7 @@ void main() {
           outsideLabelStyleSpec: TextStyleSpec(
               fontSize: 8, fontFamily: 'outsideFont', color: outsideColor));
 
-      decorator.decorate(arcElements, canvas, graphicsFactory,
+      decorator.decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       final captured =
@@ -290,7 +293,7 @@ void main() {
       expect(captured[2],
           equals(100 - decorator.insideLabelStyleSpec.fontSize ~/ 2));
       // For arc 'B'.
-      expect(captured[3].maxWidth, equals(90));
+      expect(captured[3].maxWidth, equals(30));
       expect(captured[3].textDirection, equals(TextDirection.rtl));
       expect(captured[3].textStyle.fontFamily, equals('outsideFont'));
       expect(captured[3].textStyle.color, equals(outsideColor));
@@ -318,7 +321,7 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
+      ArcLabelDecorator().decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       verifyNever(canvas.drawText(any, any, any));
@@ -341,7 +344,7 @@ void main() {
         startAngle: -pi / 2,
       );
 
-      ArcLabelDecorator().decorate(arcElements, canvas, graphicsFactory,
+      ArcLabelDecorator().decorate([arcElements], canvas, graphicsFactory,
           drawBounds: drawBounds, animationPercent: 1.0);
 
       verifyNever(canvas.drawText(any, any, any));
