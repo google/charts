@@ -15,9 +15,8 @@
 
 import 'package:charts_common/common.dart';
 import 'package:test/test.dart';
-import 'package:charts_common/src/data/graph_utils.dart';
-import 'package:charts_common/src/data/graph.dart' as graph_structure
-    show Node, Link, indexNotRelevant;
+import 'package:charts_common/src/data/graph_utils.dart' as utils;
+import 'package:charts_common/src/data/graph.dart';
 
 class MyNode {
   final String domainId;
@@ -46,10 +45,31 @@ var myMockLinks = [
   MyLink('Link B', myMockNodes[1], myMockNodes[2], 2),
 ];
 
+var testLink1 = GraphLink<MyNode, MyLink>((b) => b
+  ..source = GraphNode<MyNode, MyLink>((b) => b
+    ..data = myMockNodes[0]
+    ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
+    ..outgoingLinks = <GraphLink<MyNode, MyLink>>[])
+  ..target = GraphNode<MyNode, MyLink>((b) => b
+    ..data = myMockNodes[1]
+    ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
+    ..outgoingLinks = <GraphLink<MyNode, MyLink>>[])
+  ..data = myMockLinks[0]);
+var testLink2 = GraphLink<MyNode, MyLink>((b) => b
+  ..source = GraphNode<MyNode, MyLink>((b) => b
+    ..data = myMockNodes[1]
+    ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
+    ..outgoingLinks = <GraphLink<MyNode, MyLink>>[])
+  ..target = GraphNode<MyNode, MyLink>((b) => b
+    ..data = myMockNodes[2]
+    ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
+    ..outgoingLinks = <GraphLink<MyNode, MyLink>>[])
+  ..data = myMockLinks[1]);
+
 void main() {
   group('actOnNodes', () {
     test('returns null for null functions', () {
-      var nullMeasure = actOnNodeData<MyNode, MyLink, num>(null);
+      var nullMeasure = utils.actOnNodeData<MyNode, MyLink, num>(null);
 
       expect(nullMeasure, null);
     });
@@ -57,23 +77,31 @@ void main() {
     test('returns data for non-null functions', () {
       TypedAccessorFn<MyNode, String> getDomain = (node, _) => node.domainId;
       TypedAccessorFn<MyNode, num> getMeasure = (node, _) => node.measure;
-      var domainFn = actOnNodeData<MyNode, MyLink, String>(getDomain)!;
-      var measureFn = actOnNodeData<MyNode, MyLink, num>(getMeasure)!;
+      var domainFn = utils.actOnNodeData<MyNode, MyLink, String>(getDomain)!;
+      var measureFn = utils.actOnNodeData<MyNode, MyLink, num>(getMeasure)!;
 
       expect(
-          domainFn(graph_structure.Node(myMockNodes[0]),
-              graph_structure.indexNotRelevant),
-          getDomain(myMockNodes[0], graph_structure.indexNotRelevant));
+          domainFn(
+              GraphNode((b) => b
+                ..data = myMockNodes[0]
+                ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
+                ..outgoingLinks = <GraphLink<MyNode, MyLink>>[]),
+              indexNotRelevant),
+          getDomain(myMockNodes[0], indexNotRelevant));
       expect(
-          measureFn(graph_structure.Node(myMockNodes[0]),
-              graph_structure.indexNotRelevant),
-          getMeasure(myMockNodes[0], graph_structure.indexNotRelevant));
+          measureFn(
+              GraphNode((b) => b
+                ..data = myMockNodes[0]
+                ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
+                ..outgoingLinks = <GraphLink<MyNode, MyLink>>[]),
+              indexNotRelevant),
+          getMeasure(myMockNodes[0], indexNotRelevant));
     });
   });
 
   group('actOnLinks', () {
     test('returns null for null functions', () {
-      var nullMeasure = actOnLinkData<MyNode, MyLink, num>(null);
+      var nullMeasure = utils.actOnLinkData<MyNode, MyLink, num>(null);
 
       expect(nullMeasure, null);
     });
@@ -81,80 +109,59 @@ void main() {
     test('returns data for non-null functions', () {
       TypedAccessorFn<MyLink, String> getDomain = (link, _) => link.domainId;
       TypedAccessorFn<MyLink, num> getMeasure = (link, _) => link.measure;
-      var domainFn = actOnLinkData<MyNode, MyLink, String>(getDomain)!;
-      var measureFn = actOnLinkData<MyNode, MyLink, num>(getMeasure)!;
-      var firstLink = graph_structure.Link<MyNode, MyLink>(
-          graph_structure.Node(myMockNodes[0]),
-          graph_structure.Node(myMockNodes[1]),
-          myMockLinks[0]);
-      var secondLink = graph_structure.Link<MyNode, MyLink>(
-          graph_structure.Node(myMockNodes[1]),
-          graph_structure.Node(myMockNodes[2]),
-          myMockLinks[1]);
+      var domainFn = utils.actOnLinkData<MyNode, MyLink, String>(getDomain)!;
+      var measureFn = utils.actOnLinkData<MyNode, MyLink, num>(getMeasure)!;
 
-      expect(domainFn(firstLink, graph_structure.indexNotRelevant),
-          getDomain(myMockLinks[0], graph_structure.indexNotRelevant));
-      expect(measureFn(firstLink, graph_structure.indexNotRelevant),
-          getMeasure(myMockLinks[0], graph_structure.indexNotRelevant));
+      expect(domainFn(testLink1, indexNotRelevant),
+          getDomain(myMockLinks[0], indexNotRelevant));
+      expect(measureFn(testLink1, indexNotRelevant),
+          getMeasure(myMockLinks[0], indexNotRelevant));
     });
   });
 
-  group('addLinkToNode', () {
+  group('utils.addLinkToNode', () {
     test('adds link to corresponding list on node', () {
-      var firstLink = graph_structure.Link(graph_structure.Node(myMockNodes[0]),
-          graph_structure.Node(myMockNodes[1]), myMockLinks[0]);
-      var secondLink = graph_structure.Link(
-          graph_structure.Node(myMockNodes[1]),
-          graph_structure.Node(myMockNodes[2]),
-          myMockLinks[1]);
-      var node = graph_structure.Node(myMockNodes[2]);
-      node = addLinkToNode(node, firstLink, isIncomingLink: true);
-      node = addLinkToNode(node, secondLink, isIncomingLink: false);
+      utils.Node<MyNode, MyLink> node = GraphNode<MyNode, MyLink>((b) => b
+        ..data = myMockNodes[2]
+        ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
+        ..outgoingLinks = <GraphLink<MyNode, MyLink>>[]);
+      node = utils.addLinkToNode(node, testLink1, isIncomingLink: true);
+      node = utils.addLinkToNode(node, testLink2, isIncomingLink: false);
 
       expect(node.incomingLinks.length, 1);
       expect(node.outgoingLinks.length, 1);
-      expect(node.incomingLinks[0], firstLink);
-      expect(node.outgoingLinks[0], secondLink);
+      expect(node.incomingLinks[0], testLink1);
+      expect(node.outgoingLinks[0], testLink2);
     });
 
     test('adds link to corresponding list on absent node', () {
-      var firstLink = graph_structure.Link(graph_structure.Node(myMockNodes[0]),
-          graph_structure.Node(myMockNodes[1]), myMockLinks[0]);
-      var secondLink = graph_structure.Link(
-          graph_structure.Node(myMockNodes[1]),
-          graph_structure.Node(myMockNodes[2]),
-          myMockLinks[1]);
       var nodeWithIncoming =
-          addLinkToAbsentNode(secondLink, isIncomingLink: true);
+          utils.addLinkToAbsentNode(testLink2, isIncomingLink: true);
       var nodeWithOutgoing =
-          addLinkToAbsentNode(firstLink, isIncomingLink: false);
+          utils.addLinkToAbsentNode(testLink1, isIncomingLink: false);
 
       expect(nodeWithIncoming.incomingLinks.length, 1);
       expect(nodeWithIncoming.outgoingLinks.length, 0);
       expect(nodeWithOutgoing.outgoingLinks.length, 1);
       expect(nodeWithOutgoing.incomingLinks.length, 0);
-      expect(nodeWithIncoming.incomingLinks[0], secondLink);
-      expect(nodeWithOutgoing.outgoingLinks[0], firstLink);
+      expect(nodeWithIncoming.incomingLinks[0], testLink2);
+      expect(nodeWithOutgoing.outgoingLinks[0], testLink1);
     });
   });
 
-  group('accessorIfExists', () {
+  group('utils.accessorIfExists', () {
     test('calls function when not null', () {
       TypedAccessorFn<MyNode, String> getDomain = (node, _) => node.domainId;
       TypedAccessorFn<MyNode, num> getMeasure = (node, _) => node.measure;
 
       expect(
-          accessorIfExists(
-              getDomain, myMockNodes[0], graph_structure.indexNotRelevant),
+          utils.accessorIfExists(getDomain, myMockNodes[0], indexNotRelevant),
           'Node 1');
       expect(
-          accessorIfExists(
-              getMeasure, myMockNodes[0], graph_structure.indexNotRelevant),
+          utils.accessorIfExists(getMeasure, myMockNodes[0], indexNotRelevant),
           4);
       expect(
-          accessorIfExists(
-              null, myMockNodes[1], graph_structure.indexNotRelevant),
-          null);
+          utils.accessorIfExists(null, myMockNodes[1], indexNotRelevant), null);
     });
   });
 }
