@@ -14,8 +14,8 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart';
-import 'package:charts_common/src/data/graph.dart' as graph_structure
-    show indexNotRelevant, Link, Node;
+import 'package:charts_common/src/data/graph.dart';
+import 'package:charts_common/src/data/graph_utils.dart' as utils;
 import 'package:test/test.dart';
 
 class MyNode {
@@ -84,20 +84,20 @@ Graph<MyNode, MyLink, String> mockLinearGraph() {
 }
 
 String nodeDomain(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Node<MyNode, MyLink> node) =>
-    myGraph.nodeDomainFn(node, graph_structure.indexNotRelevant);
+        utils.Node<MyNode, MyLink> node) =>
+    myGraph.nodeDomainFn(node, indexNotRelevant);
 
 String linkDomain(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Link<MyNode, MyLink> link) =>
-    myGraph.linkDomainFn(link, graph_structure.indexNotRelevant);
+        utils.Link<MyNode, MyLink> link) =>
+    myGraph.linkDomainFn(link, indexNotRelevant);
 
 num nodeMeasure(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Node<MyNode, MyLink> node) =>
-    myGraph.nodeMeasureFn(node, graph_structure.indexNotRelevant)!;
+        utils.Node<MyNode, MyLink> node) =>
+    myGraph.nodeMeasureFn(node, indexNotRelevant)!;
 
 num linkMeasure(Graph<MyNode, MyLink, String> myGraph,
-        graph_structure.Link<MyNode, MyLink> link) =>
-    myGraph.linkMeasureFn(link, graph_structure.indexNotRelevant)!;
+        utils.Link<MyNode, MyLink> link) =>
+    myGraph.linkMeasureFn(link, indexNotRelevant)!;
 
 void main() {
   group('GraphDataClass', () {

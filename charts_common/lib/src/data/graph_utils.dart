@@ -13,10 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'graph.dart';
+import 'package:built_value/built_value.dart';
+
 import 'series.dart' show TypedAccessorFn;
 
+part 'graph_utils.g.dart';
+
 const graphCycleErrorMsg = 'The given graph contains a cycle.';
+
+const nodeMappingErrorMsg =
+    'The given node is not in the provided node mapping';
 
 /// If the node accessor is not null return a function to act on a graph [Node].
 TypedAccessorFn<Node<N, L>, R>? actOnNodeData<N, L, R>(
@@ -49,7 +55,7 @@ Node<N, L> addLinkToNode<N, L>(Node<N, L> node, Link<N, L> link,
 /// Construct a new [Node] with the added [Link].
 Node<N, L> addLinkToAbsentNode<N, L>(Link<N, L> link,
     {required bool isIncomingLink}) {
-  Node<N, L> node = isIncomingLink ? link.target : link.source;
+  var node = isIncomingLink ? link.target : link.source;
 
   return addLinkToNode(node, link, isIncomingLink: isIncomingLink);
 }
@@ -57,4 +63,36 @@ Node<N, L> addLinkToAbsentNode<N, L>(Link<N, L> link,
 /// Call an accessor if it exists on input else return null.
 R? accessorIfExists<T, R>(TypedAccessorFn<T, R>? method, T input, int index) {
   return method == null ? null : method(input, index);
+}
+
+/// A node in a graph containing user defined data and connected links.
+@BuiltValue(instantiable: false)
+abstract class Node<N, L> extends Object with GraphElement<N> {
+  /// All links that flow into this SankeyNode. Calculated from graph links.
+  List<Link<N, L>> get incomingLinks;
+
+  /// All links that flow from this SankeyNode. Calculated from graph links.
+  List<Link<N, L>> get outgoingLinks;
+
+  Node<N, L> rebuild(void Function(NodeBuilder<N, L>) updates);
+  NodeBuilder<N, L> toBuilder();
+}
+
+/// A link in a graph connecting a source node and target node.
+@BuiltValue(instantiable: false)
+abstract class Link<N, L> extends Object with GraphElement<L> {
+  /// The source Node for this Link.
+  Node<N, L> get source;
+
+  /// The target Node for this Link.
+  Node<N, L> get target;
+
+  Link<N, L> rebuild(void Function(LinkBuilder<N, L>) updates);
+  LinkBuilder<N, L> toBuilder();
+}
+
+/// A [Link] or [Node] element in a graph containing user defined data.
+abstract class GraphElement<G> {
+  /// Data associated with this graph element.
+  G get data;
 }
