@@ -19,17 +19,17 @@ import 'package:charts_common/src/chart/bar/bar_renderer.dart';
 import 'package:charts_common/src/chart/bar/bar_renderer_config.dart';
 import 'package:charts_common/src/chart/bar/base_bar_renderer.dart';
 import 'package:charts_common/src/chart/bar/base_bar_renderer_config.dart';
-import 'package:charts_common/src/chart/cartesian/cartesian_chart.dart';
 import 'package:charts_common/src/chart/cartesian/axis/axis.dart';
+import 'package:charts_common/src/chart/cartesian/cartesian_chart.dart';
 import 'package:charts_common/src/chart/common/chart_canvas.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/common/processed_series.dart'
     show MutableSeries;
+import 'package:charts_common/src/chart/common/series_datum.dart';
+import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/common/material_palette.dart'
     show MaterialPalette;
-import 'package:charts_common/src/common/color.dart';
 import 'package:charts_common/src/data/series.dart' show Series;
-
 import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -38,6 +38,7 @@ import 'package:test/test.dart';
 class MyRow {
   final String campaign;
   final int clickCount;
+
   MyRow(this.campaign, this.clickCount);
 }
 
@@ -102,9 +103,10 @@ void main() {
     return renderer;
   }
 
-  FakeBarRenderer makeFakeRenderer({BarRendererConfig config}) {
+  FakeBarRenderer makeFakeRenderer(
+      {BarRendererConfig config, bool isVertical = true}) {
     final renderer = FakeBarRenderer(config: config);
-    _configureBaseRenderer(renderer, true);
+    _configureBaseRenderer(renderer, isVertical);
     return renderer;
   }
 
@@ -857,6 +859,114 @@ void main() {
         final element = renderer.elementsPainted[i].single;
         expect(element.bounds.width, 40);
       }
+    });
+
+    test('chartPosition calculations with vertical bars', () {
+      // Helper to create series list for this test only.
+      List<MutableSeries<String>> _createSeriesList(List<MyRow> data) {
+        final domainAxis = MockAxis<dynamic>();
+        when(domainAxis.rangeBand).thenReturn(80.0);
+        when(domainAxis.axisOrientation).thenReturn(AxisOrientation.bottom);
+        when(domainAxis.getLocation('MyCampaign1')).thenReturn(20.0);
+        when(domainAxis.getLocation('MyCampaign2')).thenReturn(40.0);
+        when(domainAxis.getLocation('MyCampaign3')).thenReturn(60.0);
+        final measureAxis = MockAxis<num>();
+        when(domainAxis.axisOrientation).thenReturn(AxisOrientation.left);
+        when(measureAxis.getLocation(-20)).thenReturn(40.0);
+        when(measureAxis.getLocation(0)).thenReturn(20.0);
+        when(measureAxis.getLocation(20)).thenReturn(0.0);
+
+        final color = Color.fromHex(code: '#000000');
+
+        final series = MutableSeries<String>(Series<MyRow, String>(
+            id: 'Desktop',
+            domainFn: (MyRow row, _) => row.campaign,
+            measureFn: (MyRow row, _) => row.clickCount,
+            measureOffsetFn: (_, __) => 0,
+            colorFn: (_, __) => color,
+            fillColorFn: (_, __) => color,
+            dashPatternFn: (_, __) => [1],
+            data: data))
+          ..setAttr(domainAxisKey, domainAxis)
+          ..setAttr(measureAxisKey, measureAxis);
+
+        return [series];
+      }
+
+      final canvas = MockCanvas();
+
+      final data = [
+        MyRow('MyCampaign1', -20),
+        MyRow('MyCampaign2', 0),
+        MyRow('MyCampaign3', 20),
+      ];
+      final seriesList = _createSeriesList(data);
+
+      final renderer = makeFakeRenderer();
+
+      renderer.preprocessSeries(seriesList);
+      renderer.update(seriesList, false);
+      renderer.paint(canvas, 1.0);
+
+      final chartPositions = data
+          .map((item) => SeriesDatum(seriesList.first, item))
+          .map((datum) =>
+              renderer.getDetailsForSeriesDatum(datum).chartPosition.y);
+      expect(chartPositions, [40, 20, 0]);
+    });
+
+    test('chartPosition calculations with horizontal bars', () {
+      // Helper to create series list for this test only.
+      List<MutableSeries<String>> _createSeriesList(List<MyRow> data) {
+        final domainAxis = MockAxis<dynamic>();
+        when(domainAxis.rangeBand).thenReturn(80.0);
+        when(domainAxis.axisOrientation).thenReturn(AxisOrientation.left);
+        when(domainAxis.getLocation('MyCampaign1')).thenReturn(20.0);
+        when(domainAxis.getLocation('MyCampaign2')).thenReturn(40.0);
+        when(domainAxis.getLocation('MyCampaign3')).thenReturn(60.0);
+        final measureAxis = MockAxis<num>();
+        when(domainAxis.axisOrientation).thenReturn(AxisOrientation.bottom);
+        when(measureAxis.getLocation(-20)).thenReturn(0.0);
+        when(measureAxis.getLocation(0)).thenReturn(20.0);
+        when(measureAxis.getLocation(20)).thenReturn(40.0);
+
+        final color = Color.fromHex(code: '#000000');
+
+        final series = MutableSeries<String>(Series<MyRow, String>(
+            id: 'Desktop',
+            domainFn: (MyRow row, _) => row.campaign,
+            measureFn: (MyRow row, _) => row.clickCount,
+            measureOffsetFn: (_, __) => 0,
+            colorFn: (_, __) => color,
+            fillColorFn: (_, __) => color,
+            dashPatternFn: (_, __) => [1],
+            data: data))
+          ..setAttr(domainAxisKey, domainAxis)
+          ..setAttr(measureAxisKey, measureAxis);
+
+        return [series];
+      }
+
+      final canvas = MockCanvas();
+
+      final data = [
+        MyRow('MyCampaign1', -20),
+        MyRow('MyCampaign2', 0),
+        MyRow('MyCampaign3', 20),
+      ];
+      final seriesList = _createSeriesList(data);
+
+      final renderer = makeFakeRenderer(isVertical: false);
+
+      renderer.preprocessSeries(seriesList);
+      renderer.update(seriesList, false);
+      renderer.paint(canvas, 1.0);
+
+      final chartPositions = data
+          .map((item) => SeriesDatum(seriesList.first, item))
+          .map((datum) =>
+              renderer.getDetailsForSeriesDatum(datum).chartPosition.x);
+      expect(chartPositions, [0, 20, 40]);
     });
   });
 
