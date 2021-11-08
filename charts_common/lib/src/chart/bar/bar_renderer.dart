@@ -108,12 +108,16 @@ class BarRenderer<D>
 
     NullablePoint chartPosition;
 
+    final isNegativeMeasure = (details.measure ?? 0) < 0;
     if (renderingVertically) {
       chartPosition = NullablePoint(
-          (bounds.left + (bounds.width / 2)).toDouble(), bounds.top.toDouble());
+          (bounds.left + (bounds.width / 2)).toDouble(),
+          isNegativeMeasure ? bounds.bottom.toDouble() : bounds.top.toDouble());
     } else {
       chartPosition = NullablePoint(
-          isRtl ? bounds.left.toDouble() : bounds.right.toDouble(),
+          isRtl ^ isNegativeMeasure
+              ? bounds.left.toDouble()
+              : bounds.right.toDouble(),
           (bounds.top + (bounds.height / 2)).toDouble());
     }
 
