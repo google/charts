@@ -119,6 +119,7 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
   final int? desiredTickCount;
   final int? desiredMinTickCount;
   final int? desiredMaxTickCount;
+  final List<double>? allowedSteps;
 
   /// Creates a [TickProviderSpec] that dynamically chooses the number of
   /// ticks based on the extents of the data.
@@ -135,12 +136,16 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
   /// [desiredMaxTickCount] automatically choose the best tick
   ///     count to produce the 'nicest' ticks but make sure we don't have more
   ///     than this many.
-  const BasicNumericTickProviderSpec(
-      {this.zeroBound,
-      this.dataIsInWholeNumbers,
-      this.desiredTickCount,
-      this.desiredMinTickCount,
-      this.desiredMaxTickCount});
+  /// [allowedSteps] allowed step sizes in the [1, 10) range. All ticks will be
+  ///     a power of 10 multiple of the given step sizes.
+  const BasicNumericTickProviderSpec({
+    this.zeroBound,
+    this.dataIsInWholeNumbers,
+    this.desiredTickCount,
+    this.desiredMinTickCount,
+    this.desiredMaxTickCount,
+    this.allowedSteps,
+  });
 
   @override
   NumericTickProvider createTickProvider(ChartContext context) {
@@ -150,6 +155,9 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
     }
     if (dataIsInWholeNumbers != null) {
       provider.dataIsInWholeNumbers = dataIsInWholeNumbers!;
+    }
+    if (allowedSteps != null) {
+      provider.allowedSteps = allowedSteps!;
     }
 
     if (desiredMinTickCount != null ||
@@ -168,7 +176,8 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
       dataIsInWholeNumbers == other.dataIsInWholeNumbers &&
       desiredTickCount == other.desiredTickCount &&
       desiredMinTickCount == other.desiredMinTickCount &&
-      desiredMaxTickCount == other.desiredMaxTickCount;
+      desiredMaxTickCount == other.desiredMaxTickCount &&
+      allowedSteps == other.allowedSteps;
 
   @override
   int get hashCode {
@@ -177,6 +186,7 @@ class BasicNumericTickProviderSpec implements NumericTickProviderSpec {
     hashcode = (hashcode * 37) + desiredTickCount.hashCode;
     hashcode = (hashcode * 37) + desiredMinTickCount.hashCode;
     hashcode = (hashcode * 37) + desiredMaxTickCount.hashCode;
+    hashcode = (hashcode * 37) + allowedSteps.hashCode;
     return hashcode;
   }
 }
