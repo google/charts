@@ -18,7 +18,8 @@ import 'package:meta/meta.dart' show protected;
 import '../../../cartesian/cartesian_chart.dart' show CartesianChart;
 import '../../base_chart.dart' show BaseChart, LifecycleListener;
 import '../../processed_series.dart' show MutableSeries;
-import '../../selection_model/selection_model.dart' show SelectionModelType;
+import '../../selection_model/selection_model.dart'
+    show MutableSelectionModel, SelectionModelType;
 import '../../series_datum.dart' show SeriesDatum;
 import '../chart_behavior.dart' show ChartBehavior;
 
@@ -175,25 +176,45 @@ abstract class KeyboardDomainNavigator<D> implements ChartBehavior<D> {
 
     if (domainIndex == NO_SELECTION) {
       selectionModel.clearSelection();
-    } else {
-      final datumPairs = _getDatumPairs(domainIndex);
-
-      final seriesDatumList = <SeriesDatum<D>>[];
-      final seriesList = <MutableSeries<D>>[];
-
-      for (final seriesDatum in datumPairs) {
-        seriesDatumList
-            .add(SeriesDatum<D>(seriesDatum.series, seriesDatum.datum));
-
-        if (!seriesList.contains(seriesDatum.series)) {
-          seriesList.add(seriesDatum.series as MutableSeries<D>);
-        }
-      }
-
-      selectionModel.updateSelection(seriesDatumList, seriesList);
+      return true;
     }
 
+    // On hover.
+    if (selectionModelType == SelectionModelType.info) {
+      final targetDatum = _getDatumPairs(domainIndex);
+      _updateSelection(targetDatum, selectionModel);
+
+      return true;
+    }
+
+    // On Select
+    final targetData = _getDatumPairs(domainIndex).toSet();
+    final selectedData = selectionModel.selectedDatum.toSet();
+    final newSelection = <SeriesDatum<D>>{...targetData, ...selectedData};
+
+    // If target is already selected, need to unselect!
+    final toUnselect = targetData.where(selectedData.contains).toSet();
+    newSelection.removeAll(toUnselect);
+
+    _updateSelection(newSelection, selectionModel);
     return true;
+  }
+
+  void _updateSelection(Iterable<SeriesDatum<D>> newSelection,
+      MutableSelectionModel<D> selectionModel) {
+    final seriesDatumList = <SeriesDatum<D>>[];
+    final seriesList = <MutableSeries<D>>[];
+
+    for (final seriesDatum in newSelection) {
+      seriesDatumList
+          .add(SeriesDatum<D>(seriesDatum.series, seriesDatum.datum));
+
+      if (!seriesList.contains(seriesDatum.series)) {
+        seriesList.add(seriesDatum.series as MutableSeries<D>);
+      }
+    }
+
+    selectionModel.updateSelection(seriesDatumList, seriesList);
   }
 
   /// Reads the current active index of the hover selection.
