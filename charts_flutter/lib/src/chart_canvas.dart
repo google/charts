@@ -150,9 +150,7 @@ class ChartCanvas implements common.ChartCanvas {
       common.Color? stroke,
       double? strokeWidthPx,
       Rectangle<num>? drawAreaBounds}) {
-    // TODO: remove this explicit `bool` type when no longer needed
-    // to work around https://github.com/dart-lang/language/issues/1785
-    final bool drawStroke =
+    final drawStroke =
         (strokeWidthPx != null && strokeWidthPx > 0.0 && stroke != null);
 
     final strokeWidthOffset = (drawStroke ? strokeWidthPx : 0);
