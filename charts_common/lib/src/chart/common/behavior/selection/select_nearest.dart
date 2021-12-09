@@ -245,9 +245,7 @@ class SelectNearest<D> implements ChartBehavior<D> {
       final domainFn = series.domainFn;
       final domainLowerBoundFn = series.domainLowerBoundFn;
       final domainUpperBoundFn = series.domainUpperBoundFn;
-      // TODO: remove this explicit `bool` type when no longer
-      // needed to work around https://github.com/dart-lang/language/issues/1785
-      final bool testBounds =
+      final testBounds =
           domainLowerBoundFn != null && domainUpperBoundFn != null;
 
       for (var i = 0; i < series.data.length; i++) {

@@ -398,10 +398,7 @@ abstract class BaseBarRenderer<D, R extends BaseBarRendererElement,
         final domainValue = domainFn(barIndex);
 
         final measureValue = measureFn(barIndex);
-        // TODO: remove this explicit `bool` type when no longer
-        // needed to work around
-        // https://github.com/dart-lang/language/issues/1785
-        final bool measureIsNull = measureValue == null;
+        final measureIsNull = measureValue == null;
         final measureIsNegative = !measureIsNull && measureValue < 0;
 
         // Each bar should be stored in barStackMap in a structure that mirrors
