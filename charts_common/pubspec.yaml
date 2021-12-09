@@ -4,7 +4,7 @@ description: A common library for charting packages.
 homepage: https://github.com/google/charts
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.15.0 <3.0.0'
 
 dependencies:
   collection: ^1.14.5
