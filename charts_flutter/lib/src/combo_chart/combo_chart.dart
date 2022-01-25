@@ -49,6 +49,7 @@ class NumericComboChart extends CartesianChart<num> {
     common.RTLSpec? rtlSpec,
     LayoutConfig? layoutConfig,
     bool defaultInteractions = true,
+    bool? flipVerticalAxis = false,
   }) : super(
           seriesList,
           animate: animate,
@@ -63,6 +64,7 @@ class NumericComboChart extends CartesianChart<num> {
           rtlSpec: rtlSpec,
           layoutConfig: layoutConfig,
           defaultInteractions: defaultInteractions,
+          flipVerticalAxis: flipVerticalAxis,
         );
 
   @override
