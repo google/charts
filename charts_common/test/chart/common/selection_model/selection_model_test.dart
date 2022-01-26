@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -42,7 +44,7 @@ void main() {
     _closestSeries = MutableSeries<String>(Series<MyDatum, String>(
         id: 'closest',
         data: [_closestDatumClosestSeries, _otherDatumClosestSeries],
-        domainFn: (dynamic d, _) => d.id,
+        domainFn: (d, _) => d.id,
         measureFn: (_, __) => 0));
     _closestDatumClosestSeriesPair =
         SeriesDatum<String>(_closestSeries, _closestDatumClosestSeries);
@@ -54,7 +56,7 @@ void main() {
     _otherSeries = MutableSeries<String>(Series<MyDatum, String>(
         id: 'other',
         data: [_closestDatumOtherSeries, _otherDatumOtherSeries],
-        domainFn: (dynamic d, _) => d.id,
+        domainFn: (d, _) => d.id,
         measureFn: (_, __) => 0));
     _closestDatumOtherSeriesPair =
         SeriesDatum<String>(_otherSeries, _closestDatumOtherSeries);
@@ -231,9 +233,9 @@ void main() {
     test('removed listener not triggered for change', () {
       SelectionModel<String> triggeredModel;
 
-      Function cb = (SelectionModel<String> model) {
+      void cb(SelectionModel<String> model) {
         triggeredModel = model;
-      };
+      }
 
       // Listen
       _selectionModel.addSelectionChangedListener(cb);
@@ -302,9 +304,9 @@ void main() {
     test('removed listener not triggered for change', () {
       SelectionModel<String> triggeredModel;
 
-      Function cb = (SelectionModel<String> model) {
+      void cb(SelectionModel<String> model) {
         triggeredModel = model;
-      };
+      }
 
       // Listen
       _selectionModel.addSelectionUpdatedListener(cb);
@@ -343,9 +345,9 @@ void main() {
     test('removed listener not triggered for locking', () {
       SelectionModel<String> triggeredModel;
 
-      Function cb = (SelectionModel<String> model) {
+      void cb(SelectionModel<String> model) {
         triggeredModel = model;
-      };
+      }
 
       // Listen
       _selectionModel.addSelectionLockChangedListener(cb);

@@ -21,9 +21,9 @@ class GalleryDrawer extends StatelessWidget {
   final ValueChanged<bool> onShowPerformanceOverlayChanged;
 
   GalleryDrawer(
-      {Key key,
-      this.showPerformanceOverlay,
-      this.onShowPerformanceOverlayChanged})
+      {Key? key,
+      this.showPerformanceOverlay = false,
+      required this.onShowPerformanceOverlayChanged})
       : super(key: key);
 
   @override
@@ -40,7 +40,7 @@ class GalleryDrawer extends StatelessWidget {
           selected: showPerformanceOverlay,
           trailing: new Checkbox(
             value: showPerformanceOverlay,
-            onChanged: (bool value) {
+            onChanged: (bool? value) {
               onShowPerformanceOverlayChanged(!showPerformanceOverlay);
             },
           ),

@@ -15,7 +15,8 @@
 
 import 'dart:collection' show LinkedHashMap;
 
-import '../../common/date_time_factory.dart' show DateTimeFactory;
+import '../../common/date_time_factory.dart'
+    show DateTimeFactory, LocalDateTimeFactory;
 import '../cartesian/axis/axis.dart' show Axis, NumericAxis;
 import '../cartesian/axis/draw_strategy/small_tick_draw_strategy.dart'
     show SmallTickRendererSpec;
@@ -31,12 +32,12 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
   final DateTimeFactory dateTimeFactory;
 
   TimeSeriesChart(
-      {bool vertical,
-      LayoutConfig layoutConfig,
-      NumericAxis primaryMeasureAxis,
-      NumericAxis secondaryMeasureAxis,
-      LinkedHashMap<String, NumericAxis> disjointMeasureAxes,
-      this.dateTimeFactory})
+      {bool? vertical,
+      LayoutConfig? layoutConfig,
+      NumericAxis? primaryMeasureAxis,
+      NumericAxis? secondaryMeasureAxis,
+      LinkedHashMap<String, NumericAxis>? disjointMeasureAxes,
+      this.dateTimeFactory = const LocalDateTimeFactory()})
       : super(
             vertical: vertical,
             layoutConfig: layoutConfig,
@@ -47,8 +48,8 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
 
   @override
   void initDomainAxis() {
-    domainAxis.tickDrawStrategy = SmallTickRendererSpec<DateTime>()
-        .createDrawStrategy(context, graphicsFactory);
+    domainAxis!.tickDrawStrategy = SmallTickRendererSpec<DateTime>()
+        .createDrawStrategy(context, graphicsFactory!);
   }
 
   @override

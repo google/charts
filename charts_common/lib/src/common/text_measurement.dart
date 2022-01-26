@@ -25,8 +25,11 @@ class TextMeasurement {
   final double verticalSliceWidth;
 
   /// Baseline of the text for text vertical alignment.
-  final double baseline;
+  final double? baseline;
 
-  TextMeasurement(
-      {this.horizontalSliceWidth, this.verticalSliceWidth, this.baseline});
+  TextMeasurement({
+    required this.horizontalSliceWidth,
+    required this.verticalSliceWidth,
+    this.baseline,
+  });
 }

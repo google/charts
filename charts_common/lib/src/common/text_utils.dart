@@ -29,8 +29,8 @@ const _defaultlabelDelimiter = ' ';
 
 List<TextElement> wrapLabelLines(TextElement labelElement,
     GraphicsFactory graphicsFactory, num maxWidth, num maxHeight,
-    {bool allowLabelOverflow,
-    bool multiline,
+    {required bool allowLabelOverflow,
+    required bool multiline,
     String labelDelimiter = _defaultlabelDelimiter}) {
   final textStyle = labelElement.textStyle;
   final textDirection = labelElement.textDirection;
@@ -74,11 +74,10 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
 
   while (labelPartElements.isNotEmpty && currentLineNumber < maxLines) {
     final currentElement = labelPartElements.removeFirst();
-    var width = currentLineElements.isEmpty
-        ? currentElement.measurement.horizontalSliceWidth
-        : currentWidth +
-            delimiterElementWidth +
-            currentElement.measurement.horizontalSliceWidth;
+    var width = currentElement.measurement.horizontalSliceWidth +
+        (currentLineElements.isEmpty
+            ? 0
+            : currentWidth + delimiterElementWidth);
 
     // If the new word can fit in the left space of the line.
     if (width < maxWidth) {
@@ -89,10 +88,8 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
       currentLineElements.add(currentElement);
     } else {
       // If the new word can not fit in the left space of the line.
-      var currentLineString = '';
-      currentLineElements.forEach((element) {
-        currentLineString += element.text;
-      });
+      var currentLineString =
+          currentLineElements.map((element) => element.text).join();
       currentLineNumber++;
       currentLineElements = [];
       currentWidth = 0;
@@ -130,10 +127,8 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
   }
 
   if (currentLineElements.isNotEmpty) {
-    var currentLineString = '';
-    currentLineElements.forEach((element) {
-      currentLineString += element.text;
-    });
+    final currentLineString =
+        currentLineElements.map((element) => element.text).join();
 
     final labelElement = createTextElement(currentLineString);
     labelElements.add(labelElement);
@@ -146,7 +141,7 @@ List<TextElement> wrapLabelLines(TextElement labelElement,
 ///
 /// Returns a list of [TextElement] with length of 2.
 List<TextElement> _splitLabel(
-    String text, Function createTextElement, num maxWidth) {
+    String text, TextElement Function(String) createTextElement, num maxWidth) {
   var l = 0;
   var r = text.length - 1;
   var m = ((l + r) / 2).floor();
@@ -173,7 +168,7 @@ List<TextElement> _splitLabel(
 
 /// Tests whether or not a given text element fits in the available space.
 bool _doesLabelFit(bool allowLabelOverflow, TextElement textElement,
-    num maxWidth, Function createTextElement) {
+    num maxWidth, TextElement Function(String) createTextElement) {
   if (textElement.maxWidthStrategy != MaxWidthStrategy.ellipsize ||
       allowLabelOverflow) {
     return true;

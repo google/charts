@@ -33,7 +33,7 @@ import 'selection_model_config.dart' show SelectionModelConfig;
 import 'user_managed_state.dart' show UserManagedState;
 
 class TimeSeriesChart extends CartesianChart<DateTime> {
-  final common.DateTimeFactory dateTimeFactory;
+  final common.DateTimeFactory? dateTimeFactory;
 
   /// Create a [TimeSeriesChart].
   ///
@@ -41,21 +41,21 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
   /// be used for the time axis. If none specified, local date time is used.
   TimeSeriesChart(
     List<common.Series<dynamic, DateTime>> seriesList, {
-    bool animate,
-    Duration animationDuration,
-    common.AxisSpec domainAxis,
-    common.AxisSpec primaryMeasureAxis,
-    common.AxisSpec secondaryMeasureAxis,
-    LinkedHashMap<String, common.NumericAxisSpec> disjointMeasureAxes,
-    common.SeriesRendererConfig<DateTime> defaultRenderer,
-    List<common.SeriesRendererConfig<DateTime>> customSeriesRenderers,
-    List<ChartBehavior> behaviors,
-    List<SelectionModelConfig<DateTime>> selectionModels,
-    LayoutConfig layoutConfig,
+    bool? animate,
+    Duration? animationDuration,
+    common.AxisSpec? domainAxis,
+    common.NumericAxisSpec? primaryMeasureAxis,
+    common.NumericAxisSpec? secondaryMeasureAxis,
+    LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes,
+    common.SeriesRendererConfig<DateTime>? defaultRenderer,
+    List<common.SeriesRendererConfig<DateTime>>? customSeriesRenderers,
+    List<ChartBehavior<DateTime>>? behaviors,
+    List<SelectionModelConfig<DateTime>>? selectionModels,
+    LayoutConfig? layoutConfig,
     this.dateTimeFactory,
     bool defaultInteractions = true,
-    bool flipVerticalAxis,
-    UserManagedState<DateTime> userManagedState,
+    bool? flipVerticalAxis,
+    UserManagedState<DateTime>? userManagedState,
   }) : super(
           seriesList,
           animate: animate,
@@ -92,6 +92,6 @@ class TimeSeriesChart extends CartesianChart<DateTime> {
   void addDefaultInteractions(List<ChartBehavior> behaviors) {
     super.addDefaultInteractions(behaviors);
 
-    behaviors.add(new LinePointHighlighter());
+    behaviors.add(new LinePointHighlighter<DateTime>());
   }
 }

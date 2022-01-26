@@ -48,42 +48,50 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
       this.outlineColor = _defaultOutlineColor});
 
   @override
-  void decorate(Iterable<ImmutableBarRendererElement<D>> barElements,
-      ChartCanvas canvas, GraphicsFactory graphicsFactory,
-      {Rectangle<num> drawBounds,
-      double animationPercent,
-      bool renderingVertically,
-      bool rtl = false}) {
+  void decorate(
+    Iterable<ImmutableBarRendererElement<D>> barElements,
+    ChartCanvas canvas,
+    GraphicsFactory graphicsFactory, {
+    required Rectangle<num> drawBounds,
+    required double animationPercent,
+    required bool renderingVertically,
+    bool rtl = false,
+  }) {
     // Only decorate the bars when animation is at 100%.
     if (animationPercent != 1.0) {
       return;
     }
 
     for (var element in barElements) {
-      final bounds = element.bounds;
+      final bounds = element.bounds!;
       final datumIndex = element.index;
 
-      final measureLowerBoundFn = element.series.measureLowerBoundFn;
-      final measureUpperBoundFn = element.series.measureUpperBoundFn;
+      final series = element.series!;
+
+      final measureLowerBoundFn = series.measureLowerBoundFn;
+      final measureUpperBoundFn = series.measureUpperBoundFn;
 
       if (measureLowerBoundFn != null && measureUpperBoundFn != null) {
-        final measureOffsetFn = element.series.measureOffsetFn;
+        final measureOffsetFn = series.measureOffsetFn!;
         final measureAxis =
-            element.series.getAttr(measureAxisKey) as ImmutableAxis<num>;
+            series.getAttr(measureAxisKey) as ImmutableAxis<num>;
 
         if (renderingVertically) {
           final startY = measureAxis.getLocation(
-              measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex));
+              (measureLowerBoundFn(datumIndex) ?? 0) +
+                  measureOffsetFn(datumIndex)!)!;
           final endY = measureAxis.getLocation(
-              measureUpperBoundFn(datumIndex) + measureOffsetFn(datumIndex));
+              (measureUpperBoundFn(datumIndex) ?? 0) +
+                  measureOffsetFn(datumIndex)!)!;
 
           if (startY != endY) {
             final barWidth = bounds.right - bounds.left;
             final x = (bounds.left + bounds.right) / 2;
-            final rectWidth = min(strokeWidthPx + 2 * outlineWidthPx, barWidth);
+            final rectWidth =
+                min(strokeWidthPx + 2 * outlineWidthPx, barWidth.toDouble());
             final strokeWidth = rectWidth - 2 * outlineWidthPx;
             final rectEndpointLength =
-                min(endpointLengthPx + 2 * outlineWidthPx, barWidth);
+                min(endpointLengthPx + 2 * outlineWidthPx, barWidth.toDouble());
             final endpointLength = rectEndpointLength - 2 * outlineWidthPx;
 
             if (outlineWidthPx > 0) {
@@ -131,17 +139,20 @@ class BarErrorDecorator<D> extends BarRendererDecorator<D> {
           }
         } else {
           final startX = measureAxis.getLocation(
-              measureLowerBoundFn(datumIndex) + measureOffsetFn(datumIndex));
+              (measureLowerBoundFn(datumIndex) ?? 0) +
+                  measureOffsetFn(datumIndex)!)!;
           final endX = measureAxis.getLocation(
-              measureUpperBoundFn(datumIndex) + measureOffsetFn(datumIndex));
+              (measureUpperBoundFn(datumIndex) ?? 0) +
+                  measureOffsetFn(datumIndex)!)!;
 
           if (startX != endX) {
             final barWidth = bounds.bottom - bounds.top;
             final y = (bounds.top + bounds.bottom) / 2;
-            final rectWidth = min(strokeWidthPx + 2 * outlineWidthPx, barWidth);
+            final rectWidth =
+                min(strokeWidthPx + 2 * outlineWidthPx, barWidth.toDouble());
             final strokeWidth = rectWidth - 2 * outlineWidthPx;
             final rectEndpointLength =
-                min(endpointLengthPx + 2 * outlineWidthPx, barWidth);
+                min(endpointLengthPx + 2 * outlineWidthPx, barWidth.toDouble());
             final endpointLength = rectEndpointLength - 2 * outlineWidthPx;
 
             if (outlineWidthPx > 0) {

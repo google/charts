@@ -15,8 +15,6 @@
 
 import 'dart:math' show Rectangle;
 
-import 'package:meta/meta.dart' show required;
-
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../common/chart_canvas.dart' show ChartCanvas;
 import 'point_renderer.dart' show PointRendererElement;
@@ -31,7 +29,7 @@ abstract class PointRendererDecorator<D> {
 
   void decorate(PointRendererElement<D> pointElement, ChartCanvas canvas,
       GraphicsFactory graphicsFactory,
-      {@required Rectangle drawBounds,
-      @required double animationPercent,
+      {required Rectangle drawBounds,
+      required double animationPercent,
       bool rtl = false});
 }

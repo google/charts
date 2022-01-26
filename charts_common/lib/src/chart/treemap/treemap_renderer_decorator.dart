@@ -17,7 +17,6 @@ import 'dart:math' show Rectangle;
 
 import 'package:charts_common/src/chart/common/chart_canvas.dart';
 import 'package:charts_common/src/common/graphics_factory.dart';
-import 'package:meta/meta.dart';
 
 import 'treemap_renderer_element.dart';
 
@@ -28,8 +27,8 @@ abstract class TreeMapRendererDecorator<D> {
   /// Paints decorator on top of [rendererElement].
   void decorate(TreeMapRendererElement<D> rendererElement, ChartCanvas canvas,
       GraphicsFactory graphicsFactory,
-      {@required Rectangle drawBounds,
-      @required double animationPercent,
+      {required Rectangle drawBounds,
+      required double animationPercent,
       bool rtl = false,
       bool renderVertically = false,
       bool renderMultiline = false});

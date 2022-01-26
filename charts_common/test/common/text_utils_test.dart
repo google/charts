@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -49,6 +51,9 @@ class FakeTextStyle implements TextStyle {
 
   @override
   String fontFamily;
+
+  @override
+  String fontWeight;
 
   @override
   double lineHeight;

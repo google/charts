@@ -27,12 +27,12 @@ import '../base_chart_state.dart' show BaseChartState;
 
 /// Flutter wrapper for chart behaviors.
 @immutable
-abstract class ChartBehavior<B extends common.ChartBehavior> {
+abstract class ChartBehavior<D> {
   Set<GestureType> get desiredGestures;
 
-  B createCommonBehavior<D>();
+  common.ChartBehavior<D> createCommonBehavior();
 
-  void updateCommonBehavior(B commonBehavior);
+  void updateCommonBehavior(common.ChartBehavior<D> commonBehavior);
 
   String get role;
 }
@@ -60,7 +60,7 @@ abstract class BuildableBehavior<B extends common.ChartBehavior> {
   common.InsideJustification get insideJustification;
 
   /// Chart's draw area bounds are used for positioning.
-  Rectangle<int> get drawAreaBounds;
+  Rectangle<int>? get drawAreaBounds;
 }
 
 /// Types of gestures accepted by a chart.

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -17,6 +19,7 @@ import 'package:charts_common/src/chart/cartesian/axis/static_tick_provider.dart
 import 'package:charts_common/src/chart/cartesian/axis/linear/linear_scale.dart';
 import 'package:charts_common/src/chart/cartesian/axis/draw_strategy/base_tick_draw_strategy.dart';
 import 'package:charts_common/src/common/graphics_factory.dart';
+import 'package:charts_common/src/common/text_element.dart';
 import 'package:charts_common/src/chart/common/chart_context.dart';
 import 'package:charts_common/src/chart/cartesian/axis/scale.dart';
 import 'package:charts_common/src/chart/cartesian/axis/spec/tick_spec.dart';
@@ -27,6 +30,8 @@ import 'package:test/test.dart';
 class MockChartContext extends Mock implements ChartContext {}
 
 class MockGraphicsFactory extends Mock implements GraphicsFactory {}
+
+class MockTextElement extends Mock implements TextElement {}
 
 class MockNumericTickFormatter extends Mock implements TickFormatter<num> {}
 
@@ -42,21 +47,23 @@ class FakeNumericTickFormatter implements TickFormatter<num> {
   }
 }
 
-class MockDrawStrategy extends Mock implements BaseTickDrawStrategy {}
+class MockDrawStrategy<D> extends Mock implements BaseTickDrawStrategy<D> {}
 
 void main() {
   ChartContext context;
   GraphicsFactory graphicsFactory;
-  TickFormatter formatter;
-  BaseTickDrawStrategy drawStrategy;
+  TickFormatter<num> formatter;
+  BaseTickDrawStrategy<num> drawStrategy;
   LinearScale scale;
 
   setUp(() {
     context = MockChartContext();
     graphicsFactory = MockGraphicsFactory();
     formatter = MockNumericTickFormatter();
-    drawStrategy = MockDrawStrategy();
+    drawStrategy = MockDrawStrategy<num>();
     scale = LinearScale()..range = ScaleOutputExtent(0, 300);
+
+    when(graphicsFactory.createTextElement(any)).thenReturn(MockTextElement());
   });
 
   group('scale is extended with static tick values', () {
@@ -175,6 +182,29 @@ void main() {
           orientation: null);
 
       expect(fakeFormatter.calledTimes, equals(1));
+    });
+  });
+
+  group('with tick increment', () {
+    test('returns every Nth tick', () {
+      final tickProvider = StaticTickProvider<num>([
+        TickSpec<num>(50, label: '50'),
+        TickSpec<num>(75, label: '75'),
+        TickSpec<num>(100, label: '100'),
+        TickSpec<num>(125, label: '125'),
+        TickSpec<num>(150, label: '150'),
+      ], tickIncrement: 2);
+
+      final ticks = tickProvider.getTicks(
+          context: context,
+          graphicsFactory: graphicsFactory,
+          scale: scale,
+          formatter: formatter,
+          formatterValueCache: <num, String>{},
+          tickDrawStrategy: drawStrategy,
+          orientation: null);
+
+      expect(ticks.map((tick) => tick.value).toList(), [50, 100, 150]);
     });
   });
 }

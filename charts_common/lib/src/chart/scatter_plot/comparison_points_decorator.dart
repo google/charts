@@ -15,7 +15,7 @@
 
 import 'dart:math' show Point, Rectangle;
 
-import 'package:meta/meta.dart' show protected, required;
+import 'package:meta/meta.dart' show protected;
 
 import '../../common/graphics_factory.dart' show GraphicsFactory;
 import '../../common/symbol_renderer.dart';
@@ -37,14 +37,14 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
   @override
   final bool renderAbove = false;
 
-  ComparisonPointsDecorator({PointSymbolRenderer symbolRenderer})
+  ComparisonPointsDecorator({PointSymbolRenderer? symbolRenderer})
       : symbolRenderer = symbolRenderer ?? CylinderSymbolRenderer();
 
   @override
   void decorate(PointRendererElement<D> pointElement, ChartCanvas canvas,
       GraphicsFactory graphicsFactory,
-      {@required Rectangle drawBounds,
-      @required double animationPercent,
+      {required Rectangle drawBounds,
+      required double animationPercent,
       bool rtl = false}) {
     final points = computeBoundedPointsForElement(pointElement, drawBounds);
 
@@ -52,7 +52,7 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
       return;
     }
 
-    final color = pointElement.color.lighter;
+    final color = pointElement.color!.lighter;
 
     symbolRenderer.paint(canvas, points[0], pointElement.boundsLineRadiusPx,
         fillColor: color, strokeColor: color, p2: points[1]);
@@ -67,22 +67,21 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
   /// Returns null if [pointElement] is missing any of the data bounds, or if
   /// the line connecting them is located entirely outside of [drawBounds].
   @protected
-  List<Point<double>> computeBoundedPointsForElement(
+  List<Point<double>>? computeBoundedPointsForElement(
       PointRendererElement<D> pointElement, Rectangle drawBounds) {
     // All bounds points must be defined for a valid comparison point to be
     // drawn.
-    if (pointElement.point.xLower == null ||
-        pointElement.point.xUpper == null ||
-        pointElement.point.yLower == null ||
-        pointElement.point.yUpper == null) {
+    final point = pointElement.point!;
+    if (point.xLower == null ||
+        point.xUpper == null ||
+        point.yLower == null ||
+        point.yUpper == null) {
       return null;
     }
 
     // Construct the points that describe our line p1p2.
-    var p1 =
-        Point<double>(pointElement.point.xLower, pointElement.point.yLower);
-    var p2 =
-        Point<double>(pointElement.point.xUpper, pointElement.point.yUpper);
+    var p1 = Point<double>(point.xLower!, point.yLower!);
+    var p2 = Point<double>(point.xUpper!, point.yUpper!);
 
     // First check to see if there is no intersection at all between the line
     // p1p2 and [drawBounds].
@@ -120,7 +119,7 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
   ///
   /// This method assumes that we have already verified that the [line]
   /// intercepts the [bounds] somewhere.
-  Point<double> _clampPointAlongLineToBoundingBox(
+  Point<double>? _clampPointAlongLineToBoundingBox(
       Point<double> p1, _Line line, Rectangle<num> bounds) {
     // The top and bottom edges of the bounds box describe two horizontal lines,
     // with equations y = bounds.top and y = bounds.bottom. We can pass these
@@ -166,16 +165,16 @@ class ComparisonPointsDecorator<D> extends PointRendererDecorator<D> {
 /// Describes a simple line with the equation y = slope * x + yIntercept.
 class _Line {
   /// Slope of the line.
-  double slope;
+  double? slope;
 
   /// y-intercept of the line (i.e. the y value of the point where the line
   /// intercepts the y axis).
-  double yIntercept;
+  double? yIntercept;
 
   /// x-intercept of the line (i.e. the x value of the point where the line
   /// intercepts the x axis). This is normally only needed for vertical lines,
   /// which have no slope.
-  double xIntercept;
+  double? xIntercept;
 
   /// True if this line is a vertical line, of the form x = [xIntercept].
   bool get vertical => slope == null && xIntercept != null;
@@ -190,10 +189,10 @@ class _Line {
     }
 
     // Slope of the line p1p2.
-    double m = ((p2.y - p1.y) / (p2.x - p1.x)).toDouble();
+    final m = ((p2.y - p1.y) / (p2.x - p1.x)).toDouble();
 
     // y-intercept of the line p1p2.
-    double b = (p1.y - (m * p1.x)).toDouble();
+    final b = (p1.y - (m * p1.x)).toDouble();
 
     return _Line(m, b);
   }
@@ -207,7 +206,7 @@ class _Line {
   ///
   /// Returns the intersection of this and `other`, or `null` if they don't
   /// intersect.
-  Point<double> intersection(_Line other) {
+  Point<double>? intersection(_Line other) {
     // Parallel lines have no intersection.
     if (slope == other.slope || (vertical && other.vertical)) {
       return null;
@@ -218,22 +217,23 @@ class _Line {
     // y.
     if (other.vertical) {
       return Point<double>(
-          other.xIntercept, slope * other.xIntercept + yIntercept);
+          other.xIntercept!, slope! * other.xIntercept! + yIntercept!);
     }
 
     // If this line is a vertical line (has undefined slope), then we can just
     // plug its xIntercept value into the line equation as x and solve for y.
     if (vertical) {
       return Point<double>(
-          xIntercept, other.slope * xIntercept + other.yIntercept);
+          xIntercept!, other.slope! * xIntercept! + other.yIntercept!);
     }
 
     // Now that we know that we have intersecting, non-vertical lines, compute
     // the intersection.
-    final x = (other.yIntercept - yIntercept) / (slope - other.slope);
+    final x = (other.yIntercept! - yIntercept!) / (slope! - other.slope!);
 
-    final y = slope * (other.yIntercept - yIntercept) / (slope - other.slope) +
-        yIntercept;
+    final y =
+        slope! * (other.yIntercept! - yIntercept!) / (slope! - other.slope!) +
+            yIntercept!;
 
     return Point<double>(x, y);
   }

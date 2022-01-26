@@ -27,9 +27,12 @@ abstract class BaseTimeStepper implements TimeStepper {
   /// DateTime interface.
   final DateTimeFactory dateTimeFactory;
 
-  _TimeStepIteratorFactoryImpl _stepsIterable;
+  _TimeStepIteratorFactoryImpl? _stepsIterable;
 
-  BaseTimeStepper(this.dateTimeFactory);
+  BaseTimeStepper(this.dateTimeFactory) {
+    // Must have at least one increment option.
+    assert(allowedTickIncrements.isNotEmpty);
+  }
 
   /// Get the step time before or on the given [time] from [tickIncrement].
   DateTime getStepTimeBeforeInclusive(DateTime time, int tickIncrement);
@@ -56,10 +59,10 @@ abstract class BaseTimeStepper implements TimeStepper {
   TimeStepIteratorFactory getSteps(DateTimeExtents timeExtent) {
     // Keep the steps iterable unless time extent changes, so the same iterator
     // can be used and reset for different increments.
-    if (_stepsIterable == null || _stepsIterable.timeExtent != timeExtent) {
+    if (_stepsIterable == null || _stepsIterable!.timeExtent != timeExtent) {
       _stepsIterable = _TimeStepIteratorFactoryImpl(timeExtent, this);
     }
-    return _stepsIterable;
+    return _stepsIterable!;
   }
 
   @override
@@ -83,7 +86,7 @@ class _TimeStepIteratorImpl implements TimeStepIterator {
   final DateTime extentStartTime;
   final DateTime extentEndTime;
   final BaseTimeStepper stepper;
-  DateTime _current;
+  DateTime? _current;
   int _tickIncrement = 1;
 
   _TimeStepIteratorImpl(
@@ -97,14 +100,14 @@ class _TimeStepIteratorImpl implements TimeStepIterator {
       _current =
           stepper.getStepTimeAfterInclusive(extentStartTime, _tickIncrement);
     } else {
-      _current = stepper.getNextStepTime(_current, _tickIncrement);
+      _current = stepper.getNextStepTime(_current!, _tickIncrement);
     }
 
-    return _current.compareTo(extentEndTime) <= 0;
+    return _current!.compareTo(extentEndTime) <= 0;
   }
 
   @override
-  DateTime get current => _current;
+  DateTime get current => _current!;
 
   @override
   TimeStepIterator reset(int tickIncrement) {

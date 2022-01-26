@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -22,13 +24,23 @@ import 'package:test/test.dart';
 
 /// Fake [TextElement] for testing.
 class FakeTextElement implements TextElement {
+  @override
   final String text;
   double opacity;
 
+  @override
   TextMeasurement measurement;
+
+  @override
   TextStyle textStyle;
+
+  @override
   int maxWidth;
+
+  @override
   MaxWidthStrategy maxWidthStrategy;
+
+  @override
   TextDirection textDirection;
 
   FakeTextElement(this.text);

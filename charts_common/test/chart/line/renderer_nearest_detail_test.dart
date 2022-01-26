@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -204,9 +206,6 @@ void main() {
     });
   });
 
-  /////////////////////////////////////////
-  // Vertical BarRenderer
-  /////////////////////////////////////////
   group('LineRenderer', () {
     test('hit test works', () {
       // Setup
@@ -347,6 +346,51 @@ void main() {
 
       // Verify
       expect(details.length, equals(0));
+    });
+  });
+
+  /////////////////////////////////////////
+  // Area Chart
+  /////////////////////////////////////////
+  group('Area Chart', () {
+    setUp(() {
+      selectNearestByDomain = true;
+
+      renderer = LineRenderer<int>(
+          config: LineRendererConfig(strokeWidthPx: 1.0, includeArea: true));
+      final layoutBounds = Rectangle<int>(70, 20, 200, 100);
+      renderer.layout(layoutBounds, layoutBounds);
+      return renderer;
+    });
+
+    test('hit test works for points below one series but closer to another',
+        () {
+      // Setup
+      final seriesList = <MutableSeries<int>>[
+        _makeSeries(id: 'low'),
+        _makeSeries(id: 'middle', measureOffset: 20),
+        _makeSeries(id: 'high', measureOffset: 40),
+      ];
+      renderer.configureSeries(seriesList);
+      renderer.preprocessSeries(seriesList);
+      renderer.update(seriesList, false);
+      renderer.paint(MockCanvas(), 1.0);
+
+      // Act
+      final details = renderer.getNearestDatumDetailPerSeries(
+          Point<double>(70.0 + 10.0, 20.0 + 100.0 - 15.0),
+          selectNearestByDomain,
+          null);
+
+      // Verify
+      expect(details, hasLength(3));
+
+      final closest = details[1];
+      expect(closest.series.id, equals('middle'));
+      expect(closest.domain, equals(1000));
+      expect(closest.datum, equals(seriesList[1].data[0]));
+      expect(closest.domainDistance, equals(10));
+      expect(closest.measureDistance, equals(0));
     });
   });
 }

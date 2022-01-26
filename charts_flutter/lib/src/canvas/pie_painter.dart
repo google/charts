@@ -20,18 +20,14 @@ import 'circle_sector_painter.dart' show CircleSectorPainter;
 
 /// Draws a pie chart, with an optional hole in the center.
 class PiePainter {
-  CircleSectorPainter _circleSectorPainter;
-
   /// Draws a pie chart, with an optional hole in the center.
-  void draw(Canvas canvas, Paint paint, common.CanvasPie canvasPie) {
-    _circleSectorPainter ??= new CircleSectorPainter();
-
+  static void draw(Canvas canvas, Paint paint, common.CanvasPie canvasPie) {
     final center = canvasPie.center;
     final radius = canvasPie.radius;
     final innerRadius = canvasPie.innerRadius;
 
     for (var slice in canvasPie.slices) {
-      _circleSectorPainter.draw(
+      CircleSectorPainter.draw(
           canvas: canvas,
           paint: paint,
           center: center,
@@ -47,8 +43,8 @@ class PiePainter {
     if (canvasPie.stroke != null &&
         canvasPie.strokeWidthPx != null &&
         canvasPie.slices.length > 1) {
-      paint.color = new Color.fromARGB(canvasPie.stroke.a, canvasPie.stroke.r,
-          canvasPie.stroke.g, canvasPie.stroke.b);
+      paint.color = new Color.fromARGB(canvasPie.stroke!.a, canvasPie.stroke!.r,
+          canvasPie.stroke!.g, canvasPie.stroke!.b);
 
       paint.strokeWidth = canvasPie.strokeWidthPx;
       paint.strokeJoin = StrokeJoin.bevel;

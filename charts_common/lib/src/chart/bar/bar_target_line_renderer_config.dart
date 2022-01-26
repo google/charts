@@ -29,7 +29,7 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   /// target line in the group, and the ending side of the last bar target line.
   /// overDrawPx will be used for overdrawing the target lines for interior
   /// sides of the bars.
-  final int overDrawOuterPx;
+  final int? overDrawOuterPx;
 
   /// The number of pixels that the line will extend beyond the bandwidth for
   /// every bar in a group.
@@ -39,18 +39,20 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   final bool roundEndCaps;
 
   BarTargetLineRendererConfig(
-      {String customRendererId,
-      List<int> dashPattern,
-      groupingType = BarGroupingType.grouped,
+      {int barGroupInnerPaddingPx = 2,
+      String? customRendererId,
+      List<int>? dashPattern,
+      BarGroupingType groupingType = BarGroupingType.grouped,
       int layoutPaintOrder = LayoutViewPaintOrder.barTargetLine,
       int minBarLengthPx = 0,
       this.overDrawOuterPx,
       this.overDrawPx = 0,
       this.roundEndCaps = true,
       double strokeWidthPx = 3.0,
-      SymbolRenderer symbolRenderer,
-      List<int> weightPattern})
+      SymbolRenderer? symbolRenderer,
+      List<int>? weightPattern})
       : super(
+          barGroupInnerPaddingPx: barGroupInnerPaddingPx,
           customRendererId: customRendererId,
           dashPattern: dashPattern,
           groupingType: groupingType,
@@ -67,14 +69,12 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is BarTargetLineRendererConfig)) {
-      return false;
-    }
-    return other.overDrawOuterPx == overDrawOuterPx &&
+    return other is BarTargetLineRendererConfig &&
+        other.overDrawOuterPx == overDrawOuterPx &&
         other.overDrawPx == overDrawPx &&
         other.roundEndCaps == roundEndCaps &&
         super == other;
@@ -83,9 +83,9 @@ class BarTargetLineRendererConfig<D> extends BaseBarRendererConfig<D> {
   @override
   int get hashCode {
     var hash = 1;
-    hash = hash * 31 + (overDrawOuterPx?.hashCode ?? 0);
-    hash = hash * 31 + (overDrawPx?.hashCode ?? 0);
-    hash = hash * 31 + (roundEndCaps?.hashCode ?? 0);
+    hash = hash * 31 + overDrawOuterPx.hashCode;
+    hash = hash * 31 + overDrawPx.hashCode;
+    hash = hash * 31 + roundEndCaps.hashCode;
     return hash;
   }
 }

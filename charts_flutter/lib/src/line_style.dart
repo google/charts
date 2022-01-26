@@ -17,9 +17,13 @@ import 'package:charts_common/common.dart' as common show Color, LineStyle;
 
 class LineStyle implements common.LineStyle {
   @override
-  common.Color color;
+  common.Color? color;
+
   @override
-  List<int> dashPattern;
+  List<int>? dashPattern;
+
   @override
   int strokeWidth;
+
+  LineStyle({this.strokeWidth = 0});
 }

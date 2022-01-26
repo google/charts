@@ -42,28 +42,31 @@ import '../layout/layout_view.dart' show LayoutViewConfig;
 ///   series.
 abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
     implements SeriesRendererConfig<D> {
+  /// Spacing between the bars in a group.
+  final int barGroupInnerPaddingPx;
+
   @override
-  final String customRendererId;
+  final String? customRendererId;
 
   @override
   final SymbolRenderer symbolRenderer;
 
   /// Dash pattern for the stroke line around the edges of the bar.
-  final List<int> dashPattern;
+  final List<int>? dashPattern;
 
   /// Defines the way multiple series of bars are rendered per domain.
   final BarGroupingType groupingType;
 
   /// The order to paint this renderer on the canvas.
-  final int layoutPaintOrder;
+  final int? layoutPaintOrder;
 
   final int minBarLengthPx;
 
   // The maximum bar group width in pixels, or null if bars can be arbitrarily
   // wide.
-  final int maxBarWidthPx;
+  final int? maxBarWidthPx;
 
-  final FillPatternType fillPattern;
+  final FillPatternType? fillPattern;
 
   /// The padding between bar stacks.
   final int stackedBarPaddingPx;
@@ -87,13 +90,14 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
   /// this case.
   ///
   /// Not used for stacked bars.
-  final List<int> weightPattern;
+  final List<int>? weightPattern;
 
   @override
   final rendererAttributes = RendererAttributes();
 
   BaseBarRendererConfig(
-      {this.customRendererId,
+      {this.barGroupInnerPaddingPx = 2,
+      this.customRendererId,
       this.dashPattern,
       this.groupingType = BarGroupingType.grouped,
       this.layoutPaintOrder,
@@ -102,7 +106,7 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       this.fillPattern,
       this.stackedBarPaddingPx = 1,
       this.strokeWidthPx = 0.0,
-      SymbolRenderer symbolRenderer,
+      SymbolRenderer? symbolRenderer,
       this.weightPattern})
       : symbolRenderer = symbolRenderer ?? RoundedRectSymbolRenderer();
 
@@ -117,14 +121,12 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
       groupingType == BarGroupingType.groupedStacked;
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is BaseBarRendererConfig)) {
-      return false;
-    }
-    return other.customRendererId == customRendererId &&
+    return other is BaseBarRendererConfig &&
+        other.customRendererId == customRendererId &&
         other.dashPattern == dashPattern &&
         other.fillPattern == fillPattern &&
         other.groupingType == groupingType &&
@@ -133,22 +135,22 @@ abstract class BaseBarRendererConfig<D> extends LayoutViewConfig
         other.stackedBarPaddingPx == stackedBarPaddingPx &&
         other.strokeWidthPx == strokeWidthPx &&
         other.symbolRenderer == symbolRenderer &&
-        ListEquality().equals(other.weightPattern, weightPattern);
+        ListEquality<int>().equals(other.weightPattern, weightPattern);
   }
 
   @override
   int get hashCode {
     var hash = 1;
-    hash = hash * 31 + (customRendererId?.hashCode ?? 0);
-    hash = hash * 31 + (dashPattern?.hashCode ?? 0);
-    hash = hash * 31 + (fillPattern?.hashCode ?? 0);
-    hash = hash * 31 + (groupingType?.hashCode ?? 0);
-    hash = hash * 31 + (minBarLengthPx?.hashCode ?? 0);
-    hash = hash * 31 + (maxBarWidthPx?.hashCode ?? 0);
-    hash = hash * 31 + (stackedBarPaddingPx?.hashCode ?? 0);
-    hash = hash * 31 + (strokeWidthPx?.hashCode ?? 0);
-    hash = hash * 31 + (symbolRenderer?.hashCode ?? 0);
-    hash = hash * 31 + (weightPattern?.hashCode ?? 0);
+    hash = hash * 31 + customRendererId.hashCode;
+    hash = hash * 31 + dashPattern.hashCode;
+    hash = hash * 31 + fillPattern.hashCode;
+    hash = hash * 31 + groupingType.hashCode;
+    hash = hash * 31 + minBarLengthPx.hashCode;
+    hash = hash * 31 + maxBarWidthPx.hashCode;
+    hash = hash * 31 + stackedBarPaddingPx.hashCode;
+    hash = hash * 31 + strokeWidthPx.hashCode;
+    hash = hash * 31 + symbolRenderer.hashCode;
+    hash = hash * 31 + weightPattern.hashCode;
     return hash;
   }
 }

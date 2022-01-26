@@ -36,6 +36,8 @@ abstract class TimeStepper {
 
   /// An ordered list of step increments that makes sense given the step.
   ///
+  /// Should never be empty.
+  ///
   /// Example: hours may increment by 1, 2, 3, 4, 6, 12.  It doesn't make sense
   /// to increment hours by 7.
   List<int> get allowedTickIncrements;
@@ -53,7 +55,7 @@ abstract class TimeStepIterator extends Iterator<DateTime> {
 }
 
 /// Factory that creates TimeStepIterator with the set tickIncrement value.
-abstract class TimeStepIteratorFactory extends Iterable {
+abstract class TimeStepIteratorFactory extends Iterable<DateTime> {
   /// Get iterator and optionally set the tickIncrement.
   @override
   TimeStepIterator get iterator;

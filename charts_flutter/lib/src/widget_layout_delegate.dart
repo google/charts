@@ -57,7 +57,7 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
             isRTL ? common.BehaviorPosition.end : common.BehaviorPosition.start;
         final rightPosition =
             isRTL ? common.BehaviorPosition.start : common.BehaviorPosition.end;
-        final behaviorPosition = idAndBehavior[behaviorID].position;
+        final behaviorPosition = idAndBehavior[behaviorID]!.position;
 
         behaviorSize = layoutChild(behaviorID, new BoxConstraints.loose(size));
         if (behaviorPosition == common.BehaviorPosition.top) {
@@ -86,7 +86,7 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
       // TODO: Unable to relayout with new smaller width.
       // In the delegate, all children are required to have layout called
       // exactly once.
-      final behaviorOffset = _getBehaviorOffset(idAndBehavior[behaviorID],
+      final behaviorOffset = _getBehaviorOffset(idAndBehavior[behaviorID]!,
           behaviorSize: behaviorSize, chartSize: chartSize, isRTL: isRTL);
 
       positionChild(behaviorID, behaviorOffset);
@@ -102,8 +102,10 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
 
   // Calculate buildable behavior's offset.
   Offset _getBehaviorOffset(BuildableBehavior behavior,
-      {Size behaviorSize, Size chartSize, bool isRTL}) {
-    Offset behaviorOffset;
+      {required Size behaviorSize,
+      required Size chartSize,
+      required bool isRTL}) {
+    late Offset behaviorOffset;
 
     final behaviorPosition = behavior.position;
     final outsideJustification = behavior.outsideJustification;
@@ -120,15 +122,16 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
 
       switch (horizontalJustification) {
         case _HorizontalJustification.leftDrawArea:
-          behaviorOffset =
-              new Offset(behavior.drawAreaBounds.left.toDouble(), heightOffset);
+          behaviorOffset = new Offset(
+              behavior.drawAreaBounds!.left.toDouble(), heightOffset);
           break;
         case _HorizontalJustification.left:
           behaviorOffset = new Offset(0.0, heightOffset);
           break;
         case _HorizontalJustification.rightDrawArea:
           behaviorOffset = new Offset(
-              behavior.drawAreaBounds.right - behaviorSize.width, heightOffset);
+              behavior.drawAreaBounds!.right - behaviorSize.width,
+              heightOffset);
           break;
         case _HorizontalJustification.right:
           behaviorOffset =
@@ -147,7 +150,7 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
         case common.OutsideJustification.startDrawArea:
         case common.OutsideJustification.middleDrawArea:
           behaviorOffset =
-              new Offset(widthOffset, behavior.drawAreaBounds.top.toDouble());
+              new Offset(widthOffset, behavior.drawAreaBounds!.top.toDouble());
           break;
         case common.OutsideJustification.start:
         case common.OutsideJustification.middle:
@@ -155,7 +158,7 @@ class WidgetLayoutDelegate extends MultiChildLayoutDelegate {
           break;
         case common.OutsideJustification.endDrawArea:
           behaviorOffset = new Offset(widthOffset,
-              behavior.drawAreaBounds.bottom - behaviorSize.height);
+              behavior.drawAreaBounds!.bottom - behaviorSize.height);
           break;
         case common.OutsideJustification.end:
           behaviorOffset =

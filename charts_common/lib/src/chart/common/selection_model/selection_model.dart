@@ -36,8 +36,8 @@ class SelectionModel<D> {
 
   /// Create selection model with the desired selection.
   SelectionModel(
-      {List<SeriesDatum<D>> selectedData,
-      List<ImmutableSeries<D>> selectedSeries}) {
+      {List<SeriesDatum<D>>? selectedData,
+      List<ImmutableSeries<D>>? selectedSeries}) {
     if (selectedData != null) {
       _selectedDatum = selectedData;
     }
@@ -48,19 +48,19 @@ class SelectionModel<D> {
 
   /// Create a deep copy of the selection model.
   SelectionModel.fromOther(SelectionModel<D> other) {
-    _selectedDatum = List.from(other._selectedDatum);
-    _selectedSeries = List.from(other._selectedSeries);
+    _selectedDatum = List.of(other._selectedDatum);
+    _selectedSeries = List.of(other._selectedSeries);
   }
 
   /// Create selection model from configuration.
-  SelectionModel.fromConfig(List<SeriesDatumConfig> selectedDataConfig,
-      List<String> selectedSeriesConfig, List<ImmutableSeries<D>> seriesList) {
+  SelectionModel.fromConfig(List<SeriesDatumConfig<D>>? selectedDataConfig,
+      List<String>? selectedSeriesConfig, List<ImmutableSeries<D>> seriesList) {
     final selectedDataMap = <String, List<D>>{};
 
     if (selectedDataConfig != null) {
-      for (SeriesDatumConfig config in selectedDataConfig) {
+      for (final config in selectedDataConfig) {
         selectedDataMap[config.seriesId] ??= <D>[];
-        selectedDataMap[config.seriesId].add(config.domainValue);
+        selectedDataMap[config.seriesId]!.add(config.domainValue as D);
       }
 
       // Add to list of selected series.
@@ -68,14 +68,14 @@ class SelectionModel<D> {
           selectedDataMap.keys.contains(series.id)));
 
       // Add to list of selected data.
-      for (ImmutableSeries<D> series in seriesList) {
+      for (final series in seriesList) {
         if (selectedDataMap.containsKey(series.id)) {
           final domainFn = series.domainFn;
 
           for (var i = 0; i < series.data.length; i++) {
-            final datum = series.data[i];
+            final Object? datum = series.data[i];
 
-            if (selectedDataMap[series.id].contains(domainFn(i))) {
+            if (selectedDataMap[series.id]!.contains(domainFn(i))) {
               _selectedDatum.add(SeriesDatum(series, datum));
             }
           }
@@ -85,9 +85,13 @@ class SelectionModel<D> {
 
     // Add to list of selected series, if it does not already exist.
     if (selectedSeriesConfig != null) {
+      final existingSeriesIds = {
+        for (final series in _selectedSeries) series.id,
+      };
+
       final remainingSeriesToAdd = selectedSeriesConfig
-          .where((String seriesId) => !selectedSeries.contains(seriesId))
-          .toList();
+          .where((String seriesId) => !existingSeriesIds.contains(seriesId))
+          .toSet();
 
       _selectedSeries.addAll(seriesList.where((ImmutableSeries<D> series) =>
           remainingSeriesToAdd.contains(series.id)));
@@ -97,8 +101,8 @@ class SelectionModel<D> {
   /// Returns true if this [SelectionModel] has a selected datum.
   bool get hasDatumSelection => _selectedDatum.isNotEmpty;
 
-  bool isDatumSelected(ImmutableSeries<D> series, int index) {
-    final datum = index == null ? null : series.data[index];
+  bool isDatumSelected(ImmutableSeries<D> series, int? index) {
+    final Object? datum = index == null ? null : series.data[index];
     return _selectedDatum.contains(SeriesDatum(series, datum));
   }
 
@@ -122,15 +126,18 @@ class SelectionModel<D> {
 
   @override
   bool operator ==(Object other) {
-    return other is SelectionModel &&
-        ListEquality().equals(_selectedDatum, other.selectedDatum) &&
-        ListEquality().equals(_selectedSeries, other.selectedSeries);
+    return other is SelectionModel<D> &&
+        ListEquality<SeriesDatum<D>>()
+            .equals(_selectedDatum, other.selectedDatum) &&
+        ListEquality<ImmutableSeries<D>>()
+            .equals(_selectedSeries, other.selectedSeries);
   }
 
   @override
   int get hashCode {
-    int hashcode = ListEquality().hash(_selectedDatum);
-    hashcode = hashcode * 37 + ListEquality().hash(_selectedSeries);
+    var hashcode = ListEquality<SeriesDatum<D>>().hash(_selectedDatum);
+    hashcode = hashcode * 37 +
+        ListEquality<ImmutableSeries<D>>().hash(_selectedSeries);
     return hashcode;
   }
 }
@@ -177,8 +184,10 @@ class MutableSelectionModel<D> extends SelectionModel<D> {
     final copyOfSelectionModel = SelectionModel.fromOther(this);
     _updatedListeners.forEach((listener) => listener(copyOfSelectionModel));
 
-    final changed = !ListEquality().equals(origSelectedDatum, _selectedDatum) ||
-        !ListEquality().equals(origSelectedSeries, _selectedSeries);
+    final changed = !ListEquality<SeriesDatum<D>>()
+            .equals(origSelectedDatum, _selectedDatum) ||
+        !ListEquality<ImmutableSeries<D>>()
+            .equals(origSelectedSeries, _selectedSeries);
     if (notifyListeners && changed) {
       _changedListeners.forEach((listener) => listener(copyOfSelectionModel));
     }

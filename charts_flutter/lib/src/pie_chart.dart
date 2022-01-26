@@ -22,14 +22,14 @@ import 'selection_model_config.dart' show SelectionModelConfig;
 
 class PieChart<D> extends BaseChart<D> {
   PieChart(
-    List<common.Series> seriesList, {
-    bool animate,
-    Duration animationDuration,
-    common.ArcRendererConfig<D> defaultRenderer,
-    List<ChartBehavior> behaviors,
-    List<SelectionModelConfig<D>> selectionModels,
-    common.RTLSpec rtlSpec,
-    LayoutConfig layoutConfig,
+    List<common.Series<dynamic, D>> seriesList, {
+    bool? animate,
+    Duration? animationDuration,
+    common.ArcRendererConfig<D>? defaultRenderer,
+    List<ChartBehavior<D>>? behaviors,
+    List<SelectionModelConfig<D>>? selectionModels,
+    common.RTLSpec? rtlSpec,
+    LayoutConfig? layoutConfig,
     bool defaultInteractions = true,
   }) : super(
           seriesList,
@@ -46,9 +46,4 @@ class PieChart<D> extends BaseChart<D> {
   @override
   common.PieChart<D> createCommonChart(BaseChartState chartState) =>
       new common.PieChart<D>(layoutConfig: layoutConfig?.commonLayoutConfig);
-
-  @override
-  void addDefaultInteractions(List<ChartBehavior> behaviors) {
-    super.addDefaultInteractions(behaviors);
-  }
 }

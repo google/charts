@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -23,6 +25,14 @@ import 'package:test/test.dart';
 import 'simple_date_time_factory.dart' show SimpleDateTimeFactory;
 
 const EPSILON = 0.001;
+
+/// Checks whether the local time zone uses typical US daylight saving time,
+/// as expected by several tests here.
+bool _localTimeZoneMatchesTestExpectations() {
+  final Duration difference =
+      DateTime(2017, 3, 12, 3).difference(DateTime(2017, 3, 12, 2));
+  return difference.inSeconds == 0;
+}
 
 void main() {
   const dateTimeFactory = SimpleDateTimeFactory();
@@ -180,7 +190,7 @@ void main() {
             DateTime(2017, 3, 12, 4),
             DateTime(2017, 3, 12, 5),
           ]));
-    });
+    }, skip: !_localTimeZoneMatchesTestExpectations());
 
     test('step through daylight saving backward change in 1 hour increments',
         () {
@@ -206,7 +216,7 @@ void main() {
             DateTime(2017, 11, 5, 3),
             DateTime(2017, 11, 5, 4),
           ]));
-    });
+    }, skip: !_localTimeZoneMatchesTestExpectations());
 
     test('step through daylight saving forward change in 4 hour increments',
         () {
@@ -230,7 +240,7 @@ void main() {
             DateTime(2017, 3, 12, 20),
             DateTime(2017, 3, 13, 0),
           ]));
-    });
+    }, skip: !_localTimeZoneMatchesTestExpectations());
 
     test('step through daylight saving backward change in 4 hour increments',
         () {
@@ -258,7 +268,7 @@ void main() {
             DateTime(2017, 11, 6, 0),
           ]));
     });
-  });
+  }, skip: !_localTimeZoneMatchesTestExpectations());
 
   group('Minute time stepper', () {
     test('gets steps with 5 minute increments', () {
@@ -301,7 +311,7 @@ void main() {
             DateTime(2017, 3, 12, 3, 45),
             DateTime(2017, 3, 12, 4),
           ]));
-    });
+    }, skip: !_localTimeZoneMatchesTestExpectations());
 
     test('steps correctly after daylight saving forward change', () {
       final stepper = MinuteTimeStepper(dateTimeFactory);
@@ -350,7 +360,7 @@ void main() {
             DateTime(2017, 11, 5, 3)
           ]));
     });
-  });
+  }, skip: !_localTimeZoneMatchesTestExpectations());
 
   group('Month time stepper', () {
     test('steps crosses the year', () {

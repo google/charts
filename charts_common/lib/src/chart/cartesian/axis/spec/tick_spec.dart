@@ -20,8 +20,8 @@ import 'axis_spec.dart' show TextStyleSpec;
 /// Used to define a tick that is used by static tick provider.
 class TickSpec<D> {
   final D value;
-  final String label;
-  final TextStyleSpec style;
+  final String? label;
+  final TextStyleSpec? style;
 
   /// [value] the value of this tick
   /// [label] optional label for this tick. If not set, uses the tick formatter

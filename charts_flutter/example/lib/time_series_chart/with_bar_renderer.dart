@@ -24,7 +24,7 @@ class TimeSeriesBar extends StatelessWidget {
   final List<charts.Series<TimeSeriesSales, DateTime>> seriesList;
   final bool animate;
 
-  TimeSeriesBar(this.seriesList, {this.animate});
+  TimeSeriesBar(this.seriesList, {this.animate = false});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
   factory TimeSeriesBar.withSampleData() {

@@ -24,7 +24,7 @@ import 'linear_scale_domain_info.dart' show LinearScaleDomainInfo;
 class LinearScaleViewportSettings {
   /// Output extent for the scale, typically set by the axis as the pixel
   /// output.
-  ScaleOutputExtent range;
+  ScaleOutputExtent? range;
 
   /// Determines whether the scale should be extended to the nice values
   /// provided by the tick provider.  If true, we wont touch the viewport config
@@ -41,13 +41,13 @@ class LinearScaleViewportSettings {
   double translatePx = 0.0;
 
   /// The current extent of the viewport in domain units.
-  NumericExtents _domainExtent;
-  set domainExtent(NumericExtents extent) {
+  NumericExtents? _domainExtent;
+  set domainExtent(NumericExtents? extent) {
     _domainExtent = extent;
     _manualDomainExtent = extent != null;
   }
 
-  NumericExtents get domainExtent => _domainExtent;
+  NumericExtents? get domainExtent => _domainExtent;
 
   /// Indicates that the viewportExtends are to be read from to determine the
   /// internal scaleFactor and rangeTranslate.
@@ -73,10 +73,10 @@ class LinearScaleViewportSettings {
     domainExtent = null;
   }
 
-  int get rangeWidth => range.diff.abs().toInt();
+  int get rangeWidth => range!.diff.abs().toInt();
 
   bool isRangeValueWithinViewport(double rangeValue) =>
-      range.containsValue(rangeValue);
+      range!.containsValue(rangeValue);
 
   /// Updates the viewport's internal scalingFactor given the current
   /// domainInfo.
@@ -84,9 +84,9 @@ class LinearScaleViewportSettings {
     // If we are loading from the viewport, then update the scalingFactor given
     // the viewport size compared to the data size.
     if (_manualDomainExtent) {
-      double viewportDomainDiff = _domainExtent?.width?.toDouble();
+      final viewportDomainDiff = _domainExtent?.width.toDouble();
       if (domainInfo.domainDiff != 0.0) {
-        scalingFactor = domainInfo.domainDiff / viewportDomainDiff;
+        scalingFactor = domainInfo.domainDiff / viewportDomainDiff!;
       } else {
         scalingFactor = 1.0;
         // The domain claims to have no date, extend it to the viewport's
@@ -110,16 +110,14 @@ class LinearScaleViewportSettings {
     // the scaleFactor has been setup.
     if (_manualDomainExtent) {
       translatePx =
-          -scaleScalingFactor * (_domainExtent.min - domainInfo.extent.min);
+          -scaleScalingFactor * (_domainExtent!.min - domainInfo.extent.min);
     }
 
     // Make sure that the viewportSettings.translatePx is sane if desired.
     if (!keepViewportWithinData) {
-      int rangeDiff = range.diff.toInt();
-
       // Make sure we don't translate beyond the max domain extent.
       translatePx = math.min(0.0, translatePx);
-      translatePx = math.max(rangeDiff * (1.0 - scalingFactor), translatePx);
+      translatePx = math.max(range!.diff * (1.0 - scalingFactor), translatePx);
     }
   }
 
@@ -130,8 +128,8 @@ class LinearScaleViewportSettings {
     // If we didn't load from the viewport extent, then update them given the
     // current scale configuration.
     if (!_manualDomainExtent) {
-      double viewportDomainDiff = domainInfo.domainDiff / scalingFactor;
-      double viewportStart =
+      final viewportDomainDiff = domainInfo.domainDiff / scalingFactor;
+      final viewportStart =
           (-translatePx / scaleScalingFactor) + domainInfo.extent.min;
       _domainExtent =
           NumericExtents(viewportStart, viewportStart + viewportDomainDiff);

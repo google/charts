@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -23,6 +25,7 @@ import 'package:charts_common/src/chart/common/processed_series.dart';
 import 'package:charts_common/src/chart/common/behavior/slider/slider.dart';
 import 'package:charts_common/src/chart/common/behavior/selection/selection_trigger.dart';
 import 'package:charts_common/src/common/gesture_listener.dart';
+import 'package:charts_common/src/common/math.dart';
 import 'package:charts_common/src/data/series.dart';
 
 import 'package:mockito/mockito.dart';
@@ -33,6 +36,7 @@ class MockChart extends Mock implements CartesianChart {
 
   LifecycleListener lastLifecycleListener;
 
+  @override
   bool vertical = true;
 
   @override
@@ -138,21 +142,21 @@ void main() {
         measureFn: (_, __) => null));
 
     _details1 = DatumDetails(
-        chartPosition: Point(20.0, 80.0),
+        chartPosition: NullablePoint(20.0, 80.0),
         datum: 'myDatum1',
         domain: 1.0,
         series: _series1,
         domainDistance: 10.0,
         measureDistance: 20.0);
     _details2 = DatumDetails(
-        chartPosition: Point(40.0, 80.0),
+        chartPosition: NullablePoint(40.0, 80.0),
         datum: 'myDatum2',
         domain: 2.0,
         series: _series1,
         domainDistance: 10.0,
         measureDistance: 20.0);
     _details3 = DatumDetails(
-        chartPosition: Point(90.0, 80.0),
+        chartPosition: NullablePoint(90.0, 80.0),
         datum: 'myDatum3',
         domain: 4.5,
         series: _series1,

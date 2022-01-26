@@ -1,3 +1,5 @@
+// @dart=2.9
+
 // Copyright 2018 the Charts project authors. Please see the AUTHORS file
 // for details.
 //
@@ -30,6 +32,7 @@ import 'package:charts_common/src/common/graphics_factory.dart';
 import 'package:charts_common/src/common/line_style.dart';
 import 'package:charts_common/src/common/text_style.dart';
 import 'package:charts_common/src/common/text_element.dart';
+import 'package:meta/meta.dart' show required;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -51,7 +54,7 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
       : super(null, FakeGraphicsFactory());
 
   @override
-  CollisionReport collides(List<Tick<num>> ticks, _) {
+  CollisionReport<num> collides(List<Tick<num>> ticks, _) {
     final ticksCollide = ticks.length >= collidesAfterTickCount;
     final alternateTicksUsed = ticks.length >= alternateRenderingAfterTickCount;
 
@@ -63,11 +66,12 @@ class FakeDrawStrategy extends BaseTickDrawStrategy<num> {
 
   @override
   void draw(ChartCanvas canvas, Tick<num> tick,
-      {AxisOrientation orientation,
-      Rectangle<int> axisBounds,
-      Rectangle<int> drawAreaBounds,
-      bool isFirst,
-      bool isLast}) {}
+      {@required AxisOrientation orientation,
+      @required Rectangle<int> axisBounds,
+      @required Rectangle<int> drawAreaBounds,
+      @required bool isFirst,
+      @required bool isLast,
+      bool collision = false}) {}
 }
 
 /// A fake [GraphicsFactory] that returns [MockTextStyle] and [MockTextElement].
@@ -85,6 +89,7 @@ class FakeGraphicsFactory extends GraphicsFactory {
 class MockTextStyle extends Mock implements TextStyle {}
 
 class MockTextElement extends Mock implements TextElement {
+  @override
   String text;
 
   MockTextElement(this.text);
@@ -163,17 +168,16 @@ void main() {
       // Verify that the rest of the ticks are all above the threshold in value
       // and have normal labels.
       var aboveThresholdTicks = ticks.sublist(2);
-      aboveThresholdTicks.retainWhere((Tick tick) => tick.value > 0.1);
+      aboveThresholdTicks.retainWhere((tick) => tick.value > 0.1);
       expect(aboveThresholdTicks, hasLength(18));
 
       aboveThresholdTicks = ticks.sublist(2);
-      aboveThresholdTicks.retainWhere((Tick tick) =>
+      aboveThresholdTicks.retainWhere((tick) =>
           tick.textElement.text != '' && !tick.textElement.text.contains('<'));
       expect(aboveThresholdTicks, hasLength(18));
 
       aboveThresholdTicks = ticks.sublist(2);
-      aboveThresholdTicks
-          .retainWhere((Tick tick) => tick.labelOffsetPx == null);
+      aboveThresholdTicks.retainWhere((tick) => tick.labelOffsetPx == null);
       expect(aboveThresholdTicks, hasLength(18));
     });
   });

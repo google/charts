@@ -25,10 +25,10 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class PercentOfDomainByCategoryBarChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  PercentOfDomainByCategoryBarChart(this.seriesList, {this.animate});
+  PercentOfDomainByCategoryBarChart(this.seriesList, {this.animate = false});
 
   factory PercentOfDomainByCategoryBarChart.withSampleData() {
     return new PercentOfDomainByCategoryBarChart(

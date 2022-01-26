@@ -31,17 +31,22 @@ class PieChart<D> extends BaseChart<D> {
     rightSpec: MarginSpec.fromPixel(minPixel: 20),
   );
 
-  PieChart({LayoutConfig layoutConfig})
+  PieChart({LayoutConfig? layoutConfig})
       : super(layoutConfig: layoutConfig ?? _defaultLayoutConfig);
 
   @override
   void drawInternal(List<MutableSeries<D>> seriesList,
-      {bool skipAnimation, bool skipLayout}) {
+      {bool? skipAnimation, bool? skipLayout}) {
     if (seriesList.length > 1) {
       throw ArgumentError('PieChart can only render a single series');
     }
     super.drawInternal(seriesList,
         skipAnimation: skipAnimation, skipLayout: skipLayout);
+  }
+
+  @override
+  void updateConfig(LayoutConfig? layoutConfig) {
+    super.updateConfig(layoutConfig ?? _defaultLayoutConfig);
   }
 
   @override
@@ -54,29 +59,29 @@ class PieChart<D> extends BaseChart<D> {
   List<DatumDetails<D>> getDatumDetails(SelectionModelType type) {
     final entries = <DatumDetails<D>>[];
 
-    getSelectionModel(type).selectedDatum.forEach((seriesDatum) {
+    for (final seriesDatum in getSelectionModel(type).selectedDatum) {
       final rendererId = seriesDatum.series.getAttr(rendererIdKey);
       final renderer = getSeriesRenderer(rendererId);
 
       // This should never happen.
-      if (!(renderer is ArcRenderer)) {
-        return;
+      if (renderer is! ArcRenderer<D>) {
+        continue;
       }
 
-      final details =
-          (renderer as ArcRenderer).getExpandedDatumDetails(seriesDatum);
+      final details = renderer.getExpandedDatumDetails(seriesDatum);
 
       if (details != null) {
         entries.add(details);
       }
-    });
+    }
 
     return entries;
   }
 
-  Rectangle<int> get centerContentBounds {
+  Rectangle<int>? get centerContentBounds {
+    final defaultRenderer = this.defaultRenderer;
     if (defaultRenderer is ArcRenderer<D>) {
-      return (defaultRenderer as ArcRenderer<D>).centerContentBounds;
+      return defaultRenderer.centerContentBounds;
     } else {
       return null;
     }

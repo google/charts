@@ -21,10 +21,10 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
 class CustomRoundedBars extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  CustomRoundedBars(this.seriesList, {this.animate});
+  CustomRoundedBars(this.seriesList, {this.animate = false});
 
   /// Creates a [BarChart] with custom rounded bars.
   factory CustomRoundedBars.withSampleData() {

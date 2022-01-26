@@ -24,10 +24,10 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class PatternForwardHatchBarChart extends StatelessWidget {
-  final List<charts.Series> seriesList;
+  final List<charts.Series<dynamic, String>> seriesList;
   final bool animate;
 
-  PatternForwardHatchBarChart(this.seriesList, {this.animate});
+  PatternForwardHatchBarChart(this.seriesList, {this.animate = false});
 
   factory PatternForwardHatchBarChart.withSampleData() {
     return new PatternForwardHatchBarChart(

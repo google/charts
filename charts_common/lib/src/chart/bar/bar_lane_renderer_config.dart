@@ -42,23 +42,28 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   /// one wide lane if all measure values for said domain are null.
   final bool mergeEmptyLanes;
 
+  /// Whether or not to render negative bar lanes on bars with negative values
+  final bool renderNegativeLanes;
+
   BarLaneRendererConfig({
-    String customRendererId,
-    CornerStrategy cornerStrategy,
+    String? customRendererId,
+    CornerStrategy? cornerStrategy,
     this.emptyLaneLabel = 'No data',
-    FillPatternType fillPattern,
-    BarGroupingType groupingType,
+    FillPatternType? fillPattern,
+    BarGroupingType? groupingType,
     int layoutPaintOrder = LayoutViewPaintOrder.bar,
     this.mergeEmptyLanes = false,
     int minBarLengthPx = 0,
+    bool renderNegativeLanes = false,
     int stackedBarPaddingPx = 1,
     double strokeWidthPx = 0.0,
-    BarRendererDecorator barRendererDecorator,
-    SymbolRenderer symbolRenderer,
-    Color backgroundBarColor,
-    List<int> weightPattern,
+    BarRendererDecorator<String>? barRendererDecorator,
+    SymbolRenderer? symbolRenderer,
+    Color? backgroundBarColor,
+    List<int>? weightPattern,
   })  : backgroundBarColor =
             backgroundBarColor ?? StyleFactory.style.noDataColor,
+        renderNegativeLanes = renderNegativeLanes,
         super(
           barRendererDecorator: barRendererDecorator,
           cornerStrategy: cornerStrategy,
@@ -79,25 +84,25 @@ class BarLaneRendererConfig extends BarRendererConfig<String> {
   }
 
   @override
-  bool operator ==(other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    if (!(other is BarLaneRendererConfig)) {
-      return false;
-    }
-    return other.backgroundBarColor == backgroundBarColor &&
+    return other is BarLaneRendererConfig &&
+        other.backgroundBarColor == backgroundBarColor &&
         other.emptyLaneLabel == emptyLaneLabel &&
         other.mergeEmptyLanes == mergeEmptyLanes &&
+        other.renderNegativeLanes == renderNegativeLanes &&
         super == other;
   }
 
   @override
   int get hashCode {
     var hash = super.hashCode;
-    hash = hash * 31 + (backgroundBarColor?.hashCode ?? 0);
-    hash = hash * 31 + (emptyLaneLabel?.hashCode ?? 0);
-    hash = hash * 31 + (mergeEmptyLanes?.hashCode ?? 0);
+    hash = hash * 31 + backgroundBarColor.hashCode;
+    hash = hash * 31 + emptyLaneLabel.hashCode;
+    hash = hash * 31 + mergeEmptyLanes.hashCode;
+    hash = hash * 31 + renderNegativeLanes.hashCode;
     return hash;
   }
 }

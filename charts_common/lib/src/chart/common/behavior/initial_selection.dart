@@ -25,13 +25,17 @@ class InitialSelection<D> implements ChartBehavior<D> {
   final SelectionModelType selectionModelType;
 
   /// List of series id of initially selected series.
-  final List<String> selectedSeriesConfig;
+  final List<String>? selectedSeriesConfig;
 
   /// List of [SeriesDatumConfig] that represents the initially selected datums.
-  final List<SeriesDatumConfig> selectedDataConfig;
+  final List<SeriesDatumConfig<D>>? selectedDataConfig;
 
-  BaseChart<D> _chart;
-  LifecycleListener<D> _lifecycleListener;
+  /// Preserve selection on every draw. False by default and only preserves
+  /// selection until the fist draw or redraw call.
+  final bool shouldPreserveSelectionOnDraw;
+
+  BaseChart<D>? _chart;
+  late LifecycleListener<D> _lifecycleListener;
   bool _firstDraw = true;
 
   // TODO : When the series changes, if the user does not also
@@ -39,12 +43,13 @@ class InitialSelection<D> implements ChartBehavior<D> {
   InitialSelection(
       {this.selectionModelType = SelectionModelType.info,
       this.selectedDataConfig,
-      this.selectedSeriesConfig}) {
+      this.selectedSeriesConfig,
+      this.shouldPreserveSelectionOnDraw = false}) {
     _lifecycleListener = LifecycleListener<D>(onData: _setInitialSelection);
   }
 
   void _setInitialSelection(List<MutableSeries<D>> seriesList) {
-    if (!_firstDraw) {
+    if (!_firstDraw && !shouldPreserveSelectionOnDraw) {
       return;
     }
     _firstDraw = false;
@@ -52,7 +57,7 @@ class InitialSelection<D> implements ChartBehavior<D> {
     final immutableModel = SelectionModel<D>.fromConfig(
         selectedDataConfig, selectedSeriesConfig, seriesList);
 
-    _chart.getSelectionModel(selectionModelType).updateSelection(
+    _chart!.getSelectionModel(selectionModelType).updateSelection(
         immutableModel.selectedDatum, immutableModel.selectedSeries,
         notifyListeners: false);
   }
@@ -70,5 +75,5 @@ class InitialSelection<D> implements ChartBehavior<D> {
   }
 
   @override
-  String get role => 'InitialSelection-${selectionModelType.toString()}}';
+  String get role => 'InitialSelection-$selectionModelType';
 }

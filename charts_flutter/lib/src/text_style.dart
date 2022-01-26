@@ -17,19 +17,22 @@ import 'dart:ui' show hashValues;
 import 'package:charts_common/common.dart' as common show Color, TextStyle;
 
 class TextStyle implements common.TextStyle {
-  int fontSize;
-  String fontFamily;
-  common.Color color;
-  double lineHeight;
+  int? fontSize;
+  String? fontFamily;
+  common.Color? color;
+  double? lineHeight;
+  String? fontWeight;
 
   @override
   bool operator ==(Object other) =>
       other is TextStyle &&
       fontSize == other.fontSize &&
       fontFamily == other.fontFamily &&
+      fontWeight == other.fontWeight &&
       color == other.color &&
       lineHeight == other.lineHeight;
 
   @override
-  int get hashCode => hashValues(fontSize, fontFamily, color, lineHeight);
+  int get hashCode =>
+      hashValues(fontSize, fontFamily, color, lineHeight, fontWeight);
 }
