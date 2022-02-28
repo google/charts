@@ -48,7 +48,13 @@ class PerDatumLegendEntryGenerator<D> implements LegendEntryGenerator<D> {
 
     final series = seriesList[0];
     for (var i = 0; i < series.data.length; i++) {
-      legendEntries.add(LegendEntry<D>(series, series.domainFn(i).toString(),
+      var domainValue = series.domainFn(i);
+      String? formattedDomainValue;
+      if (series.domainFormatterFn != null && domainValue != null) {
+        formattedDomainValue = series.domainFormatterFn!(i)(domainValue);
+      }
+      legendEntries.add(LegendEntry<D>(
+          series, formattedDomainValue ?? domainValue.toString(),
           color: series.colorFn!(i),
           datum: series.data[i],
           datumIndex: i,
