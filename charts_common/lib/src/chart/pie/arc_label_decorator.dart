@@ -240,6 +240,7 @@ class ArcLabelDecorator<D> extends ArcRendererDecorator<D> {
       ..color = labelSpec.color ?? Color.black
       ..fontFamily = labelSpec.fontFamily
       ..fontSize = labelSpec.fontSize ?? 12
+      ..fontWeight = labelSpec.fontWeight
       ..lineHeight = labelSpec.lineHeight;
   }
 

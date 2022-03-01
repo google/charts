@@ -88,6 +88,7 @@ class StaticTickProvider<D> extends TickProvider<D> {
           tick.textElement!.textStyle = graphicsFactory.createTextPaint()
             ..fontFamily = style.fontFamily
             ..fontSize = style.fontSize
+            ..fontWeight = style.fontWeight
             ..color = style.color
             ..lineHeight = style.lineHeight;
         }
