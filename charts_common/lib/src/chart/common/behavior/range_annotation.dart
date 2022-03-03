@@ -240,25 +240,8 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
 
       final isRange = annotation is RangeAnnotationSegment;
 
-      final T startValue;
-      final T endValue;
-
-      // We unfortunately can't check for `RangeAnnotationSegment<T>` nor
-      // `LineAnnotationSegment<T>` here because the `AnnotationSegment` object
-      // might not have been parameterized on `T` when it was initially
-      // constructed.
-      if (annotation is RangeAnnotationSegment<Object>) {
-        startValue = annotation.startValue as T;
-        endValue = annotation.endValue as T;
-      } else if (annotation is LineAnnotationSegment<Object>) {
-        startValue = endValue = annotation.value as T;
-      } else {
-        throw UnsupportedError(
-            'Unrecognized annotation type: ${annotation.runtimeType}');
-      }
-
       final annotationDatum =
-          _getAnnotationDatum(startValue, endValue, axis, annotation.axisType);
+          annotation.getAnnotationDatum(axis as Axis<Object>);
 
       // If we already have a animatingAnnotation for that index, use it.
       var animatingAnnotation = _annotationMap[key];
@@ -329,24 +312,6 @@ class RangeAnnotation<D> implements ChartBehavior<D> {
     });
 
     _view.annotationMap = _annotationMap;
-  }
-
-  /// Generates a datum that describes an annotation.
-  ///
-  /// [startValue] and [endValue] are dynamic because they can be different data
-  /// types for domain and measure axes, e.g. DateTime and num for a TimeSeries
-  /// chart.
-  _DatumAnnotation _getAnnotationDatum<T>(T startValue, T endValue,
-      Axis<T> axis, RangeAnnotationAxisType axisType) {
-    // Remove floating point rounding errors by rounding to 2 decimal places of
-    // precision. The difference in the canvas is negligible.
-    final startPosition = (axis.getLocation(startValue)! * 100).round() / 100;
-    final endPosition = (axis.getLocation(endValue)! * 100).round() / 100;
-
-    return _DatumAnnotation(
-        startPosition: startPosition,
-        endPosition: endPosition,
-        axisType: axisType);
   }
 
   @override
@@ -1088,20 +1053,20 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
   }
 }
 
-class _DatumAnnotation {
+class DatumAnnotation {
   final double startPosition;
   final double endPosition;
   final RangeAnnotationAxisType axisType;
 
-  _DatumAnnotation({
+  DatumAnnotation({
     required this.startPosition,
     required this.endPosition,
     required this.axisType,
   });
 
-  factory _DatumAnnotation.from(_DatumAnnotation other,
+  factory DatumAnnotation.from(DatumAnnotation other,
       [double? startPosition, double? endPosition]) {
-    return _DatumAnnotation(
+    return DatumAnnotation(
         startPosition: startPosition ?? other.startPosition,
         endPosition: endPosition ?? other.endPosition,
         axisType: other.axisType);
@@ -1109,7 +1074,7 @@ class _DatumAnnotation {
 }
 
 class _AnnotationElement<D> {
-  _DatumAnnotation annotation;
+  DatumAnnotation annotation;
   final AnnotationSegment<Object> annotationSegment;
   Color? color;
   final String? startLabel;
@@ -1141,7 +1106,7 @@ class _AnnotationElement<D> {
 
   _AnnotationElement<D> clone() {
     return _AnnotationElement<D>(
-      annotation: _DatumAnnotation.from(annotation),
+      annotation: DatumAnnotation.from(annotation),
       annotationSegment: annotationSegment,
       color: color != null ? Color.fromOther(color: color!) : null,
       startLabel: startLabel,
@@ -1176,7 +1141,7 @@ class _AnnotationElement<D> {
             previousAnnotation.endPosition;
 
     annotation =
-        _DatumAnnotation.from(targetAnnotation, startPosition, endPosition);
+        DatumAnnotation.from(targetAnnotation, startPosition, endPosition);
 
     color = getAnimatedColor(previous.color!, target.color!, animationPercent);
 
@@ -1312,6 +1277,14 @@ abstract class AnnotationSegment<D> {
       this.labelDirection,
       this.labelPosition,
       this.labelStyleSpec});
+
+  /// Generates a datum that describes an annotation. This can be implemented to
+  /// customize annotation positioning.
+  ///
+  /// We can't use Axis<D> here since axis may be a [NumericAxis] and causes a
+  /// type error where an Axis<int> is expected, even though use sites are with
+  /// AnnotationSegment<Object>.
+  DatumAnnotation getAnnotationDatum(Axis<Object> axis);
 }
 
 /// Data for a chart range annotation.
@@ -1343,6 +1316,19 @@ class RangeAnnotationSegment<D> extends AnnotationSegment<D> {
 
   @override
   String get key => 'r::${axisType}::${axisId}::${startValue}::${endValue}';
+
+  @override
+  DatumAnnotation getAnnotationDatum(Axis<Object> axis) {
+    // Remove floating point rounding errors by rounding to 2 decimal places of
+    // precision. The difference in the canvas is negligible.
+    final startPosition = (axis.getLocation(startValue)! * 100).round() / 100;
+    final endPosition = (axis.getLocation(endValue)! * 100).round() / 100;
+
+    return DatumAnnotation(
+        startPosition: startPosition,
+        endPosition: endPosition,
+        axisType: axisType);
+  }
 }
 
 /// Data for a chart line annotation.
@@ -1376,6 +1362,16 @@ class LineAnnotationSegment<D> extends AnnotationSegment<D> {
 
   @override
   String get key => 'l::${axisType}::${axisId}::${value}';
+
+  @override
+  DatumAnnotation getAnnotationDatum(Axis<Object> axis) {
+    // Remove floating point rounding errors by rounding to 2 decimal places of
+    // precision. The difference in the canvas is negligible.
+    final position = (axis.getLocation(value)! * 100).round() / 100;
+
+    return DatumAnnotation(
+        startPosition: position, endPosition: position, axisType: axisType);
+  }
 }
 
 /// Axis type for an annotation.
