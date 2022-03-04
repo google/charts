@@ -530,11 +530,15 @@ class _RangeAnnotationLayoutView<D> extends LayoutView {
         case RangeAnnotationAxisType.measure:
           switch (annotationElement.labelAnchor) {
             case AnnotationLabelAnchor.start:
-              maxWidth = chart!.marginLeft - labelPadding;
+              maxWidth = isRtl
+                  ? chart!.marginRight - labelPadding
+                  : chart!.marginLeft - labelPadding;
               break;
 
             case AnnotationLabelAnchor.end:
-              maxWidth = chart!.marginRight - labelPadding;
+              maxWidth = isRtl
+                  ? chart!.marginLeft - labelPadding
+                  : chart!.marginRight - labelPadding;
               break;
 
             case AnnotationLabelAnchor.middle:
