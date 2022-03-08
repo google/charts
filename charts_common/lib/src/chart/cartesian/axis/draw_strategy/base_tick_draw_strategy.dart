@@ -160,10 +160,10 @@ abstract class BaseTickDrawStrategy<D> implements TickDrawStrategy<D> {
           ? _labelCollisionOffsetFromTickPx
           : _labelDefaultOffsetFromTickPx;
 
-  TickLabelAnchor tickLabelAnchor({required bool collision}) =>
-      collision && _rotateOnCollision
-          ? TickLabelAnchor.after
-          : _defaultTickLabelAnchor;
+  TickLabelAnchor tickLabelAnchor({required bool collision}) => collision &&
+          _rotateOnCollision
+      ? (chartContext.isRtl ? TickLabelAnchor.before : TickLabelAnchor.after)
+      : _defaultTickLabelAnchor;
 
   BaseTickDrawStrategy(
     this.chartContext,
