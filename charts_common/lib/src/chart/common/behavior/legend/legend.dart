@@ -56,7 +56,7 @@ abstract class Legend<D> implements ChartBehavior<D>, LayoutView {
   final LegendEntryGenerator<D> legendEntryGenerator;
 
   /// The title text to display before legend entries.
-  late String title;
+  String? title;
 
   late BaseChart<D> _chart;
   late final LifecycleListener<D> _lifecycleListener;
