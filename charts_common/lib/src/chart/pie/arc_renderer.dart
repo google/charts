@@ -29,7 +29,7 @@ import 'arc_renderer_element.dart'
 import 'base_arc_renderer.dart';
 
 const arcElementsKey =
-    AttributeKey<List<ArcRendererElement<Object>>>('ArcRenderer.elements');
+    AttributeKey<List<ArcRendererElement>>('ArcRenderer.elements');
 
 class ArcRenderer<D> extends BaseArcRenderer<D> {
   final ArcRendererConfig<D> config;

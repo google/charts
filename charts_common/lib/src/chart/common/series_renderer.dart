@@ -42,8 +42,7 @@ import 'series_datum.dart' show SeriesDatum;
 /// objects.
 const rendererIdKey = AttributeKey<String>('SeriesRenderer.rendererId');
 
-const rendererKey =
-    AttributeKey<SeriesRenderer<Object>>('SeriesRenderer.renderer');
+const rendererKey = AttributeKey<SeriesRenderer>('SeriesRenderer.renderer');
 
 /// A series renderer draws one or more series of data onto a chart canvas.
 abstract class SeriesRenderer<D> extends LayoutView {

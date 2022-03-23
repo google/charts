@@ -98,7 +98,7 @@ class ShapesScatterPlotChart extends StatelessWidget {
       )
         // Accessor function that associates each datum with a symbol renderer.
         ..setAttribute(
-            charts.pointSymbolRendererFnKey, (int index) => data[index].shape)
+            charts.pointSymbolRendererFnKey, (int? index) => data[index!].shape)
         // Default symbol renderer ID for data that have no defined shape.
         ..setAttribute(charts.pointSymbolRendererIdKey, 'rect')
     ];

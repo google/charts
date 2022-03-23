@@ -43,7 +43,7 @@ const pointElementsKey =
     AttributeKey<List<PointRendererElement<Object>>>('PointRenderer.elements');
 
 const pointSymbolRendererFnKey =
-    AttributeKey<AccessorFn<String>>('PointRenderer.symbolRendererFn');
+    AttributeKey<AccessorFn<String?>>('PointRenderer.symbolRendererFn');
 
 const pointSymbolRendererIdKey =
     AttributeKey<String>('PointRenderer.symbolRendererId');
