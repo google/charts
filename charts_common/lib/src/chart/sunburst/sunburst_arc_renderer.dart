@@ -31,7 +31,7 @@ import '../pie/base_arc_renderer.dart';
 import 'sunburst_arc_renderer_config.dart'
     show SunburstArcRendererConfig, SunburstColorStrategy;
 
-const arcElementsKey = AttributeKey<List<SunburstArcRendererElement<Object>>>(
+const arcElementsKey = AttributeKey<List<SunburstArcRendererElement>>(
     'SunburstArcRenderer.elements');
 
 /// ArcRenderer for the Sunburst chart using Tree based data.
