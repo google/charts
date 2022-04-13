@@ -76,7 +76,7 @@ void main() {
       LinearScale scale = LinearScale()..keepViewportWithinData = false;
       scale.addDomain(50.0);
       scale.addDomain(70.0);
-      scale.viewportDomain = NumericExtents(100.0, 200.0);
+      scale.domainOverride = NumericExtents(100.0, 200.0);
       scale.range = ScaleOutputExtent(0, 200);
 
       expect(scale[200.0], closeTo(200, EPSILON));
@@ -88,7 +88,7 @@ void main() {
       scale.resetViewportSettings();
       scale.addDomain(50.0);
       scale.addDomain(100.0);
-      scale.viewportDomain = NumericExtents(0.0, 100.0);
+      scale.domainOverride = NumericExtents(0.0, 100.0);
       scale.range = ScaleOutputExtent(0, 200);
 
       expect(scale[0.0], closeTo(0, EPSILON));
@@ -292,7 +292,7 @@ void main() {
       LinearScale other = scale.copy();
 
       expect(other.domainOverride, equals(NumericExtents(0.0, 100.0)));
-      expect(other[5.0], closeTo(120.0, EPSILON));
+      expect(other[5.0], closeTo(110.0, EPSILON));
     });
 
     test('scale calculates a scaleFactor given a domain window', () {

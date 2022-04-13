@@ -151,7 +151,7 @@ class LinearScale implements NumericScale {
   @override
   set keepViewportWithinData(bool autoAdjustViewportToNiceValues) {
     _scaleReady = false;
-    _viewportSettings.keepViewportWithinData = true;
+    _viewportSettings.keepViewportWithinData = autoAdjustViewportToNiceValues;
   }
 
   @override
