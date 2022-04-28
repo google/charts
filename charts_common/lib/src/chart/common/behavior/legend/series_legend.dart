@@ -39,6 +39,9 @@ class SeriesLegend<D> extends Legend<D> {
   /// List of series IDs that should not be hideable.
   List<String>? _alwaysVisibleSeries;
 
+  /// List of all series IDs.
+  List<String>? _allSeries;
+
   /// Whether or not the series legend should show measures on datum selection.
   late bool _showMeasures;
 
@@ -150,6 +153,9 @@ class SeriesLegend<D> extends Legend<D> {
     // of hidden series.
     final seriesIds = seriesList.map((MutableSeries<D> series) => series.id);
 
+    // ger the list of all ids
+    _allSeries = seriesIds.toList();
+
     _hiddenSeriesList.removeWhere((String id) => !seriesIds.contains(id));
   }
 
@@ -168,6 +174,18 @@ class SeriesLegend<D> extends Legend<D> {
   void hideSeries(String seriesId) {
     if (!isSeriesAlwaysVisible(seriesId)) {
       _hiddenSeriesList.add(seriesId);
+    }
+  }
+
+  /// Only keep data for a series on the chart by [seriesId].
+  ///
+  /// The other entries in the legend for this series will be grayed out to indicate
+  /// that they are hidden.
+  @protected
+  void onlyKeepSeries(String seriesId) {
+    if (!isSeriesAlwaysVisible(seriesId)) {
+      _allSeries?.forEach((element) => _hiddenSeriesList.add(element));
+      _hiddenSeriesList.remove(seriesId);
     }
   }
 
