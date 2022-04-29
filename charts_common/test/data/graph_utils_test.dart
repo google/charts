@@ -14,57 +14,31 @@
 // limitations under the License.
 
 import 'package:charts_common/common.dart';
-import 'package:test/test.dart';
-import 'package:charts_common/src/data/graph_utils.dart' as utils;
 import 'package:charts_common/src/data/graph.dart';
-
-class MyNode {
-  final String domainId;
-  final num measure;
-
-  MyNode(this.domainId, this.measure);
-}
-
-class MyLink {
-  final String domainId;
-  final num measure;
-  final MyNode sourceNode;
-  final MyNode targetNode;
-
-  MyLink(this.domainId, this.sourceNode, this.targetNode, this.measure);
-}
-
-var myMockNodes = [
-  MyNode('Node 1', 4),
-  MyNode('Node 2', 5),
-  MyNode('Node 3', 6),
-];
-
-var myMockLinks = [
-  MyLink('Link A', myMockNodes[0], myMockNodes[1], 1),
-  MyLink('Link B', myMockNodes[1], myMockNodes[2], 2),
-];
+import 'package:charts_common/src/data/graph_utils.dart' as utils;
+import 'package:test/test.dart';
+import 'package:third_party.dart.charts_common.testing/graph_testing_utils.dart';
 
 var testLink1 = GraphLink<MyNode, MyLink>((b) => b
   ..source = GraphNode<MyNode, MyLink>((b) => b
-    ..data = myMockNodes[0]
+    ..data = mockLinearNodes[0]
     ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
     ..outgoingLinks = <GraphLink<MyNode, MyLink>>[])
   ..target = GraphNode<MyNode, MyLink>((b) => b
-    ..data = myMockNodes[1]
+    ..data = mockLinearNodes[1]
     ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
     ..outgoingLinks = <GraphLink<MyNode, MyLink>>[])
-  ..data = myMockLinks[0]);
+  ..data = mockLinearLinks[0]);
 var testLink2 = GraphLink<MyNode, MyLink>((b) => b
   ..source = GraphNode<MyNode, MyLink>((b) => b
-    ..data = myMockNodes[1]
+    ..data = mockLinearNodes[1]
     ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
     ..outgoingLinks = <GraphLink<MyNode, MyLink>>[])
   ..target = GraphNode<MyNode, MyLink>((b) => b
-    ..data = myMockNodes[2]
+    ..data = mockLinearNodes[2]
     ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
     ..outgoingLinks = <GraphLink<MyNode, MyLink>>[])
-  ..data = myMockLinks[1]);
+  ..data = mockLinearLinks[1]);
 
 void main() {
   group('actOnNodes', () {
@@ -83,19 +57,19 @@ void main() {
       expect(
           domainFn(
               GraphNode((b) => b
-                ..data = myMockNodes[0]
+                ..data = mockLinearNodes[0]
                 ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
                 ..outgoingLinks = <GraphLink<MyNode, MyLink>>[]),
               indexNotRelevant),
-          getDomain(myMockNodes[0], indexNotRelevant));
+          getDomain(mockLinearNodes[0], indexNotRelevant));
       expect(
           measureFn(
               GraphNode((b) => b
-                ..data = myMockNodes[0]
+                ..data = mockLinearNodes[0]
                 ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
                 ..outgoingLinks = <GraphLink<MyNode, MyLink>>[]),
               indexNotRelevant),
-          getMeasure(myMockNodes[0], indexNotRelevant));
+          getMeasure(mockLinearNodes[0], indexNotRelevant));
     });
   });
 
@@ -113,16 +87,16 @@ void main() {
       var measureFn = utils.actOnLinkData<MyNode, MyLink, num>(getMeasure)!;
 
       expect(domainFn(testLink1, indexNotRelevant),
-          getDomain(myMockLinks[0], indexNotRelevant));
+          getDomain(mockLinearLinks[0], indexNotRelevant));
       expect(measureFn(testLink1, indexNotRelevant),
-          getMeasure(myMockLinks[0], indexNotRelevant));
+          getMeasure(mockLinearLinks[0], indexNotRelevant));
     });
   });
 
   group('utils.addLinkToNode', () {
     test('adds link to corresponding list on node', () {
       utils.Node<MyNode, MyLink> node = GraphNode<MyNode, MyLink>((b) => b
-        ..data = myMockNodes[2]
+        ..data = mockLinearNodes[2]
         ..incomingLinks = <GraphLink<MyNode, MyLink>>[]
         ..outgoingLinks = <GraphLink<MyNode, MyLink>>[]);
       node = utils.addLinkToNode(node, testLink1, isIncomingLink: true);
@@ -155,13 +129,15 @@ void main() {
       TypedAccessorFn<MyNode, num> getMeasure = (node, _) => node.measure;
 
       expect(
-          utils.accessorIfExists(getDomain, myMockNodes[0], indexNotRelevant),
-          'Node 1');
+          utils.accessorIfExists(
+              getDomain, mockLinearNodes[0], indexNotRelevant),
+          'Node 0');
       expect(
-          utils.accessorIfExists(getMeasure, myMockNodes[0], indexNotRelevant),
+          utils.accessorIfExists(
+              getMeasure, mockLinearNodes[0], indexNotRelevant),
           4);
-      expect(
-          utils.accessorIfExists(null, myMockNodes[1], indexNotRelevant), null);
+      expect(utils.accessorIfExists(null, mockLinearNodes[1], indexNotRelevant),
+          null);
     });
   });
 }
