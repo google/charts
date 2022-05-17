@@ -202,11 +202,11 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
 
     // Sometimes chart behaviors try to draw the chart outside of a Flutter draw
     // cycle. Schedule a frame manually to handle these cases.
-    if (!SchedulerBinding.instance!.hasScheduledFrame) {
-      SchedulerBinding.instance!.scheduleFrame();
+    if (!SchedulerBinding.instance.hasScheduledFrame) {
+      SchedulerBinding.instance.scheduleFrame();
     }
 
-    SchedulerBinding.instance!.addPostFrameCallback(startAnimationController);
+    SchedulerBinding.instance.addPostFrameCallback(startAnimationController);
   }
 
   /// Request Flutter to rebuild the widget/container of chart.
@@ -229,7 +229,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     // This is needed to request rebuild after the legend has been added in the
     // post process phase of the chart, which happens during the chart widget's
     // build cycle.
-    SchedulerBinding.instance!.addPostFrameCallback(doRebuild);
+    SchedulerBinding.instance.addPostFrameCallback(doRebuild);
   }
 
   /// When Flutter's markNeedsLayout is called, layout and paint are both

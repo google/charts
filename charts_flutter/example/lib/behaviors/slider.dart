@@ -119,7 +119,7 @@ class _SliderCallbackState extends State<SliderLine> {
       });
     }
 
-    SchedulerBinding.instance!.addPostFrameCallback(rebuild);
+    SchedulerBinding.instance.addPostFrameCallback(rebuild);
   }
 
   @override
