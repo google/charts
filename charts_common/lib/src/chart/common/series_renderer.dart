@@ -44,7 +44,7 @@ import '../pie/arc_renderer.dart';
 const rendererIdKey = AttributeKey<String>('SeriesRenderer.rendererId');
 
 const rendererKey =
-    AttributeKey<ArcRenderer<dynamic>?>('SeriesRenderer.renderer');
+    AttributeKey<SeriesRenderer<dynamic>?>('SeriesRenderer.renderer');
 
 /// A series renderer draws one or more series of data onto a chart canvas.
 abstract class SeriesRenderer<D> extends LayoutView {
