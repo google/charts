@@ -994,13 +994,23 @@ class LineRenderer<D> extends BaseCartesianRenderer<D> {
                 animatingLine.getCurrentLine(animationPercent))
             .forEach((line) {
           if (line != null) {
-            canvas.drawLine(
-                clipBounds: _getClipBoundsForExtent(line.positionExtent!),
-                dashPattern: line.dashPattern,
-                points: line.points!.toPoints(),
-                stroke: line.color,
-                strokeWidthPx: line.strokeWidthPx,
-                roundEndCaps: line.roundEndCaps);
+            if (config.smoothLine) {
+              canvas.drawSmoothLine(
+                  clipBounds: _getClipBoundsForExtent(line.positionExtent!),
+                  dashPattern: line.dashPattern,
+                  points: line.points!.toPoints(),
+                  stroke: line.color,
+                  strokeWidthPx: line.strokeWidthPx,
+                  roundEndCaps: line.roundEndCaps);
+            } else {
+              canvas.drawLine(
+                  clipBounds: _getClipBoundsForExtent(line.positionExtent!),
+                  dashPattern: line.dashPattern,
+                  points: line.points!.toPoints(),
+                  stroke: line.color,
+                  strokeWidthPx: line.strokeWidthPx,
+                  roundEndCaps: line.roundEndCaps);
+            }
           }
         });
       }

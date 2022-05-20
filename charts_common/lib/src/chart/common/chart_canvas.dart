@@ -71,6 +71,15 @@ abstract class ChartCanvas {
       double? strokeWidthPx,
       List<int>? dashPattern});
 
+  void drawSmoothLine(
+      {required List<Point> points,
+      Rectangle<num>? clipBounds,
+      Color? fill,
+      Color? stroke,
+      bool? roundEndCaps,
+      double? strokeWidthPx,
+      List<int>? dashPattern});
+
   /// Renders a pie, with an optional hole in the center.
   void drawPie(CanvasPie canvasPie);
 
