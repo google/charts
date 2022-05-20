@@ -25,7 +25,8 @@ import '../../common/math.dart'
     show distanceBetweenPointAndLineSegment, NullablePoint;
 import '../../common/symbol_renderer.dart'
     show CircleSymbolRenderer, SymbolRenderer;
-import '../../data/series.dart' show AccessorFn, AttributeKey, TypedAccessorFn;
+import '../../data/series.dart'
+    show AccessorFn, AccessorFn2, AttributeKey, TypedAccessorFn;
 import '../cartesian/axis/axis.dart'
     show ImmutableAxis, domainAxisKey, measureAxisKey;
 import '../cartesian/cartesian_renderer.dart' show BaseCartesianRenderer;
@@ -43,7 +44,7 @@ const pointElementsKey =
     AttributeKey<List<PointRendererElement<Object>>>('PointRenderer.elements');
 
 const pointSymbolRendererFnKey =
-    AttributeKey<AccessorFn<String>>('PointRenderer.symbolRendererFn');
+    AttributeKey<AccessorFn2<String>>('PointRenderer.symbolRendererFn');
 
 const pointSymbolRendererIdKey =
     AttributeKey<String>('PointRenderer.symbolRendererId');
@@ -657,7 +658,7 @@ class PointRenderer<D> extends BaseCartesianRenderer<D> {
     // fall back to the default.
     String? symbolRendererId;
     if (symbolRendererFn != null) {
-      symbolRendererId = symbolRendererFn(details.index);
+      symbolRendererId = symbolRendererFn(details.index!);
     }
     symbolRendererId ??= series.getAttr(pointSymbolRendererIdKey);
     symbolRendererId ??= defaultSymbolRendererId;
