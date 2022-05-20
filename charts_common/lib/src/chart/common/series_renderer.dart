@@ -34,7 +34,6 @@ import 'chart_canvas.dart' show ChartCanvas;
 import 'datum_details.dart' show DatumDetails;
 import 'processed_series.dart' show ImmutableSeries, MutableSeries;
 import 'series_datum.dart' show SeriesDatum;
-import '../pie/arc_renderer.dart';
 
 /// Unique identifier used to associate custom series renderers on a chart with
 /// one or more series of data.
