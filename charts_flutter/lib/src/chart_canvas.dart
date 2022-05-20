@@ -92,6 +92,28 @@ class ChartCanvas implements common.ChartCanvas {
   }
 
   @override
+  void drawSmoothLine(
+      {required List<Point> points,
+      Rectangle<num>? clipBounds,
+      common.Color? fill,
+      common.Color? stroke,
+      bool? roundEndCaps,
+      double? strokeWidthPx,
+      List<int>? dashPattern}) {
+    LinePainter.draw(
+        canvas: canvas,
+        paint: _paint,
+        points: points,
+        clipBounds: clipBounds,
+        fill: fill,
+        stroke: stroke,
+        smoothLine: true,
+        roundEndCaps: roundEndCaps,
+        strokeWidthPx: strokeWidthPx,
+        dashPattern: dashPattern);
+  }
+
+  @override
   void drawPie(common.CanvasPie canvasPie) {
     PiePainter.draw(canvas, _paint, canvasPie);
   }
