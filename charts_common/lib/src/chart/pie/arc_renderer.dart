@@ -29,7 +29,7 @@ import 'arc_renderer_element.dart'
 import 'base_arc_renderer.dart';
 
 const arcElementsKey =
-    AttributeKey<List<ArcRendererElement<Object>>>('ArcRenderer.elements');
+    AttributeKey<List<ArcRendererElement<dynamic>>?>('ArcRenderer.elements');
 
 class ArcRenderer<D> extends BaseArcRenderer<D> {
   final ArcRendererConfig<D> config;
@@ -160,13 +160,12 @@ class ArcRenderer<D> extends BaseArcRenderer<D> {
       var arcList =
           _seriesArcMap.putIfAbsent(arcListKey, () => AnimatedArcList());
 
-      var elementsList =
-          series.getAttr(arcElementsKey) as List<ArcRendererElement<D>>;
+      var elementsList = series.getAttr(arcElementsKey);
 
       if (series.data.isEmpty) {
         // If the series is empty, set up the "no data" arc element. This should
         // occupy the entire chart, and use the chart style's no data color.
-        final details = elementsList[0];
+        final details = elementsList![0];
 
         var arcKey = '__no_data__';
 
@@ -209,8 +208,8 @@ class ArcRenderer<D> extends BaseArcRenderer<D> {
 
         for (var arcIndex = 0; arcIndex < series.data.length; arcIndex++) {
           final Object? datum = series.data[arcIndex];
-          final details = elementsList[arcIndex];
-          final domainValue = details.domain;
+          final details = elementsList![arcIndex];
+          final domainValue = details.domain as D?;
 
           var arcKey = '${series.id}__$domainValue';
 

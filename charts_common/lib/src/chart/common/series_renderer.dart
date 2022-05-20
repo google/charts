@@ -34,6 +34,7 @@ import 'chart_canvas.dart' show ChartCanvas;
 import 'datum_details.dart' show DatumDetails;
 import 'processed_series.dart' show ImmutableSeries, MutableSeries;
 import 'series_datum.dart' show SeriesDatum;
+import '../pie/arc_renderer.dart';
 
 /// Unique identifier used to associate custom series renderers on a chart with
 /// one or more series of data.
@@ -43,7 +44,7 @@ import 'series_datum.dart' show SeriesDatum;
 const rendererIdKey = AttributeKey<String>('SeriesRenderer.rendererId');
 
 const rendererKey =
-    AttributeKey<SeriesRenderer<Object>>('SeriesRenderer.renderer');
+    AttributeKey<ArcRenderer<dynamic>?>('SeriesRenderer.renderer');
 
 /// A series renderer draws one or more series of data onto a chart canvas.
 abstract class SeriesRenderer<D> extends LayoutView {
