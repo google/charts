@@ -36,11 +36,16 @@ class MonotoneX {
   }
 
   static Path addCurve(Path path, List<Point> points, [bool reversed = false]) {
-    var targetPoints = <Point>[];
-    targetPoints.addAll(points);
+    if (points.length < 1) return path;
+
+    var targetPoints = List.from(points);
     targetPoints.add(Point(
         points[points.length - 1].x * 2, points[points.length - 1].y * 2));
     double x0, y0, x1, y1, t0, t1, x, y;
+
+    /**
+     * arr= [[x0, y0, x1, y1, t0=slope2, t1=slope3], [],.... []]
+     */
     List<List<double>> arr = [];
 
     x0 = targetPoints[0].x as double;
@@ -55,29 +60,34 @@ class MonotoneX {
     t1 = _slope3(x0, y0, x1, y1, x, y);
     arr.add([x0, y0, x1, y1, _slope2(x0, y0, x1, y1, t1), t1]);
 
-    x0 = x1;
-    y0 = y1;
-    x1 = x;
-    y1 = y;
-    t0 = t1;
-
+    /**
+     *        curve information for point[1]
+     * arr= [ [x0, y0, x1, y1, t0=slope2, t1=slope3] ]
+     */
     for (int i = 3; i < targetPoints.length; i++) {
-      x = targetPoints[i].x as double;
-      y = targetPoints[i].y as double;
-      if (x == x1 && y == y1) continue;
-      t1 = _slope3(x0, y0, x1, y1, x, y);
-      arr.add([x0, y0, x1, y1, t0, t1]);
       x0 = x1;
       y0 = y1;
       x1 = x;
       y1 = y;
       t0 = t1;
+
+      x = targetPoints[i].x as double;
+      y = targetPoints[i].y as double;
+      if (x == x1 && y == y1) continue;
+      t1 = _slope3(x0, y0, x1, y1, x, y);
+      arr.add([x0, y0, x1, y1, t0, t1]);
     }
     if (reversed) {
       arr.reversed.forEach((f) {
+        /**
+       * f: [ x1, y1, x0, y0, t1=slope3, t0=slope2]
+       */
         _point(path, f[2], f[3], f[0], f[1], f[5], f[4]);
       });
     } else {
+      /**
+       * f: [x0, y0, x1, y1, t0=slope2, t1=slope3]
+       */
       arr.forEach((f) {
         _point(path, f[0], f[1], f[2], f[3], f[4], f[5]);
       });
