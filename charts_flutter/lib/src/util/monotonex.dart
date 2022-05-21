@@ -52,8 +52,14 @@ class MonotoneX {
     x = targetPoints[2].x as double;
     y = targetPoints[2].y as double;
 
-    t0 = t1 = _slope3(x0, y0, x1, y1, x, y);
-    arr.add([x0, y0, x1, y1, _slope2(x0, y0, x1, y1, t0), t0]);
+    t1 = _slope3(x0, y0, x1, y1, x, y);
+    arr.add([x0, y0, x1, y1, _slope2(x0, y0, x1, y1, t1), t1]);
+
+    x0 = x1;
+    y0 = y1;
+    x1 = x;
+    y1 = y;
+    t0 = t1;
 
     for (int i = 3; i < targetPoints.length; i++) {
       x = targetPoints[i].x as double;
