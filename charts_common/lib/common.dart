@@ -232,6 +232,7 @@ export 'src/chart/layout/layout_view.dart'
         ViewMargin,
         ViewMeasuredSizes;
 export 'src/chart/line/line_chart.dart' show LineChart;
+export 'src/chart/line/line_grid_chart.dart' show LineGridChart;
 export 'src/chart/line/line_renderer.dart' show LineRenderer;
 export 'src/chart/line/line_renderer_config.dart' show LineRendererConfig;
 export 'src/chart/pie/arc_label_decorator.dart'

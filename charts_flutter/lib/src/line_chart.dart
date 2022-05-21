@@ -19,6 +19,7 @@ import 'package:charts_common/common.dart' as common
     show
         AxisSpec,
         LineChart,
+        LineGridChart,
         NumericAxisSpec,
         RTLSpec,
         Series,
@@ -33,24 +34,26 @@ import 'selection_model_config.dart' show SelectionModelConfig;
 import 'user_managed_state.dart' show UserManagedState;
 
 class LineChart extends CartesianChart<num> {
-  LineChart(
-    List<common.Series<dynamic, num>> seriesList, {
-    bool? animate,
-    Duration? animationDuration,
-    common.AxisSpec? domainAxis,
-    common.NumericAxisSpec? primaryMeasureAxis,
-    common.NumericAxisSpec? secondaryMeasureAxis,
-    LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes,
-    common.LineRendererConfig<num>? defaultRenderer,
-    List<common.SeriesRendererConfig<num>>? customSeriesRenderers,
-    List<ChartBehavior<num>>? behaviors,
-    List<SelectionModelConfig<num>>? selectionModels,
-    common.RTLSpec? rtlSpec,
-    LayoutConfig? layoutConfig,
-    bool defaultInteractions = true,
-    bool? flipVerticalAxis,
-    UserManagedState<num>? userManagedState,
-  }) : super(
+  final bool isGrid;
+
+  LineChart(List<common.Series<dynamic, num>> seriesList,
+      {bool? animate,
+      Duration? animationDuration,
+      common.AxisSpec? domainAxis,
+      common.NumericAxisSpec? primaryMeasureAxis,
+      common.NumericAxisSpec? secondaryMeasureAxis,
+      LinkedHashMap<String, common.NumericAxisSpec>? disjointMeasureAxes,
+      common.LineRendererConfig<num>? defaultRenderer,
+      List<common.SeriesRendererConfig<num>>? customSeriesRenderers,
+      List<ChartBehavior<num>>? behaviors,
+      List<SelectionModelConfig<num>>? selectionModels,
+      common.RTLSpec? rtlSpec,
+      LayoutConfig? layoutConfig,
+      bool defaultInteractions = true,
+      bool? flipVerticalAxis,
+      UserManagedState<num>? userManagedState,
+      this.isGrid = false})
+      : super(
           seriesList,
           animate: animate,
           animationDuration: animationDuration,
@@ -74,11 +77,20 @@ class LineChart extends CartesianChart<num> {
     // Optionally create primary and secondary measure axes if the chart was
     // configured with them. If no axes were configured, then the chart will
     // use its default types (usually a numeric axis).
-    return new common.LineChart(
-        layoutConfig: layoutConfig?.commonLayoutConfig,
-        primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
-        secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
-        disjointMeasureAxes: createDisjointMeasureAxes());
+
+    if (isGrid) {
+      return new common.LineGridChart(
+          layoutConfig: layoutConfig?.commonLayoutConfig,
+          primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+          secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
+          disjointMeasureAxes: createDisjointMeasureAxes());
+    } else {
+      return new common.LineChart(
+          layoutConfig: layoutConfig?.commonLayoutConfig,
+          primaryMeasureAxis: primaryMeasureAxis?.createAxis(),
+          secondaryMeasureAxis: secondaryMeasureAxis?.createAxis(),
+          disjointMeasureAxes: createDisjointMeasureAxes());
+    }
   }
 
   @override

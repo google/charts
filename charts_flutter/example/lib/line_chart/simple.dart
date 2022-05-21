@@ -17,6 +17,7 @@
 // EXCLUDE_FROM_GALLERY_DOCS_START
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
+import 'package:charts_common/common.dart' as common;
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
@@ -68,7 +69,9 @@ class SimpleLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(seriesList, animate: animate);
+    return new charts.LineChart(seriesList,
+        animate: animate,
+        defaultRenderer: common.LineRendererConfig(smoothLine: true));
   }
 
   /// Create one series with sample hard coded data.
