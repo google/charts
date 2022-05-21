@@ -39,11 +39,6 @@ class LineGridChart extends LineChart {
             disjointMeasureAxes: disjointMeasureAxes);
 
   @override
-  SeriesRenderer<num> makeDefaultRenderer() {
-    return LineRenderer<num>()..rendererId = SeriesRenderer.defaultRendererId;
-  }
-
-  @override
   void initDomainAxis() {
     domainAxis!.tickDrawStrategy = GridlineRendererSpec<num>()
         .createDrawStrategy(context, graphicsFactory!);

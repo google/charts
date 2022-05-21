@@ -68,8 +68,6 @@ class ScatterPlotComboLineChart extends StatelessWidget {
     var myRegressionData = [
       new LinearSales(0, desktopSalesData[0].sales, 3.5),
       new LinearSales(
-          50, desktopSalesData[desktopSalesData.length ~/ 2].sales, 3.5),
-      new LinearSales(
           100, desktopSalesData[desktopSalesData.length - 1].sales, 7.5),
     ];
 
@@ -124,7 +122,6 @@ class ScatterPlotComboLineChart extends StatelessWidget {
           new charts.LineRendererConfig(
               // ID used to link series to this renderer.
               customRendererId: 'customLine',
-              smoothLine: true,
               // Configure the regression line to be painted above the points.
               //
               // By default, series drawn by the point renderer are painted on

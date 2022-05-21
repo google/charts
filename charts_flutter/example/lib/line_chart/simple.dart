@@ -69,9 +69,10 @@ class SimpleLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(seriesList,
-        animate: animate,
-        defaultRenderer: common.LineRendererConfig(smoothLine: true));
+    return new charts.LineChart(
+      seriesList,
+      animate: animate,
+    );
   }
 
   /// Create one series with sample hard coded data.
