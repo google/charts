@@ -300,6 +300,12 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
         a11yNodes: _a11yNodes ?? [],
         textDirection: textDirection);
   }
+
+  @override
+  void dispose() {
+    _chart!.destroy();
+    super.dispose();
+  }
 }
 
 class ChartContainerCustomPaint extends CustomPainter {
