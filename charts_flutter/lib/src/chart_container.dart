@@ -202,11 +202,12 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
 
     // Sometimes chart behaviors try to draw the chart outside of a Flutter draw
     // cycle. Schedule a frame manually to handle these cases.
-    if (!SchedulerBinding.instance!.hasScheduledFrame) {
-      SchedulerBinding.instance!.scheduleFrame();
+    if (!_ambiguate(SchedulerBinding.instance)!.hasScheduledFrame) {
+      _ambiguate(SchedulerBinding.instance)!.scheduleFrame();
     }
 
-    SchedulerBinding.instance!.addPostFrameCallback(startAnimationController);
+    _ambiguate(SchedulerBinding.instance)!
+        .addPostFrameCallback(startAnimationController);
   }
 
   /// Request Flutter to rebuild the widget/container of chart.
@@ -229,7 +230,7 @@ class ChartContainerRenderObject<D> extends RenderCustomPaint
     // This is needed to request rebuild after the legend has been added in the
     // post process phase of the chart, which happens during the chart widget's
     // build cycle.
-    SchedulerBinding.instance!.addPostFrameCallback(doRebuild);
+    _ambiguate(SchedulerBinding.instance)!.addPostFrameCallback(doRebuild);
   }
 
   /// When Flutter's markNeedsLayout is called, layout and paint are both
@@ -377,3 +378,11 @@ class ChartContainerCustomPaint extends CustomPainter {
     return nodes;
   }
 }
+
+/// This allows a value of type T or T?
+/// to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become
+/// non-nullable can still be used with `!` and `?`
+/// to support older versions of the API as well.
+T? _ambiguate<T>(T? value) => value;
