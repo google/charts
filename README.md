@@ -1,3 +1,9 @@
+# Discontinued
+
+**This project is no longer maintained**, and will not receive further updates. Community members interested in collaborating on a community-maintained fork can coordinate in [this issue](https://github.com/google/charts/issues/798).
+
+---
+
 Charts is a general charting library, currently enabled for the
 [Flutter mobile UI framework](https://flutter.io).
 
@@ -23,7 +29,3 @@ and iOS.
 
 All charts packages are licensed under the Apache 2 license, see the
 [LICENSE](LICENSE) and [AUTHORS](AUTHORS) files for details.
-
-## Development
-This project is developed internally at Google and published for external
-consumption, external contributions unfortunately cannot be taken at this time.
