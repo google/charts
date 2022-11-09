@@ -8,10 +8,10 @@ environment:
 
 dependencies:
   collection: ^1.14.5
-  intl: ">=0.15.2 < 0.18.0"
   logging: ^1.0.2
   meta: ^1.1.1
   vector_math: ^2.0.8
+  intl:
 
 dev_dependencies:
   mockito: ^5.0.0
